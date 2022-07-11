@@ -49,7 +49,7 @@ bool TupCommandExecutor::createSymbol(TupLibraryResponse *response)
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupCommandExecutor::createSymbol()]";
-        qDebug() << "*** Creating object: " << id;
+        qDebug() << "*** Creating object -> " << id;
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
@@ -80,7 +80,7 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupCommandExecutor::removeSymbol()]";
-        qDebug() << "*** Removing object: " << id;
+        qDebug() << "*** Removing object -> " << id;
     #endif
 
     if (response->symbolType() == TupLibraryObject::Folder) {
@@ -110,7 +110,8 @@ bool TupCommandExecutor::removeSymbol(TupLibraryResponse *response)
 bool TupCommandExecutor::insertSymbolIntoFrame(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCommandExecutor::insertSymbolIntoFrame()] - Adding symbol to project -> " << response->getArg().toString();
+        qDebug() << "[TupCommandExecutor::insertSymbolIntoFrame()] - "
+                    "Adding symbol to project -> " << response->getArg().toString();
     #endif
 
     if (project->scenesCount() > 0) {

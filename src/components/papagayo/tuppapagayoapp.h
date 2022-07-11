@@ -60,6 +60,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 
     signals:
         void requestTriggered(const TupProjectRequest *request);
+        // void audioRemoved();
 
     public slots:
         void updateActions();

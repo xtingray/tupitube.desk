@@ -80,6 +80,10 @@ void TupLibraryDisplay::reset()
 
 void TupLibraryDisplay::resetSoundPlayer()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay::resetSoundPlayer()]";
+    #endif
+
     soundPlayer->resetMediaPlayer();
 }
 

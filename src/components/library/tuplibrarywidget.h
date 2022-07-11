@@ -101,7 +101,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void stopSoundPlayer();
         void updateSpaceContext(TupProject::Mode mode);
         void initCurrentFrame();
-        void resetSoundPlayer();
+        void removeSoundItem(const QString &soundKey);
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);
@@ -144,6 +144,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importImageSequence();
         void importSvgSequence();
         void importSoundFile();
+        void resetSoundPlayer();
 
     private slots:
         void openSearchDialog();
@@ -158,6 +159,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void requestCurrentGraphic();
         void soundUpdated();
         void lipsyncModuleCalled(PapagayoAppMode mode, const QString &filePath);
+        void soundRemoved(const QString &objectKey);
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);

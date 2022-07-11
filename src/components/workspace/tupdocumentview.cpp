@@ -2662,20 +2662,14 @@ QList<int> TupDocumentView::getContextIndexes()
     return indexes;
 }
 
-// void TupDocumentView::launchLipsyncModule(bool recorded, const QString &soundFile)
 void TupDocumentView::launchLipsyncModule(PapagayoAppMode mode, const QString &soundFile)
 {
     #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::launchLipsyncModule()] - mode -> " << mode;
        qDebug() << "[TupDocumentView::launchLipsyncModule()] - soundFile -> " << soundFile;
     #endif
 
     papagayoManager(); // Launch plugin
-
-    /*
-    PapagayoAppMode mode = Insert;
-    if (recorded)
-        mode = VoiceRecorded;
-    */
 
     if (QFile::exists(soundFile)) {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -2683,6 +2677,7 @@ void TupDocumentView::launchLipsyncModule(PapagayoAppMode mode, const QString &s
         TupPapagayoApp *papagayoApp = new TupPapagayoApp(mode, project, soundFile, getContextIndexes(), this);
         connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
                 this, SIGNAL(requestTriggered(const TupProjectRequest *)));
+        // connect(papagayoApp, SIGNAL(audioRemoved()), this, SIGNAL(audioRemoved()));
 
         /* SQA: This connection doesn't work on Windows
         connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);

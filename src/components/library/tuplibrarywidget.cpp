@@ -446,6 +446,10 @@ void TupLibraryWidget::insertObjectInWorkspace()
 
 void TupLibraryWidget::removeCurrentItem()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::removeCurrentItem()]";
+    #endif
+
     if (!libraryTree->currentItem())
         return;
 
@@ -484,7 +488,23 @@ void TupLibraryWidget::removeCurrentItem()
             type = TupLibraryObject::Audio;
     } 
 
-    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, objectKey, type);
+    if (type == TupLibraryObject::Audio) {
+        resetSoundPlayer();
+        emit soundRemoved(objectKey);
+    } else  {
+        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, objectKey, type);
+        emit requestTriggered(&request);
+    }
+}
+
+void TupLibraryWidget::removeSoundItem(const QString &soundKey)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::removeSoundItem()] - soundKey -> " << soundKey;
+    #endif
+
+    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove,
+                                                                        soundKey, TupLibraryObject::Audio);
     emit requestTriggered(&request);
 }
 
@@ -1630,6 +1650,23 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                      break;
                      case TupLibraryObject::Audio:
                        {
+                         if (!library->isLoadingProject()) {
+                             if (isEffectSound) {
+                                 library->updateObjectSoundType(id, Effect);
+                                 isEffectSound = false;
+                             } else {
+                                 library->updateObjectSoundType(id, Lipsync);
+                             }
+
+                             library->updateSoundFrameToPlay(id, currentFrame.frame + 1);
+                         }
+
+                         library->registerSoundResource(id);
+                         item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
+                         libraryTree->setCurrentItem(item);
+                         previewItem(item);
+
+                         /*
                          TupLibraryObject *object = library->getObject(id);
                          if (object) {
                              if (!library->isLoadingProject()) {
@@ -1655,6 +1692,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                              "Fatal Error: No object with id -> " << id;
                              #endif
                          }
+                         */
                        }
                      break;
                      default:
@@ -1713,7 +1751,9 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 
              if (!isFolder) {
                  if (response->symbolType() == TupLibraryObject::Audio) {
-                     if (!project->removeSoundResource(id)) {
+                     if (project->removeSoundResource(id)) {
+                         resetSoundPlayer();
+                     } else {
                          #ifdef TUP_DEBUG
                              qWarning() << "[TupLibraryWidget::libraryResponse()] - "
                                            "Warning: Can't remove sound resource record -> " << id;
@@ -2192,13 +2232,13 @@ void TupLibraryWidget::saveDefaultPath(const QString &dir)
 
 void TupLibraryWidget::callLipsyncEditor(QTreeWidgetItem *item)
 {
-    QString id = item->text(1) + "." + item->text(2).toLower();
-    TupLibraryObject *object = library->getObject(id);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::callLipsyncEditor()]";
+    #endif
 
-    if (object) {
-        QString audioPath = object->getDataPath();
-        emit lipsyncModuleCalled(AudioFromLibrary, audioPath);
-    }
+    QString id = item->text(1) + "." + item->text(2).toLower();
+    QString audioPath = library->getObjectPath(id);
+    emit lipsyncModuleCalled(AudioFromLibrary, audioPath);
 }
 
 void TupLibraryWidget::updateSoundTiming(int frame)
@@ -2310,10 +2350,11 @@ void TupLibraryWidget::resetSoundPlayer()
         qDebug() << "[TupLibraryWidget::resetSoundPlayer()]";
     #endif
 
-    if (display) {
-        if (display->isSoundPanelVisible())
-            display->resetSoundPlayer();
-    }
+    currentSound = nullptr;
+    delete currentSound;
+
+    if (display)
+        display->resetSoundPlayer();
 }
 
 void TupLibraryWidget::updateSoundPlayer()

@@ -58,21 +58,25 @@ TupFileManager::~TupFileManager()
 
 bool TupFileManager::save(const QString &fileName, TupProject *project)
 {
+    QString projectName = project->getName();
+
     #ifdef TUP_DEBUG
         qDebug() << "---";
         qDebug() << "[TupFileManager::save()] - Saving file -> " << fileName;
+        qDebug() << "[TupFileManager::save()] - Project name -> " << projectName;
+        qDebug() << "---";
     #endif
 
     QFileInfo info(fileName);
     QString filename = info.baseName();
-    QString currentDirName = CACHE_DIR + project->getName();
+    QString currentDirName = CACHE_DIR + projectName;
     QDir projectDir(currentDirName);
     bool ok;
 
     // Project name has been changed by the user
-    if ((filename.compare(project->getName()) != 0) && projectDir.exists(currentDirName)) {
+    if ((filename.compare(projectName) != 0) && projectDir.exists(currentDirName)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupFileManager::save()] - User changed project's name...";
+            qDebug() << "[TupFileManager::save()] - Case I: User changed project's name...";
         #endif
 
         QString newPath = CACHE_DIR + filename;
@@ -87,7 +91,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
         if (!projectDir.exists(newPath)) { // Target dir doesn't exist
             // Update the cache path with new project's name
             #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - "
+                qDebug() << "[TupFileManager::save()] - Case IA: "
                             "Renaming old path -> " << currentDirName << " into -> " << newPath;
             #endif
 
@@ -99,7 +103,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 #endif
             } else { // The rename action failed
                 #ifdef TUP_DEBUG
-                    qWarning() << "[TupFileManager::save()] - Warning: Renaming action failed!";
+                    qWarning() << "[TupFileManager::save()] - Case IA-I - Warning: Renaming action failed!";
                 #endif
                 // Trying to create new project's path
                 if (projectDir.mkdir(newPath)) {
@@ -147,7 +151,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             }
         } else { // Target dir exists
             #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - "
+                qDebug() << "[TupFileManager::save()] - Case IB: "
                             "Folder path already exists! -> " << newPath;
             #endif
 
@@ -210,35 +214,36 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 
         if (project->soundsListSize()) // The project has at least one sound
             emit soundPathsChanged();
-
     } else {
         // If project's path doesn't exist, create it
         if (!projectDir.exists()) {
+            QString projectPath = projectDir.path();
             #ifdef TUP_DEBUG
-                qDebug() << "[TupFileManager::save()] - Project dir doesn't exist... -> " << projectDir.path();
+                qDebug() << "[TupFileManager::save()] -  - Case II: Project dir doesn't exist... -> " << projectPath;
             #endif
             if (filename.compare(project->getName()) != 0) { // User renamed the source file name
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupFileManager::save()] - Updating project name to -> " << filename;
                 #endif
                 QString newPath = CACHE_DIR + filename;
-                projectDir.setPath(newPath);
+                projectPath = newPath;
+                projectDir.setPath(projectPath);
                 project->setProjectName(filename);
             }
 
             if (!projectDir.exists()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupFileManager::save()] - Creating project's directory -> " << projectDir.path();
+                    qDebug() << "[TupFileManager::save()] - Creating project's directory -> " << projectPath;
                 #endif
-                if (projectDir.mkdir(projectDir.path())) {
+                if (projectDir.mkdir(projectPath)) {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupFileManager::save()] - Directory was created successfully -> "
-                                 << projectDir.path();
+                                 << projectPath;
                     #endif
                 } else {
                     #ifdef TUP_DEBUG
                         qWarning() << "[TupFileManager::save()] - Error: Can't create path -> "
-                                   << projectDir.path();
+                                   << projectPath;
                     #endif
                     TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("007"));
                     return false;
@@ -255,6 +260,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     // Saving project components...
     {
         #ifdef TUP_DEBUG
+            qDebug() << "[TupFileManager::save()] - Saving project components...";
+            qDebug() << "---";
             qDebug() << "[TupFileManager::save()] - source files path -> " << projectDir.path();
         #endif
 

@@ -343,6 +343,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
         connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));
+        // connect(animationTab, SIGNAL(audioRemoved()), m_libraryWidget, SLOT(resetSoundPlayer()));
+
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
         connect(m_colorPalette, SIGNAL(eyeDropperActivated(TColorCell::FillType)),
@@ -659,6 +661,7 @@ void TupMainWindow::resetUI()
                     qDebug() << "[TupMainWindow::resetUI()] - "
                                 "Fatal Error: Can't remove CACHE project path! -> " << projectCache;
                 #endif
+                TOsd::self()->display(TOsd::Error, tr("Error while cleaning cache!"));
             }
         }
     } else {
@@ -1158,6 +1161,19 @@ void TupMainWindow::updateSoundsPath()
 
     if (cameraWidget)
         cameraWidget->loadSoundRecords();
+}
+
+void TupMainWindow::releaseSoundRecord(const QString &soundKey)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::releaseSoundRecord()] - soundKey -> " << soundKey;
+    #endif
+
+    if (cameraWidget)
+        cameraWidget->removeSoundTrack(soundKey);
+
+    if (m_libraryWidget)
+        m_libraryWidget->removeSoundItem(soundKey);
 }
 
 void TupMainWindow::openRecentProject()

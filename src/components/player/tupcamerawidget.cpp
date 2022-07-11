@@ -660,3 +660,8 @@ void TupCameraWidget::loadSoundRecords()
 {
     previewScreen->loadSoundRecords();
 }
+
+bool TupCameraWidget::removeSoundTrack(const QString &soundKey)
+{
+    return previewScreen->removeSoundTrack(soundKey);
+}

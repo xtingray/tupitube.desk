@@ -1281,8 +1281,11 @@ void TupPapagayoApp::createLipsyncRecord()
 bool TupPapagayoApp::saveLipsyncRecord()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()]";
+        qDebug() << "---";
+        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mode -> " << mode;
     #endif
+
+    // emit audioRemoved();
 
     if (!QDir(pgoFolderPath).exists()) {
         if (!QDir().mkpath(pgoFolderPath)) {
@@ -1360,7 +1363,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     emit requestTriggered(&request);
                                 } else {
                                     #ifdef TUP_DEBUG
-                                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Can't open image file -> " << imagePath;
+                                        qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                    "Fatal Error: Can't open image file -> " << imagePath;
                                     #endif
                                     TOsd::self()->display(TOsd::Error, tr("Can't load mouth image!"));
 
@@ -1372,6 +1376,9 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             #ifdef TUP_DEBUG
                                 qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Processing audio file -> " << soundFilePath;
                             #endif
+
+                            document->resetDocument();
+
                             QFile soundFile(soundFilePath);
                             QFileInfo info(soundFilePath);
                             QString soundKey = info.fileName().toLower();
@@ -1405,7 +1412,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
-                                document->resetDocument();
+                                // document->resetDocument();
 
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "

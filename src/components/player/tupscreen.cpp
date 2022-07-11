@@ -521,6 +521,31 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
     #endif
 
     Q_UNUSED(response)
+
+    /*
+    QString id = response->getArg().toString();
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupScreen::libraryResponse()] - id -> " << id;
+    #endif
+
+    switch (response->getAction()) {
+       case TupProjectRequest::Remove:
+       {
+           if (response->symbolType() == TupLibraryObject::Audio) {
+               qDebug() << "[TupScreen::libraryResponse()] - Removing item -> " << id;
+               int size = soundRecords.count();
+               qDebug() << "[TupScreen::libraryResponse()] - size -> " << size;
+               for (int i=0; i<size; i++) {
+                   SoundResource soundRecord = soundRecords.at(i);
+                   qDebug() << "[TupScreen::libraryResponse()] - Sound resource key ->" << soundRecord.path;
+               }
+           }
+       }
+       break;
+       default:
+       break;
+    }
+    */
 }
 
 void TupScreen::render()
@@ -765,11 +790,9 @@ void TupScreen::addPhotogramsArray(int scene)
 void TupScreen::loadSoundRecords()
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupScreen::loadSoundRecords()]";
     #endif
-
-    // soundRecords.clear();
-    // soundPlayer.clear();
 
     releaseAudioResources();
 
@@ -778,18 +801,21 @@ void TupScreen::loadSoundRecords()
     int total = effectsList.count();
 
     #ifdef TUP_DEBUG
-        qWarning() << "[TupScreen::loadSoundRecords()] - Loading sound effects...";
-        qWarning() << "*** Sound effect files -> " << total;
+        qDebug() << "[TupScreen::loadSoundRecords()] - Loading sound effects...";
     #endif
 
     for (int i=0; i<total; i++)  {
         SoundResource sound = effectsList.at(i);
         soundRecords << sound;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::loadSoundRecords()] - Audio loaded! -> " << sound.path;
+        #endif
         soundPlayer << new QMediaPlayer();
     }
 
     #ifdef TUP_DEBUG
-        qWarning() << "*** Sound items total -> " << soundRecords.size();
+        qDebug() << "*** Sound items total -> " << soundRecords.size();
+        qDebug() << "---";
     #endif
 }
 
@@ -856,4 +882,34 @@ void TupScreen::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event)
 
     emit activePause();
+}
+
+bool TupScreen::removeSoundTrack(const QString &soundKey)
+{
+    int size = soundRecords.count();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::removeSoundTrack()] - soundKey -> " << soundKey;
+        qDebug() << "[TupScreen::removeSoundTrack()] - sounds list size -> " << size;
+    #endif
+
+    for (int i=0; i<size; i++) {
+        SoundResource soundRecord = soundRecords.at(i);
+        if (soundKey.compare(soundRecord.key) == 0) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupScreen::removeSoundTrack()] - "
+                            "Found! Sound resource path -> " << soundRecord.path;
+            #endif
+
+            soundRecords.takeAt(i);
+            QMediaPlayer *player = soundPlayer.takeAt(i);
+            player->stop();
+            player->setMedia(QMediaContent());
+            delete player;
+            player = nullptr;
+
+            return true;
+        }
+    }
+
+    return false;
 }

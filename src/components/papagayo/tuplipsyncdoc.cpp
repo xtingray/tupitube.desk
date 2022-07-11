@@ -911,6 +911,10 @@ TupLipsyncDoc::~TupLipsyncDoc()
 
 void TupLipsyncDoc::resetDocument()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::resetDocument()]";
+    #endif
+
     if (audioPlayer) {
         audioPlayer->stop();
         audioPlayer->setMedia(QMediaContent());

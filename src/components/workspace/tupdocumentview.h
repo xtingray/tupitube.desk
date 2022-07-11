@@ -212,6 +212,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void fillToolEnabled();
         void projectHasChanged();
         void imagePostRequested(const QString &);
+        // void audioRemoved();
 
     private:
         void setupDrawActions();

@@ -222,10 +222,15 @@ bool TupLibraryFolder::removeObject(const QString &key, bool absolute)
             if (absolute) {
                 QFileInfo finfo(path);
                 if (finfo.isFile()) {
-                    if (!QFile::remove(path)) {
+                    if (QFile::remove(path)) {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupLibraryFolder::removeObject()] - "
+                                        "Success! Item file has been removed -> " << path;
+                        #endif
+                    } else {
                         #ifdef TUP_DEBUG
                             qWarning() << "[TupLibraryFolder::removeObject()] - "
-                                        "Fatal Error: Can't remove sound file -> " << path;
+                                        "Fatal Error: Can't remove item file -> " << path;
                         #endif
                     }
                 }
@@ -410,6 +415,15 @@ QString TupLibraryFolder::getObjectPath(const QString &objectKey) const
         return object->getDataPath();
 
     return "";
+}
+
+TupLibraryObject::ObjectType TupLibraryFolder::getObjectType(const QString &objectKey)
+{
+    TupLibraryObject *object = getObject(objectKey);
+    if (object)
+        return object->getObjectType();
+
+    return TupLibraryObject::Item;
 }
 
 TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
@@ -769,4 +783,25 @@ TupLibraryObject * TupLibraryFolder::findSoundFile(const QString &folderId)
     }
 
     return nullptr;
+}
+
+void TupLibraryFolder::updateObjectSoundType(const QString &id, SoundType type)
+{
+    TupLibraryObject *object = getObject(id);
+    if (object)
+        object->setSoundType(type);
+}
+
+void TupLibraryFolder::updateSoundFrameToPlay(const QString &id, int frame)
+{
+    TupLibraryObject *object = getObject(id);
+    if (object)
+        object->updateFrameToPlay(frame);
+}
+
+void TupLibraryFolder::registerSoundResource(const QString &id)
+{
+    TupLibraryObject *object = getObject(id);
+    if (object)
+        project->addSoundResource(object);
 }

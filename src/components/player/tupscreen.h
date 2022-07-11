@@ -73,6 +73,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void clearScenesArrays();
         void releaseAudioResources();
         PlayMode getPlaymode();
+        bool removeSoundTrack(const QString &soundKey);
 
     public slots:
         void render();

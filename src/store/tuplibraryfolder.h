@@ -95,6 +95,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         
         TupLibraryObject *getObject(const QString &id) const;
         QString getObjectPath(const QString &objectKey) const;
+        TupLibraryObject::ObjectType getObjectType(const QString &objectKey);
         
         Folders getFolders() const;
         LibraryObjects getObjects() const;
@@ -114,6 +115,9 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
 
         void releaseLipSyncVoices(const QString &soundFile);
         TupLibraryObject * findSoundFile(const QString &folder);
+        void updateObjectSoundType(const QString &id, SoundType type);
+        void updateSoundFrameToPlay(const QString &id, int frame);
+        void registerSoundResource(const QString &id);
 
     public:
         virtual void fromXml(const QString &xml);
