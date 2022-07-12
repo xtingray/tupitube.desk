@@ -376,7 +376,6 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
-
                      display->setSoundParams(object);
                      display->showSoundPlayer();
                    }
@@ -1591,7 +1590,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
              int index = id.lastIndexOf(".");
              QString name = id.mid(0, index);
              QString extension = id.mid(index + 1, id.length() - index).toUpper();
-             TupLibraryObject *obj = library->getObject(id);
+             TupLibraryObject *object = library->getObject(id);
 
              if (index < 0)
                  extension = "TOBJ";
@@ -1607,12 +1606,12 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
              item->setText(3, id);
              item->setFlags(item->flags() | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled);
 
-             if (obj) {
-                 switch (obj->getObjectType()) {
+             if (object) {
+                 switch (object->getObjectType()) {
                      case TupLibraryObject::Item:
                        {
-                         if (obj->getItemType() != TupLibraryObject::Text && obj->getItemType() != TupLibraryObject::Path)
-                             nativeMap[id] = TupLibraryObject::generateImage(obj->toString(), width());
+                         if (object->getItemType() != TupLibraryObject::Text && object->getItemType() != TupLibraryObject::Path)
+                             nativeMap[id] = TupLibraryObject::generateImage(object->toString(), width());
 
                          item->setIcon(0, QIcon(THEME_DIR + "icons/drawing_object.png"));
                          libraryTree->setCurrentItem(item);
@@ -2075,7 +2074,8 @@ void TupLibraryWidget::updateItem(const QString &name, const QString &extension,
             previewItem(lastItemEdited);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - Fatal Error: Couldn't reload item from Library!";
+            qDebug() << "[TupLibraryWidget::updateItemFromSaveAction()] - "
+                        "Fatal Error: Couldn't reload item from Library!";
         #endif
     }
 }
@@ -2255,7 +2255,6 @@ void TupLibraryWidget::updateSoundTiming(int frame)
                               "Warning: Can't update audio object -> " << currentSound->getSymbolName();
             #endif
         }
-
         emit soundUpdated();
     }
 }
