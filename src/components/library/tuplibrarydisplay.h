@@ -64,7 +64,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void showDisplay();
         void showSoundPlayer();
         bool isSoundPanelVisible();
-        void setSoundParams(TupLibraryObject *sound);
+        void setSoundParams(SoundResource params);
         void stopSoundPlayer();     
         QString getSoundID() const;
         void updateSoundInitFrame(int frame);

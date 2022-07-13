@@ -64,7 +64,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         ~TupSoundPlayer();
 
         QSize sizeHint() const;
-        void setSoundParams(TupLibraryObject *sound);
+        void setSoundParams(SoundResource params);
         void stopFile();
         bool isPlaying();
         void reset();
@@ -88,8 +88,9 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void muteAction();
 
     private:
+        QList<QMediaPlayer *> soundPlayer;
+
         QLabel *frameLabel;
-        QMediaPlayer *player;
         QSlider *slider;
         QLabel *timer;
         TImageButton *playButton;

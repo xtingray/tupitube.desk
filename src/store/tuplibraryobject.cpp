@@ -138,6 +138,18 @@ void TupLibraryObject::setSoundType(SoundType type)
     soundType = type;
 }
 
+SoundResource TupLibraryObject::getSoundResourceParams()
+{
+    SoundResource params;
+    params.key = symbolName;
+    params.frame = playAt;
+    params.path = dataPath;
+    params.muted = mute;
+    params.type = soundType;
+
+    return params;
+}
+
 void TupLibraryObject::setSymbolName(const QString &name)
 {
     symbolName = name;

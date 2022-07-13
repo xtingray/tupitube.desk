@@ -84,7 +84,7 @@ void TupLibraryDisplay::resetSoundPlayer()
         qDebug() << "[TupLibraryDisplay::resetSoundPlayer()]";
     #endif
 
-    soundPlayer->resetMediaPlayer();
+    soundPlayer->reset();
 }
 
 void TupLibraryDisplay::render(QGraphicsItem *item)
@@ -113,9 +113,9 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(TupLibraryObject *sound)
+void TupLibraryDisplay::setSoundParams(SoundResource params)
 {
-    soundPlayer->setSoundParams(sound);
+    soundPlayer->setSoundParams(params);
 }
 
 void TupLibraryDisplay::showSoundPlayer()
@@ -128,7 +128,7 @@ void TupLibraryDisplay::showSoundPlayer()
 
 void TupLibraryDisplay::stopSoundPlayer()
 {
-    if (soundPlayer->isVisible()) {
+    if (soundPlayer) {
         if (soundPlayer->isPlaying())
             soundPlayer->stopFile();
     }

@@ -51,10 +51,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     totalTime = "00:00";
     playing = false;
     loop = false;
-    player = new QMediaPlayer;
-    connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
-    connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
-    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
     frameWidget = new QWidget;
 
@@ -136,34 +132,44 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundParams(TupLibraryObject *objectSound)
+void TupSoundPlayer::setSoundParams(SoundResource params)
 {
-    url = objectSound->getDataPath();
+    soundID = params.key;
+    url = params.path;
 
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << objectSound->getSoundType();
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << objectSound->frameToPlay();
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << objectSound->isMuted();
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << params.type;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << params.frame;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << params.muted;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url -> " << url;
         qDebug() << "---";
     #endif
 
-    disconnect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
-    disconnect(player, SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
-    disconnect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+    if (!soundPlayer.isEmpty()) {
+        while(!soundPlayer.isEmpty()) {
+            disconnect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+            disconnect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+            disconnect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
-    player->stop();
-    player = new QMediaPlayer;
-    player->setMedia(QUrl::fromLocalFile(url));
-    connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
-    connect(player, SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
-    connect(player, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+            QMediaPlayer *player = soundPlayer.takeFirst();
+            player->stop();
+            player->setMedia(QMediaContent());
+            delete player;
+            player = nullptr;
+        }
+    }
 
-    soundID = objectSound->getSymbolName();
-    enableLipSyncInterface(objectSound->getSoundType(), objectSound->frameToPlay());
+    soundPlayer << new QMediaPlayer();
+    soundPlayer.at(0)->setMedia(QUrl::fromLocalFile(url));
 
-    mute = objectSound->isMuted();
+    connect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
+    connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+    connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+
+    enableLipSyncInterface(params.type, params.frame);
+
+    mute = params.muted;
     if (mute) {
         muteButton->setToolTip(tr("Unmute"));
         playButton->setEnabled(false);
@@ -173,6 +179,11 @@ void TupSoundPlayer::setSoundParams(TupLibraryObject *objectSound)
 
 void TupSoundPlayer::enableLipSyncInterface(SoundType type, int frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - type -> " << type;
+        qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - frame -> " << frame;
+    #endif
+
     if (type != Lipsync) {
         frameBox->setVisible(true);
         frameLabel->setText(tr("Play at frame:") + " ");
@@ -187,6 +198,10 @@ void TupSoundPlayer::enableLipSyncInterface(SoundType type, int frame)
 
 void TupSoundPlayer::playFile()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::playFile()]";
+    #endif
+
     if (!playing)
         startPlayer();
     else
@@ -201,7 +216,6 @@ void TupSoundPlayer::startPlayer()
 
     playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
     playing = true;
-    player->setVolume(60);
 
     QString initTime = "00:00";
     if (duration > 3600)
@@ -209,18 +223,28 @@ void TupSoundPlayer::startPlayer()
     initTime = initTime + " / " + totalTime;
     timer->setText(initTime);
 
-    player->play();
+    soundPlayer.at(0)->setVolume(60);
+    soundPlayer.at(0)->play();
 }
 
 void TupSoundPlayer::stopFile()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::stopFile()]";
+    #endif
+
     playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
     playing = false;
-    player->pause();
+
+    soundPlayer.at(0)->pause();
 }
 
 void TupSoundPlayer::updateLoopState()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::updateLoopState()]";
+    #endif
+
     if (loopBox->isChecked())
         loop = true;
     else
@@ -229,6 +253,10 @@ void TupSoundPlayer::updateLoopState()
 
 void TupSoundPlayer::positionChanged(qint64 value)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::positionChanged()]";
+    #endif
+
     qint64 currentInfo = value / 1000;
     slider->setValue(static_cast<int>(currentInfo));
     QString time;
@@ -246,6 +274,10 @@ void TupSoundPlayer::positionChanged(qint64 value)
 
 void TupSoundPlayer::durationChanged(qint64 value)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::durationChanged()]";
+    #endif
+
     duration = value/1000;
     slider->setMinimum(0);
     slider->setMaximum(static_cast<int>(duration));
@@ -279,11 +311,19 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
 
 void TupSoundPlayer::updateSoundPos(int pos)
 {
-    player->setPosition(pos*1000);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::updateSoundPos()] - pos -> " << pos;
+    #endif
+
+    soundPlayer.at(0)->setPosition(pos*1000);
 }
 
 bool TupSoundPlayer::isPlaying()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::isPlaying()]";
+    #endif
+
     return playing;
 }
 
@@ -293,11 +333,11 @@ void TupSoundPlayer::reset()
         qDebug() << "[TupSoundPlayer::reset()]";
     #endif
 
-    resetMediaPlayer();
+    hide();
 
     loop = false;
     loopBox->setChecked(false);
-    hide();
+    resetMediaPlayer();
 }
 
 void TupSoundPlayer::resetMediaPlayer()
@@ -306,13 +346,23 @@ void TupSoundPlayer::resetMediaPlayer()
         qDebug() << "[TupSoundPlayer::resetMediaPlayer()]";
     #endif
 
-    player->stop();
-    player->setMedia(QMediaContent());
-    player = new QMediaPlayer;
+    if (!soundPlayer.isEmpty()) {
+        while(!soundPlayer.isEmpty()) {
+            QMediaPlayer *player = soundPlayer.takeFirst();
+            player->stop();
+            player->setMedia(QMediaContent());
+            delete player;
+            player = nullptr;
+        }
+    }
 }
 
 void TupSoundPlayer::muteAction()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::muteAction()]";
+    #endif
+
     QString img("icons/mute.png");
     if (mute) {
         mute = false;
@@ -333,10 +383,18 @@ void TupSoundPlayer::muteAction()
 
 QString TupSoundPlayer::getSoundID() const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::getSoundID()]";
+    #endif
+
     return soundID;
 }
 
 void TupSoundPlayer::updateInitFrame(int frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::updateInitFrame()] - frame -> " << frame;
+    #endif
+
     frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
 }
