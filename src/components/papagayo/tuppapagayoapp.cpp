@@ -1412,11 +1412,9 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
-                                // document->resetDocument();
-
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
-                                                "Adding sound file into library again -> " << soundKey;
+                                                "Adding sound file into library again -> " << soundKey << " | folder -> " << folderName;
                                 #endif
 
                                 request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Audio, TupProject::FRAMES_MODE,
