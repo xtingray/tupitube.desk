@@ -1285,8 +1285,6 @@ bool TupPapagayoApp::saveLipsyncRecord()
         qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mode -> " << mode;
     #endif
 
-    // emit audioRemoved();
-
     if (!QDir(pgoFolderPath).exists()) {
         if (!QDir().mkpath(pgoFolderPath)) {
             #ifdef TUP_DEBUG
@@ -1412,11 +1410,9 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     }
                                 }
 
-                                // document->resetDocument();
-
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
-                                                "Adding sound file into library again -> " << soundKey;
+                                                "Adding sound file into library again -> " << soundKey << " | folder -> " << folderName;
                                 #endif
 
                                 request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, soundKey, TupLibraryObject::Audio, TupProject::FRAMES_MODE,
