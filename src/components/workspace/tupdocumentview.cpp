@@ -2677,7 +2677,8 @@ void TupDocumentView::launchLipsyncModule(PapagayoAppMode mode, const QString &s
         TupPapagayoApp *papagayoApp = new TupPapagayoApp(mode, project, soundFile, getContextIndexes(), this);
         connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
                 this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-        // connect(papagayoApp, SIGNAL(audioRemoved()), this, SIGNAL(audioRemoved()));
+        connect(papagayoApp, SIGNAL(soundRemoved(ModuleSource, const QString &)),
+                this, SIGNAL(soundRemoved(ModuleSource, const QString &)));
 
         /* SQA: This connection doesn't work on Windows
         connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);

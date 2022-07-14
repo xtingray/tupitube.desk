@@ -1285,8 +1285,6 @@ bool TupPapagayoApp::saveLipsyncRecord()
         qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - mode -> " << mode;
     #endif
 
-    // emit audioRemoved();
-
     if (!QDir(pgoFolderPath).exists()) {
         if (!QDir().mkpath(pgoFolderPath)) {
             #ifdef TUP_DEBUG
@@ -1374,7 +1372,8 @@ bool TupPapagayoApp::saveLipsyncRecord()
 
                             // Adding lip-sync sound file
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Processing audio file -> " << soundFilePath;
+                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                            "Processing audio file -> " << soundFilePath;
                             #endif
 
                             document->resetDocument();
@@ -1386,6 +1385,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 QByteArray data = soundFile.readAll();
                                 soundFile.close();
                                 if (mode == AudioFromLibrary) {
+                                    emit soundRemoved(PapagayoApp, soundKey); // Releasing audio from library and player
                                     #ifdef TUP_DEBUG
                                         qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
                                                     "Removing existing audio record from library -> " << soundKey;
@@ -1598,6 +1598,8 @@ bool TupPapagayoApp::updateLipsyncRecord()
         qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                     "Removing lipsync item -> " << oldLipsyncName;
     #endif
+
+    emit soundRemoved(PapagayoApp, soundKey); // Releasing audio from library and player
 
     // Removing lip sync record
     TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,

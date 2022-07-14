@@ -342,8 +342,9 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
-        connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));
-        // connect(animationTab, SIGNAL(audioRemoved()), m_libraryWidget, SLOT(resetSoundPlayer()));
+        connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));        
+        connect(animationTab, SIGNAL(soundRemoved(ModuleSource, const QString &)),
+                this, SLOT(releaseSoundRecord(ModuleSource, const QString &)));
 
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));
@@ -1163,17 +1164,21 @@ void TupMainWindow::updateSoundsPath()
         cameraWidget->loadSoundRecords();
 }
 
-void TupMainWindow::releaseSoundRecord(const QString &soundKey)
+void TupMainWindow::releaseSoundRecord(ModuleSource source, const QString &soundKey)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupMainWindow::releaseSoundRecord()] - soundKey -> " << soundKey;
     #endif
 
+    if (m_libraryWidget) {
+        if (source == Library)
+            m_libraryWidget->removeSoundItem(soundKey);
+        else
+            m_libraryWidget->resetSoundPlayer();
+    }
+
     if (cameraWidget)
         cameraWidget->removeSoundTrack(soundKey);
-
-    if (m_libraryWidget)
-        m_libraryWidget->removeSoundItem(soundKey);
 }
 
 void TupMainWindow::openRecentProject()

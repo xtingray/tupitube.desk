@@ -489,7 +489,7 @@ void TupLibraryWidget::removeCurrentItem()
 
     if (type == TupLibraryObject::Audio) {
         resetSoundPlayer();
-        emit soundRemoved(objectKey);
+        emit soundRemoved(Library, objectKey);
     } else  {
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, objectKey, type);
         emit requestTriggered(&request);

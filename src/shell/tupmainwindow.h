@@ -209,7 +209,7 @@ class TupMainWindow : public TabbedMainWindow
         void requestSaveAction();
 
         void updateSoundsPath();
-        void releaseSoundRecord(const QString &soundKey);
+        void releaseSoundRecord(ModuleSource source, const QString &soundKey);
 
     private:
         QString appTitle;

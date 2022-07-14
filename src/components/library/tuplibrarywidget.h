@@ -159,7 +159,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void requestCurrentGraphic();
         void soundUpdated();
         void lipsyncModuleCalled(PapagayoAppMode mode, const QString &filePath);
-        void soundRemoved(const QString &objectKey);
+        void soundRemoved(ModuleSource source, const QString &objectKey);
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);
