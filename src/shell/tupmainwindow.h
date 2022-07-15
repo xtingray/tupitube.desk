@@ -147,6 +147,8 @@ class TupMainWindow : public TabbedMainWindow
         void exportProject();
         void postProject();
         void postFrame(const QString &imagePath);
+        void releaseSoundRecord(ModuleSource source, const QString &soundKey);
+        void releaseAudioResources();
 
     private slots:
         void enableUpdatesDialog();
@@ -209,7 +211,6 @@ class TupMainWindow : public TabbedMainWindow
         void requestSaveAction();
 
         void updateSoundsPath();
-        void releaseSoundRecord(ModuleSource source, const QString &soundKey);
 
     private:
         QString appTitle;

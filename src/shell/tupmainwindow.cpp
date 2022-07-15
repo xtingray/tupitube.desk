@@ -1181,6 +1181,19 @@ void TupMainWindow::releaseSoundRecord(ModuleSource source, const QString &sound
         cameraWidget->removeSoundTrack(soundKey);
 }
 
+void TupMainWindow::releaseAudioResources()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::releaseAudioResources()]";
+    #endif
+
+    if (m_libraryWidget)
+        m_libraryWidget->resetSoundPlayer();
+
+    if (cameraWidget)
+        cameraWidget->releaseAudioResources();
+}
+
 void TupMainWindow::openRecentProject()
 {
     QAction *action = qobject_cast<QAction *>(sender());

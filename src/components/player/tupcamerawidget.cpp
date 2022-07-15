@@ -665,3 +665,8 @@ bool TupCameraWidget::removeSoundTrack(const QString &soundKey)
 {
     return previewScreen->removeSoundTrack(soundKey);
 }
+
+void TupCameraWidget::releaseAudioResources()
+{
+    previewScreen->releaseAudioResources();
+}

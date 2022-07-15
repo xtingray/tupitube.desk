@@ -805,3 +805,21 @@ void TupLibraryFolder::registerSoundResource(const QString &id)
     if (object)
         project->addSoundResource(object);
 }
+
+bool TupLibraryFolder::folderHasAudioObjects(const QString &folderName)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::folderHasAudioObjects()] - Folder -> " << folderName;
+    #endif
+
+    TupLibraryFolder *folder = getFolder(folderName);
+    if (folder) {
+        LibraryObjects objects = folder->getObjects();
+        foreach (TupLibraryObject *object, objects) {
+            if (object->getObjectType() == TupLibraryObject::Audio)
+                return true;
+        }
+    }
+
+    return false;
+}

@@ -491,6 +491,15 @@ void TupLibraryWidget::removeCurrentItem()
         resetSoundPlayer();
         emit soundRemoved(Library, objectKey);
     } else  {
+        if (type == TupLibraryObject::Folder) {
+            if (library->folderHasAudioObjects(objectKey)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryWidget::removeCurrentItem()] - Folder has audio items! -> " << objectKey;
+                #endif
+                emit folderWithAudiosRemoved();
+            }
+        }
+
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove, objectKey, type);
         emit requestTriggered(&request);
     }

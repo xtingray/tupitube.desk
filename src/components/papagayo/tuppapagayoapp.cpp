@@ -1597,6 +1597,9 @@ bool TupPapagayoApp::updateLipsyncRecord()
                     "Removing lipsync item -> " << oldLipsyncName;
     #endif
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::updateLipsyncRecord()] - Releasing audio object -> " << soundKey;
+    #endif
     emit soundRemoved(PapagayoApp, soundKey); // Releasing audio from library and player
 
     // Removing lip sync record
