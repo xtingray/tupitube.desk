@@ -28,7 +28,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         TupMicManager();
         ~TupMicManager();
 
-        QString getRecordPath() const;
+        QString getRecordPath();
         bool isRecording();
         void cancelRecording();
 
@@ -57,6 +57,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         void setupUI();
         void setConnections();
         void clearMicLevels();
+        void resetMediaPlayer();
 
         QAudioRecorder *micRecorder;
         QAudioProbe *micProbe;
@@ -80,7 +81,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QPushButton *playButton;
         QPushButton *discardButton;
 
-        QMediaPlayer *player;
+        QList<QMediaPlayer *> player;
+        // QMediaPlayer *player;
         QTimer *timer;
         qreal secCounter;
         qreal audioDuration;
