@@ -325,7 +325,8 @@ void TupMicManager::toggleRecord()
         QString extension = ".mp3";
 
         settings.setCodec(codec);
-        settings.setSampleRate(0);
+        // settings.setSampleRate(0);
+        settings.setSampleRate(44100); // Standard 44.1kHz
         settings.setBitRate(128000);
         settings.setChannelCount(1);
         settings.setQuality(QMultimedia::VeryHighQuality);
