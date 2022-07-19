@@ -260,6 +260,7 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
                 QString extension = ".mp3";
             #endif
             */
+
             QString extension = ".mp3";
             recording = false;
             QString filename = CACHE_DIR + nameInput->text() + extension;
