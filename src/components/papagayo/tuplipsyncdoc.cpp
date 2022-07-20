@@ -679,9 +679,13 @@ void LipsyncVoice::runBreakdown(QString lang, TupLipsyncDictionary *lipsyncDicti
             currentFrame += framesPerPhoneme;
         } // for k
 
-        if (word->phonemesSize() == 0) { // deal with unknown words
+        if (word->phonemesSize() == 0) { // deal with unknown words (without phonemes)
             word->setStartFrame(currentFrame);
-            word->setEndFrame(currentFrame + word->length());
+            if (j == phrase->wordsSize() - 1) { // Last word
+                word->setEndFrame(audioDuration);
+            } else {
+                word->setEndFrame(currentFrame + word->length());
+            }
             currentFrame += word->length();
         } else {
             word->setStartFrame(word->getPhonemeAt(0)->getFrame());
@@ -690,7 +694,11 @@ void LipsyncVoice::runBreakdown(QString lang, TupLipsyncDictionary *lipsyncDicti
     } // for j
 
     phrase->setStartFrame(phrase->getWordAt(0)->getStartFrame());
-    phrase->setEndFrame(phrase->getLastWord()->getEndFrame());
+
+    int lastFrame = phrase->getLastWord()->getEndFrame();
+    if (lastFrame < audioDuration)
+        lastFrame = audioDuration;
+    phrase->setEndFrame(lastFrame);
 }
 
 void LipsyncVoice::repositionPhrase(LipsyncPhrase *phrase, int32 audioDuration)

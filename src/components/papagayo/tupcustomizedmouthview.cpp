@@ -52,27 +52,39 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
     QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
     if (imagesList.size() > 0) {
         if (imagesList.count() == MOUTHS_PACKAGE_SIZE) { // Mouths set always contains 10 figures
-            QString firstImage = imagesList.at(0);
-            int dot = firstImage.lastIndexOf(".");
-            QString extension = firstImage.mid(dot);
-
-            for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
-                QString path = folderPath + "/" + dictionary->getPhonemeAt(i) + extension;
-                if (QFile::exists(path)) {
-                    mouths.insert(dictionary->getPhonemeAt(i), new QImage(path));
-                } else {
-                    path = folderPath + "/" + dictionary->getPhonemeAt(i).toLower() + extension;
-                    if (QFile::exists(path)) {
-                        mouths.insert(dictionary->getPhonemeAt(i), new QImage(path));
-                    } else {
-                        TOsd::self()->display(TOsd::Error, tr("Mouth images are missing!"));
-                        #ifdef TUP_DEBUG
-                            qDebug() << "[TupCustomizedMouthView::loadImages()] - "
-                                        "Fatal Error: Mouth image is missing -> " << path;
-                        #endif
-                    }
+            for (int32 i = 0; i < MOUTHS_PACKAGE_SIZE; i++) {
+                QString filename = imagesList.at(i);
+                int dot = filename.lastIndexOf(".");
+                QString extension = filename.mid(dot);
+                QString name = filename.left(dot);
+                QString nameLower = filename.left(dot).toLower();
+                bool found = false;
+                for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
+                     QString phoneme = dictionary->getPhonemeAt(i);
+                     QString phonemeLower = phoneme.toLower();
+                     if (nameLower.compare(phonemeLower) == 0) {
+                         QString path = folderPath + "/" + name + extension;
+                         mouths.insert(phoneme, new QImage(path));
+                         found = true;
+                         break;
+                     }
+                }
+                if (!found) {
+                    TOsd::self()->display(TOsd::Error, tr("Mouth images are missing!"));
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupCustomizedMouthView::loadImages()] - "
+                                    "Fatal Error: Image file is missing -> " << filename;
+                    #endif
+                    return;
                 }
             }
+
+            TOsd::self()->display(TOsd::Info, tr("Customized mouths are loaded!"));
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupCustomizedMouthView::loadImages()] - "
+                            "Customized mouths were loaded successfully!";
+            #endif
+
             assetsLoaded = true;
             imagesPath = folderPath;
             update();

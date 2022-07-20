@@ -1125,16 +1125,22 @@ void TupPapagayoApp::openImagesDialog()
         QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
         if (imagesList.size() > 0) {
             if (imagesList.count() == MOUTHS_PACKAGE_SIZE) { // Mouths set always contains 10 figures
-                QString firstImage = imagesList.at(0);
-                int dot = firstImage.lastIndexOf(".");
-                QString extension = firstImage.mid(dot);
-                for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
-                    QString image = dictionary->getPhonemeAt(i) + extension;
-                    QString path = dirPath + "/" + image;
-                    if (!QFile::exists(path)) {
+                for (int32 i = 0; i < MOUTHS_PACKAGE_SIZE; i++) {
+                    QString filename = imagesList.at(i);
+                    int dot = filename.lastIndexOf(".");
+                    QString name = filename.left(dot).toLower();
+                    bool found = false;
+                    for (int32 i = 0; i < dictionary->phonemesListSize(); i++) {
+                         QString phoneme = dictionary->getPhonemeAt(i).toLower();
+                         if (name.compare(phoneme) == 0) {
+                             found = true;
+                             break;
+                         }
+                    }
+                    if (!found) {
                         TOsd::self()->display(TOsd::Error, tr("Mouth image is missing!"));
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupPapagayoApp::openImagesDialog()] - "
+                            qWarning() << "[TupPapagayoApp::openImagesDialog()] - "
                                         "Fatal Error: Image file is missing -> " << path;
                         #endif
                         return;
