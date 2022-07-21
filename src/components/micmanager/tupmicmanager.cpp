@@ -329,7 +329,7 @@ void TupMicManager::toggleRecord()
         // settings.setSampleRate(0);
         settings.setSampleRate(44100); // Standard 44.1kHz
         settings.setBitRate(128000);
-        settings.setChannelCount(1);
+        settings.setChannelCount(2);
         settings.setQuality(QMultimedia::VeryHighQuality);
         settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 

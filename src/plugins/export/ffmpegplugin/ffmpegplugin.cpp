@@ -269,7 +269,6 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
                 #endif
                 return false;
             }
-
         }
     }
 

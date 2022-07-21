@@ -24,7 +24,7 @@
     </message>
     <message>
         <source>Select object</source>
-        <translation>選擇物件</translation>
+        <translation>選擇對象</translation>
     </message>
     <message>
         <source>Set Properties</source>
@@ -32,15 +32,15 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>White</source>
@@ -100,7 +100,7 @@
     </message>
     <message>
         <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
+        <translation>至少要選擇一個對象!口型</translation>
     </message>
     <message>
         <source>You must set Tween properties first!</source>
@@ -108,7 +108,7 @@
     </message>
     <message>
         <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
+        <translation>先為補間動畫選擇對象!</translation>
     </message>
 </context>
 <context>
@@ -149,7 +149,7 @@
     <name>EyeDropperSettings</name>
     <message>
         <source>Eye Dropper Properties</source>
-        <translation>滴管特性</translation>
+        <translation>滴管屬性</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@
     </message>
     <message>
         <source>Sorry, Groups can&apos;t be filled yet</source>
-        <translation>對不起，群組不能填充。</translation>
+        <translation>對不起，尚未填充組。</translation>
     </message>
     <message>
         <source>Fill Tool</source>
@@ -183,7 +183,7 @@
     </message>
     <message>
         <source>Sorry, only native objects can be filled</source>
-        <translation>對不起，只能填充原生物件</translation>
+        <translation>對不起，只能填充本地對象</translation>
     </message>
 </context>
 <context>
@@ -218,7 +218,7 @@
     </message>
     <message>
         <source>Align line to horizontal/vertical axis</source>
-        <translation>對齊水平/垂直軸線</translation>
+        <translation>將線與水准/垂直軸對齊</translation>
     </message>
     <message>
         <source>Ctrl + Left Mouse Button</source>
@@ -226,7 +226,7 @@
     </message>
     <message>
         <source>Set width/height proportional dimensions</source>
-        <translation>設定寬度/高度比例的尺寸</translation>
+        <translation>設定寬度/高度比例尺寸</translation>
     </message>
 </context>
 <context>
@@ -333,11 +333,11 @@
     </message>
     <message>
         <source>Open LipSync Creator</source>
-        <translation>打開 LipSync Creator</translation>
+        <translation>打開唇型同步創建工具</translation>
     </message>
     <message>
         <source>Edit Mouth</source>
-        <translation>編輯嘴巴</translation>
+        <translation>編輯口型</translation>
     </message>
     <message>
         <source>Are you sure you want to delete this lip-sync record?</source>
@@ -360,7 +360,7 @@
     </message>
     <message>
         <source>Select Objects</source>
-        <translation>選擇物件</translation>
+        <translation>選擇對象</translation>
     </message>
     <message>
         <source>Set Path Properties</source>
@@ -368,15 +368,15 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>Save Tween</source>
@@ -388,11 +388,11 @@
     </message>
     <message>
         <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
+        <translation>先為補間動畫選擇對象!</translation>
     </message>
     <message>
         <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
+        <translation>必須至少選擇一個對象!</translation>
     </message>
     <message>
         <source>Update Tween</source>
@@ -419,23 +419,23 @@
     </message>
     <message>
         <source>Mouth Sample Pack No 1</source>
-        <translation>口腔樣本包 1</translation>
+        <translation>口型樣本套件 1</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 2</source>
-        <translation>口腔樣本包 2</translation>
+        <translation>口型樣本套件 2</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 3</source>
-        <translation>口腔樣本包 3</translation>
+        <translation>口型樣本套件 3</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 4</source>
-        <translation>口腔樣本包 4</translation>
+        <translation>口型樣本套件 4</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 5</source>
-        <translation>口腔樣本包 5</translation>
+        <translation>口型樣本套件 5</translation>
     </message>
     <message>
         <source>Close</source>
@@ -454,7 +454,7 @@
     </message>
     <message>
         <source>Nodes Selection</source>
-        <translation>選擇節點</translation>
+        <translation>節點選擇</translation>
     </message>
     <message>
         <source>Images have no nodes!</source>
@@ -462,7 +462,7 @@
     </message>
     <message>
         <source>SVG objects cannot be edited!</source>
-        <translation>SVG物件無法編輯</translation>
+        <translation>無法編輯SVG對象</translation>
     </message>
 </context>
 <context>
@@ -477,7 +477,7 @@
     </message>
     <message>
         <source>Select object</source>
-        <translation>選擇物件</translation>
+        <translation>選擇對象</translation>
     </message>
     <message>
         <source>Set Properties</source>
@@ -485,15 +485,15 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>Initial Opacity</source>
@@ -533,7 +533,7 @@
     </message>
     <message>
         <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
+        <translation>至少要選擇一個對象!口型</translation>
     </message>
     <message>
         <source>You must set Tween properties first!</source>
@@ -541,7 +541,7 @@
     </message>
     <message>
         <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
+        <translation>先為補間動畫選擇對象!</translation>
     </message>
 </context>
 <context>
@@ -552,7 +552,7 @@
     </message>
     <message>
         <source>Mouth Samples</source>
-        <translation>口腔樣本</translation>
+        <translation>口型樣本</translation>
     </message>
 </context>
 <context>
@@ -563,7 +563,7 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>X</source>
@@ -579,11 +579,11 @@
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>Current Phoneme</source>
@@ -599,7 +599,7 @@
     </message>
     <message>
         <source>Mouth Scale</source>
-        <translation>口腔秤</translation>
+        <translation>口型秤</translation>
     </message>
     <message>
         <source>Proportion</source>
@@ -607,7 +607,7 @@
     </message>
     <message>
         <source>Reset Mouth</source>
-        <translation>重置嘴巴</translation>
+        <translation>重置口型</translation>
     </message>
     <message>
         <source>Mouth Position</source>
@@ -618,7 +618,7 @@
     <name>PapagayoTool</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>lipsync:</source>
@@ -693,11 +693,11 @@
     </message>
     <message>
         <source>Re-launch TupiTube</source>
-        <translation>重啟TupiTubei</translation>
+        <translation>重啟绘幻想</translation>
     </message>
     <message>
         <source>Well, TupiTube has crashed...</source>
-        <translation>啊,TupiTube當機了……</translation>
+        <translation>啊,绘幻想當機了……</translation>
     </message>
     <message>
         <source>This is a general failure</source>
@@ -709,7 +709,7 @@
     </message>
     <message>
         <source>Animation created using TupiTube.com</source>
-        <translation>使用TupiTube.com創建的動畫</translation>
+        <translation>使用muvizu.cn創建的動畫</translation>
     </message>
 </context>
 <context>
@@ -846,7 +846,7 @@
     </message>
     <message>
         <source>&amp;Import Image to Library</source>
-        <translation>影像匯入到函式庫(&amp;I)</translation>
+        <translation>影像輸入到函式庫(&amp;I)</translation>
     </message>
     <message>
         <source>I</source>
@@ -854,7 +854,7 @@
     </message>
     <message>
         <source>Import Image to Library</source>
-        <translation>影像匯入到函式庫</translation>
+        <translation>影像輸入到函式庫</translation>
     </message>
 </context>
 <context>
@@ -869,7 +869,7 @@
     </message>
     <message>
         <source>Select object</source>
-        <translation>選擇物件</translation>
+        <translation>選擇對象</translation>
     </message>
     <message>
         <source>Set Properties</source>
@@ -877,15 +877,15 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>Continuous</source>
@@ -901,7 +901,7 @@
     </message>
     <message>
         <source>Speed (Degrees/Frame)</source>
-        <translation>速度(度/影格)</translation>
+        <translation>速度(度/幀)</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -953,7 +953,7 @@
     </message>
     <message>
         <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
+        <translation>至少要選擇一個對象!口型</translation>
     </message>
     <message>
         <source>You must set Tween properties first!</source>
@@ -969,7 +969,7 @@
     </message>
     <message>
         <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
+        <translation>先為補間動畫選擇對象!</translation>
     </message>
 </context>
 <context>
@@ -984,7 +984,7 @@
     </message>
     <message>
         <source>Select object</source>
-        <translation>選擇物件</translation>
+        <translation>選擇對象</translation>
     </message>
     <message>
         <source>Set Properties</source>
@@ -992,15 +992,15 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>Width &amp; Height</source>
@@ -1052,7 +1052,7 @@
     </message>
     <message>
         <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
+        <translation>至少要選擇一個對象!口型</translation>
     </message>
     <message>
         <source>You must set Tween properties first!</source>
@@ -1060,7 +1060,7 @@
     </message>
     <message>
         <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
+        <translation>先為補間動畫選擇對象!</translation>
     </message>
 </context>
 <context>
@@ -1107,19 +1107,19 @@
     </message>
     <message>
         <source>Send object to back</source>
-        <translation>物件移至最下層</translation>
+        <translation>對象移至最下層</translation>
     </message>
     <message>
         <source>Send object to back one level</source>
-        <translation>物件向下一層</translation>
+        <translation>對象向下一層</translation>
     </message>
     <message>
         <source>Send object to front</source>
-        <translation>物件移至最上層</translation>
+        <translation>對象移至最上層</translation>
     </message>
     <message>
         <source>Send object to front one level</source>
-        <translation>物件向上一層</translation>
+        <translation>對象向上一層</translation>
     </message>
     <message>
         <source>Group</source>
@@ -1127,11 +1127,11 @@
     </message>
     <message>
         <source>Group Objects</source>
-        <translation>群組物件</translation>
+        <translation>群組對象</translation>
     </message>
     <message>
         <source>Ungroup Objects</source>
-        <translation>解除群組物件</translation>
+        <translation>解除群組對象</translation>
     </message>
     <message>
         <source>Position</source>
@@ -1211,7 +1211,7 @@
     </message>
     <message>
         <source>Paste objects over mouse position</source>
-        <translation>在滑鼠座標貼上物件</translation>
+        <translation>在滑鼠座標貼上對象</translation>
     </message>
     <message>
         <source>Reset Item</source>
@@ -1226,11 +1226,11 @@
     </message>
     <message>
         <source>SVG objects can&apos;t be grouped/ungrouped yet</source>
-        <translation>SVG物件還不能群组/解除群組。</translation>
+        <translation>SVG對象還不能群组/解除群組。</translation>
     </message>
     <message>
         <source>Object Selection</source>
-        <translation>選取物件</translation>
+        <translation>選取對象</translation>
     </message>
 </context>
 <context>
@@ -1245,7 +1245,7 @@
     </message>
     <message>
         <source>Select object</source>
-        <translation>選擇物件</translation>
+        <translation>選擇對象</translation>
     </message>
     <message>
         <source>Set Properties</source>
@@ -1253,15 +1253,15 @@
     </message>
     <message>
         <source>Starting at frame</source>
-        <translation>起始影格</translation>
+        <translation>起始幀</translation>
     </message>
     <message>
         <source>Ending at frame</source>
-        <translation>結束影格</translation>
+        <translation>結束幀</translation>
     </message>
     <message>
         <source>Frames Total</source>
-        <translation>總影格數</translation>
+        <translation>總幀數</translation>
     </message>
     <message>
         <source>Width &amp; Height</source>
@@ -1313,7 +1313,7 @@
     </message>
     <message>
         <source>You must select at least one object!</source>
-        <translation>您至少要選擇一個物件!</translation>
+        <translation>至少要選擇一個對象!口型</translation>
     </message>
     <message>
         <source>You must set Tween properties first!</source>
@@ -1321,7 +1321,7 @@
     </message>
     <message>
         <source>Select objects for Tweening first!</source>
-        <translation>先為補間動畫選擇物件!</translation>
+        <translation>先為補間動畫選擇對象!</translation>
     </message>
 </context>
 <context>
@@ -1339,7 +1339,7 @@
     <name>StepsViewer</name>
     <message>
         <source>Frames</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Interval</source>
@@ -1699,7 +1699,7 @@
     </message>
     <message>
         <source>About TupiTube Desk</source>
-        <translation>關於TupiTube</translation>
+        <translation>關於绘幻想</translation>
     </message>
     <message>
         <source>License Agreement</source>
@@ -1741,7 +1741,7 @@
     </message>
     <message>
         <source>TupiTube Camera Manager</source>
-        <translation>TupiTube相機管理器</translation>
+        <translation>绘幻想相機管理器</translation>
     </message>
     <message>
         <source>Current resolution:</source>
@@ -1854,11 +1854,11 @@
     </message>
     <message>
         <source>Rewind</source>
-        <translation>倒轉</translation>
+        <translation>倒回</translation>
     </message>
     <message>
         <source>Forward</source>
-        <translation>快轉</translation>
+        <translation>快進</translation>
     </message>
 </context>
 <context>
@@ -1944,7 +1944,7 @@
     </message>
     <message>
         <source>Close manager</source>
-        <translation>關閉項目</translation>
+        <translation>關閉管理器</translation>
     </message>
     <message>
         <source>Cameras</source>
@@ -1964,7 +1964,7 @@
     </message>
     <message>
         <source>TupiTube Camera Manager</source>
-        <translation>TupiTube相機管理器</translation>
+        <translation>绘幻想相機管理器</translation>
     </message>
     <message>
         <source>Current resolution:</source>
@@ -2011,7 +2011,7 @@
     </message>
     <message>
         <source>Export Project as Video File</source>
-        <translation>匯出專案為視訊檔</translation>
+        <translation>匯出專案為視訊檔案</translation>
     </message>
 </context>
 <context>
@@ -2030,7 +2030,7 @@
     </message>
     <message>
         <source>Current Frame: </source>
-        <translation>目前影格:</translation>
+        <translation>當前幀:</translation>
     </message>
     <message>
         <source>Duration: </source>
@@ -2057,11 +2057,11 @@
     </message>
     <message>
         <source>Camera not supported error</source>
-        <translation>相機不支援的錯誤</translation>
+        <translation>不支持相機的錯誤</translation>
     </message>
     <message>
         <source>Camera service missing error</source>
-        <translation>相機服務找不到</translation>
+        <translation>找不到相機服務</translation>
     </message>
     <message>
         <source>Camera invalid request error</source>
@@ -2072,7 +2072,7 @@
     <name>TupCanvas</name>
     <message>
         <source>Redo</source>
-        <translation>重作</translation>
+        <translation>重做</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -2096,7 +2096,7 @@
     </message>
     <message>
         <source>Frame Forward</source>
-        <translation>影格前進</translation>
+        <translation>幀前進</translation>
     </message>
     <message>
         <source>Onion Skin Factor</source>
@@ -2116,7 +2116,7 @@
     </message>
     <message>
         <source>Polyline</source>
-        <translation>折線</translation>
+        <translation>多段線</translation>
     </message>
     <message>
         <source>Zoom Out</source>
@@ -2140,7 +2140,7 @@
     </message>
     <message>
         <source>Import a SVG file...</source>
-        <translation>匯入一個SVG檔...</translation>
+        <translation>導入SVG檔案...</translation>
     </message>
     <message>
         <source>Color Palette</source>
@@ -2156,7 +2156,7 @@
     </message>
     <message>
         <source>Frame Backward</source>
-        <translation>影格倒退</translation>
+        <translation>幀倒退</translation>
     </message>
     <message>
         <source>Pen Size</source>
@@ -2191,7 +2191,7 @@
     </message>
     <message>
         <source>Customize Colors Bar</source>
-        <translation>自訂顏色欄</translation>
+        <translation>自定義顏色欄</translation>
     </message>
     <message>
         <source>Reset Colors Bar</source>
@@ -2256,7 +2256,7 @@
     <name>TupConfigurationArea</name>
     <message>
         <source>Cursor here for expand</source>
-        <translation>游標在此展開</translation>
+        <translation>光標在此展開</translation>
     </message>
     <message>
         <source>Properties</source>
@@ -2282,11 +2282,11 @@
     <name>TupCustomizedMouthView</name>
     <message>
         <source>Mouth images are missing!</source>
-        <translation>嘴巴圖片不見了！</translation>
+        <translation>口型圖片不見了！</translation>
     </message>
     <message>
         <source>Mouth images are incomplete!</source>
-        <translation>嘴部圖像不完整！</translation>
+        <translation>口型圖片不完整！</translation>
     </message>
     <message>
         <source>Images directory is empty!</source>
@@ -2325,7 +2325,7 @@
     </message>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>帧</translation>
     </message>
     <message>
         <source>Paste</source>
@@ -2349,7 +2349,7 @@
     </message>
     <message>
         <source>Next Frames</source>
-        <translation>下一影格</translation>
+        <translation>下一帧</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -2377,11 +2377,11 @@
     </message>
     <message>
         <source>Misc Tools</source>
-        <translation>各種工具</translation>
+        <translation>其他工具</translation>
     </message>
     <message>
         <source>Can&apos;t export frame as image</source>
-        <translation>無法將影格存成圖片</translation>
+        <translation>無法將帧动画匯出為影像</translation>
     </message>
     <message>
         <source>Onion Skin</source>
@@ -2389,7 +2389,7 @@
     </message>
     <message>
         <source>Previous Frames</source>
-        <translation>前一影格</translation>
+        <translation>前一幀</translation>
     </message>
     <message>
         <source>Static BG Opacity</source>
@@ -2409,11 +2409,11 @@
     </message>
     <message>
         <source>Export Frame As Image</source>
-        <translation>將影格存成圖片</translation>
+        <translation>匯出成幀影像</translation>
     </message>
     <message>
         <source>Frames Mode</source>
-        <translation>影格模式</translation>
+        <translation>幀模式</translation>
     </message>
     <message>
         <source>Ctrl+Shift+C</source>
@@ -2433,7 +2433,7 @@
     </message>
     <message>
         <source>Frame has been exported successfully</source>
-        <translation>影格匯出成功</translation>
+        <translation>成功匯出幀動畫</translation>
     </message>
     <message>
         <source>Dynamic BG Opacity</source>
@@ -2441,7 +2441,7 @@
     </message>
     <message>
         <source>Export Frame As</source>
-        <translation>匯出影格為</translation>
+        <translation>匯出幀為</translation>
     </message>
     <message>
         <source>Image Sequence</source>
@@ -2481,15 +2481,15 @@
     </message>
     <message>
         <source>Raster Objects</source>
-        <translation>光栅物件</translation>
+        <translation>光栅對象</translation>
     </message>
     <message>
         <source>Image imported successfully</source>
-        <translation>影像已成功匯入</translation>
+        <translation>影像導入成功</translation>
     </message>
     <message>
         <source>Post Frame On TupiTube</source>
-        <translation>在Tupitube裡發佈影格</translation>
+        <translation>在绘幻想裡發佈幀動畫</translation>
     </message>
     <message>
         <source>Ctrl+@</source>
@@ -2512,7 +2512,7 @@
     </message>
     <message>
         <source>Images path can&apos;t be unset! Please, choose one.</source>
-        <translation>影像路徑無法重設！請選擇一個</translation>
+        <translation>影像路徑不能取消設定！ 請選擇一個。</translation>
     </message>
     <message>
         <source>Choose another path</source>
@@ -2524,7 +2524,7 @@
     </message>
     <message>
         <source>Format problem. TupiTube Internal error.</source>
-        <translation>格式問題。TupiTube内部錯誤.</translation>
+        <translation>格式問題。绘幻想内部錯誤。</translation>
     </message>
     <message>
         <source>Fatal Error: Can&apos;t export video</source>
@@ -2532,11 +2532,11 @@
     </message>
     <message>
         <source>File: </source>
-        <translation>檔：</translation>
+        <translation>檔案：</translation>
     </message>
     <message>
         <source>Images name prefix is unset! Please, type a prefix.</source>
-        <translation>尚未設定影像名稱前綴！請輸入前綴</translation>
+        <translation>尚未設定影像名稱前綴！請輸入前綴。</translation>
     </message>
     <message>
         <source>File exists. Overwrite it?</source>
@@ -2548,7 +2548,7 @@
     </message>
     <message>
         <source>Animation path doesn&apos;t exist! Please, choose another.</source>
-        <translation>動畫路徑不存在！請選擇另一個</translation>
+        <translation>動畫路徑不存在！請選擇另一個。</translation>
     </message>
     <message>
         <source>Warning!</source>
@@ -2556,11 +2556,11 @@
     </message>
     <message>
         <source>Animation path can&apos;t be unset! Please, choose one.</source>
-        <translation>動畫路徑不能重設！請選擇一個</translation>
+        <translation>動畫路徑不能取消設定！ 請選擇一個。</translation>
     </message>
     <message>
         <source>Image sequence already exists. Overwrite it?</source>
-        <translation>影像序列已存在。取代？</translation>
+        <translation>影像序列已存在。 覆蓋它？</translation>
     </message>
     <message>
         <source>was saved successful</source>
@@ -2580,7 +2580,7 @@
     </message>
     <message>
         <source>Video file</source>
-        <translation>視訊檔</translation>
+        <translation>視訊檔案</translation>
     </message>
     <message>
         <source>Image Name Prefix: </source>
@@ -2592,7 +2592,7 @@
     </message>
     <message>
         <source>Enable Background Transparency</source>
-        <translation>啟用背景不透明度</translation>
+        <translation>啟用背景透明度</translation>
     </message>
     <message>
         <source>Insufficient permissions. Please, choose another path.</source>
@@ -2612,7 +2612,7 @@
     </message>
     <message>
         <source>Sorry, export attempt failed!</source>
-        <translation>抱歉，導出嘗試失敗！</translation>
+        <translation>抱歉，匯出嘗試失敗！</translation>
     </message>
 </context>
 <context>
@@ -2623,7 +2623,7 @@
     </message>
     <message>
         <source>Export To Video</source>
-        <translation>匯出視訊檔</translation>
+        <translation>匯出視訊</translation>
     </message>
     <message>
         <source>Export To Image Sequence</source>
@@ -2631,7 +2631,7 @@
     </message>
     <message>
         <source>Export To Video File</source>
-        <translation>匯出成視訊檔</translation>
+        <translation>匯出成視訊檔案</translation>
     </message>
     <message>
         <source>Exporting...</source>
@@ -2639,11 +2639,11 @@
     </message>
     <message>
         <source>Post Animation</source>
-        <translation>張貼動畫</translation>
+        <translation>發佈動畫</translation>
     </message>
     <message>
         <source>Posting...</source>
-        <translation>張貼中...</translation>
+        <translation>發佈中...</translation>
     </message>
     <message>
         <source>Post Image</source>
@@ -2678,7 +2678,7 @@
     </message>
     <message>
         <source>Uploading Source File</source>
-        <translation>上傳原始檔中</translation>
+        <translation>上傳原始檔案中</translation>
     </message>
 </context>
 <context>
@@ -2692,7 +2692,7 @@
     <name>TupExposureSheet</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Layer 1</source>
@@ -2700,15 +2700,15 @@
     </message>
     <message>
         <source>Remove frame</source>
-        <translation>移除影格</translation>
+        <translation>移除幀</translation>
     </message>
     <message>
         <source>1 frame</source>
-        <translation>1 影格</translation>
+        <translation>1 幀</translation>
     </message>
     <message>
         <source>Clear frame</source>
-        <translation>清除影格</translation>
+        <translation>清除幀</translation>
     </message>
     <message>
         <source>Insert</source>
@@ -2716,27 +2716,27 @@
     </message>
     <message>
         <source>20 frames</source>
-        <translation>20 影格</translation>
+        <translation>20 幀</translation>
     </message>
     <message>
         <source>10 frames</source>
-        <translation>10 影格</translation>
+        <translation>10 幀</translation>
     </message>
     <message>
         <source>50 frames</source>
-        <translation>50 影格</translation>
+        <translation>50 幀</translation>
     </message>
     <message>
         <source>5 frames</source>
-        <translation>5 影格</translation>
+        <translation>5 幀</translation>
     </message>
     <message>
         <source>100 frames</source>
-        <translation>100 影格</translation>
+        <translation>100 幀</translation>
     </message>
     <message>
         <source>Paste frame</source>
-        <translation>貼上影格</translation>
+        <translation>貼上幀</translation>
     </message>
     <message>
         <source>actions</source>
@@ -2760,7 +2760,7 @@
     </message>
     <message>
         <source>Copy frame</source>
-        <translation>複製影格</translation>
+        <translation>複製幀</translation>
     </message>
 </context>
 <context>
@@ -2771,15 +2771,15 @@
     </message>
     <message>
         <source>A copy of your project was successfully saved at:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</source>
-        <translation>你的專案的複本成功儲存在:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</translation>
+        <translation>你的專案複本成功儲存在:&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Please, contact TupiTube&apos;s developer team to recovery it. &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</source>
-        <translation>請聯絡TupiTube開發團隊去復原這個 &lt;b&gt;https://www.tupitube.com&lt;/b&gt;</translation>
+        <translation>請聯絡绘幻想開發團隊去復原這個 &lt;b&gt;https://www.muvizu.cn&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Sorry, the project &lt;b&gt;%1.tup&lt;/b&gt; couldn&apos;t be recovered.&lt;br/&gt;Please, try to backup your animation files often.</source>
-        <translation>抱歉,這個專案&lt;b&gt;%1.tup&lt;/b&gt;無法復原.&lt;br/&gt;請試著經常備份你的動畫檔案.</translation>
+        <translation>抱歉,這個專案&lt;b&gt;%1.tup&lt;/b&gt;無法復原.&lt;br/&gt;請試著經常備份的動畫檔案.</translation>
     </message>
     <message>
         <source>Scene %1</source>
@@ -2791,21 +2791,21 @@
     </message>
     <message>
         <source>Frame %1</source>
-        <translation>影格 %1</translation>
+        <translation>幀 %1</translation>
     </message>
 </context>
 <context>
     <name>TupFrame</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
 </context>
 <context>
     <name>TupGeneralPreferences</name>
     <message>
         <source>Confirm &quot;Remove object&quot; action from library</source>
-        <translation>確認執行“從函式庫移除物件”</translation>
+        <translation>確認執行從庫中“移除對象”</translation>
     </message>
     <message>
         <source>Confirm &quot;Remove scene&quot; action</source>
@@ -2817,7 +2817,7 @@
     </message>
     <message>
         <source>Confirm &quot;Remove frame&quot; action</source>
-        <translation>確認執行“移除影格”</translation>
+        <translation>確認執行“移除幀”</translation>
     </message>
     <message>
         <source>Render and play project automatically</source>
@@ -2829,7 +2829,7 @@
     </message>
     <message>
         <source>General Preferences</source>
-        <translation>一般偏好設定</translation>
+        <translation>一般首選項</translation>
     </message>
     <message>
         <source>Always open last project</source>
@@ -2845,11 +2845,11 @@
     </message>
     <message>
         <source>Cache</source>
-        <translation>暫存檔</translation>
+        <translation>暫存檔案</translation>
     </message>
     <message>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
-        <translation>此暫存路徑是TupiTube運行動畫專案時建立的臨時檔案&lt;br/&gt;&lt;b&gt;備註:&lt;/b&gt; 不要修改此參數除非你知道你在做什麼.</translation>
+        <translation>此暫存路徑是绘幻想運行動畫專案時建立的臨時檔案&lt;br/&gt;&lt;b&gt;備註:&lt;/b&gt; 不要修改此參數除非你知道你在做什麼.</translation>
     </message>
     <message>
         <source>Choose another path</source>
@@ -2879,13 +2879,13 @@
         <source>Social Network</source>
         <translation>社交網路</translation>
     </message>
-    <message>
+     <message>
         <source>Cache Settings</source>
         <translation>暫存設定</translation>
     </message>
     <message>
         <source>TupiTube Credentials</source>
-        <translation>TupiTube帳號</translation>
+        <translation>繪幻想證書</translation>
     </message>
     <message>
         <source>Password: </source>
@@ -2893,11 +2893,11 @@
     </message>
     <message>
         <source>Don&apos;t have a TupiTube account?</source>
-        <translation>尚未擁有TupiTube帳號?</translation>
+        <translation>尚未擁有繪幻想帳號?</translation>
     </message>
     <message>
         <source>Email: </source>
-        <translation>Email: </translation>
+        <translation>電郵：</translation>
     </message>
     <message>
         <source>Register</source>
@@ -2905,27 +2905,27 @@
     </message>
     <message>
         <source>Email is invalid. Please, fix it!</source>
-        <translation>信箱不合法, 請修正!</translation>
+        <translation>電子郵箱無效，請修改!</translation>
     </message>
     <message>
         <source>Email field is empty. Type one!</source>
-        <translation>信箱欄位不可空白. 輸入一個信箱!</translation>
+        <translation>電子郵箱字段為空。請輸入!</translation>
     </message>
     <message>
         <source>Error: Email already registered!</source>
-        <translation>錯誤: 此信箱已經註冊過!</translation>
+        <translation>錯誤: 電子郵箱已註冊!</translation>
     </message>
     <message>
         <source>Please contact us at info@maefloresta.com</source>
-        <translation>請聯絡我們 info@maefloresta.com</translation>
+        <translation>請聯絡我們 solution@meshmellow.co</translation>
     </message>
     <message>
         <source>Allow TupiTube to collect use statistics (No private/personal info)</source>
-        <translation>准許TupiTube收集數據 (無私人或個人資料)</translation>
+        <translation>准許繪幻想收集數據 (無私人或個人資料)</translation>
     </message>
     <message>
         <source>Username / Email: </source>
-        <translation>使用者名稱 / 電子信箱: </translation>
+        <translation>用戶名 / 電子郵箱: </translation>
     </message>
     <message>
         <source>Enable anonymous mode</source>
@@ -2933,7 +2933,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation>介面</translation>
+        <translation>界面</translation>
     </message>
     <message>
         <source>Enable autosave feature every</source>
@@ -2952,7 +2952,7 @@
     <name>TupGradientCreator</name>
     <message>
         <source>Pad</source>
-        <translation>墊</translation>
+        <translation>填充</translation>
     </message>
     <message>
         <source>Linear</source>
@@ -2960,7 +2960,7 @@
     </message>
     <message>
         <source>Radial</source>
-        <translation>半徑的</translation>
+        <translation>徑向</translation>
     </message>
     <message>
         <source>Repeat</source>
@@ -2979,7 +2979,7 @@
     <name>TupGraphicsScene</name>
     <message>
         <source>lipsync:</source>
-        <translation>唇型同步校正</translation>
+        <translation>唇形同步校正</translation>
     </message>
 </context>
 <context>
@@ -3049,7 +3049,7 @@
     </message>
     <message>
         <source>Project Information</source>
-        <translation>專案資訊</translation>
+        <translation>項目資訊</translation>
     </message>
 </context>
 <context>
@@ -3060,7 +3060,7 @@
     </message>
     <message>
         <source>Create new svg item</source>
-        <translation>建立新的svg專案</translation>
+        <translation>建立新的svg項目</translation>
     </message>
     <message>
         <source>Edit with Gimp</source>
@@ -3076,7 +3076,7 @@
     </message>
     <message>
         <source>Export</source>
-        <translation>匯出</translation>
+        <translation>導出</translation>
     </message>
     <message>
         <source>Rename</source>
@@ -3107,14 +3107,14 @@
     <name>TupItemPreview</name>
     <message>
         <source>Library is empty :(</source>
-        <translation>函式庫是空的 :(</translation>
+        <translation>庫是空的 :(</translation>
     </message>
 </context>
 <context>
     <name>TupItemTweener</name>
     <message>
         <source>Scale</source>
-        <translation>比例尺</translation>
+        <translation>比例</translation>
     </message>
     <message>
         <source>Shear</source>
@@ -3145,7 +3145,7 @@
     <name>TupLayer</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Layer</source>
@@ -3164,26 +3164,26 @@
     </message>
     <message>
         <source>Library object&apos;s name is missing!</source>
-        <translation>函式庫的物件名稱找不到！</translation>
+        <translation>庫的對象名已丟失！</translation>
     </message>
     <message>
         <source>Object&apos;s name already exists. Pick a new one!</source>
-        <translation>物件名已存在。 選一個新的！</translation>
+        <translation>對象名已存在。 選一個新的！</translation>
     </message>
     <message>
         <source>Library Object</source>
-        <translation>函式庫物件</translation>
+        <translation>對象庫</translation>
     </message>
 </context>
 <context>
     <name>TupLibraryWidget</name>
     <message>
         <source>Couldn&apos;t create vector directory!</source>
-        <translation>無法建立向量目錄！</translation>
+        <translation>無法建立矢量目錄！</translation>
     </message>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Image</source>
@@ -3195,15 +3195,15 @@
     </message>
     <message>
         <source>Import images...</source>
-        <translation>匯入影像中</translation>
+        <translation>導入影像中</translation>
     </message>
     <message>
         <source>Insert library item into frame</source>
-        <translation>將函式庫項目插入影格</translation>
+        <translation>將庫項目插入到幀中</translation>
     </message>
     <message>
         <source>Native Object</source>
-        <translation>本地物件</translation>
+        <translation>本地對象</translation>
     </message>
     <message>
         <source>Do you want to continue?</source>
@@ -3211,15 +3211,15 @@
     </message>
     <message>
         <source>No SVG files were found.&lt;br/&gt;Please, try another directory</source>
-        <translation>未找到SVG檔。 請嘗試其他目錄</translation>
+        <translation>未找到SVG文件。 請嘗試其他目錄</translation>
     </message>
     <message>
         <source>Cannot open file: %1</source>
-        <translation>無法開啟檔案:%1</translation>
+        <translation>無法開啟文件:%1</translation>
     </message>
     <message>
         <source>Import objects...</source>
-        <translation>匯入物件中...</translation>
+        <translation>導入對象中...</translation>
     </message>
     <message>
         <source>Choose the images directory...</source>
@@ -3227,11 +3227,11 @@
     </message>
     <message>
         <source>Library</source>
-        <translation>函式庫</translation>
+        <translation>庫</translation>
     </message>
     <message>
         <source>Choose the SVG files directory...</source>
-        <translation>選擇SVG檔案目錄</translation>
+        <translation>選擇SVG文件目錄</translation>
     </message>
     <message>
         <source>ERROR!</source>
@@ -3243,19 +3243,19 @@
     </message>
     <message>
         <source>Image files found: %1.</source>
-        <translation>找到影像檔:%1</translation>
+        <translation>找到影像文件:%1</translation>
     </message>
     <message>
         <source>Vector</source>
-        <translation>向量</translation>
+        <translation>矢量</translation>
     </message>
     <message>
         <source>Export object...</source>
-        <translation>匯出物件中...</translation>
+        <translation>導出對象...</translation>
     </message>
     <message>
         <source>TupiTube library item</source>
-        <translation>TupiTube函式庫項目</translation>
+        <translation>繪幻想庫項目</translation>
     </message>
     <message>
         <source>Directory</source>
@@ -3291,31 +3291,31 @@
     </message>
     <message>
         <source>No image files were found.&lt;br/&gt;Please, try another directory</source>
-        <translation>找不到影像檔案。請嘗試其他目錄</translation>
+        <translation>找不到影像文件。請嘗試其他目錄</translation>
     </message>
     <message>
         <source>%1 SVG files will be loaded.</source>
-        <translation>即將載入%1 SVG檔案</translation>
+        <translation>即將載入SVG文件</translation>
     </message>
     <message>
         <source>Import SVG files...</source>
-        <translation>匯入SVG檔案...</translation>
+        <translation>導入SVG文件...</translation>
     </message>
     <message>
         <source>Svg File</source>
-        <translation>Svg檔</translation>
+        <translation>Svg文件</translation>
     </message>
     <message>
         <source>Do you want to remove this object from Library?</source>
-        <translation>你想從函式庫中删除這些物件嗎？</translation>
+        <translation>你想從庫中删除這個對象嗎？</translation>
     </message>
     <message>
         <source>Add an object to library</source>
-        <translation>新增一個物件到函式庫</translation>
+        <translation>新增一個對象到庫中</translation>
     </message>
     <message>
         <source>ERROR: Can&apos;t open file %1. Please, check file permissions and try again.</source>
-        <translation>錯誤：無法開啟檔案%1。 請檢查檔案權限並重試。</translation>
+        <translation>錯誤：無法打開文件。 請檢查檔案權限並重試。</translation>
     </message>
     <message>
         <source>Create new folder</source>
@@ -3323,7 +3323,7 @@
     </message>
     <message>
         <source>Native Objects</source>
-        <translation>原生物件</translation>
+        <translation>本地對象</translation>
     </message>
     <message>
         <source>Confirmation</source>
@@ -3331,15 +3331,15 @@
     </message>
     <message>
         <source>Files are too big, so they will be resized.</source>
-        <translation>檔案太大，將重設大小</translation>
+        <translation>文件太大，將重設大小</translation>
     </message>
     <message>
         <source>Item exported successfully!</source>
-        <translation>專案已成功匯出</translation>
+        <translation>項目已成功導出</translation>
     </message>
     <message>
         <source>Library is empty!</source>
-        <translation>函式庫是空的！</translation>
+        <translation>庫是空的！</translation>
     </message>
     <message>
         <source>There&apos;s no current selection!</source>
@@ -3351,7 +3351,7 @@
     </message>
     <message>
         <source>Raster Objects</source>
-        <translation>光栅物件</translation>
+        <translation>光栅對象</translation>
     </message>
     <message>
         <source>Search for Assets</source>
@@ -3367,7 +3367,7 @@
     </message>
     <message>
         <source>Audio</source>
-        <translation>聲音的</translation>
+        <translation>音頻</translation>
     </message>
     <message>
         <source>It&apos;s a directory! Please, pick a library object</source>
@@ -3413,15 +3413,15 @@
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>編輯(&amp;E)</translation>
+        <translation>編輯</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>檔案(&amp;F)</translation>
+        <translation>文件</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>說明(&amp;H)</translation>
+        <translation>幫助</translation>
     </message>
     <message>
         <source>Animation</source>
@@ -3445,7 +3445,7 @@
     </message>
     <message>
         <source>TupiTube Project Package (*.tup)</source>
-        <translation>TupiTube 專案包(*.tup)</translation>
+        <translation>繪幻想項目包(*.tup)</translation>
     </message>
     <message>
         <source>The connection to the server has been lost.</source>
@@ -3453,23 +3453,23 @@
     </message>
     <message>
         <source>&amp;Import Papagayo Lip-sync</source>
-        <translation>匯入 Papagayo 唇形同步(&amp;I)</translation>
+        <translation>導入 Papagayo 唇形同步</translation>
     </message>
     <message>
         <source>Gimp palette import was successful</source>
-        <translation>Gimp調色盤匯入成功</translation>
+        <translation>Gimp調色盤導入成功</translation>
     </message>
     <message>
         <source>Import palettes</source>
-        <translation>匯入調色盤</translation>
+        <translation>導入調色盤</translation>
     </message>
     <message>
         <source>Open dialog box to save current project in any location</source>
-        <translation>開啟對話框並將當前專案儲存在任何位置</translation>
+        <translation>開啟對話框並將當前項目儲存在任何位置</translation>
     </message>
     <message>
         <source>Save Project</source>
-        <translation>儲存專案</translation>
+        <translation>儲存項目</translation>
     </message>
     <message>
         <source>YouTube Tutorials</source>
@@ -3477,19 +3477,19 @@
     </message>
     <message>
         <source>Gimp palette import was unsuccessful</source>
-        <translation>Gimp調色盤匯入失敗</translation>
+        <translation>Gimp調色盤導入失敗</translation>
     </message>
     <message>
         <source>Open Project</source>
-        <translation>開啟專案</translation>
+        <translation>開啟項目</translation>
     </message>
     <message>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
-        <translation>專案 &lt;b&gt;%1&lt;/b&gt; 已開啟!</translation>
+        <translation>項目已開啟!</translation>
     </message>
     <message>
         <source>About TupiTube Desk</source>
-        <translation>關於TupiTube</translation>
+        <translation>關於繪幻想</translation>
     </message>
     <message>
         <source>Modules</source>
@@ -3497,11 +3497,11 @@
     </message>
     <message>
         <source>Save Project As...</source>
-        <translation>將專案另儲存為...</translation>
+        <translation>將項目另儲存為...</translation>
     </message>
     <message>
         <source>Do you want to save the project?</source>
-        <translation>你是否儲存此專案?</translation>
+        <translation>你是否儲存此項目?</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -3549,11 +3549,11 @@
     </message>
     <message>
         <source>Open example project</source>
-        <translation>開啟範例專案</translation>
+        <translation>開啟範例項目</translation>
     </message>
     <message>
         <source>Open TupiTube project</source>
-        <translation>開啟TupiTube專案</translation>
+        <translation>開啟繪幻想項目</translation>
     </message>
     <message>
         <source>Player</source>
@@ -3565,7 +3565,7 @@
     </message>
     <message>
         <source>Opening a new document...</source>
-        <translation>開啟一個新的檔...</translation>
+        <translation>開啟一個新的文件...</translation>
     </message>
     <message>
         <source>Actions Bar</source>
@@ -3577,7 +3577,7 @@
     </message>
     <message>
         <source>Cannot open project!</source>
-        <translation>不能開啟專案!</translation>
+        <translation>無法開啟項目!</translation>
     </message>
     <message>
         <source>Please, try to connect again in a while</source>
@@ -3585,23 +3585,23 @@
     </message>
     <message>
         <source>The document has been modified.</source>
-        <translation>該文件已被修改</translation>
+        <translation>該文件已被修改。</translation>
     </message>
     <message>
         <source>New Project</source>
-        <translation>新專案</translation>
+        <translation>新項目</translation>
     </message>
     <message>
         <source>Insufficient permissions. Please, pick another path.</source>
-        <translation>權限不足。請選擇其他路徑.</translation>
+        <translation>權限不足。請選擇其他路徑。</translation>
     </message>
     <message>
         <source>Open new project</source>
-        <translation>開啟新專案</translation>
+        <translation>開啟新項目</translation>
     </message>
     <message>
         <source>Pr&amp;eferences...</source>
-        <translation>偏好設定(&amp;E)</translation>
+        <translation>偏好設定</translation>
     </message>
     <message>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
@@ -3617,11 +3617,11 @@
     </message>
     <message>
         <source>&amp;Export Project</source>
-        <translation>匯出專案(&amp;E)</translation>
+        <translation>導出項目</translation>
     </message>
     <message>
         <source>Cl&amp;ose Project</source>
-        <translation>關閉專案(&amp;O)</translation>
+        <translation>關閉項目</translation>
     </message>
     <message>
         <source>Open Example</source>
@@ -3629,7 +3629,7 @@
     </message>
     <message>
         <source>&amp;Import GIMP Palettes</source>
-        <translation>匯入GIMP調色盤(&amp;I)</translation>
+        <translation>導入GIMP調色盤</translation>
     </message>
     <message>
         <source>Alt+Shift+B</source>
@@ -3665,19 +3665,19 @@
     </message>
     <message>
         <source>Save current project in current location</source>
-        <translation>將目前專案儲存在目前位置</translation>
+        <translation>將當前項目儲存在當前位置</translation>
     </message>
     <message>
         <source>Load existent project</source>
-        <translation>載入現有專案</translation>
+        <translation>載入現有項目</translation>
     </message>
     <message>
         <source>SVG File</source>
-        <translation>SVG檔案</translation>
+        <translation>SVG文件</translation>
     </message>
     <message>
         <source>&amp;Import</source>
-        <translation>匯入(&amp;I)</translation>
+        <translation>導入</translation>
     </message>
     <message>
         <source>Discard</source>
@@ -3685,7 +3685,7 @@
     </message>
     <message>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
-        <translation>專案 &lt;b&gt;%1&lt;/b&gt; 已儲存</translation>
+        <translation>項目已儲存</translation>
     </message>
     <message>
         <source>Opens the preferences dialog box</source>
@@ -3693,11 +3693,11 @@
     </message>
     <message>
         <source>Export project to several video formats</source>
-        <translation>將專案匯出成多種視訊格式</translation>
+        <translation>將導出成多種視頻格式</translation>
     </message>
     <message>
         <source>Save Project As</source>
-        <translation>將專案另儲存為</translation>
+        <translation>將項目另儲存為</translation>
     </message>
     <message>
         <source>Hide top panels</source>
@@ -3713,11 +3713,11 @@
     </message>
     <message>
         <source>Close active project</source>
-        <translation>關閉使用中專案</translation>
+        <translation>關閉已開啟的項目</translation>
     </message>
     <message>
         <source>Import Papagayo lip-sync</source>
-        <translation>匯入 Papagayo 唇形同步</translation>
+        <translation>導入 Papagayo 唇形同步</translation>
     </message>
     <message>
         <source>Directory does not exist! Please, choose another path.</source>
@@ -3725,7 +3725,7 @@
     </message>
     <message>
         <source>Import Gimp Palettes</source>
-        <translation>匯入Gimp調色盤</translation>
+        <translation>導入Gimp調色盤</translation>
     </message>
     <message>
         <source>Image Sequence</source>
@@ -3733,11 +3733,11 @@
     </message>
     <message>
         <source>To post video add more frames!</source>
-        <translation>要張貼影片需要更多影格!</translation>
+        <translation>要發佈視頻，請添加更多幀!</translation>
     </message>
     <message>
         <source>Project is larger than 10 MB. Too big!</source>
-        <translation>專案太大,超過10MB!</translation>
+        <translation>項目太大,超過10MB!</translation>
     </message>
     <message>
         <source>Post canceled by user!</source>
@@ -3745,19 +3745,19 @@
     </message>
     <message>
         <source>Error while posting image. File is too big!</source>
-        <translation>發佈影像時, 出現錯誤. 檔案太大!</translation>
+        <translation>發佈影像時, 出現錯誤. 文件太大!</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>出口</translation>
+        <translation>導出</translation>
     </message>
     <message>
         <source>&amp;Post</source>
-        <translation>郵政</translation>
+        <translation>發佈</translation>
     </message>
     <message>
         <source>Export Frame As Image</source>
-        <translation>將影格存成圖片</translation>
+        <translation>導出成幀圖像</translation>
     </message>
     <message>
         <source>@</source>
@@ -3765,11 +3765,11 @@
     </message>
     <message>
         <source>&amp;Post Animation</source>
-        <translation>後期動畫</translation>
+        <translation>發佈動畫</translation>
     </message>
     <message>
         <source>Post Frame</source>
-        <translation>柱架</translation>
+        <translation>發佈幀</translation>
     </message>
     <message>
         <source>Ctrl+@</source>
@@ -3789,15 +3789,15 @@
     </message>
     <message>
         <source>Post project on TupiTube network</source>
-        <translation>在 TupiTube 网络上发布项目</translation>
+        <translation>在繪幻想網站上發佈项目</translation>
     </message>
     <message>
         <source>TupiTube Social Media</source>
-        <translation>TupiTube 社交媒体</translation>
+        <translation>繪幻想社交媒体</translation>
     </message>
     <message>
         <source>Open TupiTube Network</source>
-        <translation>打开 TupiTube 网络</translation>
+        <translation>打开繪幻想網站</translation>
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
@@ -3824,7 +3824,7 @@
     </message>
     <message>
         <source>Default</source>
-        <translation>默認設備</translation>
+        <translation>默認</translation>
     </message>
     <message>
         <source>Record</source>
@@ -3844,7 +3844,7 @@
     </message>
     <message>
         <source>%1 sec</source>
-        <translation>%1 第二</translation>
+        <translation>秒</translation>
     </message>
     <message>
         <source>Recording...</source>
@@ -3852,11 +3852,11 @@
     </message>
     <message>
         <source>Paused</source>
-        <translation>暫停</translation>
+        <translation>已暫停</translation>
     </message>
     <message>
         <source>Stopped</source>
-        <translation>停止</translation>
+        <translation>已停止</translation>
     </message>
     <message>
         <source>Stop</source>
@@ -3914,7 +3914,7 @@
     </message>
     <message>
         <source>Vector Dynamic Background</source>
-        <translation>向量動態背景</translation>
+        <translation>矢量動態背景</translation>
     </message>
     <message>
         <source>Raster Dynamic Background</source>
@@ -3922,7 +3922,7 @@
     </message>
     <message>
         <source>Vector Static Background</source>
-        <translation>向量靜態背景</translation>
+        <translation>矢量靜態背景</translation>
     </message>
     <message>
         <source>Raster Static Background</source>
@@ -3938,11 +3938,11 @@
     </message>
     <message>
         <source>&amp;Apply</source>
-        <translation>應用(&amp;A)</translation>
+        <translation>應用</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>取消(&amp;C)</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Foreground Layer</source>
@@ -3961,7 +3961,7 @@
     <name>TupNewItemDialog</name>
     <message>
         <source>&amp;Open it with:</source>
-        <translation>開啟為(&amp;O):</translation>
+        <translation>開啟方式:</translation>
     </message>
     <message>
         <source>Black</source>
@@ -3973,11 +3973,11 @@
     </message>
     <message>
         <source>&amp;Name:</source>
-        <translation>名字(&amp;N)</translation>
+        <translation>名字：</translation>
     </message>
     <message>
         <source>Create new vector item</source>
-        <translation>建立新向量項</translation>
+        <translation>建立新的矢量項目</translation>
     </message>
     <message>
         <source>Transparent</source>
@@ -3985,23 +3985,23 @@
     </message>
     <message>
         <source>&amp;Width:</source>
-        <translation>寬度(&amp;W):</translation>
+        <translation>寬度:</translation>
     </message>
     <message>
         <source>&amp;Background:</source>
-        <translation>背景(&amp;B):</translation>
+        <translation>背景:</translation>
     </message>
     <message>
         <source>&amp;Extension:</source>
-        <translation>擴充(&amp;E):</translation>
+        <translation>擴展:</translation>
     </message>
     <message>
         <source>Create new raster item</source>
-        <translation>建立新的光栅項</translation>
+        <translation>建立新的光栅項目</translation>
     </message>
     <message>
         <source>&amp;Height:</source>
-        <translation>高(&amp;H):</translation>
+        <translation>高:</translation>
     </message>
 </context>
 <context>
@@ -4016,7 +4016,7 @@
     </message>
     <message>
         <source>Port</source>
-        <translation>埠</translation>
+        <translation>端口</translation>
     </message>
     <message>
         <source>White</source>
@@ -4040,7 +4040,7 @@
     </message>
     <message>
         <source>Create New Project</source>
-        <translation>建立新專案</translation>
+        <translation>建立新項目</translation>
     </message>
     <message>
         <source>Author</source>
@@ -4064,7 +4064,7 @@
     </message>
     <message>
         <source>Please, set a name for the project</source>
-        <translation>請為該物件設定一個名稱</translation>
+        <translation>請為該項目設定一個名稱</translation>
     </message>
     <message>
         <source>Presets</source>
@@ -4076,7 +4076,7 @@
     </message>
     <message>
         <source>my_project</source>
-        <translation>我的專案</translation>
+        <translation>我的項目</translation>
     </message>
     <message>
         <source>520x380 - 24</source>
@@ -4092,7 +4092,7 @@
     </message>
     <message>
         <source>TupiTube project</source>
-        <translation>TupiTube專案</translation>
+        <translation>繪幻想項目</translation>
     </message>
     <message>
         <source>Description</source>
@@ -4100,7 +4100,7 @@
     </message>
     <message>
         <source>Username</source>
-        <translation>使用者名稱</translation>
+        <translation>用戶名</translation>
     </message>
     <message>
         <source>576 (PAL DV/DVD) - 25</source>
@@ -4112,7 +4112,7 @@
     </message>
     <message>
         <source>Please, fill in your username</source>
-        <translation>請填寫您的使用者名稱</translation>
+        <translation>請填寫您的用戶名</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -4128,11 +4128,11 @@
     </message>
     <message>
         <source>Project Info</source>
-        <translation>專案資訊</translation>
+        <translation>項目資訊</translation>
     </message>
     <message>
         <source>Project Name</source>
-        <translation>專案名稱</translation>
+        <translation>項目名稱</translation>
     </message>
     <message>
         <source>1080 (Full HD) - 24</source>
@@ -4151,7 +4151,7 @@
     <name>TupNewsCollector</name>
     <message>
         <source>It&apos;s time to upgrade! Click here!</source>
-        <translation>現在是升級的時候！ 點選此處！</translation>
+        <translation>該升級了！ 點選此處！</translation>
     </message>
     <message>
         <source>Latest Version</source>
@@ -4167,14 +4167,14 @@
     </message>
     <message>
         <source>Want to help us to make a better project? Click here!</source>
-        <translation>想幫助我們做更好的專案嗎？ 點選此處！</translation>
+        <translation>想幫助我們優化項目嗎？ 點選此處！</translation>
     </message>
 </context>
 <context>
     <name>TupNewsDialog</name>
     <message>
         <source>TupiTube Updates</source>
-        <translation>TupiTube 更新</translation>
+        <translation>繪幻想更新</translation>
     </message>
     <message>
         <source>Updates</source>
@@ -4236,11 +4236,11 @@
     </message>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation>貼上</translation>
+        <translation>粘貼</translation>
     </message>
     <message>
         <source>To front</source>
@@ -4248,15 +4248,15 @@
     </message>
     <message>
         <source>next 5 frames</source>
-        <translation>接下來的5影格</translation>
+        <translation>接下來的5幀</translation>
     </message>
     <message>
         <source>No items selected</source>
-        <translation>未選擇任何專案</translation>
+        <translation>未選擇任何項目</translation>
     </message>
     <message>
         <source>Add to library...</source>
-        <translation>新增到函式庫...</translation>
+        <translation>新增到庫...</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
@@ -4268,11 +4268,11 @@
     </message>
     <message>
         <source>Do you want to remove this frame?</source>
-        <translation>你要移除此影格嗎?</translation>
+        <translation>你要移除此幀嗎?</translation>
     </message>
     <message>
         <source>Paste in...</source>
-        <translation>貼在...</translation>
+        <translation>粘貼在...</translation>
     </message>
     <message>
         <source>One level to front</source>
@@ -4284,19 +4284,19 @@
     </message>
     <message>
         <source>next 100 frames</source>
-        <translation>接下來的100影格</translation>
+        <translation>接下來的100幀</translation>
     </message>
     <message>
         <source>next 10 frames</source>
-        <translation>接下來的10影格</translation>
+        <translation>接下來的10幀</translation>
     </message>
     <message>
         <source>next 20 frames</source>
-        <translation>接下來的20影格</translation>
+        <translation>接下來的20幀</translation>
     </message>
     <message>
         <source>next 50 frames</source>
-        <translation>接下來的50影格</translation>
+        <translation>接下來的50幀</translation>
     </message>
     <message>
         <source>To back</source>
@@ -4323,7 +4323,7 @@
     </message>
     <message>
         <source>No Frames!</source>
-        <translation>無影格!</translation>
+        <translation>無幀!</translation>
     </message>
 </context>
 <context>
@@ -4429,7 +4429,7 @@
     </message>
     <message>
         <source>Current Frame</source>
-        <translation>目前影格</translation>
+        <translation>當前幀</translation>
     </message>
     <message>
         <source>Contour Color</source>
@@ -4441,7 +4441,7 @@
     </message>
     <message>
         <source>Clear Frame</source>
-        <translation>清除影格</translation>
+        <translation>清除幀</translation>
     </message>
 </context>
 <context>
@@ -4480,35 +4480,35 @@
     </message>
     <message>
         <source>Lip-Sync Manager</source>
-        <translation>口型同步管理器</translation>
+        <translation>唇型同步管理器</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 1</source>
-        <translation>口腔樣本包 1</translation>
+        <translation>口型樣例套件 1</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 2</source>
-        <translation>口腔樣本包 2</translation>
+        <translation>口型樣例套件 2</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 3</source>
-        <translation>口腔樣本包 3</translation>
+        <translation>口型樣例套件 3</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 4</source>
-        <translation>口腔樣本包 4</translation>
+        <translation>口型樣例套件 4</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 5</source>
-        <translation>口腔樣本包 5</translation>
+        <translation>口型樣例套件 5</translation>
     </message>
     <message>
         <source>Set Mouth Images</source>
-        <translation>設置口像</translation>
+        <translation>設置口型圖像</translation>
     </message>
     <message>
         <source>Load &amp;Images</source>
-        <translation>載入影像(&amp;I)</translation>
+        <translation>載入影像</translation>
     </message>
     <message>
         <source>Voice name:</source>
@@ -4536,7 +4536,7 @@
     </message>
     <message>
         <source>Save lip-sync record</source>
-        <translation>保存口型同步記錄</translation>
+        <translation>保存唇型同步記錄</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -4556,7 +4556,7 @@
     </message>
     <message>
         <source>Do you want to save this lip-sync record?</source>
-        <translation>你想保存這個口型同步記錄嗎？</translation>
+        <translation>你想保存這個唇型同步記錄嗎？</translation>
     </message>
     <message>
         <source>Confirmation Required</source>
@@ -4564,11 +4564,11 @@
     </message>
     <message>
         <source>Lip-sync item added!</source>
-        <translation>添加了口型同步項目！</translation>
+        <translation>添加了唇型同步項目！</translation>
     </message>
     <message>
         <source>Lip-sync item updated!</source>
-        <translation>口型同步項目已更新！</translation>
+        <translation>唇型同步項目已更新！</translation>
     </message>
     <message>
         <source>Audio files (*.mp3 *.wav)</source>
@@ -4576,7 +4576,7 @@
     </message>
     <message>
         <source>Mouth images are unset!</source>
-        <translation>嘴巴圖像未設置！</translation>
+        <translation>口型圖片未設置！</translation>
     </message>
     <message>
         <source>No voice text to play!</source>
@@ -4596,11 +4596,11 @@
     </message>
     <message>
         <source>Mouth image is missing!</source>
-        <translation>嘴巴圖片不見了！</translation>
+        <translation>口型圖片丟失！</translation>
     </message>
     <message>
         <source>Mouth images are incomplete!</source>
-        <translation>嘴部圖像不完整！</translation>
+        <translation>口型圖片不完整！</translation>
     </message>
     <message>
         <source>Images directory is empty!</source>
@@ -4612,15 +4612,15 @@
     </message>
     <message>
         <source>Customized mouths path is unset!</source>
-        <translation>自定義嘴巴路徑未設置！</translation>
+        <translation>自定義口型路徑未設置！</translation>
     </message>
     <message>
         <source>Error while saving lip-sync!</source>
-        <translation>保存口型同步時出錯！</translation>
+        <translation>保存唇型同步時出錯！</translation>
     </message>
     <message>
         <source>Can&apos;t load mouth image!</source>
-        <translation>無法加載嘴巴圖片！</translation>
+        <translation>無法加載口型圖片！</translation>
     </message>
     <message>
         <source>Can&apos;t remove temporary voice sound!</source>
@@ -4632,27 +4632,27 @@
     </message>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Papagayo file has been imported successfully</source>
-        <translation>PAPAGAYO檔案已成功匯入</translation>
+        <translation>PAPAGAYO文件已成功導入</translation>
     </message>
     <message>
         <source>Papagayo file is invalid!</source>
-        <translation>PAPAGAYO檔無效！</translation>
+        <translation>PAPAGAYO文件無效！</translation>
     </message>
     <message>
         <source>Papagayo project is invalid!</source>
-        <translation>PAPAGAYO專案無效！</translation>
+        <translation>PAPAGAYO項目無效！</translation>
     </message>
     <message>
         <source>Error while saving lip-sync record!</source>
-        <translation>保存口型同步記錄時出錯！</translation>
+        <translation>保存唇型同步記錄時出錯！</translation>
     </message>
     <message>
         <source>Error while updating lip-sync!</source>
-        <translation>更新口型同步時出錯！</translation>
+        <translation>更新唇型同步時出錯！</translation>
     </message>
     <message>
         <source>Voice Settings</source>
@@ -4664,7 +4664,7 @@
     </message>
     <message>
         <source>Some phonemes are missing!</source>
-        <translation>有些音素不見了</translation>
+        <translation>有些音素丟失！</translation>
     </message>
 </context>
 <context>
@@ -4702,15 +4702,15 @@
     </message>
     <message>
         <source>MP4 Video</source>
-        <translation>MP4 視訊</translation>
+        <translation>MP4 視頻</translation>
     </message>
     <message>
         <source>QuickTime Video</source>
-        <translation>QuickTime 視訊</translation>
+        <translation>QuickTime 視頻</translation>
     </message>
     <message>
         <source>MPEG Video</source>
-        <translation>MPEG 視訊</translation>
+        <translation>MPEG 視頻</translation>
     </message>
     <message>
         <source>SVG Image Sequence</source>
@@ -4733,7 +4733,7 @@
     </message>
     <message>
         <source>TupiTube Preferences</source>
-        <translation>TupiTube偏好設定</translation>
+        <translation>繪幻想偏好設定</translation>
     </message>
     <message>
         <source>Workspace</source>
@@ -4741,15 +4741,15 @@
     </message>
     <message>
         <source>General</source>
-        <translation>一般的</translation>
+        <translation>通用</translation>
     </message>
     <message>
         <source>Preferences saved successfully</source>
-        <translation>偏好儲存成功</translation>
+        <translation>偏好設置儲存成功</translation>
     </message>
     <message>
         <source>Please restart TupiTube</source>
-        <translation>請重新啟動TupiTube</translation>
+        <translation>請重新啟動繪幻想</translation>
     </message>
 </context>
 <context>
@@ -4772,11 +4772,11 @@
     </message>
     <message>
         <source>Extend frame</source>
-        <translation>延展影格</translation>
+        <translation>擴展幀</translation>
     </message>
     <message>
         <source>Remove frame</source>
-        <translation>移除影格</translation>
+        <translation>刪除幀</translation>
     </message>
     <message>
         <source>Remove scene</source>
@@ -4788,7 +4788,7 @@
     </message>
     <message>
         <source>Insert frame</source>
-        <translation>插入影格</translation>
+        <translation>插入幀</translation>
     </message>
     <message>
         <source>Insert layer</source>
@@ -4804,11 +4804,11 @@
     </message>
     <message>
         <source>Move frame forward</source>
-        <translation>影格向前移動</translation>
+        <translation>向前移動幀</translation>
     </message>
     <message>
         <source>Paste frame</source>
-        <translation>貼上影格</translation>
+        <translation>粘貼幀</translation>
     </message>
     <message>
         <source>Do you want to remove this scene?</source>
@@ -4820,15 +4820,15 @@
     </message>
     <message>
         <source>Copy frame</source>
-        <translation>複製影格</translation>
+        <translation>複製幀</translation>
     </message>
     <message>
         <source>Move frame backward</source>
-        <translation>影格向後移動</translation>
+        <translation>向後移動幀</translation>
     </message>
     <message>
         <source>Reverse frame selection</source>
-        <translation>反選選取影格</translation>
+        <translation>反選幀</translation>
     </message>
     <message>
         <source>Confirmation</source>
@@ -4839,15 +4839,15 @@
     <name>TupProjectManager</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Layer %1</source>
-        <translation>圖層%1</translation>
+        <translation>圖層</translation>
     </message>
     <message>
         <source>Scene %1</source>
-        <translation> 場景%1</translation>
+        <translation>場景</translation>
     </message>
 </context>
 <context>
@@ -4882,7 +4882,7 @@
     </message>
     <message>
         <source>Show previous images</source>
-        <translation>顯示前一影像</translation>
+        <translation>顯示前一張影像</translation>
     </message>
     <message>
         <source>Grid color</source>
@@ -4894,7 +4894,7 @@
     </message>
     <message>
         <source>Close manager</source>
-        <translation>關閉項目</translation>
+        <translation>關閉管理器</translation>
     </message>
     <message>
         <source>General Camera error</source>
@@ -4902,7 +4902,7 @@
     </message>
     <message>
         <source>Camera not supported error</source>
-        <translation>相機不支援的錯誤</translation>
+        <translation>相機不支持的錯誤</translation>
     </message>
     <message>
         <source>Amount of images to show</source>
@@ -4910,11 +4910,11 @@
     </message>
     <message>
         <source>Image opacity level</source>
-        <translation>影像不透明度層</translation>
+        <translation>影像不透明度級別</translation>
     </message>
     <message>
         <source>Camera service missing error</source>
-        <translation>相機服務找不到的錯誤</translation>
+        <translation>相機服務丟失的錯誤</translation>
     </message>
     <message>
         <source>Grid spacing</source>
@@ -4922,11 +4922,11 @@
     </message>
     <message>
         <source>TupiTube Camera Manager</source>
-        <translation>TupiTube相機管理器</translation>
+        <translation>繪幻想相機管理器</translation>
     </message>
     <message>
         <source>Current resolution:</source>
-        <translation>目前解析度</translation>
+        <translation>當前分辨率</translation>
     </message>
     <message>
         <source>Camera invalid request error</source>
@@ -4937,7 +4937,7 @@
     <name>TupScene</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Layer 1</source>
@@ -4945,11 +4945,11 @@
     </message>
     <message>
         <source>Layer %1</source>
-        <translation>圖層%1</translation>
+        <translation>圖層</translation>
     </message>
     <message>
         <source>Sound layer %1</source>
-        <translation>聲音層%1</translation>
+        <translation>音頻圖層</translation>
     </message>
 </context>
 <context>
@@ -4983,11 +4983,11 @@
     </message>
     <message>
         <source>Object</source>
-        <translation>物件</translation>
+        <translation>對象</translation>
     </message>
     <message>
         <source>Character</source>
-        <translation>文字</translation>
+        <translation>字符</translation>
     </message>
     <message>
         <source>Static Background</source>
@@ -4999,11 +4999,11 @@
     </message>
     <message>
         <source>Sound</source>
-        <translation>音效</translation>
+        <translation>聲音</translation>
     </message>
     <message>
         <source>Import Asset</source>
-        <translation>匯入資產</translation>
+        <translation>導入資產</translation>
     </message>
     <message>
         <source>Searching...</source>
@@ -5035,15 +5035,15 @@
     </message>
     <message>
         <source>Creator:</source>
-        <translation>製作者:</translation>
+        <translation>製作者：</translation>
     </message>
     <message>
-        <source>License:</source>
-        <translation>授權:</translation>
+        <source>License：</source>
+        <translation>授權：</translation>
     </message>
     <message>
         <source>Network Error 809. Please, contact us!</source>
-        <translation>HTTP 409錯誤! 請聯絡我們! {809.?}</translation>
+        <translation>HTTP 409錯誤! 請聯絡我們! </translation>
     </message>
     <message>
         <source>No Results for</source>
@@ -5051,27 +5051,27 @@
     </message>
     <message>
         <source>YET!</source>
-        <translation>還沒!</translation>
+        <translation>還沒！</translation>
     </message>
     <message>
         <source>Getting item</source>
-        <translation>取得項目</translation>
+        <translation>正在獲取項目</translation>
     </message>
     <message>
         <source>Can&apos;t load the result images!</source>
-        <translation>無法載入圖片</translation>
+        <translation>無法載入圖片！</translation>
     </message>
     <message>
         <source>Can&apos;t save the asset!</source>
-        <translation>無法儲存資產</translation>
+        <translation>無法儲存資產！</translation>
     </message>
     <message>
         <source>Can&apos;t load the asset!</source>
-        <translation>無法載入資產</translation>
+        <translation>無法載入資產！</translation>
     </message>
     <message>
         <source>Can&apos;t load the asset file!</source>
-        <translation>無法載入資產檔案</translation>
+        <translation>無法載入資產文件！</translation>
     </message>
     <message>
         <source>Keywords</source>
@@ -5090,7 +5090,7 @@
     </message>
     <message>
         <source>Username</source>
-        <translation>使用者名稱</translation>
+        <translation>用戶名</translation>
     </message>
     <message>
         <source>Password</source>
@@ -5110,7 +5110,7 @@
     </message>
     <message>
         <source>Please, fill in your username</source>
-        <translation>請填寫您的使用者名稱</translation>
+        <translation>請填寫您的用戶名</translation>
     </message>
     <message>
         <source>Please, fill in your password</source>
@@ -5118,7 +5118,7 @@
     </message>
     <message>
         <source>Sign Up</source>
-        <translation>報名</translation>
+        <translation>註冊</translation>
     </message>
 </context>
 <context>
@@ -5129,7 +5129,7 @@
     </message>
     <message>
         <source>Open lip-sync module</source>
-        <translation>打開口型同步模塊</translation>
+        <translation>打開唇型同步模塊</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -5137,7 +5137,7 @@
     </message>
     <message>
         <source>Import audio file...</source>
-        <translation>匯入音訊檔中...</translation>
+        <translation>導入音頻文件...</translation>
     </message>
     <message>
         <source>Import Audio Asset</source>
@@ -5184,7 +5184,7 @@
     </message>
     <message>
         <source>Play at frame:</source>
-        <translation>在影格上播放：</translation>
+        <translation>在幀上播放：</translation>
     </message>
     <message>
         <source>Loop</source>
@@ -5207,7 +5207,7 @@
     <name>TupStoryBoardDialog</name>
     <message>
         <source>&amp;PDF</source>
-        <translation>&amp;PDF</translation>
+        <translation>PDF</translation>
     </message>
     <message>
         <source>Close</source>
@@ -5227,7 +5227,7 @@
     </message>
     <message>
         <source>Save PDF file</source>
-        <translation>儲存為 PDF 檔</translation>
+        <translation>儲存為PDF文件</translation>
     </message>
     <message>
         <source>Storyboard Settings</source>
@@ -5247,7 +5247,7 @@
     </message>
     <message>
         <source>Export as PDF</source>
-        <translation>匯出PDF</translation>
+        <translation>導出為PDF</translation>
     </message>
     <message>
         <source>Summary</source>
@@ -5255,11 +5255,11 @@
     </message>
     <message>
         <source>Storyboard exported successfully!</source>
-        <translation>分鏡腳本匯出成功</translation>
+        <translation>分鏡腳本導出成功</translation>
     </message>
     <message>
         <source>PDF file (*.pdf)</source>
-        <translation>PDF檔 (*.pdf)</translation>
+        <translation>PDF文件 (*.pdf)</translation>
     </message>
     <message>
         <source>Duration</source>
@@ -5267,15 +5267,15 @@
     </message>
     <message>
         <source>&amp;Post</source>
-        <translation>張貼(&amp;P)</translation>
+        <translation>發佈</translation>
     </message>
     <message>
         <source>&amp;Animatic</source>
-        <translation>動畫的</translation>
+        <translation>動態分鏡</translation>
     </message>
     <message>
         <source>Export as Animatic</source>
-        <translation>導出為Animatic</translation>
+        <translation>導出為動態分鏡</translation>
     </message>
     <message>
         <source>Cover Information</source>
@@ -5290,21 +5290,20 @@
         <translation>秒</translation>
     </message>
     <message>
-        <source>Storyboard
-Cover</source>
+        <source>Storyboard Cover</source>
         <translation>情節提要封面</translation>
     </message>
     <message>
         <source>Scene No %1</source>
-        <translation>場景 %1</translation>
+        <translation>場景</translation>
     </message>
     <message>
         <source>By</source>
-        <translation>經過</translation>
+        <translation>通過</translation>
     </message>
     <message>
         <source>Export Animatic As</source>
-        <translation>將Animatic導出為</translation>
+        <translation>將動態分鏡頭導出為</translation>
     </message>
     <message>
         <source>Videos</source>
@@ -5312,7 +5311,7 @@ Cover</source>
     </message>
     <message>
         <source>Animatic exported successfully!</source>
-        <translation>Animatic已成功導出！</translation>
+        <translation>動態分鏡頭已成功導出！</translation>
     </message>
 </context>
 <context>
@@ -5323,7 +5322,7 @@ Cover</source>
     </message>
     <message>
         <source>View</source>
-        <translation>檢視</translation>
+        <translation>視圖</translation>
     </message>
     <message>
         <source>Selection</source>
@@ -5362,7 +5361,7 @@ Cover</source>
     </message>
     <message>
         <source>Chocolate</source>
-        <translation>巧克力</translation>
+        <translation>巧克力色</translation>
     </message>
     <message>
         <source>Blue</source>
@@ -5370,7 +5369,7 @@ Cover</source>
     </message>
     <message>
         <source>Honey</source>
-        <translation>蜜糖</translation>
+        <translation>蜜糖色</translation>
     </message>
     <message>
         <source>Green</source>
@@ -5382,14 +5381,14 @@ Cover</source>
     </message>
     <message>
         <source>Orange</source>
-        <translation>橘子</translation>
+        <translation>橘色</translation>
     </message>
 </context>
 <context>
     <name>TupTimeLine</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Layer 1</source>
@@ -5401,7 +5400,7 @@ Cover</source>
     </message>
     <message>
         <source>Layer %1</source>
-        <translation>圖層%1</translation>
+        <translation>圖層</translation>
     </message>
     <message>
         <source>Scene 1</source>
@@ -5409,7 +5408,7 @@ Cover</source>
     </message>
     <message>
         <source>Scene %1</source>
-        <translation>場景 %1</translation>
+        <translation>場景</translation>
     </message>
     <message>
         <source>Current Layer Opacity</source>
@@ -5431,7 +5430,7 @@ Cover</source>
     </message>
     <message>
         <source>Set a title for the picture here!</source>
-        <translation>在此為圖片設定標題</translation>
+        <translation>在此為圖片設定標題！</translation>
     </message>
     <message>
         <source>Description</source>
@@ -5439,7 +5438,7 @@ Cover</source>
     </message>
     <message>
         <source>Set some topic tags for the picture here!</source>
-        <translation>在此為圖片設定一些主題標籤</translation>
+        <translation>在此為圖片設定一些主題標籤！</translation>
     </message>
     <message>
         <source>Animation Properties</source>
@@ -5451,11 +5450,11 @@ Cover</source>
     </message>
     <message>
         <source>#tupitube #animation #fun</source>
-        <translation>#tupitube #animation #fun</translation>
+        <translation>#繪幻想 #動畫 #有趣</translation>
     </message>
     <message>
         <source>Create and share animations easily with TupiTube</source>
-        <translation>用TupiTube來更輕鬆的建立並分享動畫</translation>
+        <translation>用繪幻想來更輕鬆創建並分享動畫</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -5463,7 +5462,7 @@ Cover</source>
     </message>
     <message>
         <source>Access denied. Invalid password!</source>
-        <translation>拒絕登入, 密碼錯誤</translation>
+        <translation>拒絕登入, 密碼錯誤！</translation>
     </message>
     <message>
         <source>Network Error 500. Please, contact us!</source>
@@ -5507,11 +5506,11 @@ Cover</source>
     </message>
     <message>
         <source>Post action cancelled!</source>
-        <translation>張貼已取消!</translation>
+        <translation>發佈動作已取消!</translation>
     </message>
     <message>
         <source>Project was uploaded successfully!</source>
-        <translation>專案上傳成功!</translation>
+        <translation>項目上傳成功!</translation>
     </message>
     <message>
         <source>Network Error 400. Please, contact us!</source>
@@ -5555,11 +5554,11 @@ Cover</source>
     </message>
     <message>
         <source>My Image</source>
-        <translation>我的影像</translation>
+        <translation>我的圖像</translation>
     </message>
     <message>
         <source>#tupitube #image #fun</source>
-        <translation>#tupitube #影像 #好玩</translation>
+        <translation>#繪幻想 #圖像 #有趣</translation>
     </message>
     <message>
         <source>Set a title for the post here!</source>
@@ -5571,22 +5570,22 @@ Cover</source>
     </message>
     <message>
         <source>Set some topic tags for the post here!</source>
-        <translation>在此為圖片設定一些主題標籤!</translation>
+        <translation>在此為帖子設定一些主題標籤!</translation>
     </message>
     <message>
         <source>Tags are missing!</source>
-        <translation></translation>
+        <translation>無標籤！</translation>
     </message>
     <message>
         <source>Hashtags</source>
-        <translation>Hashtags</translation>
+        <translation>標籤</translation>
     </message>
 </context>
 <context>
     <name>TupViewColorCells</name>
     <message>
         <source>Custom Color Palette</source>
-        <translation>自訂調色盤</translation>
+        <translation>自定義調色盤</translation>
     </message>
     <message>
         <source>Named Colors</source>
@@ -5602,11 +5601,11 @@ Cover</source>
     </message>
     <message>
         <source>Custom Gradient Palette</source>
-        <translation>自訂漸層調色盤</translation>
+        <translation>自定義漸層面板</translation>
     </message>
     <message>
         <source>Default Palette</source>
-        <translation>預設調色盤</translation>
+        <translation>默認面板</translation>
     </message>
 </context>
 <context>
@@ -5621,7 +5620,7 @@ Cover</source>
     </message>
     <message>
         <source>Mouth images are unset!</source>
-        <translation>嘴巴圖像未設置！</translation>
+        <translation>口型圖片未設置！</translation>
     </message>
 </context>
 <context>
@@ -5644,18 +5643,18 @@ Cover</source>
     </message>
     <message>
         <source>Tween name already exists!</source>
-        <translation>補間動畫名稱已存在</translation>
+        <translation>補間動畫名稱已存在！</translation>
     </message>
 </context>
 <context>
     <name>Tweener</name>
     <message>
         <source>Frame</source>
-        <translation>影格</translation>
+        <translation>幀</translation>
     </message>
     <message>
         <source>Scale</source>
-        <translation>比例尺</translation>
+        <translation>比例</translation>
     </message>
     <message>
         <source>Shear</source>
@@ -5663,7 +5662,7 @@ Cover</source>
     </message>
     <message>
         <source>Coloring Tween can&apos;t be applied to SVG files</source>
-        <translation>變色補間動畫不能應用於SVG檔</translation>
+        <translation>著色補間動畫不能應用於SVG文件</translation>
     </message>
     <message>
         <source>Shear Tween</source>
@@ -5683,7 +5682,7 @@ Cover</source>
     </message>
     <message>
         <source>Please, edit the previous tween of these objects.</source>
-        <translation>Please, edit the previous tween of these objects.</translation>
+        <translation>請編輯這些對象的前一個補間動畫。</translation>
     </message>
     <message>
         <source>Rotation</source>
@@ -5691,19 +5690,19 @@ Cover</source>
     </message>
     <message>
         <source>Rotation Tween</source>
-        <translation>補間動畫旋轉</translation>
+        <translation>旋轉補間動畫</translation>
     </message>
     <message>
         <source>Scale Tween</source>
-        <translation>補間動畫比例尺</translation>
+        <translation>縮放補間動畫</translation>
     </message>
     <message>
         <source>Tween %1 applied!</source>
-        <translation>補間動畫%1 已套用!</translation>
+        <translation>補間動畫已套用!</translation>
     </message>
     <message>
         <source>The selected items already have this kind of tween assigned.</source>
-        <translation>此物件已有相同補間動畫</translation>
+        <translation>所選擇的項目已經分配了這種補間動畫。</translation>
     </message>
     <message>
         <source>Shift+C</source>
@@ -5731,11 +5730,11 @@ Cover</source>
     </message>
     <message>
         <source>Tween name is missing!</source>
-        <translation>補間動畫名稱找不到</translation>
+        <translation>補間動畫名稱丟失！</translation>
     </message>
     <message>
         <source>Opacity Tween</source>
-        <translation>不透明度補間動畫</translation>
+        <translation>不透明補間動畫</translation>
     </message>
     <message>
         <source>Warning</source>
@@ -5743,11 +5742,11 @@ Cover</source>
     </message>
     <message>
         <source>Coloring Tween</source>
-        <translation>變色補間動畫</translation>
+        <translation>著色補間動畫</translation>
     </message>
     <message>
         <source>Coloring Tween can&apos;t be applied to raster images</source>
-        <translation>變色補間動畫不能應用於柵格影像</translation>
+        <translation>著色補間動畫不能應用於柵格影像</translation>
     </message>
     <message>
         <source>Motion</source>
@@ -5755,7 +5754,7 @@ Cover</source>
     </message>
     <message>
         <source>Motion Tween</source>
-        <translation>動態補間</translation>
-    </message>
+        <translation>動態補間動畫</translation>
+     </message>
 </context>
 </TS>
