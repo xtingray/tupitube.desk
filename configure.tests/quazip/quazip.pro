@@ -10,7 +10,7 @@ macx {
 }
 
 unix:!macx {
-  INCLUDEPATH += /usr/include/quazip
+  INCLUDEPATH += /usr/local/quazip/include
 }
 
 LIBS += -lz

@@ -98,7 +98,7 @@ class Test
                       if conf.hasArgument?("with-quazip")
                          quazipDir = conf.argumentValue("with-quazip")
                          quazipLib = quazipDir + "/lib"
-                         extraLib += "-L#{quazipLib} -lquazip"
+                         extraLib += "-L#{quazipLib} -lquazip1-qt5"
                          extraInclude = quazipDir + "/include"
                          qmakeLine = "'LIBS += #{extraLib}'"
                          qmakeLine += " 'INCLUDEPATH += #{extraInclude}'"
@@ -162,7 +162,7 @@ class Test
         }
 
         if conf.hasArgument?("with-quazip")
-           config.addLib("-lquazip")
+           config.addLib("-lquazip1-qt5")
         else
            config.addLib("-lquazip-qt5")
         end

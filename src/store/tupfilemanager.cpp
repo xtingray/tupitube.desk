@@ -335,7 +335,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
              library.close();
          } else {
              #ifdef TUP_DEBUG
-                 qWarning() << "[TupFileManager::save()] - Error: Can't create file -> " + projectDir.path() + "/library.tpl";
+                 qWarning() << "[TupFileManager::save()] - "
+                               "Error: Can't create file -> " << projectDir.path() << "/library.tpl";
              #endif
              return false;
          }
