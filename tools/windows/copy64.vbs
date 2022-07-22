@@ -33,7 +33,7 @@ fileSystem.CreateFolder tupiDir & "\lib\ffmpeg"
 fileSystem.CreateFolder tupiDir & "\lib\libsndfile"
 fileSystem.CreateFolder tupiDir & "\lib\raster"
 
-fileSystem.CopyFile quazipDir & "\quazip.dll", tupiDir & "\lib\quazip.dll"
+fileSystem.CopyFile quazipDir & "\libquazip1-qt5.dll", tupiDir & "\lib\libquazip1-qt5.dll"
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.iss", tupiDir & "\tupitube.iss"
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\tupitube.ico", tupiDir & "\bin\raw\icon\tupitube.ico"
 fileSystem.CopyFile "c:\devel\sources\tupitube.desk\tools\windows\TupiTube.bat", tupiDir & "\bin\TupiTube.bat"
