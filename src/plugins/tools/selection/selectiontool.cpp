@@ -533,18 +533,19 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
         break;
         case TupProjectRequest::Pen:
         case TupProjectRequest::Brush:
+        case TupProjectRequest::TextColor:
         {
             #ifdef TUP_DEBUG
                 qDebug() << "[SelectionTool::itemResponse()] - TupProjectRequest::Pen|Brush";
             #endif
 
             activeSelection = true;
-            foreach(int index, coloredSelection) {
+            foreach(int index, specialSelection) {
                 QGraphicsItem *item = frame->item(index);
                 selectedObjects << item;
             }
 
-            if (coloredSelection.size() == 1) {
+            if (specialSelection.size() == 1) {
                 QGraphicsItem *item = selectedObjects.first();
                 NodeManager *manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
                 connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
@@ -1238,7 +1239,7 @@ void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, con
     #endif
 
     if (activeSelection) {
-        coloredSelection.clear();
+        specialSelection.clear();
         foreach (QGraphicsItem *item, selectedObjects) {
             int itemIndex = -1;
             if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
@@ -1264,9 +1265,18 @@ void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, con
                 }
             }
 
-            coloredSelection << itemIndex;
+            specialSelection << itemIndex;
 
-            if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
+            TupProjectRequest event;
+            if (qgraphicsitem_cast<TupTextItem *>(item)) {
+                event = TupRequestBuilder::createItemRequest(
+                                          scene->currentSceneIndex(), currentLayer,
+                                          currentFrame, itemIndex, QPointF(),
+                                          scene->getSpaceContext(), TupLibraryObject::Item,
+                                          TupProjectRequest::TextColor,
+                                          color.name(QColor::HexArgb));
+                emit requested(&event);
+            } else if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
                 QDomDocument doc;
                 QPen pen = shape->pen();
                 if (action == TupProjectRequest::Brush) {
@@ -1277,7 +1287,7 @@ void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, con
                     pen.setColor(color);
                     doc.appendChild(TupSerializer::pen(&pen, doc));
                 }
-                TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                event = TupRequestBuilder::createItemRequest(
                                           scene->currentSceneIndex(), currentLayer,
                                           currentFrame, itemIndex, QPointF(),
                                           scene->getSpaceContext(), TupLibraryObject::Item,
@@ -1294,36 +1304,39 @@ void SelectionTool::updatePenOnSelection(const QPen &pen)
         qDebug() << "[SelectionTool::updatePenOnSelection()] - pen -> " << pen;
     #endif
 
-    if (activeSelection) {
-        coloredSelection.clear();
+    if (activeSelection) {        
+        specialSelection.clear();
         foreach (QGraphicsItem *item, selectedObjects) {
-            int itemIndex = -1;
-            if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
-                frame = scene->currentFrame();
-                if (frame) {
-                    itemIndex = frame->indexOf(item);
-                    currentLayer = scene->currentLayerIndex();
-                    currentFrame = scene->currentFrameIndex();
-                }
-            } else {
-                currentLayer = -1;
-                currentFrame = -1;
-                TupBackground *bg = scene->currentScene()->sceneBackground();
-                if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
-                    frame = bg->vectorStaticFrame();
-                    itemIndex = frame->indexOf(item);
-                } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                    frame = bg->vectorDynamicFrame();
-                    itemIndex = frame->indexOf(item);
-                } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
-                    frame = bg->vectorForegroundFrame();
-                    itemIndex = frame->indexOf(item);
-                }
-            }
+            if (qgraphicsitem_cast<TupTextItem *>(item))
+                continue;
 
-            coloredSelection << itemIndex;
+            if (qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
+                int itemIndex = -1;
+                if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
+                    frame = scene->currentFrame();
+                    if (frame) {
+                        itemIndex = frame->indexOf(item);
+                        currentLayer = scene->currentLayerIndex();
+                        currentFrame = scene->currentFrameIndex();
+                    }
+                } else {
+                    currentLayer = -1;
+                    currentFrame = -1;
+                    TupBackground *bg = scene->currentScene()->sceneBackground();
+                    if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
+                        frame = bg->vectorStaticFrame();
+                        itemIndex = frame->indexOf(item);
+                    } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+                        frame = bg->vectorDynamicFrame();
+                        itemIndex = frame->indexOf(item);
+                    } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
+                        frame = bg->vectorForegroundFrame();
+                        itemIndex = frame->indexOf(item);
+                    }
+                }
 
-            if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
+                specialSelection << itemIndex;
+
                 QDomDocument doc;
                 doc.appendChild(TupSerializer::pen(&pen, doc));
                 TupProjectRequest event = TupRequestBuilder::createItemRequest(

@@ -156,7 +156,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         int currentFrame;
         TupFrame *frame;
         QPointF wsCenter;
-        QList<int> coloredSelection;
+        QList<int> specialSelection;
 };
 
 #endif
