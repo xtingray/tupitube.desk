@@ -531,6 +531,32 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
             selectedObjects.clear();
         }
         break;
+        case TupProjectRequest::Pen:
+        case TupProjectRequest::Brush:
+        {
+            #ifdef TUP_DEBUG
+                qDebug() << "[SelectionTool::itemResponse()] - TupProjectRequest::Pen|Brush";
+            #endif
+
+            activeSelection = true;
+            foreach(int index, coloredSelection) {
+                QGraphicsItem *item = frame->item(index);
+                selectedObjects << item;
+            }
+
+            if (coloredSelection.size() == 1) {
+                QGraphicsItem *item = selectedObjects.first();
+                NodeManager *manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
+                connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
+                connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
+                manager->show();
+                manager->resizeNodes(realFactor);
+                nodeManagers << manager;
+            } else {
+                addTarget();
+            }
+        }
+        break;
         default:
         {
             #ifdef TUP_DEBUG
@@ -804,7 +830,8 @@ void SelectionTool::applyGroupAction(SelectionSettings::Group action)
                         items += ", ";
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[SelectionTool::applyGroupAction()] - Fatal Error: Index of item is invalid! -> -1";
+                        qDebug() << "[SelectionTool::applyGroupAction()] - "
+                                    "Fatal Error: Index of item is invalid! -> -1";
                     #endif
                 }
                 i++;
@@ -888,106 +915,111 @@ void SelectionTool::updateItemPosition()
         QPoint point = item->mapToScene(item->boundingRect().center()).toPoint();
         settingsPanel->setPos(point.x(), point.y());
     } else { 
-        if (selectedObjects.count() > 1) {
-            QGraphicsItem *item = selectedObjects.first();
-            QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();  
+        addTarget();
+    }
+}
+
+void SelectionTool::addTarget()
+{
+    if (selectedObjects.count() > 1) {
+        QGraphicsItem *item = selectedObjects.first();
+        QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();
+        QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();
+        int minX = left.x();
+        int maxX = right.x();
+        int minY = left.y();
+        int maxY = right.y();
+
+        foreach (QGraphicsItem *item, selectedObjects) {
+            QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();
+            int leftX = left.x();
+            int leftY = left.y();
+            if (leftX < minX)
+                minX = leftX;
+             if (leftY < minY)
+                minY = leftY;
             QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();
-            int minX = left.x();
-            int maxX = right.x(); 
-            int minY = left.y();
-            int maxY = right.y();
+            int rightX = right.x();
+            int rightY = right.y();
+            if (rightX > maxX)
+                maxX = rightX;
+            if (rightY > maxY)
+                maxY = rightY;
+        }
+        int x = minX + ((maxX - minX)/2);
+        int y = minY + ((maxY - minY)/2);
+        settingsPanel->setPos(x, y);
 
-            foreach (QGraphicsItem *item, selectedObjects) {
-                QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint(); 
-                int leftX = left.x();
-                int leftY = left.y();
-                if (leftX < minX)
-                    minX = leftX;
-                 if (leftY < minY)
-                    minY = leftY;
-                QPoint right = item->mapToScene(item->boundingRect().bottomRight()).toPoint();  
-                int rightX = right.x();
-                int rightY = right.y();
-                if (rightX > maxX)
-                    maxX = rightX;
-                if (rightY > maxY)
-                    maxY = rightY;
-            }
-            int x = minX + ((maxX - minX)/2); 
-            int y = minY + ((maxY - minY)/2);
-            settingsPanel->setPos(x, y);
+        if (!targetIsIncluded) {
+            center = new TupEllipseItem(QRectF(QPointF(x - 2, y - 2), QSize(4, 4)));
+            target1 = new QGraphicsLineItem(x, y - 6, x, y + 6);
+            target2 = new QGraphicsLineItem(x - 6, y, x + 6, y);
+            topLeftX = new QGraphicsLineItem(minX, minY, minX + 10, minY);
+            topLeftY = new QGraphicsLineItem(minX, minY, minX, minY + 10);
+            topRightX = new QGraphicsLineItem(maxX, minY, maxX - 10, minY);
+            topRightY = new QGraphicsLineItem(maxX, minY, maxX, minY + 10);
+            bottomRightX = new QGraphicsLineItem(maxX, maxY, maxX - 10, maxY);
+            bottomRightY = new QGraphicsLineItem(maxX, maxY, maxX, maxY - 10);
+            bottomLeftX = new QGraphicsLineItem(minX, maxY, minX + 10, maxY);
+            bottomLeftY = new QGraphicsLineItem(minX, maxY, minX, maxY - 10);
 
-            if (!targetIsIncluded) {
-                center = new TupEllipseItem(QRectF(QPointF(x - 2, y - 2), QSize(4, 4)));
-                target1 = new QGraphicsLineItem(x, y - 6, x, y + 6);
-                target2 = new QGraphicsLineItem(x - 6, y, x + 6, y);
-                topLeftX = new QGraphicsLineItem(minX, minY, minX + 10, minY);
-                topLeftY = new QGraphicsLineItem(minX, minY, minX, minY + 10);
-                topRightX = new QGraphicsLineItem(maxX, minY, maxX - 10, minY);
-                topRightY = new QGraphicsLineItem(maxX, minY, maxX, minY + 10);
-                bottomRightX = new QGraphicsLineItem(maxX, maxY, maxX - 10, maxY);
-                bottomRightY = new QGraphicsLineItem(maxX, maxY, maxX, maxY - 10);
-                bottomLeftX = new QGraphicsLineItem(minX, maxY, minX + 10, maxY);
-                bottomLeftY = new QGraphicsLineItem(minX, maxY, minX, maxY - 10);
+            QPen pen(QColor(255, 0, 0), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+            center->setPen(pen);
+            center->setBrush(QColor(255, 0, 0));
+            center->setZValue(nodeZValue);
+            scene->includeObject(center);
 
-                QPen pen(QColor(255, 0, 0), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-                center->setPen(pen);
-                center->setBrush(QColor(255, 0, 0));
-                center->setZValue(nodeZValue);
-                scene->includeObject(center);
+            target1->setPen(pen);
+            target1->setZValue(nodeZValue);
+            target2->setPen(pen);
+            target2->setZValue(nodeZValue);
 
-                target1->setPen(pen);
-                target1->setZValue(nodeZValue);
-                target2->setPen(pen);
-                target2->setZValue(nodeZValue);
+            topLeftX->setPen(pen);
+            topLeftX->setZValue(nodeZValue);
+            topLeftY->setPen(pen);
+            topLeftY->setZValue(nodeZValue);
+            topRightX->setPen(pen);
+            topRightX->setZValue(nodeZValue);
+            topRightY->setPen(pen);
+            topRightY->setZValue(nodeZValue);
+            bottomLeftX->setPen(pen);
+            bottomLeftX->setZValue(nodeZValue);
+            bottomLeftY->setPen(pen);
+            bottomLeftY->setZValue(nodeZValue);
+            bottomRightX->setPen(pen);
+            bottomRightX->setZValue(nodeZValue);
+            bottomRightY->setPen(pen);
+            bottomRightY->setZValue(nodeZValue);
 
-                topLeftX->setPen(pen);
-                topLeftX->setZValue(nodeZValue);
-                topLeftY->setPen(pen);
-                topLeftY->setZValue(nodeZValue);
-                topRightX->setPen(pen);
-                topRightX->setZValue(nodeZValue);
-                topRightY->setPen(pen);
-                topRightY->setZValue(nodeZValue);
-                bottomLeftX->setPen(pen);
-                bottomLeftX->setZValue(nodeZValue);
-                bottomLeftY->setPen(pen);
-                bottomLeftY->setZValue(nodeZValue);
-                bottomRightX->setPen(pen);
-                bottomRightX->setZValue(nodeZValue);
-                bottomRightY->setPen(pen);
-                bottomRightY->setZValue(nodeZValue);
+            scene->includeObject(target1);
+            scene->includeObject(target2);
 
-                scene->includeObject(target1);
-                scene->includeObject(target2);
+            scene->includeObject(topLeftX);
+            scene->includeObject(topLeftY);
+            scene->includeObject(topRightX);
+            scene->includeObject(topRightY);
+            scene->includeObject(bottomLeftX);
+            scene->includeObject(bottomLeftY);
+            scene->includeObject(bottomRightX);
+            scene->includeObject(bottomRightY);
 
-                scene->includeObject(topLeftX);
-                scene->includeObject(topLeftY);
-                scene->includeObject(topRightX);
-                scene->includeObject(topRightY);
-                scene->includeObject(bottomLeftX);
-                scene->includeObject(bottomLeftY);
-                scene->includeObject(bottomRightX);
-                scene->includeObject(bottomRightY);
+            targetIsIncluded = true;
+        } else {
+            QPoint current = center->mapToScene(center->boundingRect().topLeft()).toPoint();
+            int deltaX = x - current.x() - 1;
+            int deltaY = y - current.y() - 1;
+            center->moveBy(deltaX, deltaY);
+            target1->moveBy(deltaX, deltaY);
+            target2->moveBy(deltaX, deltaY);
 
-                targetIsIncluded = true;
-            } else {
-                QPoint current = center->mapToScene(center->boundingRect().topLeft()).toPoint();
-                int deltaX = x - current.x() - 1;
-                int deltaY = y - current.y() - 1;
-                center->moveBy(deltaX, deltaY);
-                target1->moveBy(deltaX, deltaY);
-                target2->moveBy(deltaX, deltaY);
-
-                topLeftX->moveBy(deltaX, deltaY);
-                topLeftY->moveBy(deltaX, deltaY);
-                topRightX->moveBy(deltaX, deltaY);
-                topRightY->moveBy(deltaX, deltaY);
-                bottomLeftX->moveBy(deltaX, deltaY);
-                bottomLeftY->moveBy(deltaX, deltaY);
-                bottomRightX->moveBy(deltaX, deltaY);
-                bottomRightY->moveBy(deltaX, deltaY);
-            }
+            topLeftX->moveBy(deltaX, deltaY);
+            topLeftY->moveBy(deltaX, deltaY);
+            topRightX->moveBy(deltaX, deltaY);
+            topRightY->moveBy(deltaX, deltaY);
+            bottomLeftX->moveBy(deltaX, deltaY);
+            bottomLeftY->moveBy(deltaX, deltaY);
+            bottomRightX->moveBy(deltaX, deltaY);
+            bottomRightY->moveBy(deltaX, deltaY);
         }
     }
 }
@@ -1196,4 +1228,111 @@ void SelectionTool::resetItemTransformations()
 {
     setItemRotation(0);
     setItemScale(1, 1);
+}
+
+void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, const QColor &color)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::updateColorOnSelection()] - action -> " << action;
+        qDebug() << "[SelectionTool::updateColorOnSelection()] - color -> " << color;
+    #endif
+
+    if (activeSelection) {
+        coloredSelection.clear();
+        foreach (QGraphicsItem *item, selectedObjects) {
+            int itemIndex = -1;
+            if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
+                frame = scene->currentFrame();
+                if (frame) {
+                    itemIndex = frame->indexOf(item);
+                    currentLayer = scene->currentLayerIndex();
+                    currentFrame = scene->currentFrameIndex();
+                }
+            } else {
+                currentLayer = -1;
+                currentFrame = -1;
+                TupBackground *bg = scene->currentScene()->sceneBackground();
+                if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
+                    frame = bg->vectorStaticFrame();
+                    itemIndex = frame->indexOf(item);
+                } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+                    frame = bg->vectorDynamicFrame();
+                    itemIndex = frame->indexOf(item);
+                } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
+                    itemIndex = frame->indexOf(item);
+                }
+            }
+
+            coloredSelection << itemIndex;
+
+            if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
+                QDomDocument doc;
+                QPen pen = shape->pen();
+                if (action == TupProjectRequest::Brush) {
+                    QBrush brush = pen.brush();
+                    brush.setColor(color);
+                    doc.appendChild(TupSerializer::brush(&brush, doc));
+                } else {
+                    pen.setColor(color);
+                    doc.appendChild(TupSerializer::pen(&pen, doc));
+                }
+                TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                                          scene->currentSceneIndex(), currentLayer,
+                                          currentFrame, itemIndex, QPointF(),
+                                          scene->getSpaceContext(), TupLibraryObject::Item,
+                                          action, doc.toString());
+                emit requested(&event);
+            }
+        }
+    }
+}
+
+void SelectionTool::updatePenOnSelection(const QPen &pen)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::updatePenOnSelection()] - pen -> " << pen;
+    #endif
+
+    if (activeSelection) {
+        coloredSelection.clear();
+        foreach (QGraphicsItem *item, selectedObjects) {
+            int itemIndex = -1;
+            if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
+                frame = scene->currentFrame();
+                if (frame) {
+                    itemIndex = frame->indexOf(item);
+                    currentLayer = scene->currentLayerIndex();
+                    currentFrame = scene->currentFrameIndex();
+                }
+            } else {
+                currentLayer = -1;
+                currentFrame = -1;
+                TupBackground *bg = scene->currentScene()->sceneBackground();
+                if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
+                    frame = bg->vectorStaticFrame();
+                    itemIndex = frame->indexOf(item);
+                } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+                    frame = bg->vectorDynamicFrame();
+                    itemIndex = frame->indexOf(item);
+                } else if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE) {
+                    frame = bg->vectorForegroundFrame();
+                    itemIndex = frame->indexOf(item);
+                }
+            }
+
+            coloredSelection << itemIndex;
+
+            if (QAbstractGraphicsShapeItem *shape = qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
+                QDomDocument doc;
+                doc.appendChild(TupSerializer::pen(&pen, doc));
+                TupProjectRequest event = TupRequestBuilder::createItemRequest(
+                                          scene->currentSceneIndex(), currentLayer,
+                                          currentFrame, itemIndex, QPointF(),
+                                          scene->getSpaceContext(), TupLibraryObject::Item,
+                                          TupProjectRequest::Pen, doc.toString());
+                emit requested(&event);
+            }
+        }
+    }
 }

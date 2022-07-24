@@ -98,6 +98,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         QColor projectBGColor() const;
         void updateWorkspace();
         void setFillTool(TColorCell::FillType type);
+        void updateColorOnSelection(TupProjectRequest::Action action, const QColor &color);
+        void updatePenOnSelection(const QPen &pen);
 
     private slots:
         void showModesSettings();

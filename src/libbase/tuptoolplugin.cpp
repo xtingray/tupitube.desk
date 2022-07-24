@@ -385,3 +385,14 @@ void TupToolPlugin::updateColorType(TColorCell::FillType fillType)
 void TupToolPlugin::refreshEyeDropperPanel()
 {
 }
+
+void TupToolPlugin::updateColorOnSelection(TupProjectRequest::Action action, const QColor &color)
+{
+    Q_UNUSED(action)
+    Q_UNUSED(color)
+}
+
+void TupToolPlugin::updatePenOnSelection(const QPen &pen)
+{
+    Q_UNUSED(pen)
+}

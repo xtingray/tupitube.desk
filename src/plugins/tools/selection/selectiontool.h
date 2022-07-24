@@ -96,6 +96,9 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void clearSelection();
         virtual void setProjectSize(const QSize size);
 
+        void updateColorOnSelection(TupProjectRequest::Action action, const QColor &color);
+        void updatePenOnSelection(const QPen &pen);
+
     signals:
         void closeHugeCanvas();
         void callForPlugin(int menu, int index);
@@ -119,6 +122,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         void updateItemPosition();
         void updateItemRotation();
         void updateItemScale();
+        void addTarget();
         void removeTarget();
         TupFrame* getCurrentFrame();
         TupFrame* frameAt(int sceneIndex, int layerIndex, int frameIndex);
@@ -152,6 +156,7 @@ class TUPITUBE_PLUGIN SelectionTool : public TupToolPlugin
         int currentFrame;
         TupFrame *frame;
         QPointF wsCenter;
+        QList<int> coloredSelection;
 };
 
 #endif

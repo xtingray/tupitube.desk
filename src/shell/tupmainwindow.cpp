@@ -1282,11 +1282,30 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
         m_projectManager->createCommand((TupProjectCommand *) command);
 
         // Updating color on the Pen module interface
-        if (event->getAction() == TupPaintAreaEvent::ChangePenColor)
-            m_brushWidget->setPenColor(qvariant_cast<QColor>(event->getData()));
+        if (event->getAction() == TupPaintAreaEvent::ChangePenColor) {
+            QColor color = qvariant_cast<QColor>(event->getData());
+            m_brushWidget->setPenColor(color);
+            animationTab->updateColorOnSelection(TupProjectRequest::Pen, color);
+            return;
+        }
 
-        if (event->getAction() == TupPaintAreaEvent::ChangePenThickness)
-            m_brushWidget->setPenThickness(qvariant_cast<int>(event->getData()));
+        if (event->getAction() == TupPaintAreaEvent::ChangeBrush) {
+            QColor color = qvariant_cast<QColor>(event->getData());
+            animationTab->updateColorOnSelection(TupProjectRequest::Brush, color);
+            return;
+        }
+
+        if (event->getAction() == TupPaintAreaEvent::ChangePenThickness) {
+            int size = qvariant_cast<int>(event->getData());
+            m_brushWidget->setPenThickness(size);
+            return;
+        }
+
+        if (event->getAction() == TupPaintAreaEvent::ChangePen) {
+            QPen pen = qvariant_cast<QPen>(event->getData());
+            animationTab->updatePenOnSelection(pen);
+            return;
+        }
 
         if (event->getAction() == TupPaintAreaEvent::ChangeBgColor)
             m_projectManager->setModificationStatus(true);

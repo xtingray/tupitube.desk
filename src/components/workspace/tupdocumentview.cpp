@@ -1641,6 +1641,22 @@ TupPaintAreaCommand *TupDocumentView::createPaintCommand(const TupPaintAreaEvent
     return command;
 }
 
+void TupDocumentView::updateColorOnSelection(TupProjectRequest::Action action, const QColor &color)
+{
+    if (currentTool) {
+        if (currentTool->toolId() == TAction::ObjectSelection)
+            currentTool->updateColorOnSelection(action, color);
+    }
+}
+
+void TupDocumentView::updatePenOnSelection(const QPen &pen)
+{
+    if (currentTool) {
+        if (currentTool->toolId() == TAction::ObjectSelection)
+            currentTool->updatePenOnSelection(pen);
+    }
+}
+
 void TupDocumentView::updatePaintArea()
 {
     #ifdef TUP_DEBUG

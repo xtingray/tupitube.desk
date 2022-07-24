@@ -121,6 +121,9 @@ class TUPITUBE_EXPORT TupToolPlugin : public QObject, public TupToolInterface
         virtual void updateColorType(TColorCell::FillType fillType);
         virtual void refreshEyeDropperPanel();
 
+        virtual void updateColorOnSelection(TupProjectRequest::Action action, const QColor &color);
+        virtual void updatePenOnSelection(const QPen &pen);
+
     signals:
         void requested(const TupProjectRequest *request);
         
