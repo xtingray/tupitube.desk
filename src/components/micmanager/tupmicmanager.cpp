@@ -213,6 +213,10 @@ void TupMicManager::updateProgress(qint64 duration)
 
 void TupMicManager::updateStatus(QMediaRecorder::Status status)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::updateStatus()] - status -> " << status;
+    #endif
+
     QString statusMessage;
 
     switch (status) {
@@ -237,6 +241,10 @@ void TupMicManager::updateStatus(QMediaRecorder::Status status)
 
 void TupMicManager::onStateChanged(QMediaRecorder::State state)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::onStateChanged()] - state -> " << state;
+    #endif
+
     switch (state) {
         case QMediaRecorder::RecordingState:
             recording = true;
@@ -300,6 +308,10 @@ static QVariant boxValue(const QComboBox *box)
 
 void TupMicManager::toggleRecord()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::toggleRecord()]";
+    #endif
+
     if (micRecorder->state() == QMediaRecorder::StoppedState) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Recording...";
@@ -326,7 +338,6 @@ void TupMicManager::toggleRecord()
         QString extension = ".mp3";
 
         settings.setCodec(codec);
-        // settings.setSampleRate(0);
         settings.setSampleRate(44100); // Standard 44.1kHz
         settings.setBitRate(128000);
         settings.setChannelCount(2);
@@ -354,6 +365,10 @@ void TupMicManager::togglePause()
 
 void TupMicManager::discardRecording()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::discardRecording()]";
+    #endif
+
     QMessageBox msgBox(this);
     msgBox.setWindowTitle(tr("Question"));
     msgBox.setIcon(QMessageBox::Question);
@@ -606,13 +621,24 @@ QString TupMicManager::getRecordPath()
     #endif
     */
 
-    QString extension = ".mp3";
-    QString path = CACHE_DIR + filename + extension;
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::getRecordPath()] - path -> " << path;
-    #endif
-    if (QFile::exists(path))
-        return path;
+    if (!filename.isEmpty()) {
+        QString extension = ".mp3";
+        QString path = CACHE_DIR + filename + extension;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::getRecordPath()] - path -> " << path;
+        #endif
+        if (QFile::exists(path)) {
+            return path;
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record path doesn't exist!";
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record name is empty!";
+        #endif
+    }
 
     return "";
 }
@@ -659,7 +685,8 @@ void TupMicManager::cancelRecording()
     if (QFile::exists(path)) {
         if (!QFile::remove(path)) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupMicManager::cancelRecording()] - Fatal Error: Can't remove temporary file -> " << path;
+                qWarning() << "[TupMicManager::cancelRecording()] - "
+                              "Fatal Error: Can't remove temporary file -> " << path;
             #endif
         }
     }
