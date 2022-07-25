@@ -309,9 +309,11 @@ static QVariant boxValue(const QComboBox *box)
 void TupMicManager::toggleRecord()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::toggleRecord()]";
+        qDebug() << "[TupMicManager::toggleRecord()] - state -> " << micRecorder->state();
     #endif
 
+    QString extension = ".mp3";
+    QString path = CACHE_DIR + nameInput->text() + extension;
     if (micRecorder->state() == QMediaRecorder::StoppedState) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Recording...";
@@ -335,7 +337,6 @@ void TupMicManager::toggleRecord()
 
         QString codec = "audio/mpeg, mpegversion=(int)1, layer=(int)3";
         QString container = "audio/mpeg, mpegversion=(int)1";
-        QString extension = ".mp3";
 
         settings.setCodec(codec);
         settings.setSampleRate(44100); // Standard 44.1kHz
@@ -345,13 +346,17 @@ void TupMicManager::toggleRecord()
         settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 
         micRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-        micRecorder->setOutputLocation(QUrl::fromLocalFile(CACHE_DIR + nameInput->text() + extension));
+        micRecorder->setOutputLocation(QUrl::fromLocalFile(path));
         micRecorder->record();
     } else {
+        micRecorder->stop();
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Stop recording...";
+            if (QFile::exists(path))
+                qDebug() << "[TupMicManager::toggleRecord()] - Audio file was created successfully! -> " << path;
+            else
+                qWarning() << "[TupMicManager::toggleRecord()] - Fatal Error: Audio file wasn't created -> " << path;
         #endif
-        micRecorder->stop();
     }
 }
 

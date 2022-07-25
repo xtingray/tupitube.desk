@@ -267,7 +267,7 @@ void TupSoundDialog::launchLipsyncModule()
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "[TupSoundDialog::launchLipsyncModule()] - "
-                          "Fatal Error: Recording file path is empty!";
+                          "Fatal Error: Audio file path is empty!";
         #endif
     }
 }
