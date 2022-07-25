@@ -15,6 +15,10 @@ unix {
   }
 }
 
+win32 {
+  include(../../../win.pri)
+}
+
 HEADERS = tupmicmanager.h \
           tupmiclevel.h
 
