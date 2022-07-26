@@ -82,11 +82,11 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QPushButton *discardButton;
 
         QList<QMediaPlayer *> player;
-        // QMediaPlayer *player;
         QTimer *timer;
         qreal secCounter;
         qreal audioDuration;
         bool recording;
+        QString extension;
 };
 
 #endif // TUPMICMANAGER_H

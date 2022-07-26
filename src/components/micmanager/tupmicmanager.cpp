@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupmicmanager.h"
+#include "tosd.h"
 
 #include <QDir>
 #include <QGridLayout>
@@ -80,6 +81,7 @@ void TupMicManager::initRecorder()
     recording = false;
     secCounter = 0;
     player << new QMediaPlayer;
+    extension = ".mp3";
 }
 
 void TupMicManager::setupUI()
@@ -261,17 +263,12 @@ void TupMicManager::onStateChanged(QMediaRecorder::State state)
             pauseButton->setToolTip(tr("Resume"));
             break;
         case QMediaRecorder::StoppedState:
-            /*
-            #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-                QString extension = ".wav";
-            #else
-                QString extension = ".mp3";
-            #endif
-            */
-
-            QString extension = ".mp3";
             recording = false;
-            QString filename = CACHE_DIR + nameInput->text() + extension;
+            #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+                QString filename = QDir::homePath() + "/" + nameInput->text() + extension;
+            #else
+                QString filename = CACHE_DIR + nameInput->text() + extension;
+            #endif
             #ifdef TUP_DEBUG
                 qDebug() << "[TupMicManager::onStateChanged()] - sound path -> " << filename;
             #endif
@@ -312,8 +309,11 @@ void TupMicManager::toggleRecord()
         qDebug() << "[TupMicManager::toggleRecord()] - state -> " << micRecorder->state();
     #endif
 
-    QString extension = ".mp3";
-    QString path = CACHE_DIR + nameInput->text() + extension;
+    #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+        QString filename = QDir::homePath() + "/" + nameInput->text() + extension;
+    #else
+        QString filename = CACHE_DIR + nameInput->text() + extension;
+    #endif
     if (micRecorder->state() == QMediaRecorder::StoppedState) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Recording...";
@@ -322,19 +322,6 @@ void TupMicManager::toggleRecord()
         micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
 
         QAudioEncoderSettings settings;
-        // SQA: MP3 format fails on Windows system. Research is required.
-        /*
-        #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-            QString codec = "audio/pcm";
-            QString container = "audio/x-wav";
-            QString extension = ".wav";
-        #else
-            QString codec = "audio/mpeg, mpegversion=(int)1, layer=(int)3";
-            QString container = "audio/mpeg, mpegversion=(int)1";
-            QString extension = ".mp3";
-        #endif
-        */
-
         QString codec = "audio/mpeg, mpegversion=(int)1, layer=(int)3";
         QString container = "audio/mpeg, mpegversion=(int)1";
 
@@ -346,16 +333,16 @@ void TupMicManager::toggleRecord()
         settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
 
         micRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-        micRecorder->setOutputLocation(QUrl::fromLocalFile(path));
+        micRecorder->setOutputLocation(QUrl::fromLocalFile(filename));
         micRecorder->record();
     } else {
         micRecorder->stop();
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Stop recording...";
-            if (QFile::exists(path))
-                qDebug() << "[TupMicManager::toggleRecord()] - Audio file was created successfully! -> " << path;
+            if (QFile::exists(filename))
+                qDebug() << "[TupMicManager::toggleRecord()] - Audio file was created successfully! -> " << filename;
             else
-                qWarning() << "[TupMicManager::toggleRecord()] - Fatal Error: Audio file wasn't created -> " << path;
+                qWarning() << "[TupMicManager::toggleRecord()] - Fatal Error: Audio file wasn't created -> " << filename;
         #endif
     }
 }
@@ -397,23 +384,26 @@ void TupMicManager::discardRecording()
     playerWidget->setVisible(false);
     controlsWidget->setVisible(true);
 
-    /*
-    #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-        QString extension = ".wav";
-    #else
-        QString extension = ".mp3";
-    #endif
-    */
-
     player.at(0)->setMedia(QMediaContent());
-    QString extension = ".mp3";
-    QString filename = CACHE_DIR + nameInput->text() + extension;
+
+    #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+        QString filename = QDir::homePath() + "/" + nameInput->text() + extension;
+    #else
+        QString filename = CACHE_DIR + nameInput->text() + extension;
+    #endif
+
     if (QFile::exists(filename)) {
         if (!QFile::remove(filename)) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupMicManager::discardRecording()] - Fatal Error: Can't remove file -> " << filename;
             #endif
+            TOsd::self()->display(TOsd::Error, tr("Can't remove audio file!"));
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::discardRecording()] - Fatal Error: Audio file doesn't exist -> " << filename;
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
     }
 
     emit soundReady(false);
@@ -616,24 +606,18 @@ QString TupMicManager::getRecordPath()
     #endif
 
     resetMediaPlayer();
-    QString filename = nameInput->text();
-
-    /*
-    #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-        QString extension = ".wav";
-    #else
-        QString extension = ".mp3";
-    #endif
-    */
-
-    if (!filename.isEmpty()) {
-        QString extension = ".mp3";
-        QString path = CACHE_DIR + filename + extension;
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupMicManager::getRecordPath()] - path -> " << path;
+    QString file = nameInput->text();
+    if (!file.isEmpty()) {
+        #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
+            QString filename = QDir::homePath() + "/" + file + extension;
+        #else
+            QString filename = CACHE_DIR + file + extension;
         #endif
-        if (QFile::exists(path)) {
-            return path;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::getRecordPath()] - filename -> " << filename;
+        #endif
+        if (QFile::exists(filename)) {
+            return filename;
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record path doesn't exist!";
@@ -675,23 +659,18 @@ void TupMicManager::cancelRecording()
     }
 
     player.at(0)->setMedia(QMediaContent());
-    QString filename = nameInput->text();
-
-    /*
+    QString file = nameInput->text();
     #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-        QString extension = ".wav";
+        QString filename = QDir::homePath() + "/" + file + extension;
     #else
-        QString extension = ".mp3";
+        QString filename = CACHE_DIR + file + extension;
     #endif
-    */
 
-    QString extension = ".mp3";
-    QString path = CACHE_DIR + filename + extension;
-    if (QFile::exists(path)) {
-        if (!QFile::remove(path)) {
+    if (QFile::exists(filename)) {
+        if (!QFile::remove(filename)) {
             #ifdef TUP_DEBUG
                 qWarning() << "[TupMicManager::cancelRecording()] - "
-                              "Fatal Error: Can't remove temporary file -> " << path;
+                              "Fatal Error: Can't remove temporary file -> " << filename;
             #endif
         }
     }
