@@ -72,6 +72,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         bool initLevelIncluded;
 
         TInputField *nameInput;
+        TInputField *durationInput;
         QComboBox *audioDevDropList;
         QLabel *statusLabel;
 
@@ -87,6 +88,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         qreal audioDuration;
         bool recording;
         QString extension;
+        QString recordTime;
 };
 
 #endif // TUPMICMANAGER_H
