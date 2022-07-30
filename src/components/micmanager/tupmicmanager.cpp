@@ -69,6 +69,7 @@ TupMicManager::~TupMicManager()
 
     delete micRecorder;
     delete micProbe;
+    delete playerProbe;
 }
 
 void TupMicManager::initRecorder()
@@ -81,6 +82,10 @@ void TupMicManager::initRecorder()
     recording = false;
     secCounter = 0;
     player << new QMediaPlayer;
+
+    playerProbe = new QAudioProbe(this);
+    connect(playerProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::handleBuffer);
+    playerProbe->setSource(player.at(0));
 
     #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
         extension = ".wav";
@@ -181,9 +186,9 @@ void TupMicManager::setupUI()
 
     levelsScreenLayout = new QVBoxLayout();
 
-    initLevel = new TupMicLevel(bottomWidget);
-    levelsScreenLayout->addWidget(initLevel);
-    initLevelIncluded = true;
+    micLevel = new TupMicLevel(bottomWidget);
+    levelsScreenLayout->addWidget(micLevel);
+    micLevelIncluded = true;
 
     bottomLayout->addLayout(levelsScreenLayout);
 
@@ -533,9 +538,9 @@ void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
     #endif
     */
 
-    if (initLevelIncluded) {
-        levelsScreenLayout->removeWidget(initLevel);
-        initLevelIncluded = false;
+    if (micLevelIncluded) {
+        levelsScreenLayout->removeWidget(micLevel);
+        micLevelIncluded = false;
     }
 
     if (micLevels.count() != buffer.format().channelCount()) {

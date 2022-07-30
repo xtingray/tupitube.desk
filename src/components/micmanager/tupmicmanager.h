@@ -68,8 +68,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QWidget *playerWidget;
         QWidget *bottomWidget;
         QVBoxLayout *levelsScreenLayout;
-        TupMicLevel *initLevel;
-        bool initLevelIncluded;
+        TupMicLevel *micLevel;
+        bool micLevelIncluded;
 
         TInputField *nameInput;
         TInputField *durationInput;
@@ -83,6 +83,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QPushButton *discardButton;
 
         QList<QMediaPlayer *> player;
+        QAudioProbe *playerProbe;
         QTimer *timer;
         qreal secCounter;
         qreal audioDuration;
