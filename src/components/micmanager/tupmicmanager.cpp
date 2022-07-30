@@ -70,6 +70,8 @@ TupMicManager::~TupMicManager()
     delete micRecorder;
     delete micProbe;
     delete playerProbe;
+    delete audioLevel1;
+    delete audioLevel2;
 }
 
 void TupMicManager::initRecorder()
@@ -186,9 +188,12 @@ void TupMicManager::setupUI()
 
     levelsScreenLayout = new QVBoxLayout();
 
-    audioLevel = new TupMicLevel(bottomWidget);
-    levelsScreenLayout->addWidget(audioLevel);
-    audioLevelIncluded = true;
+    audioLevel1 = new TupMicLevel(bottomWidget);
+    levelsScreenLayout->addWidget(audioLevel1);
+    audioLevel2 = new TupMicLevel(bottomWidget);
+    levelsScreenLayout->addWidget(audioLevel2);
+
+    audioLevelsIncluded = true;
 
     bottomLayout->addLayout(levelsScreenLayout);
 
@@ -538,9 +543,10 @@ void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
     #endif
     */
 
-    if (audioLevelIncluded) {
-        levelsScreenLayout->removeWidget(audioLevel);
-        audioLevelIncluded = false;
+    if (audioLevelsIncluded) {
+        levelsScreenLayout->removeWidget(audioLevel1);
+        levelsScreenLayout->removeWidget(audioLevel2);
+        audioLevelsIncluded = false;
     }
 
     if (micLevels.count() != buffer.format().channelCount()) {
