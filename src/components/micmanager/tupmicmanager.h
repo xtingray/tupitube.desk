@@ -51,6 +51,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
 
         void playRecording();
         void trackPlayerStatus();
+        void enablePlayButton();
 
     private:
         void initRecorder();

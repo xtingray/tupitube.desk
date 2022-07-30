@@ -352,6 +352,8 @@ void TupMicManager::toggleRecord()
     } else {
         micRecorder->stop();
         durationInput->setText(recordTime + " " + tr("sec"));
+        playButton->setEnabled(false);
+        QTimer::singleShot(2000, this, SLOT(enablePlayButton()));
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Stop recording...";
@@ -361,6 +363,11 @@ void TupMicManager::toggleRecord()
                 qWarning() << "[TupMicManager::toggleRecord()] - Fatal Error: Audio file wasn't created -> " << filename;
         #endif
     }
+}
+
+void TupMicManager::enablePlayButton()
+{
+    playButton->setEnabled(true);
 }
 
 void TupMicManager::togglePause()
@@ -680,8 +687,10 @@ void TupMicManager::cancelRecording()
 
     if (micRecorder->state() == QMediaRecorder::RecordingState) {
         disconnect(micRecorder, SIGNAL(durationChanged(qint64)), this, SLOT(updateProgress(qint64)));
-        disconnect(micRecorder, SIGNAL(statusChanged(QMediaRecorder::Status)), this, SLOT(updateStatus(QMediaRecorder::Status)));
-        disconnect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)), this, SLOT(onStateChanged(QMediaRecorder::State)));
+        disconnect(micRecorder, SIGNAL(statusChanged(QMediaRecorder::Status)),
+                   this, SLOT(updateStatus(QMediaRecorder::Status)));
+        disconnect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)),
+                   this, SLOT(onStateChanged(QMediaRecorder::State)));
 
         /* SQA: These methods are not working on Windows
         disconnect(micRecorder, &QAudioRecorder::durationChanged, this, &TupMicManager::updateProgress);
