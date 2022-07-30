@@ -68,8 +68,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QWidget *playerWidget;
         QWidget *bottomWidget;
         QVBoxLayout *levelsScreenLayout;
-        TupMicLevel *micLevel;
-        bool micLevelIncluded;
+        TupMicLevel *audioLevel;
+        bool audioLevelIncluded;
 
         TInputField *nameInput;
         TInputField *durationInput;

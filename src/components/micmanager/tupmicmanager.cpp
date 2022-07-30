@@ -186,9 +186,9 @@ void TupMicManager::setupUI()
 
     levelsScreenLayout = new QVBoxLayout();
 
-    micLevel = new TupMicLevel(bottomWidget);
-    levelsScreenLayout->addWidget(micLevel);
-    micLevelIncluded = true;
+    audioLevel = new TupMicLevel(bottomWidget);
+    levelsScreenLayout->addWidget(audioLevel);
+    audioLevelIncluded = true;
 
     bottomLayout->addLayout(levelsScreenLayout);
 
@@ -538,9 +538,9 @@ void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
     #endif
     */
 
-    if (micLevelIncluded) {
-        levelsScreenLayout->removeWidget(micLevel);
-        micLevelIncluded = false;
+    if (audioLevelIncluded) {
+        levelsScreenLayout->removeWidget(audioLevel);
+        audioLevelIncluded = false;
     }
 
     if (micLevels.count() != buffer.format().channelCount()) {
@@ -620,6 +620,7 @@ void TupMicManager::trackPlayerStatus()
         statusLabel->setText("");
         playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
         discardButton->setEnabled(true);
+        clearMicLevels();
     } else {
         QString prefix = "";
         int timer = secCounter/1000;
