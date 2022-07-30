@@ -352,8 +352,10 @@ void TupMicManager::toggleRecord()
     } else {
         micRecorder->stop();
         durationInput->setText(recordTime + " " + tr("sec"));
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         playButton->setEnabled(false);
-        QTimer::singleShot(2000, this, SLOT(enablePlayButton()));
+        discardButton->setEnabled(false);
+        QTimer::singleShot(1000, this, SLOT(enablePlayButton()));
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Stop recording...";
@@ -368,6 +370,8 @@ void TupMicManager::toggleRecord()
 void TupMicManager::enablePlayButton()
 {
     playButton->setEnabled(true);
+    discardButton->setEnabled(true);
+    QApplication::restoreOverrideCursor();
 }
 
 void TupMicManager::togglePause()
