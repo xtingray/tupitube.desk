@@ -610,7 +610,7 @@ void TupLibraryFolder::loadItem(const QString &folder, QDomNode xml)
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupLibraryFolder::loadItem()] - Folder -> " << folder;
+        qDebug() << "[TupLibraryFolder::loadItem()] - folder -> " << folder;
     #endif
 
     QDomDocument objectDocument;
@@ -718,7 +718,7 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
              #ifdef TUP_DEBUG
                  qDebug() << "[TupLibraryFolder::updatePaths()] - AUDIO - oldPath -> " << oldPath;
                  qDebug() << "[TupLibraryFolder::updatePaths()] - AUDIO - path -> " << path;
-             #endif
+             #endif                 
          }
 
          if (objects[oid]->getObjectType() == TupLibraryObject::Item) {

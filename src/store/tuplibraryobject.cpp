@@ -166,6 +166,10 @@ QString TupLibraryObject::getSymbolName() const
 
 void TupLibraryObject::setFolder(const QString &dir)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::setFolder()] - folder -> " << dir;
+    #endif
+
     folder = dir;
 }
 
@@ -221,6 +225,15 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
                                 "Fatal Error: Couldn't create path -> " << newPath;
                 #endif
                 return;
+            }
+        }
+    } else {
+        if (objectType == Audio) {
+            if (soundType == Lipsync) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryObject::updateFolder()] - "
+                                "Fatal Error: New lipsync audio folder can't be empty!";
+                #endif
             }
         }
     }
@@ -353,6 +366,9 @@ void TupLibraryObject::fromXml(const QString &xml)
                  if (playAt == 0)
                      playAt = 1;
                  dataPath = objectTag.attribute("path");
+                 int index = dataPath.lastIndexOf("/");
+                 if (index > 0)
+                     folder = dataPath.left(index);
              }
             break;
             default:
@@ -374,8 +390,18 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
     object.setAttribute("type", objectType);
     QFileInfo finfo(dataPath);
     QString path = finfo.fileName();
-    if (!folder.isEmpty())
+    if (!folder.isEmpty()) {
         path = folder + "/" + finfo.fileName();
+    } else {
+        if (objectType == Audio) {
+            if (soundType == Lipsync) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryObject::toXml()] - "
+                                "Fatal Error: Lipsync audio folder can't be empty!";
+                #endif
+            }
+        }
+    }
 
     #ifdef TUP_DEBUG
         qDebug() << "---";
@@ -583,7 +609,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
             case TupLibraryObject::Item:
             {
                  QString path = projectDir + "/obj/";
-                 if (folder.length() > 0)
+                 if (!folder.isEmpty())
                      path += folder + "/";
                  if (!QFile::exists(path)) {
                      QDir dir;
@@ -610,8 +636,17 @@ bool TupLibraryObject::saveData(const QString &projectDir)
             case TupLibraryObject::Audio:
             {
                  QString path = projectDir + "/audio/";
-                 if (folder.length() > 0)
+                 if (!folder.isEmpty()) {
                      path += folder + "/";
+                 } else {
+                     if (soundType == Lipsync) {
+                         #ifdef TUP_DEBUG
+                             qDebug() << "[TupLibraryObject::saveData()] - "
+                                         "Fatal Error: Lipsync audio folder can't be empty!";
+                         #endif
+                     }
+                 }
+
                  if (!QFile::exists(path)) {
                      QDir dir;
                      dir.mkpath(path);
@@ -653,7 +688,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
             case TupLibraryObject::Svg:
             {
                  QString path = projectDir + "/svg/";
-                 if (folder.length() > 0)
+                 if (!folder.isEmpty())
                      path += folder + "/";
                  if (!QFile::exists(path)) {
                      QDir dir;
@@ -682,13 +717,14 @@ bool TupLibraryObject::saveData(const QString &projectDir)
             case TupLibraryObject::Image:
             {
                  QString path = projectDir + "/images/";
-                 if (folder.length() > 0)
+                 if (!folder.isEmpty())
                      path += folder + "/";
                  if (!QFile::exists(path)) {
                      QDir dir;
                      if (!dir.mkpath(path)) { 
                          #ifdef TUP_DEBUG
-                             qDebug() << "[TupLibraryObject::saveData()] - Fatal error: Can't create image path -> " << path;
+                             qDebug() << "[TupLibraryObject::saveData()] - "
+                                         "Fatal error: Can't create image path -> " << path;
                          #endif
                          return false;
                      }

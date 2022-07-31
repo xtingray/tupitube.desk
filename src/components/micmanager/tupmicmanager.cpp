@@ -360,9 +360,11 @@ void TupMicManager::toggleRecord()
         #ifdef TUP_DEBUG
             qDebug() << "[TupMicManager::toggleRecord()] - Stop recording...";
             if (QFile::exists(filename))
-                qDebug() << "[TupMicManager::toggleRecord()] - Audio file was created successfully! -> " << filename;
+                qDebug() << "[TupMicManager::toggleRecord()] - "
+                            "Audio file was created successfully! -> " << filename;
             else
-                qWarning() << "[TupMicManager::toggleRecord()] - Fatal Error: Audio file wasn't created -> " << filename;
+                qWarning() << "[TupMicManager::toggleRecord()] - "
+                              "Fatal Error: Audio file wasn't created -> " << filename;
         #endif
     }
 }
