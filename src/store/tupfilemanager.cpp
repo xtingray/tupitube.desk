@@ -251,7 +251,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupFileManager::save()] - "
-                                "Project's directory already exists! -> " << projectDir.path();
+                                "Warning: Project's directory already exists! -> " << projectDir.path();
                 #endif
             }
         }
@@ -280,7 +280,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             projectFile.close();
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupFileManager::save()] - Error: Can't create file -> " << projectDir.path() << "/project.tpp";
+                qWarning() << "[TupFileManager::save()] - "
+                              "Error: Can't create file -> " << projectDir.path() << "/project.tpp";
             #endif
             return false;
         }

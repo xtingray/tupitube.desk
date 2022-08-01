@@ -248,10 +248,14 @@ class TupLipsyncDoc : public QObject
         void resetDocument();
 
     private:
+        void releaseAudio();
+
         int32 fps;
         int32 audioDuration;
         QString audioPath;
-        QMediaPlayer *audioPlayer;
+        // QMediaPlayer *audioPlayer;
+        QList<QMediaPlayer *> audioPlayer;
+
         TupAudioExtractor *audioExtractor;
         real maxAmplitude;
 

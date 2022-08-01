@@ -759,7 +759,8 @@ QString LipsyncVoice::getPhonemeAtFrame(int32 frame)
         // we found the phrase that contains this frame
         for (int32 j = 0; j < phrase->wordsSize(); j++) {
             LipsyncWord *word = phrase->getWordAt(j);
-            if (frame >= word->getStartFrame() && frame <= word->getEndFrame()) { // we found the word that contains this frame
+            // we found the word that contains this frame
+            if (frame >= word->getStartFrame() && frame <= word->getEndFrame()) {
                 if (word->phonemesSize() > 0) {
                     for (int32 k = word->phonemesSize() - 1; k >= 0; k--) {
                         if (frame >= word->getPhonemeAt(k)->getFrame()) {
@@ -904,7 +905,6 @@ TupLipsyncDoc::TupLipsyncDoc()
     projectHasChanged = false;
     fps = 24;
     audioDuration = 0;
-    audioPlayer = nullptr;
     audioExtractor = nullptr;
     maxAmplitude = 1.0f;
     voice = nullptr;
@@ -914,7 +914,22 @@ TupLipsyncDoc::TupLipsyncDoc()
 
 TupLipsyncDoc::~TupLipsyncDoc()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::~TupLipsyncDoc()]";
+    #endif
+
     resetDocument();
+}
+
+void TupLipsyncDoc::releaseAudio()
+{
+    while(!audioPlayer.isEmpty()) {
+        QMediaPlayer *audio = audioPlayer.takeFirst();
+        audio->stop();
+        audio->setMedia(QMediaContent());
+        delete audio;
+        audio = nullptr;
+    }
 }
 
 void TupLipsyncDoc::resetDocument()
@@ -923,13 +938,7 @@ void TupLipsyncDoc::resetDocument()
         qDebug() << "[TupLipsyncDoc::resetDocument()]";
     #endif
 
-    if (audioPlayer) {
-        audioPlayer->stop();
-        audioPlayer->setMedia(QMediaContent());
-
-        delete audioPlayer;
-        audioPlayer = nullptr;
-    }
+    releaseAudio();
 
     if (audioExtractor) {
         delete audioExtractor;
@@ -965,17 +974,7 @@ void TupLipsyncDoc::openPGOFile(const QString &pgoPath, const QString &audioPath
 	}
     pgoFilePath = pgoPath;
 
-    if (audioPlayer) {
-        audioPlayer->stop();
-        delete audioPlayer;
-        audioPlayer = nullptr;
-	}
-
-    if (audioExtractor) {
-        delete audioExtractor;
-        audioExtractor = nullptr;
-	}
-
+    resetDocument();
     clearVoice();
     voice = nullptr;
 
@@ -1006,29 +1005,17 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
 
     maxAmplitude = 1.0f;
 
-    if (audioPlayer) {
-        audioPlayer->stop();
-        audioPlayer->setMedia(QMediaContent());
-
-        delete audioPlayer;
-        audioPlayer = nullptr;
-	}
-
-    if (audioExtractor) {
-        delete audioExtractor;
-        audioExtractor = nullptr;
-	}
+    resetDocument();
 
     audioPath = path;
-    audioPlayer = new QMediaPlayer;
-    audioPlayer->setMedia(QUrl::fromLocalFile(audioPath));
-    if (audioPlayer->error()) {
+    audioPlayer << new QMediaPlayer;
+    audioPlayer.at(0)->setMedia(QUrl::fromLocalFile(audioPath));
+    if (audioPlayer.at(0)->error()) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLipsyncDoc::openAudioFile()] - Fatal Error: Can't open audio -> " << path;
-            qDebug() << "[TupLipsyncDoc::openAudioFile()] - Error Output -> " << audioPlayer->errorString();
+            qDebug() << "[TupLipsyncDoc::openAudioFile()] - Error Output -> " << audioPlayer.at(0)->errorString();
         #endif
-        delete audioPlayer;
-        audioPlayer = nullptr;
+        releaseAudio();
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLipsyncDoc::openAudioFile()] - Audio file loaded successful!";
@@ -1048,7 +1035,8 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
 			}
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLipsyncDoc::openAudioFile()] - Fatal Error: Audio extractor failed!";
+                qDebug() << "[TupLipsyncDoc::openAudioFile()] - "
+                            "Fatal Error: Audio extractor failed!";
             #endif
             delete audioExtractor;
             audioExtractor = nullptr;
@@ -1102,7 +1090,8 @@ bool TupLipsyncDoc::save()
     projectHasChanged = false;
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipsyncDoc::save()] - File saved successfully! - pgoFilePath -> " << pgoFilePath;
+        qDebug() << "[TupLipsyncDoc::save()] - "
+                    "File saved successfully! - pgoFilePath -> " << pgoFilePath;
     #endif
 
     return true;
@@ -1121,7 +1110,7 @@ void TupLipsyncDoc::setFps(int32 fps)
 
 QMediaPlayer *TupLipsyncDoc::getAudioPlayer()
 {
-    return audioPlayer;
+    return audioPlayer.at(0);
 }
 
 TupAudioExtractor* TupLipsyncDoc::getAudioExtractor()
@@ -1219,17 +1208,17 @@ QString TupLipsyncDoc::getPhonemeAt(int index)
 
 void TupLipsyncDoc::playAudio()
 {
-    audioPlayer->play();
+    audioPlayer.at(0)->play();
 }
 
 void TupLipsyncDoc::pauseAudio()
 {
-    audioPlayer->pause();
+    audioPlayer.at(0)->pause();
 }
 
 void TupLipsyncDoc::stopAudio()
 {
-    audioPlayer->stop();
+    audioPlayer.at(0)->stop();
 }
 
 void TupLipsyncDoc::runBreakdown(const QString &lang, int32 duration)
