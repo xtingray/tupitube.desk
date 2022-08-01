@@ -605,13 +605,6 @@ void TupMainWindow::resetUI()
 
     removeAllWidgets();
 
-    /*
-    if (internetOn) {
-        delete newsTab;
-        newsTab = nullptr;
-    }
-    */
-
     if (playerTab) {
         playerTab->clearInterface();
 
