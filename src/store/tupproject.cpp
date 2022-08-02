@@ -1039,7 +1039,7 @@ void TupProject::releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName
 void TupProject::addSoundResource(TupLibraryObject *object)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::addSoundResource()]";
+        qDebug() << "[TupProject::addSoundResource()] - Symbol name -> " << object->getSymbolName();
     #endif
 
     SoundResource record;
@@ -1165,6 +1165,25 @@ bool TupProject::updateSoundType(const QString audioId, SoundType type)
         SoundResource item = soundRecords.at(i);
         if (item.key.compare(audioId) == 0) {
             item.type = type;
+            soundRecords[i] = item;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool TupProject::updateSoundFrame(const QString audioId, int frame)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::updateSoundFrame()] - audioId -> " << audioId;
+    #endif
+
+    for (int i=0; i<soundRecords.size(); i++) {
+        SoundResource item = soundRecords.at(i);
+        if (item.key.compare(audioId) == 0) {
+            library->updateSoundFrameToPlay(audioId, frame);
+            item.frame = frame;
             soundRecords[i] = item;
             return true;
         }

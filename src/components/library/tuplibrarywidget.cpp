@@ -1543,46 +1543,41 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
         qDebug() << "[TupLibraryWidget::layerResponse()] - event -> " << event->getAction();
     #endif
 
-    if (event->getAction() == TupProjectRequest::AddLipSync) {
-        TupLipSync *lipSync = new TupLipSync();
-        lipSync->fromXml(event->getArg().toString());
+    switch(event->getAction()) {
+        case TupProjectRequest::AddLipSync:
+        case TupProjectRequest::UpdateLipSync:
+        {
+            TupLipSync *lipSync = new TupLipSync();
+            lipSync->fromXml(event->getArg().toString());
 
-        QString soundID = lipSync->getSoundFile();
-        int frameIndex = lipSync->getInitFrame();
-        TupLibraryObject *sound = library->getObject(soundID);
-        if (sound) {
-            sound->updateFrameToPlay(frameIndex);
-            if (display->getSoundID().compare(soundID) == 0)
-                display->updateSoundInitFrame(frameIndex);
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::layerResponse()] - Fatal Error: Can't find audio item -> " << soundID;
-            #endif
+            QString soundID = lipSync->getSoundFile();
+            int frameIndex = lipSync->getInitFrame();
+            TupLibraryObject *sound = library->getObject(soundID);
+            if (sound) {
+                sound->updateFrameToPlay(frameIndex);
+                if (display->getSoundID().compare(soundID) == 0)
+                    display->updateSoundInitFrame(frameIndex);
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryWidget::layerResponse()] - "
+                                "Fatal Error: Can't find audio item -> " << soundID;
+                #endif
+            }
         }
-    } else if (event->getAction() == TupProjectRequest::UpdateLipSync) {
-        TupLipSync *lipSync = new TupLipSync();
-        lipSync->fromXml(event->getArg().toString());
-
-        QString soundID = lipSync->getSoundFile();
-        int frameIndex = lipSync->getInitFrame();
-        TupLibraryObject *sound = library->getObject(soundID);
-        if (sound) {
-            sound->updateFrameToPlay(frameIndex);
-            if (display->getSoundID().compare(soundID) == 0)
-                display->updateSoundInitFrame(frameIndex);
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::layerResponse()] - Fatal Error: Can't find audio item -> " << soundID;
-            #endif
+        break;
+        case TupProjectRequest::RemoveLipSync:
+        {
+            if (display->isSoundPanelVisible()) {
+                QString id = event->getArg().toString();
+                TupLibraryObject *sound = library->findSoundFile(id);
+                QString currentId = display->getSoundID();
+                if (currentId.compare(sound->getSymbolName()) == 0)
+                    display->enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay() + 1);
+            }
         }
-    } else if (event->getAction() == TupProjectRequest::RemoveLipSync) {
-        if (display->isSoundPanelVisible()) {
-            QString id = event->getArg().toString();
-            TupLibraryObject *sound = library->findSoundFile(id);
-            QString currentId = display->getSoundID();
-            if (currentId.compare(sound->getSymbolName()) == 0)
-                display->enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay() + 1);
-        }
+        break;
+        default:
+        break;
     }
 }
 

@@ -1452,14 +1452,22 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             // Updating lipsync sound frame param
-                            tupProject->getLibrary()->updateSoundFrameToPlay(soundKey, frameIndex);
+                            if (!tupProject->updateSoundFrame(soundKey, frameIndex)) {
+                                #ifdef TUP_DEBUG
+                                    qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                                "Fatal Error: Can't update lipsync sound  item -> " << soundKey;
+                                #endif
+                                TOsd::self()->display(TOsd::Error, tr("Can't set lipsync voice item!"));
+
+                                return false;
+                            }
 
                             // Adding Papagayo project
                             currentMouthIndex = mouthsCombo->currentIndex();
                             parser->setMouthIndex(currentMouthIndex);
                             parser->setSoundFile(soundKey);
-                            QString xml = parser->toString();
 
+                            QString xml = parser->toString();
                             request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
                                                                             TupProjectRequest::AddLipSync, xml);
                             emit requestTriggered(&request);

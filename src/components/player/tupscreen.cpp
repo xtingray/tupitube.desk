@@ -458,7 +458,7 @@ void TupScreen::frameResponse(TupFrameResponse *)
 void TupScreen::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::layerResponse()]";
+        qDebug() << "[TupScreen::layerResponse()] - response->getAction() -> " << response->getAction();
     #endif
 
     switch (response->getAction()) {
@@ -824,6 +824,7 @@ void TupScreen::loadSoundRecords()
         soundRecords << sound;
         #ifdef TUP_DEBUG
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio loaded! -> " << sound.path;
+            qDebug() << "[TupScreen::loadSoundRecords()] - Audio frame -> " << sound.frame;
         #endif
         soundPlayer << new QMediaPlayer();
     }
