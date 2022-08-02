@@ -1451,6 +1451,9 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                 return false;
                             }
 
+                            // Updating lipsync sound frame param
+                            tupProject->getLibrary()->updateSoundFrameToPlay(soundKey, frameIndex);
+
                             // Adding Papagayo project
                             currentMouthIndex = mouthsCombo->currentIndex();
                             parser->setMouthIndex(currentMouthIndex);
@@ -1490,9 +1493,6 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
-
-                            // Updating lipsync sound frame param
-                            tupProject->getLibrary()->updateSoundFrameToPlay(soundKey, frameIndex);
                         } else {
                             TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
                             #ifdef TUP_DEBUG

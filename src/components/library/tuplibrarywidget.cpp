@@ -1665,7 +1665,6 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                  library->updateSoundFrameToPlay(id, currentFrame.frame + 1);
                              } else {
                                  library->updateObjectSoundType(id, Lipsync);
-                                 // library->updateSoundFrameToPlay(id, );
                              }
                          }
 
