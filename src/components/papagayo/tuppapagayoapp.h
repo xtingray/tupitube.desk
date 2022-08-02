@@ -35,6 +35,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QSpinBox>
 
 class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 {
@@ -154,6 +155,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
 
         TupLipsyncDictionary *dictionary;
         QString locale;
+        QSpinBox *initFrameBox;
 };
 
 #endif // TUPPAPAGAYOAPP_H

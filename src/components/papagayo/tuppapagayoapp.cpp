@@ -26,6 +26,7 @@
 #include "tuprequestbuilder.h"
 #include "tuplibrary.h"
 #include "talgorithm.h"
+#include "tseparator.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -342,8 +343,21 @@ void TupPapagayoApp::setupUI()
     voiceHorizontalLayout->addWidget(voiceLabel);
     voiceHorizontalLayout->addWidget(voiceName);
 
+    QHBoxLayout *initFrameLayout = new QHBoxLayout();
+    initFrameLayout->setSpacing(6);
+
+    QLabel *initFrameLabel = new QLabel(tr("Initial Frame:"));
+    initFrameBox = new QSpinBox;
+    initFrameBox->setMinimum(1);
+    initFrameBox->setValue(frameIndex);
+
+    voiceHorizontalLayout->addSpacing(20);
+    voiceHorizontalLayout->addWidget(initFrameLabel);
+    voiceHorizontalLayout->addWidget(initFrameBox);
+
     QSpacerItem *voiceHorizontalSpacer = new QSpacerItem(40, 20,
-                                                         QSizePolicy::Expanding, QSizePolicy::Minimum);
+                                                         QSizePolicy::Expanding,
+                                                         QSizePolicy::Minimum);
     voiceHorizontalLayout->addItem(voiceHorizontalSpacer);
     lateralVerticalLayout->addLayout(voiceHorizontalLayout);
 
@@ -1320,6 +1334,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
         QFile projectFile(pgoFilePath);
         if (projectFile.exists()) {
             if (projectFile.size() > 0) {
+                frameIndex = initFrameBox->value();
                 QDir dir(currentMouthPath);
                 QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
                 if (imagesList.size() > 0) {
@@ -1475,10 +1490,14 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             TOsd::self()->display(TOsd::Info, tr("Papagayo file has been imported successfully"));
+
+                            // Updating lipsync sound frame param
+                            tupProject->getLibrary()->updateSoundFrameToPlay(soundKey, frameIndex);
                         } else {
                             TOsd::self()->display(TOsd::Error, tr("Papagayo file is invalid!"));
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - Fatal Error: Papagayo file is invalid!";
+                                qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
+                                            "Fatal Error: Papagayo file is invalid!";
                             #endif
 
                             return false;

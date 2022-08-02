@@ -1662,45 +1662,17 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (isEffectSound) {
                                  library->updateObjectSoundType(id, Effect);
                                  isEffectSound = false;
+                                 library->updateSoundFrameToPlay(id, currentFrame.frame + 1);
                              } else {
                                  library->updateObjectSoundType(id, Lipsync);
+                                 // library->updateSoundFrameToPlay(id, );
                              }
-
-                             library->updateSoundFrameToPlay(id, currentFrame.frame + 1);
                          }
 
                          library->registerSoundResource(id);
                          item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
-
-                         /*
-                         TupLibraryObject *object = library->getObject(id);
-                         if (object) {
-                             if (!library->isLoadingProject()) {
-                                 if (isEffectSound) {
-                                     object->setSoundType(Effect);
-                                     isEffectSound = false;
-                                 } else {
-                                     object->setSoundType(Lipsync);
-                                 }
-                             }
-
-                             if (!library->isLoadingProject())
-                                 object->updateFrameToPlay(currentFrame.frame + 1);
-
-                             project->addSoundResource(object);
-
-                             item->setIcon(0, QIcon(THEME_DIR + "icons/sound_object.png"));
-                             libraryTree->setCurrentItem(item);
-                             previewItem(item);
-                         } else {
-                             #ifdef TUP_DEBUG
-                                 qDebug() << "[TupLibraryWidget::libraryResponse()] - "
-                                             "Fatal Error: No object with id -> " << id;
-                             #endif
-                         }
-                         */
                        }
                      break;
                      default:
