@@ -1552,10 +1552,10 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
         TupLibraryObject *sound = library->getObject(soundID);
         if (sound) {
             sound->updateFrameToPlay(frameIndex);
-            if (display->isSoundPanelVisible()) {
-                if (display->getSoundID().compare(soundID) == 0)
-                    display->updateSoundInitFrame(frameIndex);
-            }
+            // if (display->isSoundPanelVisible()) {
+            if (display->getSoundID().compare(soundID) == 0)
+                display->updateSoundInitFrame(frameIndex);
+            // }
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryWidget::layerResponse()] - Fatal Error: Can't find audio item -> " << soundID;
