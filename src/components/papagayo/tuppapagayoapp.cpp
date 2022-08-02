@@ -1452,7 +1452,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             // Updating lipsync sound frame param
-                            // tupProject->getLibrary()->updateSoundFrameToPlay(soundKey, frameIndex);
+                            tupProject->getLibrary()->updateSoundFrameToPlay(soundKey, frameIndex);
 
                             // Adding Papagayo project
                             currentMouthIndex = mouthsCombo->currentIndex();
