@@ -455,8 +455,23 @@ void TupScreen::frameResponse(TupFrameResponse *)
 {
 }
 
-void TupScreen::layerResponse(TupLayerResponse *)
+void TupScreen::layerResponse(TupLayerResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::layerResponse()]";
+    #endif
+
+    switch (response->getAction()) {
+        case TupProjectRequest::AddLipSync:
+        case TupProjectRequest::UpdateLipSync:
+        {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupScreen::layerResponse()] - Lipsync call. Updating sound records...";
+            #endif
+            loadSoundRecords();
+        }
+        break;
+    }
 }
 
 void TupScreen::sceneResponse(TupSceneResponse *event)
