@@ -1183,7 +1183,7 @@ bool TupProject::updateSoundFrame(const QString audioId, int frame)
         SoundResource item = soundRecords.at(i);
         if (item.key.compare(audioId) == 0) {
             library->updateSoundFrameToPlay(audioId, frame);
-            item.frame = frame;
+            item.frame = frame + 1;
             soundRecords[i] = item;
             return true;
         }

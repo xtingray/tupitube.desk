@@ -1556,7 +1556,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
             if (sound) {
                 sound->updateFrameToPlay(frameIndex);
                 if (display->getSoundID().compare(soundID) == 0)
-                    display->updateSoundInitFrame(frameIndex);
+                    display->updateSoundInitFrame(frameIndex + 1);
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupLibraryWidget::layerResponse()] - "

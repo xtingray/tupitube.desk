@@ -795,10 +795,26 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                     QString xml = response->getArg().toString();
                     TupLipSync *lipsync = new TupLipSync();
                     lipsync->fromXml(xml);
-                    currentTable->updateFrameState(response->getLayerIndex(), lipsync->getInitFrame(), TupExposureTable::Used);
+                    currentTable->updateFrameState(layerIndex, lipsync->getInitFrame(), TupExposureTable::Used);
                 }
             break;
             */
+            case TupProjectRequest::RemoveLipSync:
+                {
+                    TupScene *scene = project->sceneAt(sceneIndex);
+                    if (scene) {
+                        TupLayer *layer = scene->layerAt(layerIndex);
+                        if (layer) {
+                            int total = layer->framesCount();
+                            for (int i=0; i<total; i++) {
+                                 TupFrame *frame = layer->frameAt(i);
+                                 if (frame->isEmpty()) 
+                                     currentTable->updateFrameState(layerIndex, i, TupExposureTable::Empty);
+                            }
+                        }
+                    }
+                }
+            break;
             default:
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupExposureSheet::layerResponse()] - Layer option undefined! -> "

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Project TUPITUBE DESK                                                *
+ *   Project TUPITUBE DESK                                                 *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
  *   Project Leader: Gustav Gonzalez <info@maefloresta.com>                *
@@ -340,6 +340,40 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
                      framesTable->selectFrame(layerIndex, 0, layer + "," + layer + ",0,0");
                  }
             }
+            break;
+            case TupProjectRequest::AddLipSync:
+                {
+                    QString xml = response->getArg().toString();
+                    TupLipSync *lipsync = new TupLipSync();
+                    lipsync->fromXml(xml);
+                    framesTable->setAttribute(layerIndex, lipsync->getInitFrame(), TupTimeLineTableItem::IsEmpty, false);
+                }
+            break;
+            case TupProjectRequest::UpdateLipSync:
+                {
+                    QString xml = response->getArg().toString();
+                    TupLipSync *lipsync = new TupLipSync();
+                    lipsync->fromXml(xml);
+                    framesTable->setAttribute(layerIndex, lipsync->getInitFrame(), TupTimeLineTableItem::IsEmpty, false);
+                }
+            break;
+            case TupProjectRequest::RemoveLipSync:
+                {
+                    TupScene *scene = project->sceneAt(sceneIndex);
+                    if (scene) {
+                        TupLayer *layer = scene->layerAt(layerIndex);
+                        if (layer) {
+                            int total = layer->framesCount();
+                            for (int i=0; i<total; i++) {
+                                 TupFrame *frame = layer->frameAt(i);
+                                 if (frame->isEmpty())
+                                     framesTable->setAttribute(layerIndex, i, TupTimeLineTableItem::IsEmpty, true);
+                            }
+                        }
+                    }
+                }
+            break;
+            default:
             break;
         }
     }
