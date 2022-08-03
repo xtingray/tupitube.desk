@@ -103,12 +103,14 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
 
     setToolTip(tr(""));
 
-    if (document == nullptr && doc) {
-        sampleWidth = DEFAULT_SAMPLE_WIDTH;
-        samplesPerFrame = DEFAULT_SAMPLES_PER_FRAME;
-        samplesPerSec = doc->getFps() * samplesPerFrame;
-        frameWidth = sampleWidth * samplesPerFrame;
-	}
+    if (doc) {
+        if (document == nullptr) {
+            sampleWidth = DEFAULT_SAMPLE_WIDTH;
+            samplesPerFrame = DEFAULT_SAMPLES_PER_FRAME;
+            samplesPerSec = doc->getFps() * samplesPerFrame;
+            frameWidth = sampleWidth * samplesPerFrame;
+        }
+    }
 
     document = doc;
     audioPlayer = document->getAudioPlayer();
@@ -117,7 +119,7 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
     if (amp) {
         delete [] amp;
         amp = nullptr;
-	}
+    }
 
     TupAudioExtractor *extractor = document->getAudioExtractor();
     if (document && extractor) {
@@ -125,20 +127,20 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
             qDebug() << "[TupWaveFormView::setDocument()] - Processing audio...";
         #endif
         frameWidth = sampleWidth * samplesPerFrame;
-		real duration = extractor->duration();
-		real time = 0.0f;
+        real duration = extractor->duration();
+        real time = 0.0f;
         real sampleDur = 1.0f / samplesPerSec;
-		real maxAmp = 0.0f;
+        real maxAmp = 0.0f;
         while (time < duration) {
             numSamples++;
-			time += sampleDur;
-		}
+            time += sampleDur;
+        }
 
         if (numSamples < 1)
             numSamples = 1;
         amp = new real[numSamples];
-		time = 0.0f;
-		int32 i = 0;
+        time = 0.0f;
+        int32 i = 0;
 
         onlySilent = true;
         while (time < duration) {
@@ -273,12 +275,12 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
                 if (frame > currentFrame + 1) {
                     if (document->getAudioPlayer())
                         document->stopAudio();
-				}
+                }
             } else {
                 currentFrame = frame;
                 emit frameChanged(currentFrame);
-				update();
-			}
+                update();
+            }
 
             QMediaPlayer *audioPlayer = document->getAudioPlayer();
             if (audioPlayer) {

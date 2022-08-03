@@ -1110,7 +1110,10 @@ void TupLipsyncDoc::setFps(int32 fps)
 
 QMediaPlayer *TupLipsyncDoc::getAudioPlayer()
 {
-    return audioPlayer.at(0);
+    if (!audioPlayer.isEmpty())
+        return audioPlayer.at(0);
+
+    return nullptr;
 }
 
 TupAudioExtractor* TupLipsyncDoc::getAudioExtractor()
