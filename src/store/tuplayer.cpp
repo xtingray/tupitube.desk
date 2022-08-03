@@ -387,7 +387,6 @@ void TupLayer::fromXml(const QString &xml)
 
     QDomElement root = document.documentElement();
     setLayerName(root.attribute("name", getLayerName()));
-    // setOpacity(root.attribute("opacity", "1.0").toDouble());
     opacity = root.attribute("opacity", "1.0").toDouble();
     setLayerVisibility(root.attribute("visible", "1").toInt());
     QDomNode n = root.firstChild();
