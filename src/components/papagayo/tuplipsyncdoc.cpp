@@ -915,7 +915,7 @@ TupLipsyncDoc::TupLipsyncDoc()
 TupLipsyncDoc::~TupLipsyncDoc()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLipsyncDoc::~TupLipsyncDoc()]";
+        qDebug() << "[~TupLipsyncDoc()]";
     #endif
 
     resetDocument();
@@ -923,6 +923,10 @@ TupLipsyncDoc::~TupLipsyncDoc()
 
 void TupLipsyncDoc::releaseAudio()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDoc::releaseAudio()]";
+    #endif
+
     while(!audioPlayer.isEmpty()) {
         QMediaPlayer *audio = audioPlayer.takeFirst();
         audio->stop();
@@ -1114,6 +1118,36 @@ QMediaPlayer *TupLipsyncDoc::getAudioPlayer()
         return audioPlayer.at(0);
 
     return nullptr;
+}
+
+bool TupLipsyncDoc::audioPlayerIsSet()
+{
+    if (!audioPlayer.isEmpty()) {
+        if (audioPlayer.at(0))
+            return true;
+    }
+
+    return false;
+}
+
+QMediaPlayer::State TupLipsyncDoc::getAudioPlayerState()
+{
+    return audioPlayer.at(0)->state();
+}
+
+void TupLipsyncDoc::setPlayerPosition(real f)
+{
+    audioPlayer.at(0)->setPosition(PG_FLOOR(f));
+}
+
+void TupLipsyncDoc::playVoice()
+{
+    audioPlayer.at(0)->play();
+}
+
+void TupLipsyncDoc::setPlayerNotifyInterval(int value)
+{
+    audioPlayer.at(0)->setNotifyInterval(value);
 }
 
 TupAudioExtractor* TupLipsyncDoc::getAudioExtractor()

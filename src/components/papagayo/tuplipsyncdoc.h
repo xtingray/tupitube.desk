@@ -211,7 +211,14 @@ class TupLipsyncDoc : public QObject
         int32 getFps() { return fps; }
         void setFps(int32 fps);
         QMediaPlayer * getAudioPlayer();
+        bool audioPlayerIsSet();
+        void setPlayerPosition(real f);
+        void playVoice();
+        void setPlayerNotifyInterval(int value);
+
+        QMediaPlayer::State getAudioPlayerState();
         TupAudioExtractor * getAudioExtractor();
+
         int32 getDuration() { return audioDuration; }
         QString getVolumePhonemeAtFrame(int32 frame);
         LipsyncVoice * getVoice();
@@ -253,7 +260,6 @@ class TupLipsyncDoc : public QObject
         int32 fps;
         int32 audioDuration;
         QString audioPath;
-        // QMediaPlayer *audioPlayer;
         QList<QMediaPlayer *> audioPlayer;
 
         TupAudioExtractor *audioExtractor;

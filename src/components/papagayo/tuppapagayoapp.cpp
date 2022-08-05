@@ -125,6 +125,15 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
 
 TupPapagayoApp::~TupPapagayoApp()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupPapagayoApp()]";
+    #endif
+
+    disconnect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)),
+            waveformView, SLOT(positionChanged(qint64)));
+    disconnect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
+            waveformView, SLOT(updateMediaStatus(QMediaPlayer::MediaStatus)));
+
     if (document)
         delete document;
 
@@ -515,7 +524,7 @@ void TupPapagayoApp::openFile(QString filePath)
         document->setFps(defaultFps);
     }
 
-    if (document->getAudioPlayer() == nullptr) {
+    if (!document->audioPlayerIsSet()) {
         delete document;
         document = nullptr;
         QMessageBox::warning(this, tr("Lip-Sync Manager"),
@@ -527,7 +536,7 @@ void TupPapagayoApp::openFile(QString filePath)
         mouthView->setDocument(document);
         customView->setDocument(document);
 
-        document->getAudioPlayer()->setNotifyInterval(17); // 60 fps
+        document->setPlayerNotifyInterval(17); // 60 fps
         connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)),
                 waveformView, SLOT(positionChanged(qint64)));
         connect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
@@ -591,7 +600,8 @@ bool TupPapagayoApp::confirmCloseDocument()
                     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
                     if (updateLipsyncRecord()) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupPapagayoApp::confirmCloseDocument()] - Lip-sync item updated successfully!";
+                            qDebug() << "[TupPapagayoApp::confirmCloseDocument()] - "
+                                        "Lip-sync item updated successfully!";
                         #endif
                         TOsd::self()->display(TOsd::Info, tr("Lip-sync item updated!"));
                         QApplication::restoreOverrideCursor();
@@ -769,7 +779,7 @@ void TupPapagayoApp::playVoice()
         // return;
     }
 
-    if (document && document->getAudioPlayer()) {
+    if (document && document->audioPlayerIsSet()) {
         if (playerStopped) {
             playerStopped = false;
             actionPlay->setIcon(pauseIcon);
@@ -785,7 +795,7 @@ void TupPapagayoApp::playVoice()
 
 void TupPapagayoApp::stopVoice()
 {
-    if (document && document->getAudioPlayer()) {
+    if (document && document->audioPlayerIsSet()) {
         playerStopped = true;
         actionPlay->setIcon(playIcon);
         actionPlay->setText(tr("Play"));
@@ -796,7 +806,7 @@ void TupPapagayoApp::stopVoice()
 
 void TupPapagayoApp::pauseVoice()
 {
-    if (document && document->getAudioPlayer()) {
+    if (document && document->audioPlayerIsSet()) {
         playerStopped = true;
         document->pauseAudio();
     }

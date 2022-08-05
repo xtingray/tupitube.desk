@@ -113,7 +113,6 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
     }
 
     document = doc;
-    audioPlayer = document->getAudioPlayer();
     numSamples = 0;
 
     if (amp) {
@@ -169,7 +168,6 @@ void TupWaveFormView::setDocument(TupLipsyncDoc *doc)
             TOsd::self()->display(TOsd::Error, tr("Sound file has no voices!"), 3000);
             close();
         }
-
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupWaveFormView::setDocument()] - Fatal Error: Can't process audio input!";
@@ -262,7 +260,7 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
         if (frame != currentFrame) {
             if (audioStopFrame >= 0) {
                 if (frame > audioStopFrame) {
-                    if (document->getAudioPlayer())
+                    if (document->audioPlayerIsSet())
                         document->stopAudio();
 
                     audioStopFrame = -1;
@@ -273,7 +271,7 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
 				update();
             } else if (dragging) {
                 if (frame > currentFrame + 1) {
-                    if (document->getAudioPlayer())
+                    if (document->audioPlayerIsSet())
                         document->stopAudio();
                 }
             } else {
@@ -282,9 +280,8 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
                 update();
             }
 
-            QMediaPlayer *audioPlayer = document->getAudioPlayer();
-            if (audioPlayer) {
-                if (!dragging && audioPlayer && audioPlayer->state() == QMediaPlayer::PlayingState) {
+            if (document->audioPlayerIsSet()) {
+                if (!dragging && (document->getAudioPlayerState() == QMediaPlayer::PlayingState)) {
                     if (scrollArea) {
                         QScrollBar *scrollBar = scrollArea->horizontalScrollBar();
                         if (scrollBar) {
@@ -323,7 +320,7 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
 
     emit audioStopped();
 
-    if (document && document->getAudioPlayer()) {
+    if (document && document->audioPlayerIsSet()) {
         dragging = true;
 
         if (document->getVoice()) {
@@ -340,7 +337,8 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
 			// next, find the word that was clicked on
             if (selectedPhrase) {
                 for (int32 i = 0; i < selectedPhrase->wordsSize(); i++) {
-                    if (frame >= selectedPhrase->getStartFrameFromWordAt(i) && frame <= selectedPhrase->getEndFrameFromWordAt(i)) {
+                    if (frame >= selectedPhrase->getStartFrameFromWordAt(i)
+                        && frame <= selectedPhrase->getEndFrameFromWordAt(i)) {
                         selectedWord = selectedPhrase->getWordAt(i);
 						break;
 					}
@@ -415,11 +413,10 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
                 dragging = false;
             } else if (doubleClick) {
 				bool playSegment = false;
-                QMediaPlayer *audioPlayer = document->getAudioPlayer();
 
 				int32 startFrame;
                 audioStopFrame = -1;
-                if (audioPlayer) {
+                if (document->audioPlayerIsSet()) {
                     if (selectedPhrase) {
 						playSegment = true;
                         startFrame = selectedPhrase->getStartFrame();
@@ -436,8 +433,8 @@ void TupWaveFormView::mousePressEvent(QMouseEvent *event)
 
                     if (playSegment) {
                         float pos = ((real)startFrame / (real)document->getFps()) * 1000.0f;
-                        audioPlayer->setPosition(PG_ROUND(pos));
-						audioPlayer->play();
+                        document->setPlayerPosition(PG_ROUND(pos));
+                        document->playAudio();
                         emit frameChanged(scrubFrame);
 					}
 				}
@@ -553,13 +550,12 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 
     oldFrame = frame;
 
-    QMediaPlayer *audioPlayer = document->getAudioPlayer();
     if (frame != scrubFrame) {
         scrubFrame = frame;
         currentFrame = scrubFrame;
         f = ((real)scrubFrame / (real)document->getFps()) * 1000.0f;
-		audioPlayer->setPosition(PG_FLOOR(f));
-		audioPlayer->play();
+        document->setPlayerPosition(PG_FLOOR(f));
+        document->playAudio();
         emit frameChanged(scrubFrame);
 		needUpdate = true;
 	}
@@ -575,13 +571,14 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
     #endif
 
     if (document) {
-        if (document->getAudioPlayer() && audioStopFrame < 0)
+        if (document->audioPlayerIsSet() && audioStopFrame < 0)
             document->stopAudio();
 
         if (event->button() == Qt::RightButton && selectedWord) {
             if (mouthsPath.isEmpty()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupWaveFormView::mouseReleaseEvent()] - Warning: No mouth images path is set!";
+                    qDebug() << "[TupWaveFormView::mouseReleaseEvent()] - "
+                                "Warning: No mouth images path is set!";
                 #endif
                 TOsd::self()->display(TOsd::Error, tr("Mouth images are unset!"), 3000);
                 return;
@@ -609,7 +606,6 @@ void TupWaveFormView::mouseReleaseEvent(QMouseEvent *event)
                 if (parentPhrase)
                     parentPhrase->repositionWord(selectedWord);
 
-                // emit fonemesUpdated(const QString &word, const QString &phonemes);
                 update();
             }
 
@@ -681,11 +677,13 @@ void TupWaveFormView::paintEvent(QPaintEvent *event)
 	halfClientHeight = (clientHeight - textHeight) / 2;
 
     // Paint the red marker when the voice is being played
-    if (audioPlayer && audioPlayer->state() == QMediaPlayer::PlayingState) {
-		drawPlayMarker = true;
-        x = currentFrame * frameWidth;
-        painter.fillRect(QRect(x, 0, frameWidth, clientHeight), playBackCol);
-	}
+    if (document->audioPlayerIsSet()) {
+        if (document->getAudioPlayerState() == QMediaPlayer::PlayingState) {
+            drawPlayMarker = true;
+            x = currentFrame * frameWidth;
+            painter.fillRect(QRect(x, 0, frameWidth, clientHeight), playBackCol);
+        }
+    }
 
 	x = 0;
     for (int32 i = 0; i < numSamples; i++) {
