@@ -129,13 +129,13 @@ TupPapagayoApp::~TupPapagayoApp()
         qDebug() << "[~TupPapagayoApp()]";
     #endif
 
-    disconnect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)),
-            waveformView, SLOT(positionChanged(qint64)));
-    disconnect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
-            waveformView, SLOT(updateMediaStatus(QMediaPlayer::MediaStatus)));
-
-    if (document)
+    if (document) {
+        disconnect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)),
+                waveformView, SLOT(positionChanged(qint64)));
+        disconnect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
+                waveformView, SLOT(updateMediaStatus(QMediaPlayer::MediaStatus)));
         delete document;
+    }
 
     if (waveformView)
         delete waveformView;
