@@ -65,7 +65,6 @@ TupExportInterface::Plugin FFmpegPlugin::key()
 
 TupExportInterface::Formats FFmpegPlugin::availableFormats()
 {
-    // return TupExportInterface::MP4 | TupExportInterface::AVI | TupExportInterface::MOV;
     return TupExportInterface::MP4 | TupExportInterface::MOV;
 }
 
@@ -199,6 +198,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
             #endif
 
             if (!audioFile->remove()) {
+                audioFile->close();
                 errorMsg = "Fatal Error: Can't remove WAV file -> " + wavAudioPath;
                 #ifdef TUP_DEBUG
                     qCritical() << "[FFmpegPlugin::exportToFormat()] - " << errorMsg;
@@ -206,6 +206,8 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
 
                 return false;
             }
+
+            audioFile->close();
         }
     } else {
         #ifdef TUP_DEBUG
@@ -263,13 +265,15 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         QFile accAudioFile(aacAudioPath);
         if (accAudioFile.exists()) {
             if (!accAudioFile.remove()) {
+                accAudioFile.close();
                 errorMsg = "Fatal Error: Can't remove file -> " + aacAudioPath;
                 #ifdef TUP_DEBUG
-                    qCritical() << "[FFmpegPlugin::exportToFormat()] - " + errorMsg;
+                    qCritical() << "[FFmpegPlugin::exportToFormat()] - " << errorMsg;
                 #endif
                 return false;
             }
         }
+        accAudioFile.close();
     }
 
     return true;

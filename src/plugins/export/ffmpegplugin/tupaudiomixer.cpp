@@ -406,6 +406,10 @@ int TupAudioMixer::initFilterGraph()
 // Some of these parameters are based on the input file's parameters.
 int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCodecContext)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::openOutputFile()] - filename -> " << filename;
+    #endif
+
     AVIOContext *outputIOContext = nullptr;
     AVStream *stream = nullptr;
     AVCodec *outputCodec = nullptr;
@@ -523,6 +527,10 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
 // Initialize one audio frame for reading from the input file
 int TupAudioMixer::initInputFrame(AVFrame **frame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::initInputFrame()]";
+    #endif
+
     if (!(*frame = av_frame_alloc())) {
         errorMsg = "Fatal Error: Could not allocate input frame.";
         #ifdef TUP_DEBUG
@@ -537,7 +545,11 @@ int TupAudioMixer::initInputFrame(AVFrame **frame)
 // Decode one audio frame from the input file.
 int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext,
                                     AVCodecContext *inputCodecContext, int *dataPresent, int *finished)
-{    
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::decodeAudioFrame()]";
+    #endif
+
     // Deprecated version
     // Packet used for temporary storage. 
     AVPacket *inputPacket = av_packet_alloc();
@@ -643,6 +655,10 @@ int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormat
 // Encode one frame worth of audio to the output file.
 int TupAudioMixer::encodeAudioFrame(AVFrame *frame, int *dataPresent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::encodeAudioFrame()]";
+    #endif
+
     // Packet used for temporary storage.
     AVPacket *outputPacket = av_packet_alloc();
     int error;
@@ -873,6 +889,10 @@ bool TupAudioMixer::processAudioFiles()
 // Write the header of the output file container
 int TupAudioMixer::writeOutputFileHeader(AVFormatContext *outputFormatContext)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::writeOutputFileHeader()]";
+    #endif
+
     int error;
     if ((error = avformat_write_header(outputFormatContext, nullptr)) < 0) {
         errorMsg = "Fatal Error: Could not write output file header.";
@@ -889,6 +909,10 @@ int TupAudioMixer::writeOutputFileHeader(AVFormatContext *outputFormatContext)
 // Write the trailer of the output file container.
 int TupAudioMixer::writeOutputFileTrailer(AVFormatContext *outputFormatContext)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::writeOuputFileTrailer()]";
+    #endif
+
     int error;
     if ((error = av_write_trailer(outputFormatContext)) < 0) {
         errorMsg = "Fatal Error: Could not write output file trailer.";
@@ -904,8 +928,11 @@ int TupAudioMixer::writeOutputFileTrailer(AVFormatContext *outputFormatContext)
 
 bool TupAudioMixer::mergeAudios()
 {    
-    int error;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::mergeAudios()]";
+    #endif
 
+    int error;
     for (int i=0; i < soundsTotal; i++) {
         QString source = sounds[i].path;
         QByteArray array = source.toLocal8Bit();
@@ -969,6 +996,12 @@ bool TupAudioMixer::mergeAudios()
             qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
         #endif
         return false;
+    }
+
+    for (int i=0; i < soundsTotal; i++) {
+        avcodec_close(inputCodecContextList.at(i));
+        avio_close(inputFormatContextList.at(i)->pb);
+        avformat_free_context(inputFormatContextList.at(i));
     }
 
     avcodec_close(outputCodecContext);
