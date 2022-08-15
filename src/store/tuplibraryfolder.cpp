@@ -823,3 +823,22 @@ bool TupLibraryFolder::folderHasAudioObjects(const QString &folderName)
 
     return false;
 }
+
+QList<TupLibraryObject *> TupLibraryFolder::getLibrarySoundItems()
+{
+    QList<TupLibraryObject *> soundList;
+    foreach (TupLibraryObject *object, objects) {
+        if (object->getObjectType() == TupLibraryObject::Audio)
+            soundList << object;
+    }
+
+    foreach (TupLibraryFolder *folder, folders) {
+        LibraryObjects objects = folder->getObjects();
+        foreach (TupLibraryObject *object, objects) {
+            if (object->getObjectType() == TupLibraryObject::Audio)
+                soundList << object;
+        }
+    }
+
+    return soundList;
+}

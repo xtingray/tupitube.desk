@@ -113,6 +113,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
 
         bool isLoadingProject();
 
+        QList<TupLibraryObject *> getLibrarySoundItems();
         void releaseLipSyncVoices(const QString &soundFile);
         TupLibraryObject * findSoundFile(const QString &folder);
         void updateObjectSoundType(const QString &id, SoundType type);

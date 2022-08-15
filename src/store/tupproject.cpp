@@ -90,6 +90,17 @@ void TupProject::loadLibrary(const QString &filename)
     }
 }
 
+void TupProject::registerLibrarySounds()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::registerLibrarySounds()]";
+    #endif
+
+    QList<TupLibraryObject *> soundList = library->getLibrarySoundItems();
+    foreach(TupLibraryObject *sound, soundList)
+        addSoundResource(sound);
+}
+
 void TupProject::clear()
 {
     for (int i=0; i<scenesList.count(); i++) {

@@ -123,6 +123,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         void clear();
         void loadLibrary(const QString &filename);
+        void registerLibrarySounds();
 
         TupLibrary *getLibrary();
         void setLibrary(TupLibrary *lib);
