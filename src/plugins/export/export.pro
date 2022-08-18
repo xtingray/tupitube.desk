@@ -16,8 +16,10 @@ SUBDIRS += imageplugin
 # SMIL plugin will be disabled temporary 
 # smileplugin 
 
-contains(DEFINES, HAVE_FFMPEG) {
-        SUBDIRS += ffmpegplugin 
+!contains(DEFINES, TUP_32BIT) {
+    contains(DEFINES, HAVE_FFMPEG) {
+            SUBDIRS += ffmpegplugin
+    }
 }
 
 # linux-g++ {

@@ -100,8 +100,11 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
     exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
     exportButton->setToolTip(tr("Export Project as Video File"));
     connect(exportButton, SIGNAL(pressed()), this, SIGNAL(exportClicked()));
-    sceneInfoLayout->addWidget(exportButton, 1);
-    sceneInfoLayout->addSpacing(5);
+
+    #ifndef TUP_32BIT
+        sceneInfoLayout->addWidget(exportButton, 1);
+        sceneInfoLayout->addSpacing(5);
+    #endif
 
     postButton = new QPushButton(tr("Post"));
     postButton->setIcon(QIcon(THEME_DIR + "icons/share.png"));
