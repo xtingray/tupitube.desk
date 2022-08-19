@@ -261,9 +261,11 @@ void TupMainWindow::setupMenu()
     m_windowMenu->addAction(m_actionManager->find("show_exposure"));
     */
 
-    exportMenu = menuBar()->addMenu(tr("&Export"));
-    exportMenu->addAction(m_actionManager->find("export"));
-    exportMenu->addAction(m_actionManager->find("export_image"));
+    #ifndef TUP_32BIT
+        exportMenu = menuBar()->addMenu(tr("&Export"));
+        exportMenu->addAction(m_actionManager->find("export"));
+        exportMenu->addAction(m_actionManager->find("export_image"));
+    #endif
 
     postMenu = menuBar()->addMenu(tr("&Post"));
     postMenu->addAction(m_actionManager->find("post"));
@@ -334,13 +336,20 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_actionManager->enable("save_project_as", flag);
     m_actionManager->enable("close_project", flag);
     m_actionManager->enable("hideaction", flag);
+
+#ifndef TUP_32BIT
     m_actionManager->enable("export", flag);
     m_actionManager->enable("export_image", flag);
+#endif
+
     m_actionManager->enable("post", flag);
     m_actionManager->enable("post_image", flag);
     m_actionManager->enable("importImageGroup", flag);
 
+#ifndef TUP_32BIT
     exportMenu->setEnabled(flag);
+#endif
+
     postMenu->setEnabled(flag);
     m_insertMenu->setEnabled(flag);
     m_viewMenu->setEnabled(flag);
