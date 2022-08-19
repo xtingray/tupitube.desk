@@ -1467,7 +1467,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
                                                 "Fatal Error: Can't update lipsync sound  item -> " << soundKey;
                                 #endif
-                                TOsd::self()->display(TOsd::Error, tr("Can't set lipsync voice item!"));
+                                TOsd::self()->display(TOsd::Error, tr("Can't set lip-sync voice item!"));
 
                                 return false;
                             }

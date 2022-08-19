@@ -2292,6 +2292,10 @@
         <source>Images directory is empty!</source>
         <translation>图片目录是空的！</translation>
     </message>
+    <message>
+        <source>Customized mouths are loaded!</source>
+        <translation>定制嘴巴上载！</translation>
+    </message>
 </context>
 <context>
     <name>TupDocumentView</name>
@@ -2793,6 +2797,10 @@
         <source>Frame %1</source>
         <translation>帧 %1</translation>
     </message>
+    <message>
+        <source>Can&apos;t save project! (Code %1)</source>
+        <translation>无法保存项目！（代码 %1）</translation>
+    </message>
 </context>
 <context>
     <name>TupFrame</name>
@@ -2878,8 +2886,8 @@
     <message>
         <source>Social Network</source>
         <translation>社交网络</translation>
-   </message>
-   <message>
+    </message>
+    <message>
         <source>Cache Settings</source>
         <translation>缓存设置</translation>
     </message>
@@ -3101,6 +3109,10 @@
     <message>
         <source>Edit with Inkscape</source>
         <translation>用Inkscape编辑</translation>
+    </message>
+    <message>
+        <source>Open lip-sync editor</source>
+        <translation>打开口型同步编辑器</translation>
     </message>
 </context>
 <context>
@@ -3807,6 +3819,10 @@
         <source>Check for Updates</source>
         <translation>检查更新</translation>
     </message>
+    <message>
+        <source>Error while clearing cache!</source>
+        <translation>清除缓存时出错！</translation>
+    </message>
 </context>
 <context>
     <name>TupMicManager</name>
@@ -3841,10 +3857,6 @@
     <message>
         <source>Discard</source>
         <translation>放弃</translation>
-    </message>
-    <message>
-        <source>%1 sec</source>
-        <translation>秒</translation>
     </message>
     <message>
         <source>Recording...</source>
@@ -3887,16 +3899,28 @@
         <translation>取消</translation>
     </message>
     <message>
-        <source>Sound 01</source>
-        <translation>声音01</translation>
-    </message>
-    <message>
         <source>Playing...</source>
         <translation>正在播放...</translation>
     </message>
     <message>
         <source>Audio Level</source>
         <translation>音频电平</translation>
+    </message>
+    <message>
+        <source>Duration:</source>
+        <translation>期间：</translation>
+    </message>
+    <message>
+        <source>sec</source>
+        <translation>秒</translation>
+    </message>
+    <message>
+        <source>Can&apos;t remove audio file!</source>
+        <translation>无法删除音频文件！</translation>
+    </message>
+    <message>
+        <source>Audio file doesn&apos;t exist!</source>
+        <translation>音频文件不存在！</translation>
     </message>
 </context>
 <context>
@@ -4666,6 +4690,14 @@
         <source>Some phonemes are missing!</source>
         <translation>有些音素丢失！</translation>
     </message>
+    <message>
+        <source>Initial Frame:</source>
+        <translation>初始帧：</translation>
+    </message>
+    <message>
+        <source>Can&apos;t set lip-sync voice item!</source>
+        <translation>无法设置口型同步语音项目！</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
@@ -5290,10 +5322,6 @@
         <translation>秒</translation>
     </message>
     <message>
-        <source>Storyboard Cover</source>
-        <translation>情节提要封面</translation>
-    </message>
-    <message>
         <source>Scene No %1</source>
         <translation>场景</translation>
     </message>
@@ -5312,6 +5340,12 @@
     <message>
         <source>Animatic exported successfully!</source>
         <translation>动态分镜头已成功导出！</translation>
+    </message>
+    <message>
+        <source>Storyboard
+Cover</source>
+        <translation>故事板
+覆盖</translation>
     </message>
 </context>
 <context>

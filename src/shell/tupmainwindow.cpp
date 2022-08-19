@@ -655,7 +655,7 @@ void TupMainWindow::resetUI()
                     qDebug() << "[TupMainWindow::resetUI()] - "
                                 "Fatal Error: Can't remove CACHE project path! -> " << projectCache;
                 #endif
-                TOsd::self()->display(TOsd::Error, tr("Error while cleaning cache!"));
+                TOsd::self()->display(TOsd::Error, tr("Error while clearing cache!"));
             }
         }
     } else {

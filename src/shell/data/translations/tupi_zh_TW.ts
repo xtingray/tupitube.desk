@@ -2292,6 +2292,10 @@
         <source>Images directory is empty!</source>
         <translation>影像目錄是空的！</translation>
     </message>
+    <message>
+        <source>Customized mouths are loaded!</source>
+        <translation>定制嘴巴上載！</translation>
+    </message>
 </context>
 <context>
     <name>TupDocumentView</name>
@@ -2793,6 +2797,10 @@
         <source>Frame %1</source>
         <translation>幀 %1</translation>
     </message>
+    <message>
+        <source>Can&apos;t save project! (Code %1)</source>
+        <translation>無法保存項目！（代碼 %1）</translation>
+    </message>
 </context>
 <context>
     <name>TupFrame</name>
@@ -2879,7 +2887,7 @@
         <source>Social Network</source>
         <translation>社交網路</translation>
     </message>
-     <message>
+    <message>
         <source>Cache Settings</source>
         <translation>暫存設定</translation>
     </message>
@@ -3101,6 +3109,10 @@
     <message>
         <source>Edit with Inkscape</source>
         <translation>用Inkscape編輯</translation>
+    </message>
+    <message>
+        <source>Open lip-sync editor</source>
+        <translation>打開口型同步編輯器</translation>
     </message>
 </context>
 <context>
@@ -3807,6 +3819,10 @@
         <source>Check for Updates</source>
         <translation>檢查更新</translation>
     </message>
+    <message>
+        <source>Error while clearing cache!</source>
+        <translation>清除緩存時出錯！</translation>
+    </message>
 </context>
 <context>
     <name>TupMicManager</name>
@@ -3841,10 +3857,6 @@
     <message>
         <source>Discard</source>
         <translation>放棄</translation>
-    </message>
-    <message>
-        <source>%1 sec</source>
-        <translation>秒</translation>
     </message>
     <message>
         <source>Recording...</source>
@@ -3887,16 +3899,28 @@
         <translation>取消</translation>
     </message>
     <message>
-        <source>Sound 01</source>
-        <translation>聲音01</translation>
-    </message>
-    <message>
         <source>Playing...</source>
         <translation>正在播放...</translation>
     </message>
     <message>
         <source>Audio Level</source>
         <translation>音頻電平</translation>
+    </message>
+    <message>
+        <source>Duration:</source>
+        <translation>期間：</translation>
+    </message>
+    <message>
+        <source>sec</source>
+        <translation>秒</translation>
+    </message>
+    <message>
+        <source>Can&apos;t remove audio file!</source>
+        <translation>無法刪除音頻文件！</translation>
+    </message>
+    <message>
+        <source>Audio file doesn&apos;t exist!</source>
+        <translation>音頻文件不存在！</translation>
     </message>
 </context>
 <context>
@@ -4666,6 +4690,14 @@
         <source>Some phonemes are missing!</source>
         <translation>有些音素丟失！</translation>
     </message>
+    <message>
+        <source>Initial Frame:</source>
+        <translation>初始幀：</translation>
+    </message>
+    <message>
+        <source>Can&apos;t set lip-sync voice item!</source>
+        <translation>無法設置口型同步語音項目！</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
@@ -5038,10 +5070,6 @@
         <translation>製作者：</translation>
     </message>
     <message>
-        <source>License：</source>
-        <translation>授權：</translation>
-    </message>
-    <message>
         <source>Network Error 809. Please, contact us!</source>
         <translation>HTTP 409錯誤! 請聯絡我們! </translation>
     </message>
@@ -5080,6 +5108,10 @@
     <message>
         <source>Keywords Database</source>
         <translation>關鍵詞數據庫</translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation>執照：</translation>
     </message>
 </context>
 <context>
@@ -5290,10 +5322,6 @@
         <translation>秒</translation>
     </message>
     <message>
-        <source>Storyboard Cover</source>
-        <translation>情節提要封面</translation>
-    </message>
-    <message>
         <source>Scene No %1</source>
         <translation>場景</translation>
     </message>
@@ -5312,6 +5340,12 @@
     <message>
         <source>Animatic exported successfully!</source>
         <translation>動態分鏡頭已成功導出！</translation>
+    </message>
+    <message>
+        <source>Storyboard
+Cover</source>
+        <translation>故事板
+覆蓋</translation>
     </message>
 </context>
 <context>
@@ -5755,6 +5789,6 @@
     <message>
         <source>Motion Tween</source>
         <translation>動態補間動畫</translation>
-     </message>
+    </message>
 </context>
 </TS>
