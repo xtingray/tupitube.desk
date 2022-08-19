@@ -43,7 +43,7 @@
 
 MouthsDialog::MouthsDialog(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle(tr("LipSync Mouth Examples"));
+    setWindowTitle(tr("Lip-Sync Mouth Examples"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/papagayo.png")));
 
     setStyleSheet(TAppTheme::themeSettings());

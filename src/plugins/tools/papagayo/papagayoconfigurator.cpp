@@ -47,7 +47,7 @@ PapagayoConfigurator::PapagayoConfigurator(QWidget *parent) : QFrame(parent)
     toolTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pic(THEME_DIR + "icons/papagayo.png");
     toolTitle->setPixmap(pic.scaledToWidth(20, Qt::SmoothTransformation));
-    toolTitle->setToolTip(tr("Papagayo LipSync Files"));
+    toolTitle->setToolTip(tr("Papagayo Lip-Sync Files"));
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 

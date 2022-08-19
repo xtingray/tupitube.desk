@@ -60,11 +60,11 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
     listLayout->addWidget(lipSyncList);
 
     openButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/plus_sign.png"), 22);
-    openButton->setToolTip(tr("Open LipSync Creator"));
+    openButton->setToolTip(tr("Open Lip-Sync Creator"));
     connect(openButton, SIGNAL(clicked()), this, SIGNAL(lipsyncCreatorRequested()));
 
     editPgoButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/edit_sign.png"), 22);
-    editPgoButton->setToolTip(tr("Edit LipSync"));
+    editPgoButton->setToolTip(tr("Edit Lip-Sync"));
     connect(editPgoButton, SIGNAL(clicked()), this, SLOT(editLipSync()));
 
     editMouthButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/mouth.png"), 22);
@@ -72,7 +72,7 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
     connect(editMouthButton, SIGNAL(clicked()), this, SLOT(editMouth()));
 
     deleteButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/minus_sign.png"), 22);
-    deleteButton->setToolTip(tr("Remove LipSync"));
+    deleteButton->setToolTip(tr("Remove Lip-Sync"));
     connect(deleteButton, SIGNAL(clicked()), this, SLOT(removeLipSync()));
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;

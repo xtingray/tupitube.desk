@@ -414,12 +414,12 @@
     <name>LipSyncManager</name>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="63"/>
-        <source>Open LipSync Creator</source>
-        <translation>Ouvrez LipSync Creator</translation>
+        <source>Open Lip-Sync Creator</source>
+        <translation>Ouvrez Lip-Sync Creator</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="67"/>
-        <source>Edit LipSync</source>
+        <source>Edit Lip-Sync</source>
         <translation>Éditer la synchronisation labiale</translation>
     </message>
     <message>
@@ -429,7 +429,7 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="75"/>
-        <source>Remove LipSync</source>
+        <source>Remove Lip-Sync</source>
         <translation>Supprimer la synchronisation labiale</translation>
     </message>
     <message>
@@ -531,8 +531,8 @@
     <name>MouthsDialog</name>
     <message>
         <location filename="../../../plugins/tools/papagayo/mouthsdialog.cpp" line="46"/>
-        <source>LipSync Mouth Examples</source>
-        <translation>Exemples De Bouche (LipSync)</translation>
+        <source>Lip-Sync Mouth Examples</source>
+        <translation>Exemples De Bouche (Lip-Sync)</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/mouthsdialog.cpp" line="62"/>
@@ -700,7 +700,7 @@
     <name>PapagayoConfigurator</name>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayoconfigurator.cpp" line="50"/>
-        <source>Papagayo LipSync Files</source>
+        <source>Papagayo Lip-Sync Files</source>
         <translation>Fichier Papagayo de synchronisation labiale</translation>
     </message>
     <message>

@@ -414,13 +414,13 @@
     <name>LipSyncManager</name>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="63"/>
-        <source>Open LipSync Creator</source>
+        <source>Open Lip-Sync Creator</source>
         <translation>Abrir Editor de Bocas</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="67"/>
-        <source>Edit LipSync</source>
-        <translation>Editar LipSync</translation>
+        <source>Edit Lip-Sync</source>
+        <translation>Editar Lip-Sync</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="71"/>
@@ -429,8 +429,8 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="75"/>
-        <source>Remove LipSync</source>
-        <translation>Remover LipSync</translation>
+        <source>Remove Lip-Sync</source>
+        <translation>Remover Lip-Sync</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/lipsyncmanager.cpp" line="153"/>
@@ -531,8 +531,8 @@
     <name>MouthsDialog</name>
     <message>
         <location filename="../../../plugins/tools/papagayo/mouthsdialog.cpp" line="46"/>
-        <source>LipSync Mouth Examples</source>
-        <translation>Ejemplos de Bocas (LipSync)</translation>
+        <source>Lip-Sync Mouth Examples</source>
+        <translation>Ejemplos de Bocas (Lip-Sync)</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/mouthsdialog.cpp" line="62"/>
@@ -700,8 +700,8 @@
     <name>PapagayoConfigurator</name>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayoconfigurator.cpp" line="50"/>
-        <source>Papagayo LipSync Files</source>
-        <translation>Archivos de LipSync</translation>
+        <source>Papagayo Lip-Sync Files</source>
+        <translation>Archivos de Lip-Sync</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayoconfigurator.cpp" line="65"/>

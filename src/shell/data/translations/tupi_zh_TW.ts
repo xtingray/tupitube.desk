@@ -324,15 +324,15 @@
 <context>
     <name>LipSyncManager</name>
     <message>
-        <source>Edit LipSync</source>
+        <source>Edit Lip-Sync</source>
         <translation>編輯唇形同步</translation>
     </message>
     <message>
-        <source>Remove LipSync</source>
+        <source>Remove Lip-Sync</source>
         <translation>移除唇形同步</translation>
     </message>
     <message>
-        <source>Open LipSync Creator</source>
+        <source>Open Lip-Sync Creator</source>
         <translation>打開唇型同步創建工具</translation>
     </message>
     <message>
@@ -414,8 +414,8 @@
 <context>
     <name>MouthsDialog</name>
     <message>
-        <source>LipSync Mouth Examples</source>
-        <translation>口例（LipSync）</translation>
+        <source>Lip-Sync Mouth Examples</source>
+        <translation>口例（Lip-Sync）</translation>
     </message>
     <message>
         <source>Mouth Sample Pack No 1</source>
@@ -547,7 +547,7 @@
 <context>
     <name>PapagayoConfigurator</name>
     <message>
-        <source>Papagayo LipSync Files</source>
+        <source>Papagayo Lip-Sync Files</source>
         <translation>Papagayo 唇型同步檔</translation>
     </message>
     <message>
