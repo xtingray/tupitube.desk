@@ -108,11 +108,13 @@ bool ThemeManager::startElement(const QString& , const QString& , const QString&
                           QColor c = getColor(atts);
                           if (! c.isValid())
                               c = 0xd7d7ef;
-                          m_palette.setColor(QPalette::Foreground, c);
+                          // m_palette.setColor(QPalette::Foreground, c);
+                          m_palette.setColor(QPalette::WindowText, c);
                } else if (qname == "Background") {
                           QColor c = getColor(atts);
                           if (c.isValid())
-                              m_palette.setColor(QPalette::Background, c);
+                              // m_palette.setColor(QPalette::Background, c);
+                              m_palette.setColor(QPalette::Window, c);
                } else if (qname == "Button") {
                           QColor c = getColor(atts);
                           if (c.isValid())

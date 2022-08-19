@@ -88,8 +88,10 @@ void TApplication::applyColors(ColorSchema cs)
 
               pal.setColor(QPalette::Text, Qt::white);
               pal.setColor(QPalette::Base, bg);
-              pal.setColor(QPalette::Foreground, 0xd7d7ef);
-              pal.setColor(QPalette::Background, bgAlt);
+              // pal.setColor(QPalette::Foreground, 0xd7d7ef);
+              // pal.setColor(QPalette::Background, bgAlt);
+              pal.setColor(QPalette::WindowText, 0xd7d7ef);
+              pal.setColor(QPalette::Window, bgAlt);
 
               pal.setColor(QPalette::Button, bgAlt);
               pal.setColor(QPalette::ButtonText, 0xd7d7ef);

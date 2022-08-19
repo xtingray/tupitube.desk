@@ -442,8 +442,11 @@ void TupBackground::renderVectorDynamicView()
     vectorDynamicBgExpanded = QPixmap::fromImage(bgView);
     vectorDynamicRenderRequired = false;
 
-    free(painter);
-    free(canvas);
+    delete painter;
+    delete canvas;
+
+    // free(painter);
+    // free(canvas);
 }
 
 // Creating expanded raster dynamic image

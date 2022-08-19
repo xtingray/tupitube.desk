@@ -107,7 +107,8 @@ void TRulerBase::paintEvent(QPaintEvent *)
         p.scale(sFactor, 1.0);
 
     drawScale(&p);
-    p.setBrush(palette ().color(QPalette::Foreground));
+    // p.setBrush(palette().color(QPalette::Foreground));
+    p.setBrush(palette().color(QPalette::QPalette::WindowText));
 
     p.save();
 

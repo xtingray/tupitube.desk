@@ -95,7 +95,8 @@ void TColorButton::paintEvent(QPaintEvent *)
     
     opt.rect = rect();
     opt.palette.setColor(QPalette::Button, m_color);
-    opt.palette.setColor(QPalette::Background, m_color);
+    // opt.palette.setColor(QPalette::Background, m_color);
+    opt.palette.setColor(QPalette::Window, m_color);
     
     style()->drawControl(QStyle::CE_PushButtonBevel, &opt, &painter, this);
 }

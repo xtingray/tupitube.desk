@@ -75,8 +75,8 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
     TupTimeLineTableItem *item = dynamic_cast<TupTimeLineTableItem *>(table->itemFromIndex(index));
     
     // draw the background color
-    QVariant value = index.data(Qt::BackgroundColorRole);
-    
+    // QVariant value = index.data(Qt::BackgroundColorRole);
+    QVariant value = index.data(Qt::BackgroundRole);
     if (value.isValid()) {
         painter->save();
         

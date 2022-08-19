@@ -71,7 +71,8 @@ void TCellViewItemDelegate::paint(QPainter * painter, const QStyleOptionViewItem
         painter->drawImage(opt.rect, img);
 
     // draw the background color
-    value = model->data(index, Qt::BackgroundColorRole);
+    // value = model->data(index, Qt::BackgroundColorRole);
+    value = model->data(index, Qt::BackgroundRole);
 
     if (value.isValid()) {
         QBrush brush = qvariant_cast<QBrush>(value);
@@ -137,7 +138,8 @@ QImage TCellViewItem::image() const
 
 QBrush TCellViewItem::background() const
 {
-    return qvariant_cast<QBrush>(data(Qt::BackgroundColorRole));
+    // return qvariant_cast<QBrush>(data(Qt::BackgroundColorRole));
+    return qvariant_cast<QBrush>(data(Qt::BackgroundRole));
 }
     
 ////////// TCellView  ///////////

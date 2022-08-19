@@ -183,8 +183,10 @@ void TCircleButton::paintMask()
     
     QPainter paintMask(&m_mask);
     paintMask.setRenderHint(QPainter::Antialiasing);
-    paintMask.setPen(QPen(palette().color(QPalette::Foreground ), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    paintMask.setBrush(QBrush(palette().color(QPalette::Foreground )));
+    // paintMask.setPen(QPen(palette().color(QPalette::Foreground ), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    paintMask.setPen(QPen(palette().color(QPalette::WindowText), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    // paintMask.setBrush(QBrush(palette().color(QPalette::Foreground)));
+    paintMask.setBrush(QBrush(palette().color(QPalette::WindowText)));
     
     paintMask.drawEllipse(QRect(rect().x(),rect().y(),m_diameter, m_diameter));
     
@@ -209,7 +211,8 @@ void TCircleButton::paintEvent(QPaintEvent *event)
     int internalRadio = m_diameter;
     
     // pen
-    painter.setPen(QPen(palette().color(QPalette::Foreground ), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    // painter.setPen(QPen(palette().color(QPalette::Foreground), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(palette().color(QPalette::WindowText), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     
     path.addEllipse( rect().x(), rect().y(), m_diameter, m_diameter);
     painter.drawPath(path);
@@ -228,7 +231,8 @@ void TCircleButton::paintEvent(QPaintEvent *event)
     path = QPainterPath();
     
     // pen
-    painter.setPen(QPen(palette().color(QPalette::Foreground ), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    // painter.setPen(QPen(palette().color(QPalette::Foreground), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(palette().color(QPalette::WindowText), 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     internalRadio += 2;
     
     path.addEllipse( rect().x()+internalRadio, rect().y()+internalRadio, m_diameter-internalRadio*2, m_diameter-internalRadio*2);

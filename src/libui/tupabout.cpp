@@ -108,7 +108,8 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
     addTab(credits, tr("About"));
 
     QPalette palette = credits->palette();
-    palette.setColor(QPalette::Foreground, QColor(50, 50, 50, 255));
+    // palette.setColor(QPalette::Foreground, QColor(50, 50, 50, 255));
+    palette.setColor(QPalette::WindowText, QColor(50, 50, 50, 255));
     credits->setPalette(palette);
 
     /*

@@ -1727,7 +1727,7 @@ void TupGraphicsScene::setSelectionRange()
                 it.key()->setFlag(QGraphicsItem::ItemIsSelectable, false);
                 it.key()->setFlag(QGraphicsItem::ItemIsMovable, false);
             } else {
-                it.key()->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MidButton | Qt::XButton1
+                it.key()->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton | Qt::XButton1
                                                   | Qt::XButton2);
                 if (gTool->toolId() == TAction::Text) {
                     if (qgraphicsitem_cast<TupTextItem *>(it.key())) {

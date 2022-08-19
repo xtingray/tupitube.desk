@@ -558,7 +558,8 @@ TDebug& TDebug::operator << (const QTransform &t)
 void TDebug::resaltWidget(QWidget *w, const QColor &color)
 {
     QPalette pal = w->palette();
-    pal.setColor(QPalette::Background, color);
+    // pal.setColor(QPalette::Background, color);
+    pal.setColor(QPalette::Window, color);
     w->setPalette(pal);
 }
 

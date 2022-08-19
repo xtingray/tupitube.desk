@@ -239,7 +239,8 @@ void TupConfigurationArea::showConfigurator()
         setPalette(pal);
         setAutoFillBackground(false);
 
-        setFeatures(QDockWidget::AllDockWidgetFeatures);
+        // setFeatures(QDockWidget::AllDockWidgetFeatures);
+        setFeatures(DockWidgetClosable|DockWidgetMovable|DockWidgetFloatable);
     }
 
     shower.stop();
@@ -255,7 +256,8 @@ void TupConfigurationArea::hideConfigurator()
         setFeatures(QDockWidget::NoDockWidgetFeatures);
 
         QPalette pal = palette();
-        pal.setBrush(QPalette::Background, pal.button());
+        // pal.setBrush(QPalette::Background, pal.button());
+        pal.setBrush(QPalette::Window, pal.button());
         setPalette(pal);
         setAutoFillBackground(true);
 

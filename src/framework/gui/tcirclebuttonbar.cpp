@@ -58,11 +58,13 @@ void TCircleButtonBar::paintEvent(QPaintEvent *)
 
     setMinimumSize(m_mask.size());
 
-    painter.setPen(QPen(palette().color(QPalette::Foreground ),5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    // painter.setPen(QPen(palette().color(QPalette::Foreground), 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter.setPen(QPen(palette().color(QPalette::WindowText), 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)); 
     painter.drawPath(m_border);
 
     QPalette pal = palette();
-    pal.setColor(QPalette::Background, pal.color(QPalette::Button));
+    // pal.setColor(QPalette::Background, pal.color(QPalette::Button));
+    pal.setColor(QPalette::Window, pal.color(QPalette::Button));
     setPalette(pal);
 }
 
