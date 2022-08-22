@@ -54,6 +54,10 @@
 
 SelectionTool::SelectionTool(): settingsPanel(nullptr)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool()]";
+    #endif
+
     setupActions();
 }
 
@@ -93,6 +97,10 @@ void SelectionTool::initItems(TupGraphicsScene *gScene)
 
 void SelectionTool::removeTarget()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::removeTarget()]";
+    #endif
+
     if (targetIsIncluded) {
         scene->removeItem(center);
         scene->removeItem(target1);
@@ -457,6 +465,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
     if (response->getAction() == TupProjectRequest::Remove) {
         if (nodeManagers.count() == 1)
             settingsPanel->enableFormControls(false);
+        clearSelection();
         return;
     }
 
@@ -711,6 +720,10 @@ bool SelectionTool::selectionIsActive()
 
 void SelectionTool::applyAlignAction(SelectionSettings::Align align)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::applyAlignAction()] - align -> " << align;
+    #endif
+
     QPointF distance;
     foreach (NodeManager *manager, nodeManagers) {
         QGraphicsItem *item = manager->parentItem();
@@ -733,6 +746,10 @@ void SelectionTool::applyAlignAction(SelectionSettings::Align align)
 
 void SelectionTool::applyFlip(SelectionSettings::Flip flip)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::applyFlip()] - flip -> " << flip;
+    #endif
+
     selectedObjects = scene->selectedItems();
 
     foreach (QGraphicsItem *item, selectedObjects) {
@@ -800,6 +817,10 @@ void SelectionTool::applyOrderAction(SelectionSettings::Order action)
 
 void SelectionTool::applyGroupAction(SelectionSettings::Group action)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::applyGroupAction()] - action -> " << action;
+    #endif
+
     foreach (QGraphicsItem *item, selectedObjects) {
         TupSvgItem *svg = qgraphicsitem_cast<TupSvgItem *>(item);
         if (svg) {
@@ -900,6 +921,10 @@ void SelectionTool::updateZoomFactor(qreal scaleFactor)
 
 void SelectionTool::sceneResponse(const TupSceneResponse *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::sceneResponse()] - event->getAction() -> " << event->getAction();
+    #endif
+
     if (event->getAction() == TupProjectRequest::Select)
         initItems(scene);
 }
@@ -922,6 +947,10 @@ void SelectionTool::updateItemPosition()
 
 void SelectionTool::addTarget()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::addTarget()]";
+    #endif
+
     if (selectedObjects.count() > 1) {
         QGraphicsItem *item = selectedObjects.first();
         QPoint left = item->mapToScene(item->boundingRect().topLeft()).toPoint();
@@ -1227,6 +1256,10 @@ void SelectionTool::setProjectSize(const QSize size)
 
 void SelectionTool::resetItemTransformations()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[SelectionTool::resetItemTransformations()]";
+    #endif
+
     setItemRotation(0);
     setItemScale(1, 1);
 }
@@ -1240,6 +1273,9 @@ void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, con
 
     if (activeSelection) {
         specialSelection.clear();
+        #ifdef TUP_DEBUG
+            qDebug() << "[SelectionTool::updateColorOnSelection()] - selectedObjects.size() -> " << selectedObjects.size();
+        #endif
         foreach (QGraphicsItem *item, selectedObjects) {
             int itemIndex = -1;
             if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
@@ -1268,7 +1304,11 @@ void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, con
             specialSelection << itemIndex;
 
             TupProjectRequest event;
-            if (qgraphicsitem_cast<TupTextItem *>(item)) {
+            if (qgraphicsitem_cast<TupItemGroup *>(item)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[SelectionTool::updateColorOnSelection()] - Warning: Group item has been selected!";
+                #endif
+            } else if (qgraphicsitem_cast<TupTextItem *>(item)) {
                 event = TupRequestBuilder::createItemRequest(
                                           scene->currentSceneIndex(), currentLayer,
                                           currentFrame, itemIndex, QPointF(),
@@ -1295,6 +1335,10 @@ void SelectionTool::updateColorOnSelection(TupProjectRequest::Action action, con
                 emit requested(&event);
             }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[SelectionTool::updateColorOnSelection()] - Warning: No active selection!";
+        #endif
     }
 }
 
