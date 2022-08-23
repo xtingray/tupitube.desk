@@ -1351,8 +1351,19 @@ void SelectionTool::updatePenOnSelection(const QPen &pen)
     if (activeSelection) {        
         specialSelection.clear();
         foreach (QGraphicsItem *item, selectedObjects) {
-            if (qgraphicsitem_cast<TupTextItem *>(item))
+            if (qgraphicsitem_cast<TupTextItem *>(item)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[SelectionTool::updatePenOnSelection()] - Warning: Text item has been selected!";
+                #endif
                 continue;
+            }
+
+            if (qgraphicsitem_cast<TupItemGroup *>(item)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[SelectionTool::updatePenOnSelection()] - Warning: Group item has been selected!";
+                #endif
+                continue;
+            }
 
             if (qgraphicsitem_cast<QAbstractGraphicsShapeItem *>(item)) {
                 int itemIndex = -1;
@@ -1391,5 +1402,9 @@ void SelectionTool::updatePenOnSelection(const QPen &pen)
                 emit requested(&event);
             }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[SelectionTool::updatePenOnSelection()] - Warning: No active selection!";
+        #endif
     }
 }
