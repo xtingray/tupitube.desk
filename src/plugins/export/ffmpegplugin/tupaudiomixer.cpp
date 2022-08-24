@@ -67,7 +67,7 @@ int TupAudioMixer::openInputFile(const char *filename)
     AVCodec *input_codec;
     AVStream *in_stream;
     AVCodecParameters *in_codecpar;
-    enum AVCodecID audioCodecID;
+    enum AVCodecID audioCodecID = AV_CODEC_ID_NONE;
     int error;
 
     // Open the input file to read from it.
@@ -94,19 +94,27 @@ int TupAudioMixer::openInputFile(const char *filename)
     }
 
     // Make sure that there is only one stream in the input file.
-    if (inputFormatContext->nb_streams != 1) {
-        errorMsg = "Fatal Error: Expected one audio input stream, but found several.";
+    int streamsTotal = inputFormatContext->nb_streams;
+    if (streamsTotal > 1) {
+        errorMsg = "Warning: Expected one audio input stream, but found several -> " + QString::number(streamsTotal);
         #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
+            qWarning() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
         #endif
+        /*
         avformat_close_input(&inputFormatContext);
         return AVERROR_EXIT;
+        */
     }
 
     av_dump_format(inputFormatContext, 0, filename, 0);
 
+    /*
     in_stream = inputFormatContext->streams[0];
     in_codecpar = in_stream->codecpar;
+    audioCodecID = in_codecpar->codec_id;
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupAudioMixer::openInputFile()] - Codec ID -> " << avcodec_get_name(audioCodecID);
+    #endif
     if (in_codecpar->codec_type != AVMEDIA_TYPE_AUDIO) {
         errorMsg = "Fatal Error: File input has no stream audio -> " + QString(filename);
         #ifdef TUP_DEBUG
@@ -114,8 +122,23 @@ int TupAudioMixer::openInputFile(const char *filename)
         #endif
         return -1;
     }
+    */
 
-    audioCodecID = in_codecpar->codec_id;
+    for(int i=0; i<streamsTotal; i++) {
+        in_stream = inputFormatContext->streams[i];
+        in_codecpar = in_stream->codecpar;
+        audioCodecID = in_codecpar->codec_id;
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupAudioMixer::openInputFile()] - Codec ID -> " << avcodec_get_name(audioCodecID);
+        #endif
+
+        if (in_codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupAudioMixer::openInputFile()] - Found audio stream!";
+            #endif
+            break;
+        }
+    }
 
     // Find a decoder for the audio stream.
     if (!(input_codec = avcodec_find_decoder(audioCodecID))) {
