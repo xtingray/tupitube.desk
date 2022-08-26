@@ -177,6 +177,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
         void refreshItemFromCollection(LibraryObjects collection);
+        QString getItemKey(const QString &filename);
 
         QScreen *screen;
         TupLibrary *library;

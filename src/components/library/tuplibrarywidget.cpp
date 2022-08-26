@@ -982,18 +982,10 @@ void TupLibraryWidget::importImage(const QString &imagePath)
 
     QFile imageFile(imagePath);
 
-    if (imageFile.open(QIODevice::ReadOnly)) {
+    if (imageFile.open(QIODevice::ReadOnly)) { 
         QFileInfo fileInfo(imageFile);
-        QString key = fileInfo.fileName().toLower();
-        key = key.replace("(","_");
-        key = key.replace(")","_");
-        int index = key.lastIndexOf(".");
+        QString key = getItemKey(fileInfo.fileName().toLower());
 
-        QString name = key.mid(0, index);
-        if (name.length() > 30)
-            name = key.mid(0, 30);
-
-        QString extension = key.mid(index, key.length() - index);
         QByteArray data = imageFile.readAll();
         imageFile.close();
 
@@ -1042,12 +1034,6 @@ void TupLibraryWidget::importImage(const QString &imagePath)
             } 
         }
 
-        int i = 0;
-        while (library->exists(key)) {
-            i++;
-            key = name + "-" + QString::number(i) + extension;
-        }
-
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                                             TupLibraryObject::Image, project->spaceContext(), data, QString(),
                                                                             currentFrame.scene, currentFrame.layer, currentFrame.frame);
@@ -1087,16 +1073,7 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
 
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
-        QString key = fileInfo.fileName().toLower();
-        key = key.replace("(","_");
-        key = key.replace(")","_");
-
-        int index = key.lastIndexOf(".");
-        QString name = key.mid(0, index);
-        if (name.length() > 30)
-            name = key.mid(0, 30);
-
-        QString extension = key.mid(index, key.length() - index);
+        QString key = getItemKey(fileInfo.fileName().toLower());
 
         QByteArray data = file.readAll();
         file.close();
@@ -1108,12 +1085,6 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
             qDebug() << "[TupLibraryWidget::importSvg()] - Project Size: [" << projectWidth << ","
                      << projectHeight << "]";
         #endif
-
-        int i = 0;
-        while (library->exists(key)) {
-            i++;
-            key = name + "-" + QString::number(i) + extension;
-        }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                        TupLibraryObject::Svg, project->spaceContext(), data, QString(),
@@ -1162,9 +1133,8 @@ void TupLibraryWidget::importNativeObject(const QString &object)
     QFile file(object);
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
-        QString key = fileInfo.fileName().toLower();
-        key = key.replace("(","_");
-        key = key.replace(")","_");
+        QString key = getItemKey(fileInfo.fileName().toLower());
+
         QByteArray data = file.readAll();
         file.close();
 
@@ -1175,15 +1145,6 @@ void TupLibraryWidget::importNativeObject(const QString &object)
             qDebug() << "[TupLibraryWidget::importNativeObject()] - Inserting native object into project -> "
                      << project->getName();
         #endif
-
-        int i = 0;
-        int index = key.lastIndexOf(".");
-        QString name = key.mid(0, index);
-        QString extension = key.mid(index, key.length() - index);
-        while (library->exists(key)) {
-            i++;
-            key = name + "-" + QString::number(i) + extension;
-        }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                        TupLibraryObject::Item, project->spaceContext(), data, QString(),
@@ -1493,6 +1454,30 @@ void TupLibraryWidget::importSoundFile()
     soundDialog->show();
 }
 
+QString TupLibraryWidget::getItemKey(const QString &filename)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::getItemKey()] - filename -> " << filename;
+    #endif
+
+    QString key = filename;
+    key = key.replace("(","_");
+    key = key.replace(")","_");
+
+    int index = key.lastIndexOf(".");
+    QString name = key.mid(0, index);
+    if (name.length() > 30)
+        name = key.mid(0, 30);
+    QString extension = key.mid(index, key.length() - index);
+    int i = 0;
+    while (library->exists(key)) {
+        i++;
+        key = name + "-" + QString::number(i) + extension;
+    }
+
+    return key;
+}
+
 void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
 {
     #ifdef TUP_DEBUG
@@ -1500,14 +1485,29 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
     #endif
 
     QFile file(filePath);
-    QFileInfo fileInfo(file);
-    QString key = fileInfo.fileName().toLower();
-    key = key.replace("(","_");
-    key = key.replace(")","_");
-
     if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         file.close();
+
+        QFileInfo fileInfo(file);
+        // QString key = fileInfo.fileName().toLower();
+        QString key = getItemKey(fileInfo.fileName().toLower());
+
+        /*
+        key = key.replace("(","_");
+        key = key.replace(")","_");
+
+        int index = key.lastIndexOf(".");
+        QString name = key.mid(0, index);
+        if (name.length() > 30)
+            name = key.mid(0, 30);
+        QString extension = key.mid(index, key.length() - index);
+        int i = 0;
+        while (library->exists(key)) {
+            i++;
+            key = name + "-" + QString::number(i) + extension;
+        }
+        */
 
         isEffectSound = true;
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
