@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupexportwidget.h"
+#include "tconfig.h"
 
 TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType type) : TupExportWizard(parent)
 {
@@ -102,7 +103,14 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
         break;
         case Scene:
         {
-            setWindowTitle(tr("Post Animation"));
+            QString username = TCONFIG->value("Username").toString();
+            bool anonymous = TCONFIG->value("Anonymous").toBool();
+            QString label = "";
+            if (anonymous)
+                label = tr("Post Animation") + " (" + tr("as Anonymous") + ")";
+            else
+                label = tr("Post Animation") + " (" + tr("as") + " " + username + ")";
+            setWindowTitle(label);
             setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
 
             scenesPage = new TupSceneSelector();

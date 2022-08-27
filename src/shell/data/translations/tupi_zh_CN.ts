@@ -2657,6 +2657,14 @@
         <source>Post</source>
         <translation>发布</translation>
     </message>
+    <message>
+        <source>as Anonymous</source>
+        <translation>匿名</translation>
+    </message>
+    <message>
+        <source>as</source>
+        <translation>如同</translation>
+    </message>
 </context>
 <context>
     <name>TupExportWizard</name>
