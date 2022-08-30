@@ -105,6 +105,10 @@ void TupSignDialog::signUp()
 
 void TupSignDialog::apply()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSignDialog::apply()]";
+    #endif
+
     if (username->text().isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Please, fill in your username"));
         return;
@@ -124,6 +128,7 @@ void TupSignDialog::apply()
         TCONFIG->setValue("Password", "");
         TCONFIG->setValue("StorePassword", "0");
     }
+    TCONFIG->sync();
 
     // Storing cache settings
     QString data = metadata->text();

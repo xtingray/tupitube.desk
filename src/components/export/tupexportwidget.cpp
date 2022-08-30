@@ -103,6 +103,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
         break;
         case Scene:
         {
+            TCONFIG->beginGroup("Network");
             QString username = TCONFIG->value("Username").toString();
             bool anonymous = TCONFIG->value("Anonymous").toBool();
             QString label = "";
