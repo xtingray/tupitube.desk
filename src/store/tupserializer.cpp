@@ -102,15 +102,26 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlStreamAttribut
     item->setData(TupGraphicObject::ScaleY, sy);
 
     if (TupTextItem *textItem = qgraphicsitem_cast<TupTextItem *>(item)) {
-        textItem->setTextWidth(atts.value("text_width").toInt());
+        int width = atts.value("text_width").toInt();
+        #ifdef TUP_SERVER
+            width += 100;
+        #endif
+
+        textItem->setTextWidth(width);
 
         Qt::Alignment alignment = Qt::Alignment(atts.value("text_alignment").toInt());
         QTextOption option = textItem->document()->defaultTextOption();
         option.setAlignment(alignment);
         textItem->document()->setDefaultTextOption(option);
 
-        textItem->setData(0, atts.value("text").toString());
-        textItem->setPlainText(atts.value("text").toString());
+        QString text = atts.value("text").toString();
+        #ifdef TUP_SERVER
+            text.replace("&#xA", " &#xA");
+            text += " ";
+        #endif
+
+        textItem->setData(0, text);
+        textItem->setPlainText(text);
     }
 }
 
