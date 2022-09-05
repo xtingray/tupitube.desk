@@ -107,7 +107,7 @@ _EOH_
        print "[ \033[91mOFF\033[0m ]\n"
     end
 
-    // config.addDefine("TUP_SERVER")
+    # config.addDefine("TUP_SERVER")
 
     if conf.hasArgument?("with-ffmpeg") and conf.hasArgument?("without-ffmpeg")  
        Info.error << " ERROR: Options --with-ffmpeg and --without-ffmpeg are mutually exclusive\n"
