@@ -1163,33 +1163,45 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                              #endif
 
                              // Adding rest phoneme to cover empty frame
-                             QString imgName = "rest" + lipSync->getPicExtension();
-                             mouthImg = folder->getObject(imgName);
-                             if (mouthImg) {
-                                 item = new TupGraphicLibraryItem(mouthImg);
-                                 if (item) {
-                                     QDomElement properties = voice->getDefaultTransformation();
-                                     TupSerializer::loadProperties(item, properties);
+                             phoneme = voice->getPhonemeAt(index - 1);
+                             if (phoneme) {
+                                 QString imgName = "rest" + lipSync->getPicExtension();
+                                 mouthImg = folder->getObject(imgName);
+                                 if (mouthImg) {
+                                     item = new TupGraphicLibraryItem(mouthImg);
+                                     if (item) {
+                                         QDomElement properties = phoneme->getTransformationDom();
+                                         TupSerializer::loadProperties(item, properties);
+                                         // QDomElement properties = voice->getDefaultTransformation();
+                                         // TupSerializer::loadProperties(item, properties);
 
-                                     QRectF rect = item->boundingRect();
-                                     int x = rect.width()/2;
-                                     int y = rect.height()/2;
-                                     item->moveBy(-x, -y);
+                                         /*
+                                         QRectF rect = item->boundingRect();
+                                         int x = rect.width()/2;
+                                         int y = rect.height()/2;
+                                         item->moveBy(-x, -y);
+                                         */
 
-                                     item->setToolTip(tr("lipsync:") + name);
-                                     item->setZValue(zValue);
-                                     addItem(item);
+                                         item->setToolTip(tr("lipsync:") + name);
+                                         item->setZValue(zValue);
+                                         addItem(item);
+                                     } else {
+                                        #ifdef TUP_DEBUG
+                                            qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't load library item -> "
+                                                     << imgName;
+                                        #endif
+                                     }
                                  } else {
-                                    #ifdef TUP_DEBUG
-                                        qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't load library item -> "
-                                                 << imgName;
-                                    #endif
+                                         #ifdef TUP_DEBUG
+                                             qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
+                                                      << imgName;
+                                         #endif
                                  }
                              } else {
-                                     #ifdef TUP_DEBUG
-                                         qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Can't find phoneme image -> "
-                                                  << imgName;
-                                     #endif
+                                 #ifdef TUP_DEBUG
+                                     qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Warning: Previous phoneme is not available"
+                                                 " - index -> " << (index - 1);
+                                 #endif
                              }
                          }
                      } else {
