@@ -78,6 +78,7 @@ class Test
             if File.stat(dir).directory?
                 Dir.chdir(dir)
 
+                qmakeLine = ""
                 extraLib = ""
                 extraInclude = ""
                 if RUBY_PLATFORM == "x86_64-linux"
@@ -88,7 +89,7 @@ class Test
                    if conf.hasArgument?("with-ffmpeg")
                       ffmpegDir = conf.argumentValue("with-ffmpeg")
                       ffmpegLib = ffmpegDir + "/lib"
-                      extraLib += "-L#{ffmpegLib}"
+                      extraLib  = "-L#{ffmpegLib}"
                       extraInclude = ffmpegDir + "/include"
                       qmakeLine = "'LIBS += #{extraLib}'";
                       qmakeLine += " 'INCLUDEPATH += #{extraInclude}'";
@@ -98,13 +99,17 @@ class Test
                       if conf.hasArgument?("with-quazip")
                          quazipDir = conf.argumentValue("with-quazip")
                          quazipLib = quazipDir + "/lib"
-                         extraLib += "-L#{quazipLib} -lquazip1-qt5"
-                         extraInclude = quazipDir + "/include"
+                         extraLib  = "-L#{quazipLib} -lquazip1-qt5"
+                         if RUBY_PLATFORM =~ /linux/ 
+                             extraInclude = quazipDir + "/include"
+                         elsif RUBY_PLATFORM =~ /darwin/
+                             extraInclude = quazipDir + "/include/quazip"
+                         end
                          qmakeLine = "'LIBS += #{extraLib}'"
                          qmakeLine += " 'INCLUDEPATH += #{extraInclude}'"
                       else
-                         extraLib = "-lquazip-qt5"
-                         qmakeLine = "'LIBS += #{extraLib}'"
+                         extraLib = "-lquazip1-qt5"
+                         qmakeLine += "'LIBS += #{extraLib}'"
                       end
                    else
                       qmakeLine = ""
@@ -164,10 +169,10 @@ class Test
         if conf.hasArgument?("with-quazip")
            config.addLib("-lquazip1-qt5")
         else
-           config.addLib("-lquazip-qt5")
+           config.addLib("-lquazip1-qt5")
         end
 
-        # config.addLib("-lquazip-qt5")
+        # config.addLib("-lquazip1-qt5")
         
         parser.defines.each { |define|
             config.addDefine(define)

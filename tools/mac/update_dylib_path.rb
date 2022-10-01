@@ -36,7 +36,7 @@
 ###########################################################################
 
 library = ARGV[0]
-oldpath  = ARGV[1]
+oldpath = ARGV[1]
 newpath = ARGV[2]
 
 libs = %x[otool -L #{library} |awk '{print $1}'|grep "#{oldpath}"]

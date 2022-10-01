@@ -17,9 +17,6 @@
             <lib path="-lswscale" /> 
             <lib path="-lavutil" />
         </libs>
-        <includes>
-            <include path="/usr/local/ffmpeg/include/" />
-        </includes>
     </provide>
     <solution>
         <linux package="ffmpeg" url="http://ffmpeg.org/" comment="" >

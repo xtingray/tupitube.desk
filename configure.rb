@@ -143,7 +143,11 @@ _EOH_
        quazipDir = conf.argumentValue("with-quazip")
        if File.directory? quazipDir
           quazipLib = quazipDir + "/lib"
-          quazipInclude = quazipDir + "/include"
+          if RUBY_PLATFORM =~ /linux/
+              quazipInclude = quazipDir + "/include"
+          elsif RUBY_PLATFORM =~ /darwin/
+              quazipInclude = quazipDir + "/include/quazip"
+          end
           config.addLib("-L" + quazipLib)
           config.addIncludePath(quazipInclude)
        else

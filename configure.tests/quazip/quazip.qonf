@@ -7,9 +7,10 @@
 		<defines>
 			<define value="HAVE_QUAZIP" />
 		</defines>
-                <includes>
-                        <include path="/usr/include/quazip/" />
-                </includes>
+                <libs>
+                        <lib path="-L/usr/local/lib" />
+                        <lib path="-lquazip1-qt5" />
+                </libs>
 	</provide>
 	<solution>
 		<linux package="quazip" url="http://quazip.sourceforge.net/" comment="" >

@@ -17,7 +17,7 @@ macx {
                 html
 
     icons.target = ../../launcher/icons/tupitube.desk.png
-    icons.commands = cp ../../launcher/icons/tupitube.desk.png $(INSTALL_ROOT)/pixmaps
+    icons.commands = cp -v ../../launcher/icons/tupitube.desk.png $(INSTALL_ROOT)/pixmaps
     icons.path = /pixmaps/
 
     target.path = /bin/
@@ -28,7 +28,7 @@ macx {
 
     html.target = html
     html.files = html
-    html.commands = cp -r html $(INSTALL_ROOT)/share/tupitube/data
+    html.commands = cp -rv html $(INSTALL_ROOT)/share/tupitube/data
     html.path = /data/
 }
 
@@ -44,36 +44,36 @@ unix:!mac {
                 copyright
 
     tupidata.target = data
-    tupidata.commands = cp -r data/* $(INSTALL_ROOT)/data
+    tupidata.commands = cp -rv data/* $(INSTALL_ROOT)/data
     tupidata.path = /data/
 
     launcher.target = ../../launcher/tupitube.desk
-    launcher.commands = cp ../../launcher/tupitube.desk $(INSTALL_ROOT)/bin; chmod 755 $(INSTALL_ROOT)/bin/tupitube.desk
+    launcher.commands = cp -v ../../launcher/tupitube.desk $(INSTALL_ROOT)/bin; chmod 755 $(INSTALL_ROOT)/bin/tupitube.desk
     launcher.path = /bin/
 
     mime.target = ../../launcher/tupitube.xml
-    mime.commands = cp ../../launcher/tupitube.xml $(INSTALL_ROOT)/share/mime/packages
+    mime.commands = cp -v ../../launcher/tupitube.xml $(INSTALL_ROOT)/share/mime/packages
     mime.path = /share/mime/packages/
 
     desktop.target = ../../launcher/tupitube.desktop
-    desktop.commands = cp ../../launcher/tupitube.desktop $(INSTALL_ROOT)/applications
+    desktop.commands = cp -v ../../launcher/tupitube.desktop $(INSTALL_ROOT)/applications
     desktop.path = /applications/
 
     appdata.target = ../../launcher/tupitube.appdata.xml
-    appdata.commands = cp ../../launcher/tupitube.appdata.xml $(INSTALL_ROOT)/metainfo
+    appdata.commands = cp -v ../../launcher/tupitube.appdata.xml $(INSTALL_ROOT)/metainfo
     appdata.path = /metainfo/
 
     icons.target = ../../launcher/icons/tupitube.desk.png
-    icons.commands = cp ../../launcher/icons/tupitube.desk.png $(INSTALL_ROOT)/pixmaps
+    icons.commands = cp -v ../../launcher/icons/tupitube.desk.png $(INSTALL_ROOT)/pixmaps
     icons.path = /pixmaps/
 
     html.target = html 
     html.files = html 
-    html.commands = cp -r html $(INSTALL_ROOT)/share/tupitube/data
+    html.commands = cp -rv html $(INSTALL_ROOT)/share/tupitube/data
     html.path = /data/
 
     copyright.target = man/copyright
-    copyright.commands = cp man/copyright $(INSTALL_ROOT)/share/doc/tupitube
+    copyright.commands = cp -v man/copyright $(INSTALL_ROOT)/share/doc/tupitube
     copyright.path = /tupitube/
 
     target.path = /bin/

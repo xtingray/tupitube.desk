@@ -46,6 +46,7 @@ export DYLD_FRAMEWORK_PATH=$QT_PATH/5.15.2/clang_64/lib
 TUPITUBE_GIT_REPOSITORY=$1
 INSTALLATION_PATH=$2
 INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
+FRAMEWORKS_PATH=$INSTALLATION_PATH/TupiTube.app/Contents/Frameworks
 TUPITUBE_VERSION=0.2.19
 
 # libtupinet.dylib
@@ -54,51 +55,68 @@ declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' '
 'libtupiplayer.1.dylib' 'libtupibrush.1.dylib' 'libtupimport.1.dylib' 'libtupiexport.1.dylib' 'libtupiexposure.1.dylib' \
 'libjson-c.1.dylib' 'liblibmypaint.1.dylib' 'libqtmypaint.1.dylib' \
 'librasterbrushes.1.dylib' 'librastercolor.1.dylib' 'librastermain.1.dylib' \
-'libtupitimeline.1.dylib' 'libtupilibrary.1.dylib' 'libtupiscenes.1.dylib' 'libtupinews.1.dylib' 'libtupiplugincommon.1.dylib');
+'libtupitimeline.1.dylib' 'libtupilibrary.1.dylib' 'libtupinews.1.dylib' 'libtupiplugincommon.1.dylib');
 
 cd $TUPITUBE_GIT_REPOSITORY
 
 make install
 
-cp launcher/icons/tupitube.desk.png $INSTALLATION_PATH/TupiTube.app/Contents/Resources/tup.png
+cp -v launcher/icons/tupitube.desk.png $INSTALLATION_PATH/TupiTube.app/Contents/Resources/tup.png
 
 cd $INSTALLATION_PATH
-cp -r lib/tupitube/plugins TupiTube.app/Contents/MacOS
+cp -rv lib/tupitube/plugins TupiTube.app/Contents/MacOS
 
-mkdir TupiTube.app/Contents/MacOS/share
-cp -r share/pixmaps TupiTube.app/Contents/MacOS/share/
-cp -r share/tupitube/data TupiTube.app/Contents/MacOS/share/
-cp -r share/tupitube/themes TupiTube.app/Contents/MacOS/share/
+mkdir -pv TupiTube.app/Contents/MacOS/share
+cp -rv share/pixmaps TupiTube.app/Contents/MacOS/share/
+cp -rv share/tupitube/data TupiTube.app/Contents/MacOS/share/
+cp -rv share/tupitube/themes TupiTube.app/Contents/MacOS/share/
 
 cd TupiTube.app/Contents/MacOS/plugins
 
 find . -name "*.dylib" -exec $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/plugins/{} \/usr\/local\/lib\/ @executable_path/../Frameworks/ \;
 
 for lib in ${LIBS[@]}; do
+    echo "";
+    echo "[Phase I] Updating paths for $lib";
     find . -name "*.dylib" -exec $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/plugins/{} $lib @executable_path/../Frameworks/$lib \;
 done
 
 cd $INSTALLATION_PATH/TupiTube.app/Contents/MacOS
 
 for lib in ${LIBS[@]}; do
+    echo "";
+    echo "[Phase II] Updating paths for (Frameworks I) $lib";
     $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/TupiTube $lib @executable_path/../Frameworks/$lib  \;
 done
 
-cp -r $QT_PATH/MaintenanceTool.app/Contents/Resources/qt_menu.nib $INSTALLATION_PATH/TupiTube.app/Contents/Resources
+cp -rv $QT_PATH/MaintenanceTool.app/Contents/Resources/qt_menu.nib $INSTALLATION_PATH/TupiTube.app/Contents/Resources
 
 cd $INSTALLATION_PATH
+mkdir -pv $FRAMEWORKS_PATH
 
-mkdir TupiTube.app/Contents/Frameworks/
-
+echo ""
+echo "* Copying TupiTube libraries into Frameworks folder"
 for lib in ${LIBS[@]}; do
-    cp lib/tupitube/$lib TupiTube.app/Contents/Frameworks/
+    cp -v $INSTALLATION_PATH/lib/tupitube/$lib $FRAMEWORKS_PATH
 done
+
 for lib in ${LIBS[@]}; do
+    echo "";
+    echo "[Phase III] Updating paths for (Frameworks II) $lib";    
     $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/Frameworks/$lib  \/usr\/local\/lib\/ @executable_path/../Frameworks/
+
     for sublib in ${LIBS[@]}; do
-        $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/Frameworks/$lib $sublib @executable_path/../Frameworks/$sublib
+        echo " * Updating paths for (sublib) $sublib";
+        $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/Frameworks/$lib $sublib @executable_path/../Frameworks/$sublib \;
     done
 done
+
+echo ""
+echo "* Copying additional lib dependencies..."
+# Libsndfile lib
+cp -av /usr/local/lib/libsndfile.1.0.33.dylib $FRAMEWORKS_PATH
+# Quazip lib
+cp -av /usr/local/lib/libquazip1-qt5.1.3.dylib $FRAMEWORKS_PATH
 
 macdeployqt TupiTube.app -dmg -libpath=/usr/local/lib
 mv TupiTube.dmg TupiTube_Desk_$TUPITUBE_VERSION.dmg
