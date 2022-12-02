@@ -181,7 +181,9 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
-            return false;
+            hasSound = false;
+            goto safe;
+            // return false;
         }
 
         if (!openAudioInputStream()) {
@@ -189,7 +191,9 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
-            return false;
+            hasSound = false;
+            goto safe;
+            // return false;
         }
 
         if (!openAudioOutputStream()) {
@@ -197,7 +201,9 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
-            return false;
+            hasSound = false;
+            goto safe;
+            // return false;
         }
 
         if (!openAudioOutputCodec()) {
@@ -205,10 +211,13 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
-            return false;
+            hasSound = false;
+            goto safe;
+            // return false;
         }
     }
 
+    safe:
     av_dump_format(formatContext, 0, movieFile.toLocal8Bit().data(), 1);
 
     if (!(outputFormat->flags & AVFMT_NOFILE)) {
@@ -349,6 +358,18 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
     }
 
     av_dump_format(audioInputFormatContext, 0, inputFile, 0);
+
+    int streamsTotal = audioInputFormatContext->nb_streams;
+    #ifdef TUP_DEBUG
+        qDebug() << "[TFFmpegMovieGenerator::loadInputAudio()] - Streams total -> " << streamsTotal;
+    #endif
+    if (streamsTotal == 0) {
+        errorMsg = "ffmpeg error: No audio input stream at all!";
+        #ifdef TUP_DEBUG
+            qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
+        #endif
+        return false;
+    }
 
     // Process the stream from input audio
     audioInputStream = audioInputFormatContext->streams[0];
