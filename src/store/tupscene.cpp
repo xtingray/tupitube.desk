@@ -268,7 +268,7 @@ TupSoundLayer *TupScene::soundLayer(int index) const
 {
     if (index < 0 || index >= soundLayers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupScene::fromXml()] - Fatal Error: index out of bound -> " << index;
+            qDebug() << "[TupScene::soundLayer()] - Fatal Error: index out of bound -> " << index;
         #endif
         return nullptr;
     }
@@ -294,12 +294,22 @@ void TupScene::fromXml(const QString &xml)
     setSceneName(root.attribute("name"));
     setFPS(root.attribute("fps", "24").toInt());
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::fromXml()] - Entering while...";
+    #endif
+
     QDomNode n = root.firstChild();
     while (!n.isNull()) {
-           QDomElement e = n.toElement();
+           #ifdef TUP_DEBUG
+               qDebug() << "[TupScene::fromXml()] - While iteration...";
+           #endif
 
+           QDomElement e = n.toElement();
            if (!e.isNull()) {
                if (e.tagName() == "layer") {
+                   #ifdef TUP_DEBUG
+                       qDebug() << "[TupScene::fromXml()] - Processing layer...";
+                   #endif 
                    int layerIndex = layers.count();
                    TupLayer *layer = createLayer(e.attribute("name"), layerIndex, true);
 
@@ -343,6 +353,10 @@ void TupScene::fromXml(const QString &xml)
            n = n.nextSibling();
 
     } // end while
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::fromXml()] - Ending reading...";
+    #endif
 }
 
 QDomElement TupScene::toXml(QDomDocument &doc) const
@@ -873,19 +887,17 @@ TupLipSync * TupScene::getLipSync(const QString &name)
 
 bool TupScene::updateLipSync(TupLipSync *lipsync)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupScene::updateLipSync()] - lipsync name -> " << lipsync->getLipSyncName();
-    #endif
+    QString name = lipsync->getLipSyncName();
 
     if (layers.count()) {
-        QString name = lipsync->getLipSyncName();
         foreach (TupLayer *layer, layers) {
             if (layer->lipSyncCount() > 0) {
                 Mouths mouths = layer->getLipSyncList();
-                for (int i=0; i < mouths.size(); i++) {
-                    TupLipSync *record = mouths.at(i);
-                     if (record->getLipSyncName().compare(name) == 0)
-                         return layer->updateLipSync(i, lipsync);
+                foreach (TupLipSync *record, mouths) {
+                    if (record->getLipSyncName().compare(name) == 0) {
+                        record = lipsync;
+                        return true;
+                    }
                 }
             }
         }
