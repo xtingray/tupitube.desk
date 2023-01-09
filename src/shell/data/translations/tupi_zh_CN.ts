@@ -4706,6 +4706,10 @@
         <source>Can&apos;t set lip-sync voice item!</source>
         <translation>无法设置口型同步语音项目！</translation>
     </message>
+    <message>
+        <source>Spanish</source>
+        <translation>西班牙语</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
