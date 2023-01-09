@@ -103,9 +103,10 @@ void LipsyncWord::runBreakdown(const QString &lang, TupLipsyncDictionary *lipsyn
 
     QString msg = text;
     msg.remove(QRegExp("[.,!?;-/()¿]"));
-    if (lang == "en") {
+    msg = msg.toUpper();
+    if (lang == "en") { // English input
         QStringList	pronunciation;
-        pronunciation << lipsyncDictionary->getDictionaryValue(msg.toUpper());
+        pronunciation << lipsyncDictionary->getDictionaryValue(msg);
         if (pronunciation.size() > 1) {
             for (int32 i = 1; i < pronunciation.size(); i++) {
 				QString p = pronunciation.at(i);
@@ -116,6 +117,71 @@ void LipsyncWord::runBreakdown(const QString &lang, TupLipsyncDictionary *lipsyn
                 phonemes << phoneme;
 			}
 		}
+    } else if (lang == "es") { // Spanish input
+        QStringList vowels = {"A", "E", "I", "O", "U"};
+        QStringList letters;
+        msg = msg.replace("H", ""); // Removing the mute letter
+        msg = msg.trimmed();
+        letters = msg.split("");
+
+        // Searching for vowels
+        QList<int> indexes;
+        int index = 0;
+        foreach(QString item, letters) {
+            if (!item.isEmpty()) {
+                if (vowels.contains(item))
+                    indexes << index;
+                index++;
+            }
+        }
+
+        if (indexes.isEmpty()) { // There are no vowels in the word, processing word by word
+            QString previous = "";
+            foreach(QString letter, letters) {
+                if (letter.compare(previous) != 0) {
+                    LipsyncPhoneme *phoneme = new LipsyncPhoneme;
+                    phoneme->setText(lipsyncDictionary->getPhonemeFromDictionary(letter, "etc"));
+                    phonemes << phoneme;
+                    previous = letter;
+                }
+            }
+        } else {
+            // Cutting word into chunks using the vowel indexes
+            index = 0;
+            for (int i=0; i<indexes.size(); i++) {
+                int length = (indexes.at(i)+1) - index;
+                QString chunk = msg.mid(index, length);
+                if (i == (indexes.size()-1))
+                    chunk = msg.right(msg.length() - index);
+
+                if (chunk.length() < 3) {
+                    QStringList values = lipsyncDictionary->getPhonemeFromDictionary(chunk, "etc").split(" ");
+                    QString previous = "";
+                    foreach(QString value, values) {
+                        if (value.compare(previous) != 0) {
+                            LipsyncPhoneme *phoneme = new LipsyncPhoneme;
+                            phoneme->setText(value);
+                            phonemes << phoneme;
+                            previous = value;
+                        }
+                    }
+                } else { // chunks too large are processed letter by letter
+                    QString previous = "";
+                    while(!chunk.isEmpty()) {
+                        QString letter = chunk.left(1);
+                        QString value = lipsyncDictionary->getPhonemeFromDictionary(letter, "etc");
+                        if (value.compare(previous) != 0) {
+                            LipsyncPhoneme *phoneme = new LipsyncPhoneme;
+                            phoneme->setText(value);
+                            phonemes << phoneme;
+                            previous = value;
+                        }
+                        chunk.remove(0, 1);
+                    }
+                }
+                index = indexes.at(i) + 1;
+            }
+        }
     }
 }
 
@@ -792,8 +858,9 @@ void LipsyncVoice::clearPhrase()
 
 /***/
 
-TupLipsyncDictionary::TupLipsyncDictionary()
+TupLipsyncDictionary::TupLipsyncDictionary(const QString &language)
 {
+    lang = language;
     loadDictionaries();
 }
 
@@ -807,56 +874,55 @@ void TupLipsyncDictionary::loadDictionaries()
         return;
 
 #ifdef Q_OS_WIN
-    QString dictPath = SHARE_DIR + "dictionaries/";
+    QString dictPath = SHARE_DIR + "dictionaries/" + lang + "/";
 #else
-    QString dictPath = SHARE_DIR + "data/dictionaries/";
+    QString dictPath = SHARE_DIR + "data/dictionaries/" + lang + "/";
 #endif
 
-    QFile *file = new QFile(dictPath + "standard_dictionary");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        loadDictionary(file);
-        file->close();
-    }
-    delete file;
-
-    file = new QFile(dictPath + "extended_dictionary");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        loadDictionary(file);
-        file->close();
-    }
-    delete file;
-
-    file = new QFile(dictPath + "user_dictionary");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        loadDictionary(file);
-        file->close();
-    }
-    delete file;
-
-    file = new QFile(dictPath + "phoneme_mapping");
-    if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        while (!file->atEnd()) {
-            QString line = file->readLine();
-            line = line.trimmed();
-
-            if (line.isEmpty()) {
-                continue; // skip comments
-            } else if (line.at(0) == "#" || line.length() == 0) {
-                continue; // skip comments
-            }
-
-            QStringList strList = line.split(' ', Qt::SkipEmptyParts);
-            if (strList.size() > 1) {
-                if (strList[0] == ".")
-                    phonemesList << strList.at(1);
-                else
-                    dictionaryToPhonemeMap.insert(strList.at(0), strList.at(1));
-            }
+    if (lang.compare("en") == 0) { // English dictionary
+        QFile *file = new QFile(dictPath + "standard_dictionary");
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+            loadDictionary(file);
+            file->close();
         }
-        file->close();
-    }
+        delete file;
 
-    delete file;
+        file = new QFile(dictPath + "extended_dictionary");
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+            loadDictionary(file);
+            file->close();
+        }
+        delete file;
+
+        file = new QFile(dictPath + "user_dictionary");
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+            loadDictionary(file);
+            file->close();
+
+        }
+        delete file;
+
+        file = new QFile(dictPath + "phoneme_mapping");
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+            loadPhonemesFromFile(file, lang);
+            file->close();
+        }
+
+        delete file;
+    } else if (lang.compare("es") == 0) { // Spanish dictionary
+        QString phonemePath = dictPath + "phoneme_mapping";
+        QFile *file = new QFile(phonemePath);
+        if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+            loadPhonemesFromFile(file, lang);
+            file->close();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLipsyncDictionary::loadDictionaries()] "
+                            "- Fatal Error: Can't open phoneme map file -> " << phonemePath;
+            #endif
+        }
+        delete file;
+    }
 }
 
 void TupLipsyncDictionary::loadDictionary(QFile *file)
@@ -876,6 +942,46 @@ void TupLipsyncDictionary::loadDictionary(QFile *file)
                 phonemeDictionary.insert(strList.at(0), strList);
         }
     }
+}
+
+void TupLipsyncDictionary::loadPhonemesFromFile(QFile *file, const QString &lang)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDictionary::loadPhonemesFromFile()] - lang -> " << lang;
+    #endif
+
+    while (!file->atEnd()) {
+        QString line = file->readLine();
+        line = line.trimmed();
+
+        if (line.isEmpty()) {
+            continue; // skip comments
+        } else if (line.at(0) == "#" || line.length() == 0) {
+            continue; // skip comments
+        }
+
+        QStringList strList = line.split(' ', Qt::SkipEmptyParts);
+        if (strList.size() > 1) {
+            if (lang.compare("en") == 0) {
+                if (strList[0] == ".") {
+                    phonemesList << strList.at(1);
+                } else {
+                    dictionaryToPhonemeMap.insert(strList.at(0), strList.at(1));
+                }
+            } else if (lang.compare("es") == 0) {
+                QString value = "";
+                for (int i=1; i<strList.size(); i++) {
+                    value += strList.at(i) + " ";
+                }
+                dictionaryToPhonemeMap.insert(strList.at(0), value.trimmed());
+            }
+        }
+    }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLipsyncDictionary::loadPhonemesFromFile()] - "
+                    "Phoneme map size -> " << dictionaryToPhonemeMap.size() << lang;
+    #endif
 }
 
 QString TupLipsyncDictionary::getPhonemeFromDictionary(const QString &key, const QString &defaultValue)
@@ -909,7 +1015,8 @@ TupLipsyncDoc::TupLipsyncDoc()
     maxAmplitude = 1.0f;
     voice = nullptr;
 
-    lipsyncDictionary = new TupLipsyncDictionary;
+    englishLipsyncDictionary = new TupLipsyncDictionary("en"); // English
+    spanishLipsyncDictionary = new TupLipsyncDictionary("es"); // Spanish
 }
 
 TupLipsyncDoc::~TupLipsyncDoc()
@@ -952,7 +1059,7 @@ void TupLipsyncDoc::resetDocument()
 
 TupLipsyncDictionary * TupLipsyncDoc::getDictionary()
 {
-    return lipsyncDictionary;
+    return englishLipsyncDictionary;
 }
 
 void TupLipsyncDoc::openPGOFile(const QString &pgoPath, const QString &audioPath, int fps)
@@ -1225,22 +1332,22 @@ void TupLipsyncDoc::setModifiedFlag(bool flag)
 
 QString TupLipsyncDoc::getPhonemeFromDictionary(const QString &key, const QString &defaultValue)
 {
-    return lipsyncDictionary->getPhonemeFromDictionary(key, defaultValue);
+    return englishLipsyncDictionary->getPhonemeFromDictionary(key, defaultValue);
 }
 
 QStringList TupLipsyncDoc::getDictionaryValue(const QString &key)
 {
-    return lipsyncDictionary->getDictionaryValue(key);
+    return englishLipsyncDictionary->getDictionaryValue(key);
 }
 
 int TupLipsyncDoc::phonemesListSize()
 {
-    return lipsyncDictionary->phonemesListSize();
+    return englishLipsyncDictionary->phonemesListSize();
 }
 
 QString TupLipsyncDoc::getPhonemeAt(int index)
 {
-    return lipsyncDictionary->getPhonemeAt(index);
+    return englishLipsyncDictionary->getPhonemeAt(index);
 }
 
 void TupLipsyncDoc::playAudio()
@@ -1260,8 +1367,13 @@ void TupLipsyncDoc::stopAudio()
 
 void TupLipsyncDoc::runBreakdown(const QString &lang, int32 duration)
 {
-    if (voice)
-        voice->runBreakdown(lang, lipsyncDictionary, duration);
+    if (voice) {
+        if (lang.compare("en") == 0) {
+            voice->runBreakdown(lang, englishLipsyncDictionary, duration);
+        } else if (lang.compare("es") == 0) {
+            voice->runBreakdown(lang, spanishLipsyncDictionary, duration);
+        }
+    }
 }
 
 bool TupLipsyncDoc::voiceTextIsEmpty()

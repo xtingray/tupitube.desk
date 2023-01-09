@@ -66,7 +66,7 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
     grid = nullptr;
 
     TCONFIG->beginGroup("PaintArea");
-    safeLevel = SafeLevel(TCONFIG->value("SafeLevel", Background).toInt());
+    safeLevel = SafeLevel(TCONFIG->value("SafeLevel", Foreground).toInt());
 
     updateGridParameters();
     updateRotParameters();

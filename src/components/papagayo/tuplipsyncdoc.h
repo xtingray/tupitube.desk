@@ -31,7 +31,7 @@ class TupLipsyncDictionary : public QObject
     Q_OBJECT
 
     public:
-        TupLipsyncDictionary();
+        TupLipsyncDictionary(const QString &language);
         ~TupLipsyncDictionary();
 
         QString getPhonemeFromDictionary(const QString &key, const QString &defaultValue);
@@ -43,10 +43,13 @@ class TupLipsyncDictionary : public QObject
     private:
         void loadDictionaries();
         void loadDictionary(QFile *file);
+        void loadPhonemesFromFile(QFile *file, const QString &lang);
 
         QList<QString> phonemesList;
         QHash<QString, QString> dictionaryToPhonemeMap;
         QHash<QString, QStringList> phonemeDictionary;
+
+        QString lang;
 };
 
 /***/
@@ -269,7 +272,8 @@ class TupLipsyncDoc : public QObject
         bool projectHasChanged;
         LipsyncVoice * voice;
 
-        TupLipsyncDictionary *lipsyncDictionary;
+        TupLipsyncDictionary *englishLipsyncDictionary;
+        TupLipsyncDictionary *spanishLipsyncDictionary;
         // SQA: Consider to use a QAudioDecoder object, but it doesn't seem to actually be implemented (at least on Mac).
 };
 

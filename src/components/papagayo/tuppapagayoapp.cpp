@@ -397,12 +397,16 @@ void TupPapagayoApp::setupUI()
 
     languageChoice = new QComboBox();
     languageChoice->addItem(tr("English"));
+    languageChoice->addItem(tr("Spanish"));
     languageChoice->addItem(tr("Other Language"));
 
     TCONFIG->beginGroup("General");
     locale = TCONFIG->value("Language", "en").toString();
     if (locale.compare("en") == 0) {
         currentLanguage = English;
+    } else if (locale.compare("es") == 0) {
+        currentLanguage = Spanish;
+        languageChoice->setCurrentIndex(Spanish);
     } else {
         currentLanguage = OtherLang;
         languageChoice->setCurrentIndex(OtherLang);
@@ -525,7 +529,6 @@ void TupPapagayoApp::openFile(QString filePath)
         document->setModifiedFlag(true);
         document->setFps(defaultFps);
     }
-
     if (!document->audioPlayerIsSet()) {
         delete document;
         document = nullptr;
@@ -638,6 +641,8 @@ void TupPapagayoApp::updateLanguage(int index)
 
     if (index == English) {
         currentLanguage = English;
+    } else if (index == Spanish) {
+        currentLanguage = Spanish;
     } else {
         currentLanguage = OtherLang;
         buildOtherLanguagePhonemes();
@@ -968,7 +973,11 @@ void TupPapagayoApp::runBreakdownAction()
     }
 
     document->setModifiedFlag(true);
-    document->runBreakdown(locale, calculateDuration());
+
+    QString lang = "en";
+    if (currentLanguage == Spanish)
+        lang= "es";
+    document->runBreakdown(lang, calculateDuration());
     waveformView->update();
 }
 
