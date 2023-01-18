@@ -144,7 +144,10 @@ void TupCameraWidget::addVideoHeader()
 
     setProgressBar();
 
-    projectLabel = new QLabel(project->getName() + " ");
+    QString name = project->getName();
+    if (name.length() > 25)
+        name = name.left(25) + "...";
+    projectLabel = new QLabel(name + " ");
     projectLabel->setFont(font);
 
     setDimensionLabel(project->getDimension());

@@ -57,6 +57,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     layout->addWidget(nameLabel, 0, 0);
 
     projectName = new QLineEdit(infoContainer);
+    projectName->setMaxLength(30);
     projectName->setText(tr("my_project"));
     layout->addWidget(projectName, 0, 1);
 
@@ -64,6 +65,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     layout->addWidget(authorLabel, 1, 0);
 
     authorName = new QLineEdit(infoContainer);
+    authorName->setMaxLength(30);
     authorName->setText(tr("Your name"));
     layout->addWidget(authorName, 1, 1);
 
@@ -71,6 +73,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     layout->addWidget(descLabel, 3, 0);
 
     description = new QLineEdit(infoContainer);
+    description->setMaxLength(50);
     description->setText(tr("Just for fun!"));
     layout->addWidget(description, 3, 1);
 

@@ -145,6 +145,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
     protected:
         void mousePressEvent(QMouseEvent *event);
         void tabletEvent(QTabletEvent *event);
+        void dragEnterEvent(QDragEnterEvent *event);
+        void dropEvent(QDropEvent *event);
 
         void frameResponse(TupFrameResponse *response);
         void layerResponse(TupLayerResponse *response);

@@ -1708,16 +1708,45 @@ void TupMainWindow::setUpdateFlag(bool update)
 
 void TupMainWindow::dragEnterEvent(QDragEnterEvent *e)
 {
-    if (e->mimeData()->hasUrls())
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::dragEnterEvent()]";
+    #endif
+
+    if (e->mimeData()->hasUrls()) {
         e->acceptProposedAction();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::dragEnterEvent()] - Warning: Mime data has no URL!";
+        #endif
+    }
 }
 
 void TupMainWindow::dropEvent(QDropEvent *e)
 {
     QList<QUrl> list = e->mimeData()->urls();
-    QString project = list.at(0).toLocalFile();
+    QString object = list.at(0).toLocalFile();
 
-    openProject(project);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::dropEvent()] - object dropped -> " << object;
+    #endif
+
+    if (!object.isEmpty()) {
+        QString lowercase = object.toLower();
+        if (lowercase.endsWith(".tup")) {
+            openProject(object);
+        } else {
+            if (m_projectManager->isOpen()) {
+                qDebug() << "*** Project is open!";
+                if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp")) {
+                    qDebug() << "*** Processing image!";
+                }
+            } else {
+                qDebug() << "*** Fail! No project is open!";
+            }
+        }
+    } else {
+        qDebug() << "*** Fail! Object id is empty!";
+    }
 }
 
 void TupMainWindow::updateProjectAuthor(const QString &artist)

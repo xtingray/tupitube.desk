@@ -130,7 +130,16 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
         break;
         case Frame:
         {
-            setWindowTitle(tr("Post Image"));
+            TCONFIG->beginGroup("Network");
+            QString username = TCONFIG->value("Username").toString();
+            bool anonymous = TCONFIG->value("Anonymous").toBool();
+            QString label = "";
+            if (anonymous)
+                label = tr("Post Image") + " (" + tr("as Anonymous") + ")";
+            else
+                label = tr("Post Image") + " (" + tr("as") + " " + username + ")";
+
+            setWindowTitle(label);
             setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
 
             videoProperties = new TupVideoProperties(TupVideoProperties::Image);

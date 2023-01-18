@@ -50,7 +50,6 @@ TupVideoProperties::TupVideoProperties(Mode m) : TupExportWizardPage(tr("Animati
     aborted = false;
     setWindowParams();
     stackedWidget = new QStackedWidget;
-
     setForm();
     setProgressBar();
 

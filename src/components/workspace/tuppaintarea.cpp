@@ -44,6 +44,7 @@
 
 #include <QScreen>
 #include <cmath> // fabs
+#include <QMimeData>
 
 TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(parent, work->getDimension(),
                                                                                  work->getLibrary())
@@ -53,6 +54,8 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(
     #endif
 
     setAccessibleName("WORKSPACE");
+    setAcceptDrops(true);
+
     project = work;
     canvasEnabled = false;
     globalSceneIndex = 0;
@@ -1731,4 +1734,37 @@ void TupPaintArea::resetWorkSpaceCenter(const QSize projectSize)
 void TupPaintArea::updateLoadingFlag(bool flag)
 {
     graphicsScene()->updateLoadingFlag(flag);
+}
+
+void TupPaintArea::dragEnterEvent(QDragEnterEvent *e)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::dragEnterEvent()]";
+    #endif
+
+    if (e->mimeData()->hasUrls()) {
+        e->acceptProposedAction();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::dragEnterEvent()] - Warning: Mime data has no URL!";
+        #endif
+    }
+}
+
+void TupPaintArea::dropEvent(QDropEvent *e)
+{
+    QList<QUrl> list = e->mimeData()->urls();
+    QString object = list.at(0).toLocalFile();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::dropEvent()] - object dropped -> " << object;
+    #endif
+
+    if (!object.isEmpty()) {
+        QString lowercase = object.toLower();
+        qDebug() << "*** Project is open!";
+        if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp")) {
+            qDebug() << "*** Processing image!";
+        }
+    }
 }
