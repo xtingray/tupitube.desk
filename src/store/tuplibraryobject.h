@@ -51,6 +51,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
     public:
         enum ObjectType
         {
+            None = -1,
             Item = 1,
             Image,
             Audio,

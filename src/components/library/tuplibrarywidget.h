@@ -145,6 +145,9 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSvgSequence();
         void importSoundFile();
         void resetSoundPlayer();
+        void importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type);
+        void importWebDroppedAsset(const QString &imageName, const QString &extension,
+                                   TupLibraryObject::ObjectType type, QByteArray array);
 
     private slots:
         void openSearchDialog();
@@ -177,7 +180,10 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importNativeObject(const QString &object);
         QStringList naturalSort(QStringList photograms);
         void refreshItemFromCollection(LibraryObjects collection);
-        QString getItemKey(const QString &filename);
+        void importImageFromByteArray(const QString &filename, const QString &extension, QByteArray data);
+        void importSvgFromByteArray(const QString &filename, QByteArray data);
+        void importNativeObjectFromByteArray(const QString &filename, QByteArray data);
+        void importSoundFileFromByteArray(const QString &filename, QByteArray data);
 
         QScreen *screen;
         TupLibrary *library;

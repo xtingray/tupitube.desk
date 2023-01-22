@@ -121,6 +121,8 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         void registerSoundResource(const QString &id);
         bool folderHasAudioObjects(const QString &folderName);
 
+        QString getItemKey(const QString &filename);
+
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;

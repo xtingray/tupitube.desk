@@ -53,6 +53,7 @@
 #include <cmath>
 #include <QGraphicsSceneMouseEvent>
 #include <QScreen>
+#include <QMimeData>
 
 TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary *library) : QGraphicsView(parent)
 {
@@ -87,7 +88,8 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
     setScene(gScene);
     centerDrawingArea();
     setInteractive(true);
-    setMouseTracking(true); 
+    setMouseTracking(true);
+    // setAcceptDrops(true);
 
     setRenderHints(QPainter::RenderHints(QPainter::Antialiasing));
 

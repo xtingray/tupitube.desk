@@ -355,6 +355,7 @@ QString TupLibraryFolder::getId() const
 bool TupLibraryFolder::exists(const QString &key)
 {
     QStringList keys = objects.keys();
+    qDebug() << "keys -> " << keys;
     foreach (QString oid, keys) {
         if (oid.compare(key) == 0)
             return true;
@@ -373,7 +374,36 @@ bool TupLibraryFolder::exists(const QString &key)
     return false;
 }
 
-TupLibraryObject *TupLibraryFolder::getObject(const QString &key) const
+QString TupLibraryFolder::getItemKey(const QString &filename)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::getItemKey()] - filename -> " << filename;
+    #endif
+
+    QFileInfo info(filename);
+    QString base = info.baseName();
+    QString extension = info.suffix();
+
+    base = base.replace("(","_");
+    base = base.replace(")","_");
+    if (base.length() > 20)
+        base = base.left(20);
+
+    QString key = base + "." + extension;
+    int i = 0;
+    while (exists(key)) {
+        i++;
+        key = base + "-" + QString::number(i) + "." + extension;
+    }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::getItemKey()] - key -> " << key;
+    #endif
+
+    return key;
+}
+
+TupLibraryObject* TupLibraryFolder::getObject(const QString &key) const
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryFolder::getObject()] - object key -> " << key;

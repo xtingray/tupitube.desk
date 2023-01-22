@@ -971,33 +971,69 @@ void TupLibraryWidget::importImageGroup()
     }
 }
 
-void TupLibraryWidget::importImage(const QString &imagePath)
+void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importImage()]";
+        qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - path -> " << path;
     #endif
 
-    if (imagePath.isEmpty())
+    if (type == TupLibraryObject::Image) {
+        importImage(path);
+    } if (type == TupLibraryObject::Svg) {
+        importSvg(path);
+    } if (type == TupLibraryObject::Item) {
+        nativeFromFileSystem = true;
+        importNativeObject(path);
+    } if (type == TupLibraryObject::Audio) {
+        importSoundFileFromFolder(path);
+    }
+}
+
+void TupLibraryWidget::importWebDroppedAsset(const QString &assetName, const QString &extension,
+                                             TupLibraryObject::ObjectType type, QByteArray data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importWebDroppedAsset()]";
+    #endif
+
+    if (data.size() == 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::importWebDroppedAsset()] - Fatal Error: Byte array is empty!";
+        #endif
         return;
+    }
 
-    QFile imageFile(imagePath);
+    if (type == TupLibraryObject::Image) {
+        importImageFromByteArray(assetName, extension, data);
+    } if (type == TupLibraryObject::Svg) {
+        importSvgFromByteArray(assetName, data);
+    } if (type == TupLibraryObject::Item) {
+        nativeFromFileSystem = true;
+        importNativeObjectFromByteArray(assetName, data);
+    } if (type == TupLibraryObject::Audio) {
+        importSoundFileFromByteArray(assetName, data);
+    }
+}
 
-    if (imageFile.open(QIODevice::ReadOnly)) { 
-        QFileInfo fileInfo(imageFile);
-        QString key = getItemKey(fileInfo.fileName().toLower());
+void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const QString &extension, QByteArray data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importImageFromByteArray()]";
+    #endif
 
-        QByteArray data = imageFile.readAll();
-        imageFile.close();
-
-        QPixmap *pixmap = new QPixmap(imagePath);
+    QString key = library->getItemKey(imageName);
+    QByteArray ba = extension.toLatin1();
+    const char* ext = ba.data();
+    QPixmap *pixmap = new QPixmap();
+    if (pixmap->loadFromData(data, ext)) {
         int picWidth = pixmap->width();
         int picHeight = pixmap->height();
         int projectWidth = project->getDimension().width();
         int projectHeight = project->getDimension().height();
 
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::importImage()] - Image filename: " << key << " | Raw Size: " << data.size();
-            qDebug() << "[TupLibraryWidget::importImage()] - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
+            qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image filename: " << key << " | Raw Size: " << data.size();
+            qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
                     << " | Project Size: " << "[" << projectWidth << ", " << projectHeight << "]";
         #endif
 
@@ -1017,9 +1053,6 @@ void TupLibraryWidget::importImage(const QString &imagePath)
             if (msgBox.exec() == QMessageBox::Yes) {
                 msgBox.close();
                 pixmap = new QPixmap();
-                QString extension = fileInfo.suffix().toUpper();
-                QByteArray ba = extension.toLatin1();
-                const char* ext = ba.data();
                 if (pixmap->loadFromData(data, ext)) {
                     QPixmap newpix;
                     if (picWidth > picHeight) {
@@ -1031,14 +1064,39 @@ void TupLibraryWidget::importImage(const QString &imagePath)
                     buffer.open(QIODevice::WriteOnly);
                     newpix.save(&buffer, ext);
                 }
-            } 
+            }
         }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
                                                                             TupLibraryObject::Image, project->spaceContext(), data, QString(),
                                                                             currentFrame.scene, currentFrame.layer, currentFrame.frame);
         emit requestTriggered(&request);
+    }
+}
 
+void TupLibraryWidget::importImage(const QString &imagePath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importImage()]";
+    #endif
+
+    if (imagePath.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::importImage()] - Warning: Image path is empty!";
+        #endif
+        return;
+    }
+
+    QFile imageFile(imagePath);
+    if (imageFile.open(QIODevice::ReadOnly)) { 
+        QFileInfo fileInfo(imageFile);
+        QString key = library->getItemKey(fileInfo.fileName().toLower());
+        QString extension = fileInfo.suffix().toUpper();
+        QByteArray ba = extension.toLatin1();
+
+        QByteArray data = imageFile.readAll();
+        imageFile.close();
+        importImageFromByteArray(key, extension, data);
         data.clear();
     } else {
         TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(imagePath));
@@ -1064,32 +1122,39 @@ void TupLibraryWidget::importSvgGroup()
     }
 }
 
+void TupLibraryWidget::importSvgFromByteArray(const QString &filename, QByteArray data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importSvg()] - Inserting SVG into project -> " << project->getName();
+        int projectWidth = project->getDimension().width();
+        int projectHeight = project->getDimension().height();
+        qDebug() << "[TupLibraryWidget::importSvg()] - Project Size: [" << projectWidth << ","
+                 << projectHeight << "]";
+    #endif
+
+    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
+                                                   TupLibraryObject::Svg, project->spaceContext(), data, QString(),
+                                                   currentFrame.scene, currentFrame.layer, currentFrame.frame);
+    emit requestTriggered(&request);
+}
+
 void TupLibraryWidget::importSvg(const QString &svgPath)
 {
-    if (svgPath.isEmpty())
+    if (svgPath.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::importSvg()] - Warning: SVG path is empty!";
+        #endif
         return;
+    }
 
     QFile file(svgPath);
-
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
-        QString key = getItemKey(fileInfo.fileName().toLower());
-
+        QString key = library->getItemKey(fileInfo.fileName().toLower());
         QByteArray data = file.readAll();
         file.close();
 
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::importSvg()] - Inserting SVG into project -> " << project->getName();
-            int projectWidth = project->getDimension().width();
-            int projectHeight = project->getDimension().height();
-            qDebug() << "[TupLibraryWidget::importSvg()] - Project Size: [" << projectWidth << ","
-                     << projectHeight << "]";
-        #endif
-
-        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                       TupLibraryObject::Svg, project->spaceContext(), data, QString(),
-                                                       currentFrame.scene, currentFrame.layer, currentFrame.frame);
-        emit requestTriggered(&request);
+        importSvgFromByteArray(key, data);
     } else {
         TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(svgPath));
     }
@@ -1116,42 +1181,44 @@ void TupLibraryWidget::importNativeObjects()
     }
 }
 
-void TupLibraryWidget::importNativeObject(const QString &object)
+void TupLibraryWidget::importNativeObjectFromByteArray(const QString &filename, QByteArray data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importNativeObjectFromByteArray()] - Inserting native object into project -> "
+                 << project->getName();
+    #endif
+
+    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
+                                                   TupLibraryObject::Item, project->spaceContext(), data, QString(),
+                                                   currentFrame.scene, currentFrame.layer, currentFrame.frame);
+    emit requestTriggered(&request);
+}
+
+void TupLibraryWidget::importNativeObject(const QString &nativePath)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importNativeObject()] - object -> ";
-        qDebug() << object;
+        qDebug() << nativePath;
     #endif
 
-    if (object.isEmpty()) {
+    if (nativePath.isEmpty()) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::importNativeObject()] - Error: object data is empty!";
         #endif
         return;
     }
 
-    QFile file(object);
+    QFile file(nativePath);
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo fileInfo(file);
-        QString key = getItemKey(fileInfo.fileName().toLower());
+        QString key = library->getItemKey(fileInfo.fileName().toLower());
 
         QByteArray data = file.readAll();
         file.close();
 
-        if (object.startsWith("<group") || object.startsWith("<rect") || object.startsWith("<ellipse"))
-            nativeMap[key] = TupLibraryObject::generateImage(object, width());
-
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::importNativeObject()] - Inserting native object into project -> "
-                     << project->getName();
-        #endif
-
-        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                       TupLibraryObject::Item, project->spaceContext(), data, QString(),
-                                                       currentFrame.scene, currentFrame.layer, currentFrame.frame);
-        emit requestTriggered(&request);
+        importNativeObjectFromByteArray(key, data);
     } else {
-        TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(object));
+        TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(nativePath));
     }
 }
 
@@ -1454,28 +1521,12 @@ void TupLibraryWidget::importSoundFile()
     soundDialog->show();
 }
 
-QString TupLibraryWidget::getItemKey(const QString &filename)
+void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QByteArray data)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::getItemKey()] - filename -> " << filename;
-    #endif
-
-    QString key = filename;
-    key = key.replace("(","_");
-    key = key.replace(")","_");
-
-    int index = key.lastIndexOf(".");
-    QString name = key.mid(0, index);
-    if (name.length() > 30)
-        name = key.mid(0, 30);
-    QString extension = key.mid(index, key.length() - index);
-    int i = 0;
-    while (library->exists(key)) {
-        i++;
-        key = name + "-" + QString::number(i) + extension;
-    }
-
-    return key;
+    isEffectSound = true;
+    TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
+                                                   TupLibraryObject::Audio, project->spaceContext(), data);
+    emit requestTriggered(&request);
 }
 
 void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
@@ -1490,29 +1541,8 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
         file.close();
 
         QFileInfo fileInfo(file);
-        // QString key = fileInfo.fileName().toLower();
-        QString key = getItemKey(fileInfo.fileName().toLower());
-
-        /*
-        key = key.replace("(","_");
-        key = key.replace(")","_");
-
-        int index = key.lastIndexOf(".");
-        QString name = key.mid(0, index);
-        if (name.length() > 30)
-            name = key.mid(0, 30);
-        QString extension = key.mid(index, key.length() - index);
-        int i = 0;
-        while (library->exists(key)) {
-            i++;
-            key = name + "-" + QString::number(i) + extension;
-        }
-        */
-
-        isEffectSound = true;
-        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                       TupLibraryObject::Audio, project->spaceContext(), data);
-        emit requestTriggered(&request);
+        QString key = library->getItemKey(fileInfo.fileName().toLower());
+        importSoundFileFromByteArray(key, data);
         setDefaultPath(filePath);
     } else {
         file.close();

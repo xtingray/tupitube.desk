@@ -131,6 +131,10 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
     connect(paintArea, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
     connect(paintArea, SIGNAL(eyeDropperLaunched()), this, SLOT(launchEyeDropperTool()));
+    connect(paintArea, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)),
+            this, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)));
+    connect(paintArea, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
+            this, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
 
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), horizontalRuler, SLOT(movePointers(const QPointF&)));

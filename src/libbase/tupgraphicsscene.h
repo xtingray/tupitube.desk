@@ -160,14 +160,14 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
         virtual void keyPressEvent(QKeyEvent *keyEvent);
         virtual void keyReleaseEvent(QKeyEvent *keyEvent);
-       
-        /* 
-        virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent * event);
+
+        /*
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent * event);
         virtual void dragMoveEvent(QGraphicsSceneDragDropEvent * event);
+        virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent * event);
         virtual void dropEvent(QGraphicsSceneDragDropEvent * event);
         */
-        
+
         virtual bool event(QEvent *event);
 
     private:

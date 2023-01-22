@@ -1,4 +1,4 @@
-/***************************************************************************
+﻿/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -69,6 +69,7 @@
 #include <QStyleOptionGraphicsItem>
 #include <QClipboard>
 #include <QMenu>
+#include <QNetworkReply>
 
 // class QGraphicsRectItem;
 class TupBrushManager;
@@ -124,6 +125,9 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void zoomOut();
         void newPerspective(int index);
         void eyeDropperLaunched();
+        void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
+        void webAssetDropped(const QString &name, const QString &extension,
+                             TupLibraryObject::ObjectType type, QByteArray array);
 
     public slots:
         void deleteItems();
@@ -142,10 +146,15 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void requestItemMovement(QAction *action);
         void goToFrame(int index);
 
+    private slots:
+        void processWebAsset(QNetworkReply *reply);
+        void slotError(QNetworkReply::NetworkError error);
+
     protected:
         void mousePressEvent(QMouseEvent *event);
         void tabletEvent(QTabletEvent *event);
         void dragEnterEvent(QDragEnterEvent *event);
+        void dragMoveEvent(QDragMoveEvent *event);
         void dropEvent(QDropEvent *event);
 
         void frameResponse(TupFrameResponse *response);
@@ -160,6 +169,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
     private:
         // QPoint ellipsePos(const QString &xml);
         void multipasteObject(int pasteTotal);
+        void getWebAsset(const QString &webPath);
 
         TupProject *project;
         int globalSceneIndex;
@@ -177,6 +187,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         QString copyFrameName;
         bool copyIsValid;
         bool canvasEnabled;
+
+        QString webAssetName;
 };
 
 #endif

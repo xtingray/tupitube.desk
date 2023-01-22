@@ -45,6 +45,7 @@
 #include <QScreen>
 #include <cmath> // fabs
 #include <QMimeData>
+#include <QNetworkAccessManager>
 
 TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(parent, work->getDimension(),
                                                                                  work->getLibrary())
@@ -1742,29 +1743,184 @@ void TupPaintArea::dragEnterEvent(QDragEnterEvent *e)
         qDebug() << "[TupPaintArea::dragEnterEvent()]";
     #endif
 
-    if (e->mimeData()->hasUrls()) {
+    if (e->mimeData()->hasUrls())
         e->acceptProposedAction();
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupPaintArea::dragEnterEvent()] - Warning: Mime data has no URL!";
-        #endif
-    }
+}
+
+void TupPaintArea::dragMoveEvent(QDragMoveEvent *e)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::dragMoveEvent()]";
+    #endif
+
+    if (e->mimeData()->hasUrls())
+        e->acceptProposedAction();
 }
 
 void TupPaintArea::dropEvent(QDropEvent *e)
 {
-    QList<QUrl> list = e->mimeData()->urls();
-    QString object = list.at(0).toLocalFile();
-
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::dropEvent()] - object dropped -> " << object;
+        qDebug() << "[TupPaintArea::dropEvent()]";
     #endif
 
-    if (!object.isEmpty()) {
-        QString lowercase = object.toLower();
-        qDebug() << "*** Project is open!";
-        if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp")) {
-            qDebug() << "*** Processing image!";
-        }
+    QList<QUrl> list = e->mimeData()->urls();
+    QString objectPath = e->mimeData()->text().trimmed();
+
+    QString lowercase = objectPath.toLower();
+    if (lowercase.startsWith("http")) {
+        getWebAsset(objectPath);
+    } else if (lowercase.startsWith("file")) {
+        objectPath = objectPath.replace("file://", "");
+        TupLibraryObject::ObjectType type = TupLibraryObject::None;
+        if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
+            type = TupLibraryObject::Image;
+        else if (lowercase.endsWith(".svg"))
+            type = TupLibraryObject::Svg;
+        else if (lowercase.endsWith(".tobj"))
+            type = TupLibraryObject::Item;
+        else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
+            type = TupLibraryObject::Audio;
+
+        if (type != TupLibraryObject::None)
+            emit localAssetDropped(objectPath, type);
+        else
+            TOsd::self()->display(TOsd::Error, tr("Sorry, file format not supported!"));
     }
+}
+
+void TupPaintArea::getWebAsset(const QString &urlPath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::getWebAsset()] - url -> " << urlPath;
+    #endif
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(processWebAsset(QNetworkReply*)));
+    connect(manager, SIGNAL(finished(QNetworkReply*)), manager, SLOT(deleteLater()));
+
+    QUrl url(urlPath);
+    int index = urlPath.lastIndexOf("/") + 1;
+    webAssetName = urlPath.right(urlPath.length() - index);
+    QNetworkRequest request = QNetworkRequest();
+    request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    request.setUrl(url);
+
+    QNetworkReply *reply = manager->get(request);
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
+
+    reply->setParent(manager);
+    reply = manager->get(request);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
+}
+
+void TupPaintArea::processWebAsset(QNetworkReply *reply)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::processWebAsset()]";
+    #endif
+
+    QByteArray data = reply->readAll();
+    if (data.size() > 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::processWebAsset()] - Saving web asset...";
+            qDebug() << "[TupPaintArea::processWebAsset()] - Asset size -> " << data.size();
+        #endif
+
+        QString content = reply->rawHeader("Content-Disposition");
+        int index = content.indexOf("=") + 1;
+        QString filename = content.right(content.length() - index);
+        filename = filename.replace("\'","");
+        filename = filename.replace("\"","");
+        filename = filename.replace("\\","");
+
+        if (filename.isEmpty())
+            filename = webAssetName;
+
+        QFileInfo info(filename);
+        QString base = info.baseName();
+        QString extension = info.suffix();
+        if (base.length() > 20)
+            filename = base.left(20) + "." + extension;
+        else
+            filename = info.fileName().toLower();
+
+        extension = extension.toUpper();
+        QString lowercase = filename.toLower();
+        TupLibraryObject::ObjectType type = TupLibraryObject::None;
+        if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
+            type = TupLibraryObject::Image;
+        else if (lowercase.endsWith(".svg"))
+            type = TupLibraryObject::Svg;
+        else if (lowercase.endsWith(".tobj"))
+            type = TupLibraryObject::Item;
+        else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
+            type = TupLibraryObject::Audio;
+
+        if (type != TupLibraryObject::None) {
+            filename = project->getLibrary()->getItemKey(filename);
+            emit webAssetDropped(filename, extension, type, data);
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Sorry, file format not supported!"));
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::processWebAsset()] - Fatal Error: No answer from server!";
+        #endif
+    }
+
+    QApplication::restoreOverrideCursor();
+}
+
+void TupPaintArea::slotError(QNetworkReply::NetworkError error)
+{
+    TOsd::self()->display(TOsd::Error, tr("Network Fatal Error. Please, contact us!"));
+
+    switch (error) {
+        case QNetworkReply::HostNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupPaintArea::slotError()] - Network Error: Host not found";
+             #endif
+             }
+        break;
+        case QNetworkReply::TimeoutError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupPaintArea::slotError()] - Network Error: Time out!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ConnectionRefusedError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupPaintArea::slotError()] - Network Error: Connection Refused!";
+             #endif
+             }
+        break;
+        case QNetworkReply::ContentNotFoundError:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupPaintArea::slotError()] - Network Error: Content not found!";
+             #endif
+             }
+        break;
+        case QNetworkReply::UnknownNetworkError:
+        default:
+             {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupPaintArea::slotError()] - Network Error: Unknown Network error!";
+             #endif
+             }
+        break;
+    }
+
+    QApplication::restoreOverrideCursor();
 }
