@@ -1803,6 +1803,7 @@ void TupPaintArea::getWebAsset(const QString &urlPath)
     QUrl url(urlPath);
     int index = urlPath.lastIndexOf("/") + 1;
     webAssetName = urlPath.right(urlPath.length() - index);
+
     QNetworkRequest request = QNetworkRequest();
     request.setRawHeader("User-Agent", BROWSER_FINGERPRINT);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
