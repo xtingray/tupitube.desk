@@ -1766,26 +1766,42 @@ void TupPaintArea::dropEvent(QDropEvent *e)
     QList<QUrl> list = e->mimeData()->urls();
     QString objectPath = e->mimeData()->text().trimmed();
 
-    QString lowercase = objectPath.toLower();
-    if (lowercase.startsWith("http")) {
-        getWebAsset(objectPath);
-    } else if (lowercase.startsWith("file")) {
-        objectPath = objectPath.replace("file://", "");
-        TupLibraryObject::ObjectType type = TupLibraryObject::None;
-        if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
-            type = TupLibraryObject::Image;
-        else if (lowercase.endsWith(".svg"))
-            type = TupLibraryObject::Svg;
-        else if (lowercase.endsWith(".tobj"))
-            type = TupLibraryObject::Item;
-        else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
-            type = TupLibraryObject::Audio;
-
-        if (type != TupLibraryObject::None)
-            emit localAssetDropped(objectPath, type);
-        else
-            TOsd::self()->display(TOsd::Error, tr("Sorry, file format not supported!"));
+    if (!objectPath.isEmpty()) {
+        QString lowercase = objectPath.toLower();
+        if (lowercase.startsWith("http")) {
+            getWebAsset(objectPath);
+        } else if (lowercase.startsWith("file")) {
+            getLocalAsset(objectPath, lowercase);
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::dropEvent()] - Warning: Asset path is empty!";
+        #endif
     }
+}
+
+void TupPaintArea::getLocalAsset(const QString &path, const QString &lowercase)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::getLocalAsset()]";
+    #endif
+
+    QString objectPath = path;
+    objectPath = objectPath.replace("file://", "");
+    TupLibraryObject::ObjectType type = TupLibraryObject::None;
+    if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
+        type = TupLibraryObject::Image;
+    else if (lowercase.endsWith(".svg"))
+        type = TupLibraryObject::Svg;
+    else if (lowercase.endsWith(".tobj"))
+        type = TupLibraryObject::Item;
+    else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
+        type = TupLibraryObject::Audio;
+
+    if (type != TupLibraryObject::None)
+        emit localAssetDropped(objectPath, type);
+    else
+        TOsd::self()->display(TOsd::Error, tr("Sorry, file format not supported!"));
 }
 
 void TupPaintArea::getWebAsset(const QString &urlPath)

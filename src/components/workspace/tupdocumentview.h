@@ -100,6 +100,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void setFillTool(TColorCell::FillType type);
         void updateColorOnSelection(TupProjectRequest::Action action, const QColor &color);
         void updatePenOnSelection(const QPen &pen);
+        void getWebAsset(const QString &assetPath);
+        void getLocalAsset(const QString &assetPath, const QString &lowercase);
 
     private slots:
         void showModesSettings();

@@ -1266,11 +1266,9 @@ int TupGraphicsScene::currentLayerIndex() const
 
 int TupGraphicsScene::currentSceneIndex() const
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::currentSceneIndex()]";
     #endif
-    */
 
     if (!tupScene) {
         #ifdef TUP_DEBUG

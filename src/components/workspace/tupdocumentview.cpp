@@ -2715,3 +2715,13 @@ void TupDocumentView::launchLipsyncModule(PapagayoAppMode mode, const QString &s
         QApplication::restoreOverrideCursor();
     }
 }
+
+void TupDocumentView::getWebAsset(const QString &assetPath)
+{
+    paintArea->getWebAsset(assetPath);
+}
+
+void TupDocumentView::getLocalAsset(const QString &assetPath, const QString &lowercase)
+{
+    paintArea->getLocalAsset(assetPath, lowercase);
+}

@@ -107,6 +107,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void updateLoadingFlag(bool flag);
         void goOneLayerBack();
         void goOneLayerForward();
+        void getLocalAsset(const QString &path, const QString &lowercase);
+        void getWebAsset(const QString &webPath);
 
     public slots:
         void updatePaintArea();
@@ -167,14 +169,11 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         bool canPaint() const;
 
     private:
-        // QPoint ellipsePos(const QString &xml);
         void multipasteObject(int pasteTotal);
-        void getWebAsset(const QString &webPath);
 
         TupProject *project;
         int globalSceneIndex;
         QStringList copiesXml;
-        // QString currentTool;
         TAction::ActionId currentToolID;
         bool deleteMode;
         TupProject::Mode spaceMode;

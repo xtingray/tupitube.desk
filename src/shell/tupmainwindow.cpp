@@ -1729,28 +1729,31 @@ void TupMainWindow::dragEnterEvent(QDragEnterEvent *e)
 void TupMainWindow::dropEvent(QDropEvent *e)
 {
     QList<QUrl> list = e->mimeData()->urls();
-    QString object = list.at(0).toLocalFile();
+    QString assetPath = list.at(0).toLocalFile();
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::dropEvent()] - object dropped -> " << object;
+        qDebug() << "[TupMainWindow::dropEvent()] - object dropped -> " << assetPath;
     #endif
 
-    if (!object.isEmpty()) {
-        QString lowercase = object.toLower();
+    if (!assetPath.isEmpty()) {
+        QString lowercase = assetPath.toLower();
         if (lowercase.endsWith(".tup")) {
-            openProject(object);
-        } else {
-            if (m_projectManager->isOpen()) {
-                qDebug() << "*** Project is open!";
-                if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp")) {
-                    qDebug() << "*** Processing image!";
-                }
-            } else {
-                qDebug() << "*** Fail! No project is open!";
+            openProject(assetPath);
+        } else {                        
+            if (!m_projectManager->isOpen()) {
+                // Creating a new project first!
+                newProject();
+                if (lowercase.startsWith("http")) // Web assets
+                    animationTab->getWebAsset(assetPath);
+                else // Local assets
+                    animationTab->getLocalAsset(assetPath, lowercase);
             }
         }
     } else {
-        qDebug() << "*** Fail! Object id is empty!";
+        TOsd::self()->display(TOsd::Error, tr("Sorry, this action is unsupported!"));
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::dropEvent()] - Fatal Error: Object filename is empty!";
+        #endif
     }
 }
 
