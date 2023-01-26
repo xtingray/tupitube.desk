@@ -37,6 +37,8 @@
 
 #include <QBoxLayout>
 #include <QGraphicsItem>
+#include <QMimeData>
+#include <QDrag>
 
 TupLibraryDisplay::TupLibraryDisplay() : QWidget()
 {
@@ -54,6 +56,7 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget()
     layout->addWidget(soundPlayer);
     layout->setContentsMargins(0, 0, 0, 0);
  
+    isVisual = false;
     showDisplay();
 }
 
@@ -87,21 +90,23 @@ void TupLibraryDisplay::resetSoundPlayer()
     soundPlayer->reset();
 }
 
-void TupLibraryDisplay::render(QGraphicsItem *item)
+void TupLibraryDisplay::render(bool flag, QGraphicsItem *item)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryDisplay::render(QGraphicsItem)]";
+        qDebug() << "[TupLibraryDisplay::render(bool, QGraphicsItem)]";
     #endif
 
+    isVisual = flag;
     previewPanel->render(item);
 }
 
-void TupLibraryDisplay::render(const QPixmap &img)
+void TupLibraryDisplay::render(bool flag, const QPixmap &img)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryDisplay::render(QImage)] - img.isNull() -> " << img.isNull();
+        qDebug() << "[TupLibraryDisplay::render(bool, QImage)] - img.isNull() -> " << img.isNull();
     #endif
 
+    isVisual = flag;
     previewPanel->render(img);
 }
 
@@ -152,4 +157,39 @@ void TupLibraryDisplay::updateSoundInitFrame(int frame)
 void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, int frame)
 {
     soundPlayer->enableLipSyncInterface(soundType, frame);
+}
+
+void TupLibraryDisplay::mousePressEvent(QMouseEvent *event)
+{
+    if (isVisual) {
+        TupItemPreview *child = static_cast<TupItemPreview*>(childAt(event->pos()));
+        if (!child) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryDisplay::mousePressEvent] - Fatal Error: Library asset is NULL!";
+            #endif
+            return;
+        }
+
+        QPixmap pixmap = QPixmap(THEME_DIR + "icons/bitmap.png");
+        QByteArray itemData;
+        QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+        dataStream << pixmap << QPoint(event->pos() - child->pos());
+
+        QMimeData *mimeData = new QMimeData;
+        mimeData->setData("application/x-dnditemdata", itemData);
+        QUrl url("asset://");
+        QList<QUrl> list;
+        list << url;
+        mimeData->setUrls(list);
+
+        QDrag *drag = new QDrag(this);
+        drag->setMimeData(mimeData);
+        drag->setPixmap(pixmap);
+
+        drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryDisplay::mousePressEvent()] - No drag action.";
+        #endif
+    }
 }

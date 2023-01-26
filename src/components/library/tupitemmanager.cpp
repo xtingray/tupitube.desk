@@ -387,10 +387,14 @@ void TupItemManager::mousePressEvent(QMouseEvent *event)
 
             QMimeData *mimeData = new QMimeData;
             mimeData->setData("application/x-dnditemdata", itemData);
+            QUrl url("asset://");
+            QList<QUrl> list;
+            list << url;
+            mimeData->setUrls(list);
 
             QDrag *drag = new QDrag(this);
             drag->setMimeData(mimeData);
-            drag->setPixmap(pixmap);
+            drag->setPixmap(pixmap);            
 
             if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
                 delete takeTopLevelItem(indexOfTopLevelItem(item));

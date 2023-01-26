@@ -321,7 +321,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
         if (item->text(2).length() == 0) {
             display->showDisplay();
             QGraphicsTextItem *msg = new QGraphicsTextItem(tr("Directory"));
-            display->render(static_cast<QGraphicsItem *>(msg));
+            display->render(false, static_cast<QGraphicsItem *>(msg));
             return;
         }
 
@@ -338,7 +338,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
 
             display->showDisplay();
             QGraphicsTextItem *text = new QGraphicsTextItem(tr("No preview available"));
-            display->render(static_cast<QGraphicsItem *>(text));
+            display->render(false, static_cast<QGraphicsItem *>(text));
 
             return;
         }
@@ -348,22 +348,22 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                    {
                      display->showDisplay();
                      QGraphicsSvgItem *svg = new QGraphicsSvgItem(object->getDataPath()); 
-                     display->render(static_cast<QGraphicsItem *>(svg));
+                     display->render(true, static_cast<QGraphicsItem *>(svg));
                    }
                    break;
                 case TupLibraryObject::Image:
                    {
                      display->showDisplay();
-                     display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
+                     display->render(true, qvariant_cast<QGraphicsItem *>(object->getData()));
                    }
                    break;
                 case TupLibraryObject::Item:
                    {
                      display->showDisplay();
                      if (object->getItemType() == TupLibraryObject::Text || object->getItemType() == TupLibraryObject::Path) {
-                         display->render(qvariant_cast<QGraphicsItem *>(object->getData()));
+                         display->render(true, qvariant_cast<QGraphicsItem *>(object->getData()));
                      } else {
-                         display->render(nativeMap[objectName]);
+                         display->render(true, nativeMap[objectName]);
                      }
 
                      /* SQA: Just a test
@@ -391,7 +391,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
         }
     } else {
         QGraphicsTextItem *msg = new QGraphicsTextItem(tr("No preview available"));
-        display->render(static_cast<QGraphicsItem *>(msg));
+        display->render(false, static_cast<QGraphicsItem *>(msg));
     }
 }
 
@@ -1884,7 +1884,7 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
         library->addFolder(folder);
 
         QGraphicsTextItem *msg = new QGraphicsTextItem(tr("Directory"));
-        display->render(static_cast<QGraphicsItem *>(msg));
+        display->render(false, static_cast<QGraphicsItem *>(msg));
 
         editorItems << tag;
 

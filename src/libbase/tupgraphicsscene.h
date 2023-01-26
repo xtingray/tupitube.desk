@@ -127,9 +127,9 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         bool tweenExists(const QString &name, TupItemTweener::Type type);
 
     // private slots:
-    //  void updateObjectInformation(const QString &value);
-    //  void showInfoWidget();
-    //  void updateAliveObject();
+    //     void updateObjectInformation(const QString &value);
+    //     void showInfoWidget();
+    //     void updateAliveObject();
 
     signals:
         void showInfoWidget();

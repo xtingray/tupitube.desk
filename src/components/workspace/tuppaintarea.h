@@ -65,13 +65,11 @@
 #include <QGraphicsRectItem>
 #include <QPolygon>
 #include <QApplication>
-// #include <QTimer>
 #include <QStyleOptionGraphicsItem>
 #include <QClipboard>
 #include <QMenu>
 #include <QNetworkReply>
 
-// class QGraphicsRectItem;
 class TupBrushManager;
 class TupInputDeviceInformation;
 class TupProject;
@@ -129,7 +127,8 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void eyeDropperLaunched();
         void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
         void webAssetDropped(const QString &name, const QString &extension,
-                             TupLibraryObject::ObjectType type, QByteArray array);
+                             TupLibraryObject::ObjectType type, QByteArray data);
+        void libraryAssetDragged();
 
     public slots:
         void deleteItems();

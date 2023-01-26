@@ -41,6 +41,7 @@
 #include "tupsoundplayer.h"
 
 #include <QWidget>
+#include <QMouseEvent>
 
 /**
  * @author Gustav Gonzalez
@@ -58,8 +59,8 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void reset();
         void resetSoundPlayer();
 
-        void render(QGraphicsItem *item);
-        void render(const QPixmap &img);
+        void render(bool isVisual, QGraphicsItem *item);
+        void render(bool isVisual, const QPixmap &img);
 
         void showDisplay();
         void showSoundPlayer();
@@ -75,9 +76,13 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void frameUpdated(int frame);
         void muteEnabled(bool mute);
 
+    protected:
+        void mousePressEvent(QMouseEvent *event);
+
     private:
         TupItemPreview *previewPanel;
         TupSoundPlayer *soundPlayer;
+        bool isVisual;
 };
 
 #endif

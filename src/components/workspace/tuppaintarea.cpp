@@ -1749,9 +1749,11 @@ void TupPaintArea::dragEnterEvent(QDragEnterEvent *e)
 
 void TupPaintArea::dragMoveEvent(QDragMoveEvent *e)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupPaintArea::dragMoveEvent()]";
     #endif
+    */
 
     if (e->mimeData()->hasUrls())
         e->acceptProposedAction();
@@ -1763,7 +1765,6 @@ void TupPaintArea::dropEvent(QDropEvent *e)
         qDebug() << "[TupPaintArea::dropEvent()]";
     #endif
 
-    QList<QUrl> list = e->mimeData()->urls();
     QString objectPath = e->mimeData()->text().trimmed();
 
     if (!objectPath.isEmpty()) {
@@ -1772,6 +1773,12 @@ void TupPaintArea::dropEvent(QDropEvent *e)
             getWebAsset(objectPath);
         } else if (lowercase.startsWith("file")) {
             getLocalAsset(objectPath, lowercase);
+        } else if (lowercase.startsWith("asset")) {
+            emit libraryAssetDragged();
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPaintArea::dropEvent()] - Warning: The dropped object is unsupported!";
+            #endif
         }
     } else {
         #ifdef TUP_DEBUG

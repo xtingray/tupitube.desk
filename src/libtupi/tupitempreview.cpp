@@ -47,21 +47,21 @@ TupItemPreview::~TupItemPreview()
 {
     if (item) {
         delete item;
-        item = NULL;
+        item = nullptr;
     }
 
     if (proxy) {
         delete proxy;
-        proxy = NULL;
+        proxy = nullptr;
     }
 }
 
 void TupItemPreview::reset()
 {
-    proxy = NULL;
+    proxy = nullptr;
     if (item) {
         delete item;
-        item = NULL;
+        item = nullptr;
     }
 
     item = new QGraphicsTextItem(tr("Library is empty :("));
@@ -197,7 +197,7 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         proxy->paint(&painter, &opt, this);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupItemPreview::paintEvent()] - Warning: proxy is NULL]";
+            qDebug() << "[TupItemPreview::paintEvent()] - Warning: proxy is nullptr]";
         #endif
     }
 }

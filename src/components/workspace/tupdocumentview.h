@@ -220,6 +220,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
         void webAssetDropped(const QString &name, const QString &extension,
                              TupLibraryObject::ObjectType type, QByteArray array);
+        void libraryAssetDragged();
 
     private:
         void setupDrawActions();
