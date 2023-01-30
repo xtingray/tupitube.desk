@@ -41,6 +41,10 @@
 #include "tuppixmapitem.h"
 #include "tupsvg2qt.h"
 #include "tmouthtarget.h"
+#include "tupfilemanager.h"
+#include "talgorithm.h"
+#include "tupprojectimporterdialog.h"
+#include "tupprojectscanner.h"
 
 #include <QScreen>
 #include <cmath> // fabs
@@ -1795,20 +1799,80 @@ void TupPaintArea::getLocalAsset(const QString &path, const QString &lowercase)
 
     QString objectPath = path;
     objectPath = objectPath.replace("file://", "");
-    TupLibraryObject::ObjectType type = TupLibraryObject::None;
-    if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
-        type = TupLibraryObject::Image;
-    else if (lowercase.endsWith(".svg"))
-        type = TupLibraryObject::Svg;
-    else if (lowercase.endsWith(".tobj"))
-        type = TupLibraryObject::Item;
-    else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
-        type = TupLibraryObject::Audio;
 
-    if (type != TupLibraryObject::None)
-        emit localAssetDropped(objectPath, type);
-    else
-        TOsd::self()->display(TOsd::Error, tr("Sorry, file format not supported!"));
+    if (lowercase.endsWith(".tup")) { // Importing elements from external TUP source file
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+        QString tempFolder = TAlgorithm::randomString(10);
+        QString tempPath = CACHE_DIR + tempFolder + "/";
+        TupProjectScanner *scanner = new TupProjectScanner;
+        bool result = scanner->read(objectPath, tempFolder);
+
+        QApplication::restoreOverrideCursor();
+        if (result) {
+            QList<QString> scenes = scanner->sceneNamesList();
+            bool isLibraryEmpty = false;
+            if (!scanner->isLibraryEmpty())
+                isLibraryEmpty = true;
+
+            TupProjectImporterDialog *dialog = new TupProjectImporterDialog(scanner->getProjectName(), scenes, isLibraryEmpty);
+            if (dialog->exec() == QDialog::Accepted) {
+                QList<int> sceneIndexes = dialog->scenes();
+                isLibraryEmpty = dialog->isLibraryIncluded();
+                foreach(int index, sceneIndexes) {
+                    // Processing scenes...
+                    qDebug() << "*** SCENE INDEX -> " << index;
+                }
+                qDebug() << "*** Import library? -> " << isLibraryEmpty;
+                if (isLibraryEmpty) { // Processing library assets
+                    qDebug() << "*** Processing library items!";
+                    TupProjectScanner::Folder libraryAssets = scanner->getLibrary();
+                    QList<TupProjectScanner::LibraryObject> objects = libraryAssets.objects;
+                    qDebug() << "*** Objects size -> " << objects.size();
+                    QList<TupProjectScanner::Folder> folders = libraryAssets.folders;
+                    foreach(TupProjectScanner::LibraryObject object, objects) {
+                        qDebug() << "    Library record key -> " << object.key;
+                        qDebug() << "    Library record path -> " << object.path;
+                        qDebug() << "    Library record type -> " << object.type;
+                        qDebug() << "---";
+                    }
+                }
+            }
+
+            // Removing temporary folder
+            QDir assetsDir(tempPath);
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPaintArea::getLocalAsset()] - Removing temporary folder -> " << tempPath;
+            #endif
+            if (assetsDir.exists()) {
+                if (!assetsDir.removeRecursively()) {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupPaintArea::getLocalAsset(] - Error: Can't remove temporary folder -> " << tempPath;
+                    #endif
+                }
+            }
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPaintArea::getLocalAsset()] - Fatal Error: Can't open TUP source file -> " << objectPath;
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Sorry, TUP source file is invalid!"));
+        }
+    } else {
+        TupLibraryObject::ObjectType type = TupLibraryObject::None;
+        if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
+            type = TupLibraryObject::Image;
+        else if (lowercase.endsWith(".svg"))
+            type = TupLibraryObject::Svg;
+        else if (lowercase.endsWith(".tobj"))
+            type = TupLibraryObject::Item;
+        else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
+            type = TupLibraryObject::Audio;
+
+        if (type != TupLibraryObject::None)
+            emit localAssetDropped(objectPath, type);
+        else
+            TOsd::self()->display(TOsd::Error, tr("Sorry, file format not supported!"));
+    }
 }
 
 void TupPaintArea::getWebAsset(const QString &urlPath)

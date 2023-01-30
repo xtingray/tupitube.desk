@@ -1,4 +1,4 @@
-﻿/***************************************************************************
+/***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,37 +33,39 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPFILEMANAGER_H 
-#define TUPFILEMANAGER_H
+#ifndef TUPPROJECTIMPORTERDIALOG_H
+#define TUPPROJECTIMPORTERDIALOG_H 
 
 #include "tglobal.h"
+#include "tapplicationproperties.h"
 
-#include <QObject>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QListWidget>
 
-class TupProject;
-
-class TUPITUBE_EXPORT TupFileManager : public QObject
+class TUPITUBE_EXPORT TupProjectImporterDialog : public QDialog 
 {
     Q_OBJECT
 
     public:
-        TupFileManager();
-        ~TupFileManager();
+        TupProjectImporterDialog(const QString &projectName, QStringList scenes, bool includeLibrary,
+                         QWidget *parent = nullptr);
+        ~TupProjectImporterDialog();
 
-        virtual bool save(const QString &filename, TupProject *project);
-        virtual bool load(const QString &filename, TupProject *project, const QString &tempFolder = QString());
+        QList<int> scenes();
+        bool isLibraryIncluded();
 
-        virtual bool createImageProject(const QString &projectCode, const QString &imgPath,
-                                        TupProject *project);
+    private slots:
+        void addScene(QListWidgetItem *item);
+        void setLibraryFlag(int state);
 
-        QList<QString> scenesList();
+    private:
+        void setUI(QStringList scenes);
 
-    signals:
-        void projectPathChanged();
-        void soundPathsChanged();
-
-    public:
-        QList<QString> scenesLabels;
+        QListWidget *scenesListWidget;
+        QVBoxLayout *layout;
+        QList<int> selectedScenes;
+        bool includeLibrary;
 };
 
 #endif

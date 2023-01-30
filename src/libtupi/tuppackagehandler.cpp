@@ -68,15 +68,21 @@ bool TupPackageHandler::makePackage(const QString &projectPath, const QString &p
     return JlCompress::compressDir(packagePath, projectPath, true);
 }
 
-bool TupPackageHandler::importPackage(const QString &packagePath)
+bool TupPackageHandler::importPackage(const QString &packagePath, const QString &tempFolder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPackageHandler::importPackage()] - packagePath -> " << packagePath;
         qDebug() << "[TupPackageHandler::importPackage()] - CACHE_DIR -> " << CACHE_DIR;
+        if (!tempFolder.isEmpty())
+            qDebug() << "[TupPackageHandler::importPackage()] - tempFolder -> " << tempFolder;
         QFile file(packagePath);
         qDebug() << "[TupPackageHandler::importPackage()] - source file size -> "
                  << (QString::number(file.size()) + " bytes");
     #endif
+
+    QString workPath = CACHE_DIR;
+    if (!tempFolder.isEmpty())
+        workPath += tempFolder + "/";
 
     QFileInfo fileInfo(packagePath);
     projectDir = fileInfo.baseName();
@@ -84,8 +90,9 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
     if (zipChecker.open(QuaZip::mdUnzip)) {
         zipChecker.goToFirstFile();
         QString firstFile = zipChecker.getCurrentFileName();
+        // qDebug() << "[TupPackageHandler::importPackage()] - firstFile -> " << firstFile;
         int index = firstFile.indexOf("/");
-        QString dirName = CACHE_DIR + firstFile.left(index);
+        QString dirName = workPath + firstFile.left(index);
         QDir dir(dirName);
         if (dir.exists(dirName)) {
             if (dir.removeRecursively()) {
@@ -102,7 +109,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
         }
     }
 
-    QStringList list = JlCompress::extractDir(packagePath, CACHE_DIR);
+    QStringList list = JlCompress::extractDir(packagePath, workPath);
     if (list.size() == 0) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPackageHandler::importPackage()] - "
@@ -113,7 +120,7 @@ bool TupPackageHandler::importPackage(const QString &packagePath)
     }
 
     QString path = list.at(0);
-    int index = path.indexOf("/", CACHE_DIR.length());
+    int index = path.indexOf("/", workPath.length());
     gPath = path.left(index);
 
     return true;

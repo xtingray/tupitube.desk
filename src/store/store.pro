@@ -75,7 +75,8 @@ HEADERS += tuplayer.h \
            tupbackgroundscene.h \
            tupbackground.h \
            tupstoryboard.h \
-           tuplipsync.h
+           tuplipsync.h \
+           tupprojectscanner.h
 
 SOURCES += tuplayer.cpp \
            tuppalettedocument.cpp \
@@ -125,7 +126,8 @@ SOURCES += tuplayer.cpp \
            tupbackgroundscene.cpp \
            tupbackground.cpp \
            tupstoryboard.cpp \
-           tuplipsync.cpp
+           tuplipsync.cpp \
+           tupprojectscanner.cpp
 
 STORE_DIR = .
 

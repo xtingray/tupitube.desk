@@ -64,6 +64,7 @@ class T_CORE_EXPORT TApplicationProperties
         void setVectorBgDir(const QString &path);
         void setRasterResourcesDir(const QString &path);
         void setProjectDir(const QString &projectName);
+        void setTempProjectDir(const QString &tempFolder, const QString &projectName);
 
         virtual QString homeDir() const;
         virtual QString binDir() const;

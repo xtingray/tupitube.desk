@@ -733,6 +733,10 @@ void TupMainWindow::setupLocalProject(TupProjectManagerParams *params)
 
 void TupMainWindow::openProject()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::openProject()]";
+    #endif
+
     if (m_projectManager->isOpen()) {
         if (playerTab)
             cameraWidget->doStop();

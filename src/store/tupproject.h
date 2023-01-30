@@ -75,6 +75,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         ~TupProject();
 
         void setProjectName(const QString &name);
+        void setTempProjectName(const QString &tempFolder, const QString &name);
         void setAuthor(const QString &author);
         // void setTags(const QString &tags);
         void setBgColor(const QColor color);
@@ -127,6 +128,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         TupLibrary *getLibrary();
         void setLibrary(TupLibrary *lib);
+        bool isLibraryEmpty();
         void resetSoundRecordsList();
 
         void emitResponse(TupProjectResponse *response);

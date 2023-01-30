@@ -115,6 +115,11 @@ void TApplicationProperties::setProjectDir(const QString &projectName)
     projectPath = cachePath + "/" + projectName;
 }
 
+void TApplicationProperties::setTempProjectDir(const QString &tempFolder, const QString &projectName)
+{
+    projectPath = cachePath + "/" + tempFolder + "/" + projectName;
+}
+
 QString TApplicationProperties::homeDir() const
 {
     return homePath + "/";

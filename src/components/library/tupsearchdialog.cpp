@@ -74,7 +74,11 @@ TupSearchDialog::TupSearchDialog(const QSize &size, QWidget *parent) : QDialog(p
     // if (getNews)
     //     tabWidget->addTab(patreonTab(), tr("Support Us"));
 
-    QPushButton *closeButton = new QPushButton(tr("Close"));
+
+    // QIcon(QPixmap(THEME_DIR + "icons/search.png"))
+    // QPushButton *closeButton = new QPushButton(tr("Close"));
+    QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
+    closeButton->setToolTip(tr("Close"));
     layout->addWidget(closeButton);
     connect(closeButton, SIGNAL(clicked()), this, SLOT(accept()));
 

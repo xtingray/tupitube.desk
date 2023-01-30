@@ -539,6 +539,15 @@ int TupLibraryFolder::foldersCount() const
     return folders.count();
 }
 
+bool TupLibraryFolder::isEmpty()
+{
+    int total = objects.count();
+    foreach (TupLibraryFolder *folder, folders)
+        total += folder->objectsCount();
+
+    return total == 0;
+}
+
 TupProject *TupLibraryFolder::getProject() const
 {
     return project;
@@ -563,8 +572,12 @@ void TupLibraryFolder::fromXml(const QString &xml)
     loadingProject = true;
 
     QDomDocument document;
-    if (!document.setContent(xml))
+    if (!document.setContent(xml)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryFolder::fromXml()] - Fatal Error: Library XML file is invalid!";
+        #endif
         return;
+    }
     
     QDomElement root = document.documentElement();
     QDomNode domNode = root.firstChild();

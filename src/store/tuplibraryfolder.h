@@ -103,6 +103,8 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         int objectsCount() const;
         int foldersCount() const;
         
+        bool isEmpty();
+
         TupProject *getProject() const;
         void reset();
 

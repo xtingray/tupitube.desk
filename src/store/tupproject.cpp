@@ -113,14 +113,18 @@ void TupProject::clear()
 
     scenesList.clear();
     sceneCounter = 0;
-
-    // deleteDataDir(cachePath);
 }
 
 void TupProject::setProjectName(const QString &name)
 {
     projectName = name;
     kAppProp->setProjectDir(projectName);
+}
+
+void TupProject::setTempProjectName(const QString &tempFolder, const QString &name)
+{
+    projectName = name;
+    kAppProp->setTempProjectDir(tempFolder, projectName);
 }
 
 void TupProject::setAuthor(const QString &author)
@@ -947,6 +951,11 @@ TupLibrary *TupProject::getLibrary()
 void TupProject::setLibrary(TupLibrary *lib)
 {
     library = lib;
+}
+
+bool TupProject::isLibraryEmpty()
+{
+    return library->isEmpty();
 }
 
 void TupProject::emitResponse(TupProjectResponse *response)

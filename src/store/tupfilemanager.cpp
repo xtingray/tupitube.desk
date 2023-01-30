@@ -403,14 +403,14 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     return ok;
 }
 
-bool TupFileManager::load(const QString &fileName, TupProject *project)
+bool TupFileManager::load(const QString &fileName, TupProject *project, const QString &tempFolder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupFileManager::load()] - fileName -> " << fileName;
     #endif
 
     TupPackageHandler packageHandler;
-    if (packageHandler.importPackage(fileName)) {
+    if (packageHandler.importPackage(fileName, tempFolder)) {
         QDir projectDir(packageHandler.importedProjectPath());
         QFile pfile(projectDir.path() + "/project.tpp");
 
@@ -426,7 +426,12 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
             return false;
         }
 
+        // Work-around to load temporary projects, and import scenes and library
+        if (!tempFolder.isEmpty())
+            project->setTempProjectName(tempFolder, project->getName());
+
         project->setDataDir(packageHandler.importedProjectPath());
+        // Loading library assets
         project->loadLibrary(projectDir.path() + "/library.tpl");
 
         QStringList scenes = projectDir.entryList(QStringList() << "*.tps", QDir::Readable | QDir::Files);
@@ -447,7 +452,9 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
                         return false;
 
                     root = doc.documentElement();
-                    project->createScene(root.attribute("name"), index, true)->fromXml(xml);
+                    QString sceneName = root.attribute("name");
+                    scenesLabels << sceneName;
+                    project->createScene(sceneName, index, true)->fromXml(xml);
                     index += 1;
                     doc.clear();
                     file->close();
@@ -537,4 +544,9 @@ bool TupFileManager::createImageProject(const QString &projectCode, const QStrin
     }
 
     return save(filename, newProject);
+}
+
+QList<QString> TupFileManager::scenesList()
+{
+    return scenesLabels;
 }

@@ -33,37 +33,59 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPFILEMANAGER_H 
-#define TUPFILEMANAGER_H
+#ifndef TUPPROJECTSCANNER_H 
+#define TUPPROJECTSCANNER_H
 
 #include "tglobal.h"
+#include "tuplibraryobject.h"
 
 #include <QObject>
+#include <QDomNode>
 
-class TupProject;
-
-class TUPITUBE_EXPORT TupFileManager : public QObject
+class TUPITUBE_EXPORT TupProjectScanner : public QObject
 {
     Q_OBJECT
 
     public:
-        TupFileManager();
-        ~TupFileManager();
+        TupProjectScanner();
+        ~TupProjectScanner();
 
-        virtual bool save(const QString &filename, TupProject *project);
-        virtual bool load(const QString &filename, TupProject *project, const QString &tempFolder = QString());
+        virtual bool read(const QString &filename, const QString &tempFolder = QString());
 
-        virtual bool createImageProject(const QString &projectCode, const QString &imgPath,
-                                        TupProject *project);
+        QString getProjectName() const;
+        int scenesCount();
+        QList<QString> sceneNamesList();
+        bool isLibraryEmpty();
 
-        QList<QString> scenesList();
+        struct LibraryObject {
+            QString key;
+            TupLibraryObject::ObjectType type;
+            QString path;
+        };
 
-    signals:
-        void projectPathChanged();
-        void soundPathsChanged();
+        struct Folder {
+            QString key;
+            QList<LibraryObject> objects;
+            QList<Folder> folders;
+        };
+        Folder getLibrary();
 
-    public:
+    private:
+        QString readSceneName(const QString &xml) const;
+        bool scanLibrary(const QString &xml);
+        bool storeObject();
+
+        QString projectName;
+        int scenesTotal;
         QList<QString> scenesLabels;
+
+        Folder library;
+        QList<LibraryObject> objects;
+        int objectsTotal;
+        LibraryObject object;
+
+        bool scanObjects(const QString &folderId, const QString &xml);
+        bool scanObject(QDomNode xml);
 };
 
 #endif

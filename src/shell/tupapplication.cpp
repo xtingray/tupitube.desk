@@ -50,10 +50,14 @@ TupApplication::~TupApplication()
 
 void TupApplication::createCache(const QString &cacheDir)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupApplication::createCache() - cacheDir -> " << cacheDir;
+    #endif
+
     QDir cache(cacheDir);
     if (!cache.exists()) {
         #ifdef TUP_DEBUG
-            qWarning() << "Initializing repository: " + cacheDir;
+            qWarning() << "Initializing repository: " << cacheDir;
         #endif
 
         if (!cache.mkdir(cacheDir)) {

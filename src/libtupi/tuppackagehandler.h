@@ -47,7 +47,7 @@ class TUPITUBE_EXPORT TupPackageHandler
         ~TupPackageHandler();
         
         bool makePackage(const QString &projectPath, const QString &packagePath);
-        bool importPackage(const QString &packagePath);
+        bool importPackage(const QString &packagePath, const QString &tempFolder = QString());
         
         QString importedProjectPath() const;
         QString projectDirectory() const;
