@@ -180,6 +180,7 @@ void TupMainWindow::setupMenu()
     m_fileMenu = menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_actionManager->find("new_project"));
     m_fileMenu->addAction(m_actionManager->find("open_project"));
+    m_fileMenu->addAction(m_actionManager->find("open_demo"));
 
     // SQA: This code has been disabled temporary
     // m_fileMenu->addAction(m_actionManager->find("opennetproject"));
