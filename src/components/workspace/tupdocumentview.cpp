@@ -2722,7 +2722,12 @@ void TupDocumentView::getWebAsset(const QString &assetPath)
     paintArea->getWebAsset(assetPath);
 }
 
-void TupDocumentView::getLocalAsset(const QString &assetPath, const QString &lowercase)
+void TupDocumentView::getLocalAsset(const QString &assetPath)
 {
-    paintArea->getLocalAsset(assetPath, lowercase);
+    paintArea->getLocalAsset(assetPath);
+}
+
+void TupDocumentView::importLocalProject(const QString &packagePath)
+{
+    paintArea->importLocalProject(packagePath);
 }

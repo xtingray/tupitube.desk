@@ -1776,7 +1776,7 @@ void TupPaintArea::dropEvent(QDropEvent *e)
         if (lowercase.startsWith("http")) {
             getWebAsset(objectPath);
         } else if (lowercase.startsWith("file")) {
-            getLocalAsset(objectPath, lowercase);
+            getLocalAsset(objectPath);
         } else if (lowercase.startsWith("asset")) {
             emit libraryAssetDragged();
         } else {
@@ -1791,73 +1791,107 @@ void TupPaintArea::dropEvent(QDropEvent *e)
     }
 }
 
-void TupPaintArea::getLocalAsset(const QString &path, const QString &lowercase)
+void TupPaintArea::importLocalProject(const QString &objectPath)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::getLocalAsset()]";
-    #endif
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QString objectPath = path;
-    objectPath = objectPath.replace("file://", "");
+    QString tempFolder = TAlgorithm::randomString(10);
+    QString tempPath = CACHE_DIR + tempFolder + "/";
+    TupProjectScanner *scanner = new TupProjectScanner;
+    bool result = scanner->read(objectPath, tempFolder);
 
-    if (lowercase.endsWith(".tup")) { // Importing elements from external TUP source file
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QApplication::restoreOverrideCursor();
+    if (result) {
+        QList<QString> scenes = scanner->getSceneLabels();
+        bool isLibraryEmpty = false;
+        if (!scanner->isLibraryEmpty())
+            isLibraryEmpty = true;
 
-        QString tempFolder = TAlgorithm::randomString(10);
-        QString tempPath = CACHE_DIR + tempFolder + "/";
-        TupProjectScanner *scanner = new TupProjectScanner;
-        bool result = scanner->read(objectPath, tempFolder);
+        TupProjectImporterDialog *dialog = new TupProjectImporterDialog(scanner->getProjectName(), scenes, isLibraryEmpty);
+        if (dialog->exec() == QDialog::Accepted) {
+            QList<int> sceneIndexes = dialog->scenes();
+            bool includeLibrary = dialog->isLibraryIncluded();
+            QList<bool> libraryFlags = scanner->getSceneLibraryFlags();
+            bool scenesSelected = !sceneIndexes.isEmpty();
 
-        QApplication::restoreOverrideCursor();
-        if (result) {
-            QList<QString> scenes = scanner->sceneNamesList();
-            bool isLibraryEmpty = false;
-            if (!scanner->isLibraryEmpty())
-                isLibraryEmpty = true;
-
-            TupProjectImporterDialog *dialog = new TupProjectImporterDialog(scanner->getProjectName(), scenes, isLibraryEmpty);
-            if (dialog->exec() == QDialog::Accepted) {
-                QList<int> sceneIndexes = dialog->scenes();
-                isLibraryEmpty = dialog->isLibraryIncluded();
+            if (scenesSelected) {
+                // Checking if the library is required by at least one scene
                 foreach(int index, sceneIndexes) {
-                    // Processing scenes...
-                    qDebug() << "*** SCENE INDEX -> " << index;
-                }
-                qDebug() << "*** Import library? -> " << isLibraryEmpty;
-                if (isLibraryEmpty) { // Processing library assets
-                    qDebug() << "*** Processing library items!";
-                    TupProjectScanner::Folder libraryAssets = scanner->getLibrary();
-                    QList<TupProjectScanner::LibraryObject> objects = libraryAssets.objects;
-                    qDebug() << "*** Objects size -> " << objects.size();
-                    QList<TupProjectScanner::Folder> folders = libraryAssets.folders;
-                    foreach(TupProjectScanner::LibraryObject object, objects) {
-                        qDebug() << "    Library record key -> " << object.key;
-                        qDebug() << "    Library record path -> " << object.path;
-                        qDebug() << "    Library record type -> " << object.type;
-                        qDebug() << "---";
+                    if (libraryFlags.at(index)) {
+                        if (!includeLibrary)
+                            includeLibrary = true;
                     }
                 }
             }
 
-            // Removing temporary folder
-            QDir assetsDir(tempPath);
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupPaintArea::getLocalAsset()] - Removing temporary folder -> " << tempPath;
-            #endif
-            if (assetsDir.exists()) {
-                if (!assetsDir.removeRecursively()) {
-                    #ifdef TUP_DEBUG
-                        qWarning() << "[TupPaintArea::getLocalAsset(] - Error: Can't remove temporary folder -> " << tempPath;
-                    #endif
+            qDebug() << "*** Import library? -> " << includeLibrary;
+            if (includeLibrary) { // Processing library assets
+                qDebug() << "*** Processing library items!";
+                TupProjectScanner::Folder libraryAssets = scanner->getLibrary();
+                QList<TupProjectScanner::LibraryObject> objects = libraryAssets.objects;
+                qDebug() << "*** Objects size -> " << objects.size();
+                QList<TupProjectScanner::Folder> folders = libraryAssets.folders;
+                foreach(TupProjectScanner::LibraryObject object, objects) {
+                    qDebug() << "    Library record key -> " << object.key;
+                    qDebug() << "    Library record path -> " << object.path;
+                    qDebug() << "    Library record type -> " << object.type;
+                    qDebug() << "---";
+                    // Before creating items, check if their ID is unique in the current project
+                    // Rename them if its necessary
+                    // Rename them inside the scenes if necessary
                 }
             }
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupPaintArea::getLocalAsset()] - Fatal Error: Can't open TUP source file -> " << objectPath;
-            #endif
-            TOsd::self()->display(TOsd::Error, tr("Sorry, TUP source file is invalid!"));
+
+            if (scenesSelected) {
+                // Creating scenes...
+                QList<QString> sceneNames = scanner->getSceneLabels();
+                // QList<QString> scenePaths = scanner->getScenePaths();
+                QList<QString> sceneContents = scanner->getSceneContents();
+                int scenesCount = project->scenesCount();
+                foreach(int index, sceneIndexes) {
+                    qDebug() << "*** SCENE INDEX -> " << index;
+                    // qDebug() << "*** SCENE PATH -> " << scenePaths.at(index);
+                    project->createScene(sceneNames.at(index), scenesCount, true)->fromXml(sceneContents.at(index));
+                    scenesCount++;
+                }
+                TupProjectRequest request = TupRequestBuilder::createSceneRequest(scenesCount - 1, TupProjectRequest::Select);
+                emit localRequestTriggered(&request);
+            }
+        }
+
+        // Removing temporary folder
+        QDir assetsDir(tempPath);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::getLocalAsset()] - Removing temporary folder -> " << tempPath;
+        #endif
+        if (assetsDir.exists()) {
+            if (!assetsDir.removeRecursively()) {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupPaintArea::getLocalAsset(] - Error: Can't remove temporary folder -> " << tempPath;
+                #endif
+            }
         }
     } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::getLocalAsset()] - Fatal Error: Can't open TUP source file -> " << objectPath;
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Sorry, TUP source file is invalid!"));
+    }
+}
+
+void TupPaintArea::getLocalAsset(const QString &path)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::getLocalAsset(QString)]";
+    #endif
+
+    QString objectPath = path;
+    objectPath = objectPath.replace("file://", "");
+    QString lowercase = objectPath.toLower();
+
+    if (lowercase.endsWith(".tup")) { // Importing elements from external TUP source file
+        importLocalProject(objectPath);
+    } else { // Processing library assets
         TupLibraryObject::ObjectType type = TupLibraryObject::None;
         if (lowercase.endsWith(".jpeg") || lowercase.endsWith(".jpg") || lowercase.endsWith(".png") || lowercase.endsWith(".webp"))
             type = TupLibraryObject::Image;

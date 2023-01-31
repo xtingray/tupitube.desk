@@ -105,8 +105,9 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void updateLoadingFlag(bool flag);
         void goOneLayerBack();
         void goOneLayerForward();
-        void getLocalAsset(const QString &path, const QString &lowercase);
+        void getLocalAsset(const QString &path);
         void getWebAsset(const QString &webPath);
+        void importLocalProject(const QString &path);
 
     public slots:
         void updatePaintArea();

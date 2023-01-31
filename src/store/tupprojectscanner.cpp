@@ -55,7 +55,8 @@ bool TupProjectScanner::read(const QString &filename, const QString &tempFolder)
     TupPackageHandler packageHandler;
     if (packageHandler.importPackage(filename, tempFolder)) {
         QDir projectDir(packageHandler.importedProjectPath());
-        QFile *projectFile = new QFile(projectDir.path() + "/project.tpp");
+        projectPath = projectDir.path();
+        QFile *projectFile = new QFile(projectPath + "/project.tpp");
 
         if (projectFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
             project->fromXml(QString::fromLocal8Bit(projectFile->readAll()));
@@ -117,11 +118,22 @@ bool TupProjectScanner::read(const QString &filename, const QString &tempFolder)
                     xml = QString::fromLocal8Bit(sceneFile->readAll());
                     QString sceneName = readSceneName(xml);
                     if (!sceneName.isEmpty()) {
-                        scenesLabels << sceneName;
+                        sceneLabels << sceneName;
+                        scenePaths << scenePath;
+                        sceneContents << xml;
+                        if (xml.indexOf("<symbol id=") == -1)
+                            libraryFlags << false;
+                        else
+                            libraryFlags << true;
                     } else {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupProjectScanner::read()] - Fatal Error: Scene file seems to be invalid -> " << scenePath;
+                            qWarning() << "[TupProjectScanner::read()] - Fatal Error: Scene file seems to be invalid -> "
+                                       << scenePath;
                         #endif
+                        sceneFile->close();
+                        delete sceneFile;
+
+                        return false;
                     }
 
                     sceneFile->close();
@@ -137,7 +149,7 @@ bool TupProjectScanner::read(const QString &filename, const QString &tempFolder)
             }
             delete project;
 
-            return true;
+            return true; // Everything's OK!
         } else {
             #ifdef TUP_DEBUG
                 qWarning() << "[TupProjectScanner::read()] - Fatal Error: No scene files found (*.tps)";
@@ -164,9 +176,9 @@ int TupProjectScanner::scenesCount()
     return scenesTotal;
 }
 
-QList<QString> TupProjectScanner::sceneNamesList()
+QList<QString> TupProjectScanner::getSceneLabels()
 {
-    return scenesLabels;
+    return sceneLabels;
 }
 
 QString TupProjectScanner::readSceneName(const QString &xml) const
@@ -350,4 +362,24 @@ bool TupProjectScanner::isLibraryEmpty()
 TupProjectScanner::Folder TupProjectScanner::getLibrary()
 {
     return library;
+}
+
+QString TupProjectScanner::getProjectPath() const
+{
+    return projectPath;
+}
+
+QList<QString> TupProjectScanner::getScenePaths()
+{
+    return scenePaths;
+}
+
+QList<bool> TupProjectScanner::getSceneLibraryFlags()
+{
+    return libraryFlags;
+}
+
+QList<QString> TupProjectScanner::getSceneContents()
+{
+    return sceneContents;
 }

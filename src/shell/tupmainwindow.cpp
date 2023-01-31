@@ -858,6 +858,24 @@ void TupMainWindow::updateRecentProjectList()
     }
 }
 
+void TupMainWindow::importProject()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::importProject()]";
+    #endif
+
+    TCONFIG->beginGroup("General");
+    QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+
+    QString packagePath = QFileDialog::getOpenFileName(this, tr("Import TupiTube project"), path,
+                      tr("TupiTube Project Package (*.tup)"));
+
+    if (packagePath.isEmpty() || !packagePath.endsWith(".tup"))
+        return;
+
+    animationTab->importLocalProject(packagePath);
+}
+
 /*
 void TupMainWindow::openProjectFromServer()
 {
@@ -1750,7 +1768,7 @@ void TupMainWindow::dropEvent(QDropEvent *e)
                 if (lowercase.startsWith("http")) // Web assets
                     animationTab->getWebAsset(assetPath);
                 else // Local assets
-                    animationTab->getLocalAsset(assetPath, lowercase);
+                    animationTab->getLocalAsset(assetPath);
             }
         }
     } else {

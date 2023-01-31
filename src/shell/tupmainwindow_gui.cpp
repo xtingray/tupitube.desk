@@ -180,7 +180,6 @@ void TupMainWindow::setupMenu()
     m_fileMenu = menuBar()->addMenu(tr("&File"));
     m_fileMenu->addAction(m_actionManager->find("new_project"));
     m_fileMenu->addAction(m_actionManager->find("open_project"));
-    m_fileMenu->addAction(m_actionManager->find("open_demo"));
 
     // SQA: This code has been disabled temporary
     // m_fileMenu->addAction(m_actionManager->find("opennetproject"));
@@ -196,6 +195,8 @@ void TupMainWindow::setupMenu()
         recents.clear();
     updateOpenRecentMenu(m_recentProjectsMenu, recents);	
     m_fileMenu->addMenu(m_recentProjectsMenu);
+
+    m_fileMenu->addAction(m_actionManager->find("import_project"));
 
     // Adding Options save, save as, close, export, import palettes and exit	
     m_fileMenu->addAction(m_actionManager->find("save_project"));
@@ -332,6 +333,7 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     #endif
     */
 
+    m_actionManager->enable("import_project", flag);
     m_actionManager->enable("save_project", flag);
     m_actionManager->enable("save_project_as", flag);
     m_actionManager->enable("close_project", flag);
@@ -382,6 +384,12 @@ void TupMainWindow::setupFileActions()
                     this, SLOT(openExample()), m_actionManager);
     m_actionManager->insert(openDemo, "open_demo", "file");
     openDemo->setStatusTip(tr("Open example project"));
+
+    TAction *importProject = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Import Project"), tr(""),
+                    this, SLOT(importProject()), m_actionManager);
+    m_actionManager->insert(importProject, "import_project", "file");
+    importProject->setStatusTip(tr("Import project"));
+    m_actionManager->enable("import_project", false);
 
     TAction *save = new TAction(QPixmap(THEME_DIR + "icons/save.png"), tr( "Save Project" ),
 				QKeySequence(tr("Ctrl+S")), this, SLOT(saveProject()), m_actionManager);

@@ -54,8 +54,12 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
 
         QString getProjectName() const;
         int scenesCount();
-        QList<QString> sceneNamesList();
+        QList<QString> getSceneLabels();
         bool isLibraryEmpty();
+        QString getProjectPath() const;
+        QList<QString> getScenePaths();
+        QList<bool> getSceneLibraryFlags();
+        QList<QString> getSceneContents();
 
         struct LibraryObject {
             QString key;
@@ -76,8 +80,12 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         bool storeObject();
 
         QString projectName;
+        QString projectPath;
         int scenesTotal;
-        QList<QString> scenesLabels;
+        QList<QString> sceneLabels;
+        QList<QString> scenePaths;
+        QList<QString> sceneContents;
+        QList<bool> libraryFlags;
 
         Folder library;
         QList<LibraryObject> objects;

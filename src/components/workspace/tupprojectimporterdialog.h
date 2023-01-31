@@ -42,6 +42,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QListWidget>
+#include <QPushButton>
 
 class TUPITUBE_EXPORT TupProjectImporterDialog : public QDialog 
 {
@@ -64,6 +65,8 @@ class TUPITUBE_EXPORT TupProjectImporterDialog : public QDialog
 
         QListWidget *scenesListWidget;
         QVBoxLayout *layout;
+        QPushButton *okButton;
+
         QList<int> selectedScenes;
         bool includeLibrary;
 };

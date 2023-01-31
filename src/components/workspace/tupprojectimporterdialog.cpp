@@ -39,7 +39,6 @@
 #include <algorithm>
 #include <QLabel>
 #include <QCheckBox>
-#include <QPushButton>
 
 TupProjectImporterDialog::TupProjectImporterDialog(const QString &projectName, QStringList scenes, bool libraryFlag,
                                    QWidget *parent) : QDialog(parent)
@@ -79,13 +78,15 @@ void TupProjectImporterDialog::setUI(QStringList scenes)
         QCheckBox *libraryCheck = new QCheckBox(tr("Library"));
         connect(libraryCheck, SIGNAL(stateChanged(int)), this, SLOT(setLibraryFlag(int)));
         layout->addWidget(libraryCheck);
+
+        TSeparator *separator = new TSeparator(Qt::Horizontal);
+        layout->addWidget(separator);
     }
 
-    TSeparator *separator = new TSeparator(Qt::Horizontal);
-    layout->addWidget(separator);
-
-    QPushButton *okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
+    okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
     okButton->setToolTip(tr("Import Assets"));
+    okButton->setVisible(false);
+
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
     QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
@@ -117,16 +118,26 @@ void TupProjectImporterDialog::addScene(QListWidgetItem *item)
 {
     QString text = item->text();
     int index = scenesListWidget->row(item);
-    if (item->checkState() == Qt::Checked)
+    if (item->checkState() == Qt::Checked) {
         selectedScenes << index;
-    else
+        if (!okButton->isVisible())
+            okButton->setVisible(true);
+    } else {
         selectedScenes.removeOne(index);
+        if (okButton->isVisible() && !includeLibrary)
+            okButton->setVisible(false);
+    }
 }
 
 void TupProjectImporterDialog::setLibraryFlag(int state)
 {
-    if (state == Qt::Checked)
+    if (state == Qt::Checked) {
         includeLibrary = true;
-    else
+        if (!okButton->isVisible())
+            okButton->setVisible(true);
+    } else {
         includeLibrary = false;
+        if (okButton->isVisible() && selectedScenes.isEmpty())
+            okButton->setVisible(false);
+    }
 }
