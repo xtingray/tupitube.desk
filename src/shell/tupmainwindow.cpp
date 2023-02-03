@@ -359,6 +359,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
                 m_libraryWidget, SLOT(importWebDroppedAsset(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
         connect(animationTab, SIGNAL(libraryAssetDragged()), m_libraryWidget, SLOT(insertObjectInWorkspace()));
+        connect(animationTab, SIGNAL(sceneCreated(int)), m_exposureSheet, SLOT(updateSceneFramesState(int)));
 
         animationTab->setAntialiasing(true);
         int width = animationTab->workSpaceSize().width();
@@ -867,7 +868,7 @@ void TupMainWindow::importProject()
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
-    QString packagePath = QFileDialog::getOpenFileName(this, tr("Import TupiTube project"), path,
+    QString packagePath = QFileDialog::getOpenFileName(this, tr("Select TupiTube project"), path,
                       tr("TupiTube Project Package (*.tup)"));
 
     if (packagePath.isEmpty() || !packagePath.endsWith(".tup"))

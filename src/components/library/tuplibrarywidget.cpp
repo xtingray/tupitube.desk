@@ -1005,6 +1005,7 @@ void TupLibraryWidget::importWebDroppedAsset(const QString &assetName, const QSt
 
     if (type == TupLibraryObject::Image) {
         importImageFromByteArray(assetName, extension, data);
+        // addAssetIntoTheScene(assetName, data);
     } if (type == TupLibraryObject::Svg) {
         importSvgFromByteArray(assetName, data);
     } if (type == TupLibraryObject::Item) {
@@ -1034,7 +1035,7 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image filename: " << key << " | Raw Size: " << data.size();
             qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image Size: " << "[" << picWidth << ", " << picHeight << "]"
-                    << " | Project Size: " << "[" << projectWidth << ", " << projectHeight << "]";
+                    << " | Project Size: " << "[" << projectWidth << ", " << projectHeight << "] - Extension -> " << ext;
         #endif
 
         if (picWidth > projectWidth || picHeight > projectHeight) {
@@ -1077,7 +1078,7 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
 void TupLibraryWidget::importImage(const QString &imagePath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importImage()]";
+        qDebug() << "[TupLibraryWidget::importImage()] - imagePath -> " << imagePath;
     #endif
 
     if (imagePath.isEmpty()) {
@@ -1097,8 +1098,12 @@ void TupLibraryWidget::importImage(const QString &imagePath)
         QByteArray data = imageFile.readAll();
         imageFile.close();
         importImageFromByteArray(key, extension, data);
+        // addAssetIntoTheScene(key, data);
         data.clear();
     } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::importImage()] - Error: Can't open image - imagePath -> " << imagePath;
+        #endif
         TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(imagePath));
     }
 }

@@ -136,6 +136,8 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
             this, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
     connect(paintArea, SIGNAL(libraryAssetDragged()), this, SIGNAL(libraryAssetDragged()));
+    connect(paintArea, SIGNAL(sceneCreated(int)), this, SIGNAL(sceneCreated(int)));
+
 
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), horizontalRuler, SLOT(movePointers(const QPointF&)));

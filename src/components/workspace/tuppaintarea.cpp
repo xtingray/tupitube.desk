@@ -68,6 +68,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(
     menuOn = false;
     copyIsValid = false;
     currentToolID = TAction::Pencil;
+    webLock = false;
 
     setBgColor(work->getBgColor());
 
@@ -1807,7 +1808,8 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
         if (!scanner->isLibraryEmpty())
             isLibraryEmpty = true;
 
-        TupProjectImporterDialog *dialog = new TupProjectImporterDialog(scanner->getProjectName(), scenes, isLibraryEmpty);
+        QString projectName = scanner->getProjectName();
+        TupProjectImporterDialog *dialog = new TupProjectImporterDialog(projectName, scenes, isLibraryEmpty);
         if (dialog->exec() == QDialog::Accepted) {
             QList<int> sceneIndexes = dialog->scenes();
             bool includeLibrary = dialog->isLibraryIncluded();
@@ -1839,19 +1841,18 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
                     // Before creating items, check if their ID is unique in the current project
                     // Rename them if its necessary
                     // Rename them inside the scenes if necessary
+                    emit localAssetDropped(tempPath + projectName + "/images/" + object.path, object.type);
                 }
             }
 
             if (scenesSelected) {
                 // Creating scenes...
                 QList<QString> sceneNames = scanner->getSceneLabels();
-                // QList<QString> scenePaths = scanner->getScenePaths();
                 QList<QString> sceneContents = scanner->getSceneContents();
                 int scenesCount = project->scenesCount();
                 foreach(int index, sceneIndexes) {
-                    qDebug() << "*** SCENE INDEX -> " << index;
-                    // qDebug() << "*** SCENE PATH -> " << scenePaths.at(index);
                     project->createScene(sceneNames.at(index), scenesCount, true)->fromXml(sceneContents.at(index));
+                    emit sceneCreated(scenesCount);
                     scenesCount++;
                 }
                 TupProjectRequest request = TupRequestBuilder::createSceneRequest(scenesCount - 1, TupProjectRequest::Select);
@@ -1860,6 +1861,7 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
         }
 
         // Removing temporary folder
+        /*
         QDir assetsDir(tempPath);
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintArea::getLocalAsset()] - Removing temporary folder -> " << tempPath;
@@ -1871,6 +1873,7 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
                 #endif
             }
         }
+        */
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintArea::getLocalAsset()] - Fatal Error: Can't open TUP source file -> " << objectPath;
@@ -1914,6 +1917,11 @@ void TupPaintArea::getWebAsset(const QString &urlPath)
     #ifdef TUP_DEBUG
         qDebug() << "[TupPaintArea::getWebAsset()] - url -> " << urlPath;
     #endif
+
+    if (webLock)
+        return;
+
+    webLock = true;
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
@@ -1999,6 +2007,7 @@ void TupPaintArea::processWebAsset(QNetworkReply *reply)
     }
 
     QApplication::restoreOverrideCursor();
+    webLock = false;
 }
 
 void TupPaintArea::slotError(QNetworkReply::NetworkError error)
@@ -2045,4 +2054,5 @@ void TupPaintArea::slotError(QNetworkReply::NetworkError error)
     }
 
     QApplication::restoreOverrideCursor();
+    webLock = false;
 }

@@ -130,6 +130,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void webAssetDropped(const QString &name, const QString &extension,
                              TupLibraryObject::ObjectType type, QByteArray data);
         void libraryAssetDragged();
+        void sceneCreated(int index);
 
     public slots:
         void deleteItems();
@@ -188,6 +189,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         bool canvasEnabled;
 
         QString webAssetName;
+        bool webLock;
 };
 
 #endif

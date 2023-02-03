@@ -1262,20 +1262,24 @@ void TupExposureSheet::clearFrame()
 
 void TupExposureSheet::updateFramesState()
 {
-    for (int i=0; i < project->scenesCount(); i++) {
-         TupScene *scene = project->sceneAt(i);
-         TupExposureTable *tab = scenesContainer->getTable(i);
-         for (int j=0; j < scene->layersCount(); j++) {
-              TupLayer *layer = scene->layerAt(j);
-              for (int k=0; k < layer->framesCount(); k++) {
-                   TupFrame *frame = layer->frameAt(k);
-                   TupExposureTable::FrameType state = TupExposureTable::Used;
-                   if (frame->isEmpty())
-                       state = TupExposureTable::Empty;
-                   tab->updateFrameState(j, k, state);
-              }
-         }
-    }
+    for (int i=0; i < project->scenesCount(); i++)
+        updateSceneFramesState(i);
+}
+
+void TupExposureSheet::updateSceneFramesState(int sceneIndex)
+{
+     TupScene *scene = project->sceneAt(sceneIndex);
+     TupExposureTable *tab = scenesContainer->getTable(sceneIndex);
+     for (int j=0; j < scene->layersCount(); j++) {
+          TupLayer *layer = scene->layerAt(j);
+          for (int k=0; k < layer->framesCount(); k++) {
+               TupFrame *frame = layer->frameAt(k);
+               TupExposureTable::FrameType state = TupExposureTable::Used;
+               if (frame->isEmpty())
+                   state = TupExposureTable::Empty;
+               tab->updateFrameState(j, k, state);
+          }
+     }
 }
 
 /*

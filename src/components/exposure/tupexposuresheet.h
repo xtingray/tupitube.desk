@@ -86,6 +86,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void newPerspective(int);
 
     public slots:
+        void updateSceneFramesState(int sceneIndex);
         void closeAllScenes();
         void applyAction(int action);
         void addScene(int sceneIndex, const QString &name);

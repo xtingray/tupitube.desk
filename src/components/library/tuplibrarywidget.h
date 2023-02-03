@@ -183,6 +183,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSvgFromByteArray(const QString &filename, QByteArray data);
         void importNativeObjectFromByteArray(const QString &filename, QByteArray data);
         void importSoundFileFromByteArray(const QString &filename, QByteArray data);
+        // void addAssetIntoTheScene(const QString &assetName, QByteArray data);
 
         QScreen *screen;
         TupLibrary *library;

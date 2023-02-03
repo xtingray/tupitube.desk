@@ -46,7 +46,7 @@ TupAbstractProjectHandler::~TupAbstractProjectHandler()
 
 void TupAbstractProjectHandler::initialize(TupProjectManagerParams *params)
 {
-    Q_UNUSED(params);
+    Q_UNUSED(params)
 }
 
 bool TupAbstractProjectHandler::setupNewProject(TupProjectManagerParams *params)

@@ -102,6 +102,9 @@ void TupMainWindow::createGUI()
     new TAction(QPixmap(THEME_DIR + "icons/sound_object.png"), tr("Audio File"), QKeySequence(tr("Alt+A")), m_libraryWidget, SLOT(importSoundFile()),
                 m_actionManager, "importAudioFile");
 
+    new TAction(QPixmap(THEME_DIR + "icons/library.png"), tr("Library"), QKeySequence("Alt+L"), this, SLOT(importProject()),
+                m_actionManager, "import_library");
+
     // SQA: Temporary code
     // m_actionManager->enable("importSvg", false);
     // m_actionManager->enable("importSvgArray", false);
@@ -199,6 +202,7 @@ void TupMainWindow::setupMenu()
 
     m_fileMenu->addAction(m_actionManager->find("import_project"));
 
+    m_fileMenu->addSeparator();
     // Adding Options save, save as, close, export, import palettes and exit	
     m_fileMenu->addAction(m_actionManager->find("save_project"));
 
@@ -244,6 +248,7 @@ void TupMainWindow::setupMenu()
     m_insertMenu->addAction(m_actionManager->find("importSvg"));
     m_insertMenu->addAction(m_actionManager->find("importSvgSequence"));
     m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
+    m_insertMenu->addAction(m_actionManager->find("import_library"));
 
     m_insertMenu->addSeparator();
     m_insertMenu->addAction(m_actionManager->find("importGimpPalettes"));
@@ -386,7 +391,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(openDemo, "open_demo", "file");
     openDemo->setStatusTip(tr("Open example project"));
 
-    TAction *importProject = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Import Project"), tr(""),
+    TAction *importProject = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Import Project"), QKeySequence(tr("Ctrl+I")),
                     this, SLOT(importProject()), m_actionManager);
     m_actionManager->insert(importProject, "import_project", "file");
     importProject->setStatusTip(tr("Import project"));
