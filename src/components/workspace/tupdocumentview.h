@@ -95,7 +95,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updateUsersOnLine(const QString &login, int state);
         void resizeProjectDimension(const QSize dimension);
         void updatePerspective();
-        QColor projectBGColor() const;
+        QColor currentBGColor() const;
         void updateWorkspace();
         void setFillTool(TColorCell::FillType type);
         void updateColorOnSelection(TupProjectRequest::Action action, const QColor &color);

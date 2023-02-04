@@ -49,7 +49,7 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     createTopResources();
     createCentralWidget(project, contourColor);
 
-    colorWidget = new RasterColorWidget(contourColor, project->getBgColor(), this);
+    colorWidget = new RasterColorWidget(contourColor, project->getCurrentBgColor(), this);
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),

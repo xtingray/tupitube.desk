@@ -494,8 +494,7 @@ bool TupFileManager::createImageProject(const QString &projectCode, const QStrin
     TupProject *newProject = new TupProject();
     newProject->setProjectName(projectCode);
     newProject->setAuthor(project->getAuthor());
-    // newProject->setTags(project->getTags());
-    newProject->setBgColor(project->getBgColor());
+    newProject->setCurrentBgColor(project->getCurrentBgColor());
     newProject->setDescription(project->getDescription());
     newProject->setDimension(project->getDimension());
     newProject->setFPS(project->getFPS(), 0);

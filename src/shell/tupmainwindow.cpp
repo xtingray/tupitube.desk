@@ -437,7 +437,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         m_projectManager->setModificationStatus(false);
         m_colorPalette->init();
-        m_colorPalette->setBgColor(project->getBgColor());
+        m_colorPalette->setBgColor(project->getCurrentBgColor());
 
         TCONFIG->beginGroup("BrushParameters");
         int thickness = TCONFIG->value("Thickness", 3).toInt();
@@ -833,6 +833,7 @@ void TupMainWindow::openProject(const QString &path)
             m_exposureSheet->updateLayerOpacity(0, 0);
             m_exposureSheet->initLayerVisibility();
             m_timeLine->initLayerVisibility();
+            m_colorPalette->setBgColor(m_projectManager->getSceneBgColor(0));
 
             int last = path.lastIndexOf("/");
             QString dir = path.left(last);
@@ -1328,8 +1329,12 @@ void TupMainWindow::createPaintCommand(const TupPaintAreaEvent *event)
             return;
         }
 
-        if (event->getAction() == TupPaintAreaEvent::ChangeBgColor)
+        if (event->getAction() == TupPaintAreaEvent::ChangeBgColor) {
             m_projectManager->setModificationStatus(true);
+            QColor color = qvariant_cast<QColor>(event->getData());
+            int sceneIndex = animationTab->currentSceneIndex();
+            m_projectManager->setSceneBgColor(sceneIndex, color);
+        }
     }
 }
 

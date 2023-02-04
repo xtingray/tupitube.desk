@@ -41,7 +41,7 @@
 #include "tupprojectloader.h"
 #include "tupitemfactory.h"
 
-TupScene::TupScene(TupProject *parent, int index, const QSize size, const QColor color) : QObject(parent)
+TupScene::TupScene(TupProject *parent, int index, const QSize size, const QColor &color) : QObject(parent)
 {
     sceneIndex = index;
     dimension = size;
@@ -53,7 +53,7 @@ TupScene::TupScene(TupProject *parent, int index, const QSize size, const QColor
     isVisible = true;
 
     storyboard = new TupStoryboard;
-    background = new TupBackground(this, sceneIndex, size, color);
+    background = new TupBackground(this, sceneIndex, size);
 }
 
 TupScene::~TupScene()
@@ -73,12 +73,6 @@ void TupScene::setSceneName(const QString &name)
     sceneName = name;
 }
 
-void TupScene::setBgColor(const QColor color)
-{
-    bgColor = color;
-    background->setBgColor(color);
-}
-
 void TupScene::setFPS(const int value)
 {
     fps = value;
@@ -87,6 +81,16 @@ void TupScene::setFPS(const int value)
 int TupScene::getFPS()
 {
     return fps;
+}
+
+void TupScene::setBgColor(const QColor color)
+{
+    bgColor = color;
+}
+
+QColor TupScene::getBgColor() const
+{
+    return bgColor;
 }
 
 void TupScene::setSceneLocked(bool locked)
@@ -293,6 +297,7 @@ void TupScene::fromXml(const QString &xml)
     QDomElement root = doc.documentElement();
     setSceneName(root.attribute("name"));
     setFPS(root.attribute("fps", "24").toInt());
+    setBgColor(QColor(root.attribute("bgcolor", "#ffffff")));
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupScene::fromXml()] - Entering while...";
@@ -364,6 +369,7 @@ QDomElement TupScene::toXml(QDomDocument &doc) const
     QDomElement root = doc.createElement("scene");
     root.setAttribute("name", sceneName);
     root.setAttribute("fps", fps);
+    root.setAttribute("bgcolor", bgColor.name());
 
     root.appendChild(storyboard->toXml(doc));
     root.appendChild(background->toXml(doc));
@@ -742,7 +748,8 @@ void TupScene::setSceneBackground(TupBackground *bg)
 void TupScene::reset(const QString &name)
 {
     sceneName = name;
-    background = new TupBackground(this, sceneIndex, dimension, bgColor);
+    bgColor = Qt::white;
+    background = new TupBackground(this, sceneIndex, dimension);
     layers.clear();
     tweeningGraphicObjects.clear();
     tweeningSvgObjects.clear();

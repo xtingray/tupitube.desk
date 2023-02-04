@@ -84,6 +84,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
 
     signals:
         void newPerspective(int);
+        void sceneChanged(int sceneIndex);
 
     public slots:
         void updateSceneFramesState(int sceneIndex);
@@ -114,10 +115,6 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void requestRenameLayer(int layerIndex, const QString &name);
         void moveLayer(int oldIndex, int newIndex);
         void actionTriggered(QAction *action);
-
-        // SQA: Pending features
-        // void exportCurrentLayer();
-        // void importCurrentLayer();
 
     private:
         TupProject *project;

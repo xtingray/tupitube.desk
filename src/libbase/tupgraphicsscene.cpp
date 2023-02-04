@@ -271,7 +271,7 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
 
     if (showWaterMark) {
         TupWaterMark *mark = new TupWaterMark;
-        addItem(mark->generateWaterMark(background->getBgColor(), background->getProjectSize(), zLevel));
+        addItem(mark->generateWaterMark(tupScene->getBgColor(), background->getProjectSize(), zLevel));
     }
 
     if (gTool)

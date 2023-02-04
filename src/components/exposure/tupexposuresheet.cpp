@@ -92,10 +92,6 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
     connect(scenesContainer, SIGNAL(layerOpacityChanged(double)), this, SLOT(requestUpdateLayerOpacity(double)));
 
-    // SQA: Pending features
-    // connect(scenesContainer, SIGNAL(exportActionCalled()), this, SLOT(exportCurrentLayer()));
-    // connect(scenesContainer, SIGNAL(importActionCalled()), this, SLOT(importCurrentLayer()));
-
     addChild(scenesContainer);
     createMenuForAFrame();
     // createMenuForSelection();
@@ -449,6 +445,8 @@ void TupExposureSheet::requestChangeScene(int sceneIndex)
     if (scenesContainer->count() > 1) {
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
         emit localRequestTriggered(&request);
+
+        emit sceneChanged(sceneIndex);
     }
 }
 
@@ -1496,61 +1494,6 @@ void TupExposureSheet::removeBlock(TupExposureTable *table, int layerIndex, int 
     else
         table->selectFrame(layerIndex, frameIndex);
 }
-
-/* SQA: Useful code for future features
-void TupExposureSheet::exportCurrentLayer()
-{
-    int sceneIndex = scenesContainer->currentIndex();
-    int layerIndex = currentTable->currentLayer();
-
-    TupScene *scene = project->sceneAt(sceneIndex);
-    TupLayer *layer = scene->layerAt(layerIndex);
-
-    QDomDocument doc;
-    QDomElement data = layer->toXml(doc);
-
-    TCONFIG->beginGroup("General");
-    QString home = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-
-    QString path = QFileDialog::getSaveFileName(this, tr("Export TupiTube Layer As"), home,
-                       tr("TupiTube Layer Package (*.tlayer)"));
-
-    if (path.isEmpty())
-        return;
-
-    if (!path.endsWith(".tlayer"))
-        path += ".tlayer";
-
-    QFile file(path);
-    if (file.open(QIODevice::ReadWrite)) {
-        QTextStream stream(&file);
-        stream << doc.toString() << endl;
-    }
-    file.close();
-
-    TOsd::self()->display(tr("Information"), tr("Layer exported successfully!"));
-}
-
-void TupExposureSheet::importCurrentLayer()
-{
-    TCONFIG->beginGroup("General");
-    QString home = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
-
-    QString path = QFileDialog::getOpenFileName(this, tr("Import TupiTube Layer"),
-                                                home, tr("TupiTube Layer Package (*.tlayer)"));
-
-    QFile file(path);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) 
-        return;
-
-    QTextStream in(&file);
-    QString xml = in.readAll();
-    file.close();
-
-    int sceneIndex = scenesContainer->currentIndex();
-    project->importLayer(sceneIndex, xml);
-}
-*/
 
 void TupExposureSheet::updateFPS(int fps)
 {

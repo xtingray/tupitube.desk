@@ -83,9 +83,10 @@ class TUPITUBE_EXPORT TupProjectManager : public QObject
         void setOpen(bool isOpen);
 
         void updateProjectDimension(const QSize size);
-        // bool removeProjectPath(const QString &projectPath);
 
         int framesCount(int sceneIndex);
+        void setSceneBgColor(int sceneIndex, const QColor &bgColor);
+        QColor getSceneBgColor(int sceneIndex);
 
     public slots:
         void setModificationStatus(bool changed);

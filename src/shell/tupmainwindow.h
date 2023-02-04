@@ -210,8 +210,8 @@ class TupMainWindow : public TabbedMainWindow
         void updateScenesPanelStatus(bool flag);
         void doPlay();
         void requestSaveAction();
-
         void updateSoundsPath();
+        void updateBgColorInPalette(int sceneIndex);
 
     private:
         QString appTitle;

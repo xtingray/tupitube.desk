@@ -1005,7 +1005,6 @@ void TupLibraryWidget::importWebDroppedAsset(const QString &assetName, const QSt
 
     if (type == TupLibraryObject::Image) {
         importImageFromByteArray(assetName, extension, data);
-        // addAssetIntoTheScene(assetName, data);
     } if (type == TupLibraryObject::Svg) {
         importSvgFromByteArray(assetName, data);
     } if (type == TupLibraryObject::Item) {
@@ -1098,7 +1097,6 @@ void TupLibraryWidget::importImage(const QString &imagePath)
         QByteArray data = imageFile.readAll();
         imageFile.close();
         importImageFromByteArray(key, extension, data);
-        // addAssetIntoTheScene(key, data);
         data.clear();
     } else {
         #ifdef TUP_DEBUG

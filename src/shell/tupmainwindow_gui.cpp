@@ -128,6 +128,7 @@ void TupMainWindow::createGUI()
     // Adding the exposure sheet to the right side of the interface
     m_exposureSheet = new TupExposureSheet(this, m_projectManager->getProject());
     connect(m_exposureSheet, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
+    connect(m_exposureSheet, SIGNAL(sceneChanged(int)), this, SLOT(updateBgColorInPalette(int)));
 
     exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, "Exposure Sheet", QKeySequence(tr("Shift+E")));
     // connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
@@ -141,6 +142,7 @@ void TupMainWindow::createGUI()
     // Adding the time line widget to the bottom side of the interface
     m_timeLine = new TupTimeLine(m_projectManager->getProject());
     connect(m_timeLine, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
+    connect(m_timeLine, SIGNAL(sceneChanged(int)), this, SLOT(updateBgColorInPalette(int)));
 
     timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
     // connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
@@ -723,4 +725,10 @@ void TupMainWindow::checkTupiTubeUpdates()
     newsDialog = new TupNewsDialog(this);
     newsDialog->setSource(releasePath, newsPath);
     newsDialog->show();
+}
+
+void TupMainWindow::updateBgColorInPalette(int sceneIndex)
+{
+    QColor color = m_projectManager->getSceneBgColor(sceneIndex);
+    m_colorPalette->setBgColor(color);
 }

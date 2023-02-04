@@ -70,7 +70,7 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(
     currentToolID = TAction::Pencil;
     webLock = false;
 
-    setBgColor(work->getBgColor());
+    setBgColor(work->getCurrentBgColor());
 
     setCurrentScene(0);
     graphicsScene()->setCurrentFrame(0, 0);
@@ -97,6 +97,7 @@ void TupPaintArea::setCurrentScene(int index)
         if (scene) {
             globalSceneIndex = index;
             graphicsScene()->setCurrentScene(scene);
+            setBgColor(scene->getBgColor());
         } else {
             if (project->scenesCount() == 1) {
                 setDragMode(QGraphicsView::NoDrag);
@@ -1861,7 +1862,6 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
         }
 
         // Removing temporary folder
-        /*
         QDir assetsDir(tempPath);
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintArea::getLocalAsset()] - Removing temporary folder -> " << tempPath;
@@ -1873,7 +1873,6 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
                 #endif
             }
         }
-        */
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupPaintArea::getLocalAsset()] - Fatal Error: Can't open TUP source file -> " << objectPath;

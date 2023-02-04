@@ -29,10 +29,9 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
                            RasterCanvasBase(project->getDimension(), parent)
 {
     pressed = false;
-    setBgColor(project->getBgColor());
+    setBgColor(project->getCurrentBgColor());
     tableInUse = false;
     spaceBar = false;
-    // counter = 0;
 
     // Set scene
     canvasSize = project->getDimension();

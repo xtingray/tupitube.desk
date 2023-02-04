@@ -72,13 +72,14 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
     Q_OBJECT
 
     public:
-        TupScene(TupProject *parent, int index, const QSize dimension, const QColor bgColor);
+        TupScene(TupProject *parent, int index, const QSize dimension, const QColor &bgColor);
         ~TupScene();
+
+        void setBgColor(const QColor bgColor);
+        QColor getBgColor() const;
 
         void setSceneName(const QString &name);
         QString getSceneName() const;
-
-        void setBgColor(const QColor bgColor);
 
         void setFPS(const int value);
         int getFPS();

@@ -180,27 +180,27 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
         qDebug() << "[TupCommandExecutor::resetScene()]";
     #endif
 
-    int pos = response->getSceneIndex();
+    int index = response->getSceneIndex();
     QString newName = response->getArg().toString();
 
-    TupScene *scene = project->sceneAt(pos);
+    TupScene *scene = project->sceneAt(index);
     if (scene) {
         if (response->getMode() == TupProjectResponse::Do || response->getMode() == TupProjectResponse::Redo) {
-            if (project->resetScene(pos, newName)) {
+            if (project->resetScene(index, newName)) {
                 emit responsed(response);
                 return true;
             }
         }
 
         if (response->getMode() == TupProjectResponse::Undo) {
-            QString oldName = project->recoverScene(pos);
+            QString oldName = project->recoverScene(index);
             response->setArg(oldName);
             emit responsed(response);
             return true;
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupCommandExecutor::resetScene() - Fatal Error: No scene at index -> " + QString::number(pos);
+            qDebug() << "TupCommandExecutor::resetScene() - Fatal Error: No scene at index -> " + QString::number(index);
         #endif
     }
 
@@ -209,8 +209,9 @@ bool TupCommandExecutor::resetScene(TupSceneResponse *response)
 
 void TupCommandExecutor::setBgColor(TupSceneResponse *response)
 {
+    int index = response->getSceneIndex();
     QString colorName = response->getArg().toString();
-    project->setBgColor(QColor(colorName));
+    project->setSceneBgColor(index, QColor(colorName));
 
     emit responsed(response);
 }

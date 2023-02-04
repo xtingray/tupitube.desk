@@ -41,12 +41,10 @@
 #include <cmath>
 #include <QTimer>
 
-TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
-                             const QColor color) : QObject(parent)
+TupBackground::TupBackground(TupScene *parent, int index, const QSize size) : QObject(parent)
 {
     sceneIndex = index;
     dimension = size;
-    bgColor = color;
 
     rasterStaticUpdateRequired = true;
     vectorDynamicRenderRequired = true;
@@ -71,16 +69,6 @@ TupBackground::TupBackground(TupScene *parent, int index, const QSize size,
 
 TupBackground::~TupBackground()
 {
-}
-
-void TupBackground::setBgColor(const QColor color)
-{
-    bgColor = color;
-}
-
-QColor TupBackground::getBgColor() const
-{
-    return bgColor;
 }
 
 void TupBackground::setProjectSize(const QSize size)
@@ -444,9 +432,6 @@ void TupBackground::renderVectorDynamicView()
 
     delete painter;
     delete canvas;
-
-    // free(painter);
-    // free(canvas);
 }
 
 // Creating expanded raster dynamic image

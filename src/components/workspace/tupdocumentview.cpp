@@ -192,7 +192,7 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, &TupPaintArea::cursorPosition, status, &TupPaintAreaStatus::showPos);
     */
 
-    brushManager()->initBgColor(project->getBgColor());
+    brushManager()->initBgColor(project->getCurrentBgColor());
 
     connect(brushManager(), SIGNAL(penChanged(const QPen &)), this, SLOT(updatePen(const QPen &)));
     connect(brushManager(), SIGNAL(brushChanged(const QBrush &)), this, SLOT(updateBrush(const QBrush &)));
@@ -1587,9 +1587,7 @@ void TupDocumentView::redo()
 void TupDocumentView::setCursor(const QCursor &cursor)
 {
     Q_UNUSED(cursor)
- /*
-    paintArea->setCursor(c);
- */
+    // paintArea->setCursor(c);
 }
 
 void TupDocumentView::setPreviousOnionSkin(int level)
@@ -1812,7 +1810,7 @@ int TupDocumentView::currentSceneIndex()
 void TupDocumentView::updateBgColor(const QColor color)
 {
    if (!isNetworked) {
-       project->setBgColor(color);
+       project->setSceneBgColor(currentSceneIndex(), color);
        paintArea->setBgColor(color);
        emit bgColorChanged(color);
    } else {
@@ -1994,7 +1992,7 @@ void TupDocumentView::exportImage()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export Frame As"), QDir::homePath(),
                                                     tr("Images") + " (*.png *.jpg *.svg)");
     if (!fileName.isNull()) {
-        bool isOk = imagePlugin->exportFrame(frameIndex, project->getBgColor(), fileName, project->sceneAt(sceneIndex),
+        bool isOk = imagePlugin->exportFrame(frameIndex, project->getCurrentBgColor(), fileName, project->sceneAt(sceneIndex),
                                              project->getDimension(), project);
         updatePaintArea();
         if (isOk)
@@ -2016,7 +2014,7 @@ void TupDocumentView::postImage()
     int frameIndex = paintArea->graphicsScene()->currentFrameIndex();
     QString fileName = CACHE_DIR + TAlgorithm::randomString(8) + ".png";
 
-    bool isOk = imagePlugin->exportFrame(frameIndex, project->getBgColor(), fileName, project->sceneAt(sceneIndex),
+    bool isOk = imagePlugin->exportFrame(frameIndex, project->getCurrentBgColor(), fileName, project->sceneAt(sceneIndex),
                                          project->getDimension(), project);
     updatePaintArea();
     if (isOk)
@@ -2505,9 +2503,9 @@ void TupDocumentView::resetWorkSpaceTransformations()
     status->setZoomPercent("100");
 }
 
-QColor TupDocumentView::projectBGColor() const
+QColor TupDocumentView::currentBGColor() const
 {
-    return project->getBgColor();
+    return project->getCurrentBgColor();
 }
 
 void TupDocumentView::updateWorkspace()

@@ -922,6 +922,7 @@ void TupTimeLine::requestSceneSelection(int sceneIndex)
         QString args = QString::number(previewSceneIndex) + ":" + QString::number(previewLayerIndex) + ":" + QString::number(previewFrameIndex);
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select, args);
         emit localRequestTriggered(&request);
+        emit sceneChanged(previewSceneIndex);
     }
 }
 

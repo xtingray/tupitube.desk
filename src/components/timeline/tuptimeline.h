@@ -70,7 +70,8 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
 
     signals:
         void newPerspective(int);
-        
+        void sceneChanged(int sceneIndex);
+
     public slots:
         void addScene(int sceneIndex, const QString &name);
         void removeScene(int sceneIndex);

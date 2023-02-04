@@ -58,7 +58,7 @@ TupStoryBoardDialog::TupStoryBoardDialog(bool network, TupExportInterface *imgPl
     videoPlugin = vPlugin;
 
     project = work;
-    bgColor = project->getBgColor();
+    bgColor = project->getCurrentBgColor();
     size = project->getDimension();
     scene =  project->sceneAt(sIndex);
     sceneIndex = sIndex;

@@ -50,15 +50,12 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
     public:
         enum BgType { VectorDynamic = 0, RasterDynamic, VectorStatic, RasterStatic, VectorForeground };
         enum Direction { Right = 0, Left = 1, Top, Bottom };
-        TupBackground(TupScene *parent, int sceneIndex, const QSize dimension, const QColor bgColor);
+        TupBackground(TupScene *parent, int sceneIndex, const QSize dimension);
         ~TupBackground();
 
         TupFrame* vectorStaticFrame();
         TupFrame* vectorDynamicFrame();
         TupFrame* vectorForegroundFrame();
-
-        void setBgColor(const QColor color);
-        QColor getBgColor() const;
 
         void setProjectSize(const QSize size);
         QSize getProjectSize() const;
@@ -128,7 +125,6 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         QPoint calculatePoint(TupBackground::Direction direction, int frameIndex, int shift);
         int sceneIndex;
         QSize dimension;
-        QColor bgColor;
 
         TupFrame *vectorDynamicBgFrame;
         TupFrame *vectorStaticBgFrame;
@@ -140,7 +136,6 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         bool vectorDynamicRenderRequired;
         bool rasterDynamicRenderRequired;
 
-        // QImage vectorDynamicImg;
         // Vector expanded image
         QPixmap vectorDynamicBgExpanded;
 

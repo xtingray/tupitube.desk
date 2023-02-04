@@ -68,7 +68,7 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
 
     screen = QGuiApplication::screens().at(0);
 
-    graphicsView = new TupCanvasView(this, gScene, screenSize, size, work->getBgColor());
+    graphicsView = new TupCanvasView(this, gScene, screenSize, size, work->getCurrentBgColor());
     connect(graphicsView, SIGNAL(rightClick()), this, SIGNAL(rightClick()));
     connect(graphicsView, SIGNAL(zoomIn()), this, SLOT(wakeUpZoomIn()));
     connect(graphicsView, SIGNAL(zoomOut()), this, SLOT(wakeUpZoomOut()));

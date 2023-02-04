@@ -405,7 +405,7 @@ void TupExportModule::exportIt()
             if ((height % 2) != 0)
                 height++;
 
-            QColor color = m_project->getBgColor();
+            QColor color = m_project->getCurrentBgColor();
             if (m_currentFormat == TupExportInterface::PNG || m_currentFormat == TupExportInterface::SVG) {
                 if (transparency)
                     color.setAlpha(0);

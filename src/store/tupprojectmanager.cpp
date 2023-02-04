@@ -82,9 +82,6 @@ TupProjectManager::~TupProjectManager()
 
 void TupProjectManager::setParams(TupProjectManagerParams *parameters)
 {
-    // if (params)
-    //     delete params;
-
     params = parameters;
     handler->initialize(params);
 }
@@ -144,9 +141,8 @@ void TupProjectManager::setupNewProject()
 
     project->setProjectName(params->getProjectManager());
     project->setAuthor(params->getAuthor());
-    // project->setTags(params->getTags());
     project->setDescription(params->getDescription());
-    project->setBgColor(params->getBgColor());
+    project->setCurrentBgColor(params->getBgColor());
     project->setDimension(params->getDimension());
     project->setFPS(params->getFPS());
 
@@ -497,44 +493,12 @@ int TupProjectManager::framesCount(int sceneIndex)
     return total;
 }
 
-/*
-bool TupProjectManager::removeProjectPath(const QString &projectPath)
+void TupProjectManager::setSceneBgColor(int sceneIndex, const QColor &bgColor)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectManager::removeProjectPath()] - Removing project path: " << projectPath;
-        qDebug() << "*** CACHE_DIR: " << CACHE_DIR;
-    #endif
-
-    bool result = true;
-    QDir dir(projectPath);
-
-    if (dir.exists(projectPath)) {
-        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden
-                                                    | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
-            if (info.isDir()) {
-                QString path = info.absoluteFilePath();
-                if (CACHE_DIR.compare(path) != 0) {
-                    result = removeProjectPath(path);
-                } else {
-                    #ifdef TUP_DEBUG
-                       qWarning() << "[TupProjectManager::removeProjectPath()] - Cache Path reached! -> " << path;
-                    #endif
-                    return true;
-                }
-            } else {
-                result = QFile::remove(info.absoluteFilePath());
-            }
-
-            if (!result)
-                return result;
-        }
-        result = dir.rmdir(projectPath);
-    }
-
-    #ifdef TUP_DEBUG
-        qWarning() << "TupProjectManager::removeProjectPath() - Result -> " + QString::number(result);
-    #endif
-
-    return result;
+    project->sceneAt(sceneIndex)->setBgColor(bgColor);
 }
-*/
+
+QColor TupProjectManager::getSceneBgColor(int sceneIndex)
+{
+    return project->getSceneBgColor(sceneIndex);
+}

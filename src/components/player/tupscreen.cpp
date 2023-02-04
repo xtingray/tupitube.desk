@@ -582,7 +582,7 @@ void TupScreen::render()
 
     clearPhotograms();
 
-    renderer = new TupAnimationRenderer(project->getBgColor(), library);
+    renderer = new TupAnimationRenderer(project->getCurrentBgColor(), library);
     renderer->setScene(project->sceneAt(sceneIndex), project->getDimension());
     int i = 1;
     while (renderer->nextPhotogram()) {
@@ -749,7 +749,7 @@ void TupScreen::updateFirstFrame()
         if (scene) { 
             loadSoundRecords();
 
-            renderer = new TupAnimationRenderer(project->getBgColor(), library);
+            renderer = new TupAnimationRenderer(project->getCurrentBgColor(), library);
             renderer->setScene(scene, project->getDimension());
             renderer->renderPhotogram(0);
 

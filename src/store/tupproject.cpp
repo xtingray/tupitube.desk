@@ -53,7 +53,7 @@ TupProject::TupProject(QObject *parent) : QObject(parent)
     #endif    
     
     spaceMode = TupProject::NONE;
-    bgColor = QColor(255, 255, 255);
+    currentBgColor = QColor(255, 255, 255);;
     dimension = QSize(1920, 1080);
     fps = 24;
     sceneCounter = 0;
@@ -68,7 +68,6 @@ TupProject::~TupProject()
         qDebug() << "[~TupProject()]";
     #endif    
         
-    // deleteDataDir(cachePath);
     scenesList.clear();
 }
 
@@ -132,22 +131,17 @@ void TupProject::setAuthor(const QString &author)
     projectAuthor = author;
 }
 
-/*
-void TupProject::setTags(const QString &tags)
+void TupProject::setCurrentBgColor(const QColor &bgColor)
 {
-    projectTags = tags;
+    currentBgColor = bgColor;
 }
-*/
 
-void TupProject::setBgColor(const QColor color)
+void TupProject::setSceneBgColor(int sceneIndex, const QColor &bgColor)
 {
-    bgColor = color;
+    setCurrentBgColor(bgColor);
 
-    int totalScenes = scenesList.size();
-    for (int i = 0; i < totalScenes; i++) {
-         TupScene *scene = scenesList.at(i);
-         scene->setBgColor(color);
-    }
+    TupScene *scene = scenesList.at(sceneIndex);
+    scene->setBgColor(bgColor);
 }
 
 void TupProject::setDescription(const QString &description)
@@ -187,18 +181,6 @@ QString TupProject::getAuthor() const
     return projectAuthor;
 }
 
-/*
-QString TupProject::getTags() const
-{
-    return projectTags;
-}
-*/
-
-QColor TupProject::getBgColor() const
-{
-    return bgColor;
-}
-
 QString TupProject::getDescription() const
 {
     return projectDesc;
@@ -222,6 +204,16 @@ int TupProject::getFPS(const int sceneIndex) const
     return value;
 }
 
+QColor TupProject::getCurrentBgColor() const
+{
+    return currentBgColor;
+}
+
+QColor TupProject::getSceneBgColor(int sceneIndex) const
+{
+    return scenesList.at(sceneIndex)->getBgColor();
+}
+
 QString TupProject::getDataDir() const
 {
     return cachePath;
@@ -236,7 +228,7 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
     if (position < 0 || position > scenesList.count())
         return nullptr;
 
-    TupScene *scene = new TupScene(this, position, dimension, bgColor);
+    TupScene *scene = new TupScene(this, position, dimension, currentBgColor);
     scene->setFPS(fps);
     scenesList.insert(position, scene);
     sceneCounter++;
@@ -315,7 +307,7 @@ bool TupProject::resetScene(int pos, const QString &newName)
     if (scene) {
         undoScenes << scenesList.takeAt(pos);
 
-        TupScene *basic = new TupScene(this, pos, dimension, "#ffffff");
+        TupScene *basic = new TupScene(this, pos, dimension, Qt::white);
         basic->setSceneName(newName);
         basic->setBasicStructure();
         scenesList.insert(pos, basic);
@@ -418,11 +410,9 @@ void TupProject::fromXml(const QString &xml)
                         if (e1.tagName() == "author") {
                             if (e1.firstChild().isText())
                                 setAuthor(e1.text());
-                        } else if (e1.tagName() == "bgcolor") {
-                            if (e1.text().isEmpty())
-                                setBgColor(QColor("#ffffff"));
-                            else
-                                setBgColor(QColor(e1.text()));
+                        } else if (e1.tagName() == "bgcolor") { // Legacy parameter
+                            if (!e1.text().isEmpty())
+                                currentBgColor = QColor(e1.text());
                         } else if (e1.tagName() == "description") {
                             if (e1.firstChild().isText())
                                 setDescription(e1.text());
@@ -455,7 +445,7 @@ void TupProject::fromXml(const QString &xml)
 QDomElement TupProject::toXml(QDomDocument &doc) const
 {
     QDomElement tupi = doc.createElement("Tupi");
-    tupi.setAttribute("version", "1");
+    tupi.setAttribute("version", "1.1");
 
     QDomElement project = doc.createElement("project");
     project.setAttribute("name", projectName);
@@ -467,9 +457,6 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
 
     QDomElement description = doc.createElement("description");
     description.appendChild(doc.createTextNode(projectDesc));
-
-    QDomElement color = doc.createElement("bgcolor");
-    color.appendChild(doc.createTextNode(bgColor.name()));
 
     QDomElement size = doc.createElement("dimension");
     int w = dimension.width();
@@ -487,7 +474,6 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
 
     meta.appendChild(author);
     // meta.appendChild(tags);
-    meta.appendChild(color);
     meta.appendChild(description);
     meta.appendChild(size);
     meta.appendChild(fpsElement);
@@ -842,8 +828,6 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ob
          }
     }
 
-    // library->removeObject(name, true);
-
     return true;
 }
 
@@ -972,42 +956,6 @@ bool TupProject::isProjectOpen()
 {
     return isOpen;
 }
-
-/*
-bool TupProject::deleteDataDir(const QString &path)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::deleteDataDir()] - path: " << path;
-    #endif
-
-    QDir dir(path);
-    if (dir.exists()) {
-        QStringList contentList = dir.entryList();
-        foreach (QString item, contentList) {
-            QString absolute = dir.absolutePath() + "/" + item;
-            QFileInfo itemInfo(absolute);
-            if (itemInfo.isFile()) {
-                tError() << "FILE: " << absolute;
-                // dir.remove(absolute); 
-            } else {
-                if (!absolute.endsWith(".")) {
-                    tError() << "DIR: " << absolute;
-                    // deleteDataDir(absolute);
-                }
-            }
-        } 
-        // dir.rmdir(path);
-        tError() << "path: " << path;
-        return true;
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "TupProject::deleteDataDir() - Warning: directory doesn't exist -> " + path;
-        #endif
-    }
-
-    return false;
-}
-*/
 
 int TupProject::scenesCount() const
 {
