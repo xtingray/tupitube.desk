@@ -53,7 +53,7 @@ TupProject::TupProject(QObject *parent) : QObject(parent)
     #endif    
     
     spaceMode = TupProject::NONE;
-    currentBgColor = QColor(255, 255, 255);;
+    currentBgColor = QColor(255, 255, 255);
     dimension = QSize(1920, 1080);
     fps = 24;
     sceneCounter = 0;

@@ -297,7 +297,10 @@ void TupScene::fromXml(const QString &xml)
     QDomElement root = doc.documentElement();
     setSceneName(root.attribute("name"));
     setFPS(root.attribute("fps", "24").toInt());
-    setBgColor(QColor(root.attribute("bgcolor", "#ffffff")));
+
+    QString color = root.attribute("bgcolor");
+    if (!color.isEmpty())
+        setBgColor(QColor(color));
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupScene::fromXml()] - Entering while...";
