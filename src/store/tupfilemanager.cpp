@@ -130,6 +130,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                             "Fatal Error: Can't remove old path -> " << currentDirName;
                             #endif
                             TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("001"));
+
                             return false;
                         }
                     } else { // Copy action failed
@@ -138,6 +139,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                           "Fatal Error: Can't copy content into new path -> " << newPath;
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("002"));
+
                         return false;
                     }
                 } else { // New path creation failed
@@ -146,6 +148,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                       "Error: Can't create path -> " << newPath;
                     #endif
                     TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("003"));
+
                     return false;
                 }
             }
@@ -182,6 +185,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                               "Fatal Error: Can't copy content into new path -> " << newPath;
                             #endif
                             TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("004"));
+
                             return false;
                         }
                     } else { // Failed while creating target dir
@@ -190,6 +194,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                           "Error: Can't create path after removing -> " << newPath;
                         #endif
                         TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("005"));
+
                         return false;
                     }
                 } else { // Failed removing target dir
@@ -198,11 +203,12 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                       "Error: Can't create path after removing -> " << newPath;
                     #endif
                     TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("006"));
+
                     return false;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    // SQA: This case is still under tracking
+                    // SQA: This case is still under revision
                     qDebug() << "---";
                     qDebug() << "[TupFileManager::save()] - "
                                 "User is saving the current opened project in same/other folder using same name...";
@@ -246,6 +252,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                    << projectPath;
                     #endif
                     TOsd::self()->display(TOsd::Error, tr("Can't save project! (Code %1)").arg("007"));
+
                     return false;
                 }
             } else {
@@ -283,6 +290,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 qWarning() << "[TupFileManager::save()] - "
                               "Error: Can't create file -> " << projectDir.path() << "/project.tpp";
             #endif
+
             return false;
         }
     }
@@ -315,6 +323,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupFileManager::save()] - Error: Can't create file -> " << scenePath;
                 #endif
+
                 return false;
             }
         }
@@ -339,6 +348,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                  qWarning() << "[TupFileManager::save()] - "
                                "Error: Can't create file -> " << projectDir.path() << "/library.tpl";
              #endif
+
              return false;
          }
     }
@@ -380,7 +390,6 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 msgBox.show();
                 msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                             static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
-                // result = msgBox.exec();
                 msgBox.exec();
             } else if (result == QDialog::Rejected) {
                 QMessageBox msgBox;
@@ -392,7 +401,6 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                 msgBox.show();
                 msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
                             static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
-                // result = msgBox.exec();
                 msgBox.exec();
             }
 
@@ -403,14 +411,14 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
     return ok;
 }
 
-bool TupFileManager::load(const QString &fileName, TupProject *project, const QString &tempFolder)
+bool TupFileManager::load(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupFileManager::load()] - fileName -> " << fileName;
     #endif
 
     TupPackageHandler packageHandler;
-    if (packageHandler.importPackage(fileName, tempFolder)) {
+    if (packageHandler.importPackage(fileName)) {
         QDir projectDir(packageHandler.importedProjectPath());
         QFile pfile(projectDir.path() + "/project.tpp");
 
@@ -425,10 +433,6 @@ bool TupFileManager::load(const QString &fileName, TupProject *project, const QS
             #endif
             return false;
         }
-
-        // Work-around to load temporary projects, and import scenes and library
-        if (!tempFolder.isEmpty())
-            project->setTempProjectName(tempFolder, project->getName());
 
         project->setDataDir(packageHandler.importedProjectPath());
         // Loading library assets
@@ -463,15 +467,18 @@ bool TupFileManager::load(const QString &fileName, TupProject *project, const QS
                     #ifdef TUP_DEBUG
                         qWarning() << "[TupFileManager::load()] - Error: Can't open file -> " << scenePath;
                     #endif
+
                     return false;
                 }
             }
             project->setOpen(true);
+
             return true;
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupFileManager::load()] - Error: No scene files found (*.tps)";
             #endif
+
             return false;
         }
     }
@@ -479,6 +486,7 @@ bool TupFileManager::load(const QString &fileName, TupProject *project, const QS
     #ifdef TUP_DEBUG
         qDebug() << "[TupFileManager::load()] - Error: Can't import package -> " << fileName;
     #endif
+
     return false;
 }
 
@@ -516,6 +524,7 @@ bool TupFileManager::createImageProject(const QString &projectCode, const QStrin
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupProject::createImageProject()] - Fatal error: image object can't be created. Data is NULL!";
                 #endif
+
                 return false;
             }
 

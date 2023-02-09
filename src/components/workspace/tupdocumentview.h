@@ -219,6 +219,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void imagePostRequested(const QString &);
         void soundRemoved(ModuleSource source, const QString &);
         void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
+        void libraryAssetImported(const QString &path, TupLibraryObject::ObjectType type);
         void webAssetDropped(const QString &name, const QString &extension,
                              TupLibraryObject::ObjectType type, QByteArray array);
         void libraryAssetDragged();

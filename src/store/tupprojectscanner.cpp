@@ -77,6 +77,8 @@ bool TupProjectScanner::read(const QString &filename, const QString &tempFolder)
         }
 
         projectName = project->getName();
+        projectVersion = project->getVersion();
+        bgColor = project->getCurrentBgColor();
         objectsTotal = 0;
         QFile *libraryFile = new QFile(projectDir.path() + "/library.tpl");
         if (libraryFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -171,6 +173,16 @@ QString TupProjectScanner::getProjectName() const
     return projectName;
 }
 
+float TupProjectScanner::getProjectVersion()
+{
+    return projectVersion;
+}
+
+QColor TupProjectScanner::getProjectBgColor() const
+{
+    return bgColor;
+}
+
 int TupProjectScanner::scenesCount()
 {
     return scenesTotal;
@@ -222,19 +234,6 @@ bool TupProjectScanner::scanLibrary(const QString &xml)
     while (!domNode.isNull()) {
         QDomElement e = domNode.toElement();
         if (!e.isNull()) {
-            /*
-            if (e.tagName() == "object") {
-                if (scanObject(domNode)) {
-                    library.objects << object;
-                } else {
-                    #ifdef TUP_DEBUG
-                        qWarning() << "[TupProjectScanner::scanLibrary()] - Fatal Error: Library XML file is invalid!";
-                    #endif
-
-                    return false;
-                }
-            } else
-            */
             if (e.tagName() == "folder") {
                 QDomDocument folderDocument;
                 folderDocument.appendChild(folderDocument.importNode(domNode, true));
@@ -382,4 +381,15 @@ QList<bool> TupProjectScanner::getSceneLibraryFlags()
 QList<QString> TupProjectScanner::getSceneContents()
 {
     return sceneContents;
+}
+
+void TupProjectScanner::updateLibraryKey(int index, const QString &oldKey, const QString &key)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectScanner::updateLibraryKey()] - index -> " << index;
+        qDebug() << "[TupProjectScanner::updateLibraryKey()] - oldKey -> " << oldKey;
+        qDebug() << "[TupProjectScanner::updateLibraryKey()] - key -> " << key;
+    #endif
+
+    sceneContents[index].replace(oldKey, key);
 }

@@ -38,6 +38,10 @@
 #include "tupprojectloader.h"
 #include "tupproject.h"
 
+#include <QFile>
+#include <QFileInfo>
+#include <QTextStream>
+
 TupLibraryFolder::TupLibraryFolder(const QString &key, TupProject *animation, QObject *parent) : QObject(parent)
 {
     #ifdef TUP_DEBUG

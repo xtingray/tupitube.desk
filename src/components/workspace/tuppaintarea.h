@@ -127,6 +127,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void newPerspective(int index);
         void eyeDropperLaunched();
         void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
+        void libraryAssetImported(const QString &path, TupLibraryObject::ObjectType type);
         void webAssetDropped(const QString &name, const QString &extension,
                              TupLibraryObject::ObjectType type, QByteArray data);
         void libraryAssetDragged();

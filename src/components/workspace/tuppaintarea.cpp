@@ -1783,12 +1783,12 @@ void TupPaintArea::dropEvent(QDropEvent *e)
             emit libraryAssetDragged();
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPaintArea::dropEvent()] - Warning: The dropped object is unsupported!";
+                qWarning() << "[TupPaintArea::dropEvent()] - Warning: The dropped object is unsupported!";
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPaintArea::dropEvent()] - Warning: Asset path is empty!";
+            qWarning() << "[TupPaintArea::dropEvent()] - Warning: Asset path is empty!";
         #endif
     }
 }
@@ -1812,6 +1812,8 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
         QString projectName = scanner->getProjectName();
         TupProjectImporterDialog *dialog = new TupProjectImporterDialog(projectName, scenes, isLibraryEmpty);
         if (dialog->exec() == QDialog::Accepted) {
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
             QList<int> sceneIndexes = dialog->scenes();
             bool includeLibrary = dialog->isLibraryIncluded();
             QList<bool> libraryFlags = scanner->getSceneLibraryFlags();
@@ -1827,38 +1829,67 @@ void TupPaintArea::importLocalProject(const QString &objectPath)
                 }
             }
 
-            qDebug() << "*** Import library? -> " << includeLibrary;
             if (includeLibrary) { // Processing library assets
-                qDebug() << "*** Processing library items!";
                 TupProjectScanner::Folder libraryAssets = scanner->getLibrary();
                 QList<TupProjectScanner::LibraryObject> objects = libraryAssets.objects;
-                qDebug() << "*** Objects size -> " << objects.size();
                 QList<TupProjectScanner::Folder> folders = libraryAssets.folders;
                 foreach(TupProjectScanner::LibraryObject object, objects) {
-                    qDebug() << "    Library record key -> " << object.key;
-                    qDebug() << "    Library record path -> " << object.path;
-                    qDebug() << "    Library record type -> " << object.type;
-                    qDebug() << "---";
-                    // Before creating items, check if their ID is unique in the current project
-                    // Rename them if its necessary
-                    // Rename them inside the scenes if necessary
-                    emit localAssetDropped(tempPath + projectName + "/images/" + object.path, object.type);
+                    if (project->getLibrary()->exists(object.key)) { // Object key already exists... renaming it!
+                        QString key = project->getLibrary()->getItemKey(object.key);
+                        if (scenesSelected) {
+                            // Checking if the library is required by at least one scene
+                            foreach(int index, sceneIndexes) {
+                                if (libraryFlags.at(index)) {
+                                    // Replacing keys in every scene
+                                    QString oldKey = "<symbol id=\"" + object.key + "\">";
+                                    key = "<symbol id=\"" + key + "\">";
+                                    scanner->updateLibraryKey(index, oldKey, key);
+                                }
+                            }
+                        }
+                    }
+
+                    QString folder = "";
+                    if (object.type == TupLibraryObject::Image)
+                        folder = "/images/";
+                    if (object.type == TupLibraryObject::Svg)
+                        folder = "/svg/";
+                    if (object.type == TupLibraryObject::Item)
+                        folder = "/obj/";
+                    if (object.type == TupLibraryObject::Audio)
+                        folder = "/audio/";
+
+                    emit libraryAssetImported(tempPath + projectName + folder + object.path, object.type);
                 }
             }
 
-            if (scenesSelected) {
-                // Creating scenes...
+            if (scenesSelected) { // Importing selected scenes...
                 QList<QString> sceneNames = scanner->getSceneLabels();
                 QList<QString> sceneContents = scanner->getSceneContents();
                 int scenesCount = project->scenesCount();
+                QColor bgColor = Qt::white;
                 foreach(int index, sceneIndexes) {
                     project->createScene(sceneNames.at(index), scenesCount, true)->fromXml(sceneContents.at(index));
+                    if (scanner->getProjectVersion() < 1.1) {
+                        bgColor = scanner->getProjectBgColor();
+                        project->sceneAt(scenesCount)->setBgColor(bgColor);
+                    } else {
+                        bgColor = project->sceneAt(scenesCount)->getBgColor();
+                    }
+
                     emit sceneCreated(scenesCount);
                     scenesCount++;
                 }
+
+                project->setCurrentBgColor(bgColor);
+                setBgColor(bgColor);
+
                 TupProjectRequest request = TupRequestBuilder::createSceneRequest(scenesCount - 1, TupProjectRequest::Select);
                 emit localRequestTriggered(&request);
             }
+            QApplication::restoreOverrideCursor();
+
+            TOsd::self()->display(TOsd::Info, tr("Project assets imported successfully!"));
         }
 
         // Removing temporary folder

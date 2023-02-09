@@ -42,7 +42,6 @@
 #include <QVariant>
 #include <QGraphicsItem>
 #include <QTemporaryFile>
-#include <QDir>
 
 class TupLibraryObject;
 
@@ -131,7 +130,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QString dataPath;
         QString symbolName;
         QString folder;
-        QString smallId;
+        QString shortId;
         QString extension;
         QByteArray rawData;
         QString xmlString;

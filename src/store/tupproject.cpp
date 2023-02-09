@@ -166,6 +166,11 @@ void TupProject::setFPS(const int value, const int sceneIndex)
     }
 }
 
+void TupProject::setVersion(const QString &value)
+{
+    version = value.toFloat();
+}
+
 void TupProject::setDataDir(const QString &path)
 {
     cachePath = path;
@@ -202,6 +207,11 @@ int TupProject::getFPS(const int sceneIndex) const
         value = scene->getFPS();
 
     return value;
+}
+
+float TupProject::getVersion()
+{
+    return version;
 }
 
 QColor TupProject::getCurrentBgColor() const
@@ -252,8 +262,10 @@ bool TupProject::restoreScene(int position)
         if (scene) {
             scenesList.insert(position, scene);
             sceneCounter++;
+
             return true;
         }
+
         return false;
     }
 
@@ -327,6 +339,7 @@ QString TupProject::recoverScene(int pos)
     TupScene *scene = undoScenes.takeLast();
     if (scene) {
         scenesList[pos] = scene;
+
         return scene->getSceneName();
     }
 
@@ -340,6 +353,7 @@ bool TupProject::moveScene(int position, int newPosition)
             qDebug() << "[TupProject::moveScene()] - Failed moving scene from " << position
                      << " to " << newPosition;
         #endif
+
         return false;
     }
 
@@ -359,6 +373,7 @@ TupScene *TupProject::sceneAt(int sceneIndex) const
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::sceneAt()] - FATAL ERROR: index out of bound -> " << sceneIndex;
         #endif
+
         return nullptr;
     }
 
@@ -371,6 +386,7 @@ TupBackground * TupProject::getBackgroundFromScene(int sceneIndex)
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::getBackgroundFromScene()] - FATAL ERROR: index out of bound -> " << sceneIndex;
         #endif
+
         return nullptr;
     }
 
@@ -386,10 +402,17 @@ void TupProject::fromXml(const QString &xml)
 {
     QDomDocument document;
 
-    if (!document.setContent(xml))
+    if (!document.setContent(xml)) {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupProject::fromXml()] - Fatal Error: Xml input is corrupt! -> " << xml;
+        #endif
+
         return;
+    }
 
     QDomElement root = document.documentElement();
+    setVersion(root.attribute("version"));
+
     QDomNode n = root.firstChild();
 
     int i = 0;
@@ -473,7 +496,6 @@ QDomElement TupProject::toXml(QDomDocument &doc) const
     fpsElement.appendChild(doc.createTextNode(frames));
 
     meta.appendChild(author);
-    // meta.appendChild(tags);
     meta.appendChild(description);
     meta.appendChild(size);
     meta.appendChild(fpsElement);
@@ -498,22 +520,23 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
 
     if (!isOpen) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::createSymbol()] - Fatal error: project is NOT open!";
-        #endif        
+            qWarning() << "[TupProject::createSymbol()] - Fatal error: project is NOT open!";
+        #endif
+
         return false;
     }
 
     if (library->createSymbol(TupLibraryObject::ObjectType(type), name, data, folder) == nullptr) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::createSymbol()] - Fatal error: object can't be created. Data is NULL!";
+            qWarning() << "[TupProject::createSymbol()] - Fatal error: object can't be created. Data is NULL!";
         #endif    
 
         return false;
     }         
 
     #ifdef TUP_DEBUG
-        qWarning() << "[TupProject::createSymbol()] - Object added successfully -> " << name;
-    #endif    
+        qDebug() << "[TupProject::createSymbol()] - Object added successfully -> " << name;
+    #endif
 
     return true;
 }
@@ -624,6 +647,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 frame = layer->frameAt(frameIndex);
             else
                 return false;
+
         } else if (spaceMode == TupProject::VECTOR_STATIC_BG_MODE) {
             TupBackground *bg = scene->sceneBackground();
 
@@ -631,6 +655,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 frame = bg->vectorStaticFrame();
             else
                 return false;
+
         } else if (spaceMode == TupProject::VECTOR_DYNAMIC_BG_MODE) {
             TupBackground *bg = scene->sceneBackground();
 
@@ -640,6 +665,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
             } else {
                 return false;
             }
+
         } else if (spaceMode == TupProject::VECTOR_FG_MODE) {
             TupBackground *bg = scene->sceneBackground();
 
@@ -647,10 +673,12 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 frame = bg->vectorForegroundFrame();
             else
                 return false;
+
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupProject::insertSymbolIntoFrame()] - Fatal Error: invalid spaceMode!";
-            #endif        
+            #endif
+
             return false;
         }
 
@@ -776,8 +804,13 @@ bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::Ob
         qDebug() << "[TupProject::removeSymbolFromFrame()] - Removing symbol from project -> " << name;
     #endif
     
-    if (type == TupLibraryObject::Folder)
+    if (type == TupLibraryObject::Folder) {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupProject::removeSymbolFromFrame()] - Ignoring! Object is a folder -> " << name;
+        #endif
+
         return true;
+    }
 
     int totalScenes = scenesList.size();
     for (int i = 0; i < totalScenes; i++) {
@@ -1134,6 +1167,7 @@ bool TupProject::updateSoundType(const QString audioId, SoundType type)
         if (item.key.compare(audioId) == 0) {
             item.type = type;
             soundRecords[i] = item;
+
             return true;
         }
     }
@@ -1153,6 +1187,7 @@ bool TupProject::updateSoundFrame(const QString audioId, int frame)
             library->updateSoundFrameToPlay(audioId, frame);
             item.frame = frame + 1;
             soundRecords[i] = item;
+
             return true;
         }
     }

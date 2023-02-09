@@ -354,12 +354,16 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
                 animationTab, SLOT(launchLipsyncModule(PapagayoAppMode, const QString&)));
         connect(this, SIGNAL(imageExported()), animationTab, SLOT(exportImage()));
         connect(this, SIGNAL(imagePosted()), animationTab, SLOT(postImage()));
+
         connect(animationTab, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)),
                 m_libraryWidget, SLOT(importLocalDroppedAsset(const QString &, TupLibraryObject::ObjectType)));
+        connect(animationTab, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType)),
+                m_libraryWidget, SLOT(importExternalLibraryAsset(const QString &, TupLibraryObject::ObjectType)));
         connect(animationTab, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
                 m_libraryWidget, SLOT(importWebDroppedAsset(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
         connect(animationTab, SIGNAL(libraryAssetDragged()), m_libraryWidget, SLOT(insertObjectInWorkspace()));
         connect(animationTab, SIGNAL(sceneCreated(int)), m_exposureSheet, SLOT(updateSceneFramesState(int)));
+        connect(animationTab, SIGNAL(sceneCreated(int)), this, SLOT(updateBgColorInPalette(int)));
 
         animationTab->setAntialiasing(true);
         int width = animationTab->workSpaceSize().width();

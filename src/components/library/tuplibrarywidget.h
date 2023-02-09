@@ -146,6 +146,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSoundFile();
         void resetSoundPlayer();
         void importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type);
+        void importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type);
         void importWebDroppedAsset(const QString &imageName, const QString &extension,
                                    TupLibraryObject::ObjectType type, QByteArray array);
 
@@ -200,6 +201,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         bool mkdir;
         bool isNetworked;
         bool nativeFromFileSystem;
+        bool isExternalLibraryAsset;
 
         QTreeWidgetItem *lastItemEdited;
         QTreeWidgetItem *currentItemDisplayed;

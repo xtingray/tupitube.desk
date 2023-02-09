@@ -289,7 +289,7 @@ void TupScene::fromXml(const QString &xml)
     QDomDocument doc;
     if (!doc.setContent(xml)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupScene::fromXml()] - Error while processing XML file";
+            qDebug() << "[TupScene::fromXml()] - Error while processing XML file! -> " << xml;
         #endif  
         return;
     }

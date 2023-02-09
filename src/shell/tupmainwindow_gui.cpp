@@ -58,7 +58,6 @@ void TupMainWindow::createGUI()
 
     colorView = addToolView(m_colorPalette, Qt::LeftDockWidgetArea, Animation, "Color Palette", QKeySequence(tr("Shift+P")));
     connect(colorView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateColorPanelStatus(bool)));
-    // colorView->setShortcut(QKeySequence(tr("Shift+P")));
 
     m_actionManager->insert(colorView->toggleViewAction(), "show_palette");
     addToPerspective(colorView->toggleViewAction(), Animation);
@@ -131,7 +130,6 @@ void TupMainWindow::createGUI()
     connect(m_exposureSheet, SIGNAL(sceneChanged(int)), this, SLOT(updateBgColorInPalette(int)));
 
     exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, "Exposure Sheet", QKeySequence(tr("Shift+E")));
-    // connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
 
     m_actionManager->insert(exposureView->toggleViewAction(), "show_exposure");
     addToPerspective(exposureView->toggleViewAction(), Animation);
@@ -145,7 +143,6 @@ void TupMainWindow::createGUI()
     connect(m_timeLine, SIGNAL(sceneChanged(int)), this, SLOT(updateBgColorInPalette(int)));
 
     timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
-    // connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
     m_actionManager->insert(timeView->toggleViewAction(), "show_timeline");
     addToPerspective(timeView->toggleViewAction(), Animation);
@@ -211,22 +208,6 @@ void TupMainWindow::setupMenu()
     m_fileMenu->addAction(m_actionManager->find("save_project_as"));
     m_fileMenu->addAction(m_actionManager->find("close_project"));
 
-    /*
-    m_fileMenu->addSeparator();
-    exportMenu = new QMenu(tr("Export..."), this);
-    exportMenu->addAction(m_actionManager->find("export"));
-    exportMenu->addAction(m_actionManager->find("export_image"));
-    m_fileMenu->addMenu(exportMenu);
-
-    // m_fileMenu->addAction(m_actionManager->find("export"));
-    // m_fileMenu->addAction(m_actionManager->find("post"));
-
-    postMenu = new QMenu(tr("Post..."), this);
-    postMenu->addAction(m_actionManager->find("post"));
-    postMenu->addAction(m_actionManager->find("post_image"));
-    m_fileMenu->addMenu(postMenu);
-    */
-
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_actionManager->find("Exit"));
 
@@ -235,12 +216,7 @@ void TupMainWindow::setupMenu()
     m_settingsMenu = menuBar()->addMenu(tr("&Edit"));
 
     m_settingsMenu->addAction(m_actionManager->find("preferences"));
-    // Temporary out while SQA is done
-    // m_actionManager->enable("preferences", false);
 
-    // Temporary out while SQA is done
-    // Setting up the insert menu
-    // setupInsertActions();
     // Menu Insert
     m_insertMenu = menuBar()->addMenu(tr("&Import"));
 
@@ -257,18 +233,6 @@ void TupMainWindow::setupMenu()
 
     // SQA: Action disabled while Library module is fixed
     m_insertMenu->addAction(m_actionManager->find("importPapagayoLipSync"));
-
-    /*
-    // Setting up the window menu
-    m_windowMenu = menuBar()->addMenu(tr("&Window"));
-    // Adding Options show debug, palette, pen, library, timeline, scenes, exposure, help
-    m_windowMenu->addAction(m_actionManager->find("show_palette"));
-    m_windowMenu->addAction(m_actionManager->find("show_pen"));
-    m_windowMenu->addAction(m_actionManager->find("show_library"));
-    m_windowMenu->addAction(m_actionManager->find("show_timeline"));
-    m_windowMenu->addAction(m_actionManager->find("show_scenes"));
-    m_windowMenu->addAction(m_actionManager->find("show_exposure"));
-    */
 
     #ifndef TUP_32BIT
         exportMenu = menuBar()->addMenu(tr("&Export"));
@@ -301,18 +265,6 @@ void TupMainWindow::setupMenu()
     animationPerspective->setData(Player);
     group->addAction(animationPerspective);
 
-    // Adding Option News
-    // TCONFIG->beginGroup("General");
-    // bool getNews = TCONFIG->value("GetNews", true).toBool();
-    // if (getNews) {
-    //     QAction *newsPerspective = new QAction(tr("News"), this);
-    //     newsPerspective->setIcon(QPixmap(THEME_DIR + "icons/news_mode.png"));
-    //     newsPerspective->setIconVisibleInMenu(true);
-    //     newsPerspective->setShortcut(QKeySequence("Ctrl+3"));
-    //     newsPerspective->setData(News);
-    //     group->addAction(newsPerspective);
-    // }
-
     m_viewMenu->addActions(group->actions());
     connect(group, SIGNAL(triggered(QAction*)), this, SLOT(changePerspective(QAction*)));
     menuBar()->addMenu(m_viewMenu);
@@ -321,16 +273,12 @@ void TupMainWindow::setupMenu()
     setupHelpActions();
     m_helpMenu = new QMenu(tr("&Help"), this);
     menuBar()->addMenu(m_helpMenu);
-    // m_helpMenu->addAction(m_actionManager->find("help"));
     m_helpMenu->addAction(m_actionManager->find("youtube"));
     m_helpMenu->addAction(m_actionManager->find("check_updates"));
     m_helpMenu->addSeparator();
     m_helpMenu->addAction(m_actionManager->find("about_tupitube"));
 
     setMenuItemsContext(false);
-
-    // SQA: Temporary code
-    // menuBar()->setVisible(false);
 }
 
 void TupMainWindow::setMenuItemsContext(bool flag)
@@ -479,15 +427,6 @@ void TupMainWindow::setPreferencesAction()
 
 void TupMainWindow::setupHelpActions()
 {
-    /*
-        helpAction = new TAction(QPixmap(THEME_DIR + "icons/help_mode.png"), tr("Online Help Content"), QKeySequence(tr("F1")),
-                     this, SLOT(showHelp()), m_actionManager, "help");
-        helpAction->setEnabled(false);
-
-        new TAction(QPixmap(THEME_DIR + "icons/tip.png"), tr("Tip Of The Day"), QKeySequence(tr("Ctrl+T")),
-                    this, SLOT(showTipDialog()), m_actionManager, "tip_of_day");
-    */
-
     new TAction(QPixmap(THEME_DIR + "icons/youtube.png"), tr("YouTube Tutorials"), QKeySequence(tr("Y")),
                         this, SLOT(openYouTubeChannel()), m_actionManager, "youtube");
     updatesAction = new TAction(QPixmap(THEME_DIR + "icons/updates.png"), tr("Check for Updates"), QKeySequence(),
@@ -557,11 +496,8 @@ void TupMainWindow::changePerspective(QAction *action)
     int perspective = action->data().toInt();
 
     // Animation or Player perspective
-    if (perspective == Animation || perspective == Player) // {
+    if (perspective == Animation || perspective == Player)
         setCurrentTab(perspective - 1);
-    /* }  else if (perspective == News) { // News perspective
-        setCurrentTab(2);
-    } */
 
     action->setChecked(true);
 }
@@ -634,9 +570,6 @@ void TupMainWindow::checkTimeLineVisibility(bool visible)
             timeView->blockSignals(false);
         }
 
-        // if (scenesView->isExpanded())
-        //     scenesView->expandDock(false);
-
         currentDock = TupDocumentView::ExposureSheet;
         emit activeDockChanged(TupDocumentView::ExposureSheet);
     } else {
@@ -667,8 +600,6 @@ void TupMainWindow::checkExposureVisibility(bool visible)
 
 void TupMainWindow::updateFillTool(TColorCell::FillType type)
 {
-    // Q_UNUSED(type);
-
     if (animationTab)
         animationTab->setFillTool(type);
 }

@@ -40,6 +40,7 @@
 #include <QGraphicsScene>
 #include <QPainter>
 #include <QTextStream>
+#include <QDir>
 
 TupLibraryObject::TupLibraryObject(QObject *parent) : QObject(parent)
 {
@@ -60,10 +61,6 @@ TupLibraryObject::~TupLibraryObject()
 {
 }
 
-/*
- Items, pics, text, etc...
- @param data
-*/
 void TupLibraryObject::setData(const QVariant &input)
 {
     data = input;
@@ -155,7 +152,7 @@ void TupLibraryObject::setSymbolName(const QString &name)
     symbolName = name;
     // SQA: Check if this line is really required
     symbolName.replace(QDir::separator(), "-");
-    smallId = symbolName.section('.', 0, 0);
+    shortId = symbolName.section('.', 0, 0);
     extension = symbolName.section('.', 1, 1).toUpper();
 }
 
@@ -224,6 +221,7 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
                     qDebug() << "[TupLibraryObject::updateFolder()] - "
                                 "Fatal Error: Couldn't create path -> " << newPath;
                 #endif
+
                 return;
             }
         }
@@ -265,7 +263,7 @@ QString TupLibraryObject::getFolder() const
 
 QString TupLibraryObject::getShortId() const
 {
-    return smallId;
+    return shortId;
 }
 
 QString TupLibraryObject::getExtension() const
@@ -284,6 +282,7 @@ void TupLibraryObject::fromXml(const QString &xml)
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Invalid XML structure!";
         #endif
+
         return;
     }
     
@@ -294,6 +293,7 @@ void TupLibraryObject::fromXml(const QString &xml)
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Symbol name is empty!";
             #endif
+
             return;
         }
        
@@ -305,6 +305,7 @@ void TupLibraryObject::fromXml(const QString &xml)
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryObject::fromXml()] - Fatal Error: Invalid object type!";
             #endif
+
             return;
         }
 
@@ -331,6 +332,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                                  qDebug() << "[TupLibraryObject::fromXml()] - "
                                              "Object data is empty! -> " << symbolName;
                              #endif
+
                              return;
                          }
                      } else {
@@ -338,6 +340,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                              qDebug() << "[TupLibraryObject::fromXml()] - "
                                          "Fatal Error: Object data from xml is NULL -> " << symbolName;
                          #endif
+
                          return;
                      }
                  } else {
@@ -377,6 +380,7 @@ void TupLibraryObject::fromXml(const QString &xml)
                      qDebug() << "[TupLibraryObject::fromXml()] - "
                                  "Unknown object type -> " << objectType;
                  #endif
+
                  return;
              }
         }
@@ -461,6 +465,7 @@ bool TupLibraryObject::loadRawData(const QByteArray &data)
                          qDebug() << "[TupLibraryObject::loadRawData()] - "
                                      "Fatal Error: Can't load image -> " << symbolName;
                      #endif
+
                      return false;
                  }
 
@@ -574,6 +579,7 @@ bool TupLibraryObject::loadData(const QString &path)
                                              "Warning: Object file is empty -> " << path;
                              #endif
                              file.close();
+
                              return false;
                          }
                      } else {
@@ -581,6 +587,7 @@ bool TupLibraryObject::loadData(const QString &path)
                              qDebug() << "[TupLibraryObject::loadData()] - "
                                          "Fatal Error: Can't access object file -> " << path;
                          #endif
+
                          return false;
                      }
                  } else {
@@ -588,6 +595,7 @@ bool TupLibraryObject::loadData(const QString &path)
                          qDebug() << "[TupLibraryObject::loadData()] - "
                                      "Fatal Error: Object file doesn't exist -> " << path;
                      #endif
+
                      return false;
                  }
             }
@@ -617,11 +625,12 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                  }
 
                  dataPath = path + symbolName;
-                 QFile file(dataPath);
+                 QFile file (dataPath);
                  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                      QTextStream out(&file);
                      out << QString(rawData);
                      file.close();
+
                      return true;
                  } else {
                      #ifdef TUP_DEBUG
@@ -629,6 +638,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                                      "Fatal Error: Lack of permission to save item file -> " << dataPath;
                      #endif
                      file.close();
+
                      return false;
                  }
             }
@@ -665,6 +675,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                                          "Audio file has been saved successfully -> "
                                          << dataPath;
                          #endif
+
                          return true;
                      } else {
                          #ifdef TUP_DEBUG
@@ -672,6 +683,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                                          "Fatal Error: Can't save audio file -> "
                                          << dataPath;
                          #endif
+
                          return false;
                      }
                  } else {
@@ -681,6 +693,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                                   << dataPath;
                      #endif
                      file.close();
+
                      return false;
                  }
             }
@@ -702,6 +715,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                      QTextStream out(&file);
                      out << data.toString();
                      file.close();
+
                      return true;
                  } else {
                      #ifdef TUP_DEBUG
@@ -710,6 +724,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                                   << dataPath;
                      #endif
                      file.close();
+
                      return false;
                  }
             }
@@ -726,6 +741,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                              qDebug() << "[TupLibraryObject::saveData()] - "
                                          "Fatal error: Can't create image path -> " << path;
                          #endif
+
                          return false;
                      }
                  }
@@ -742,12 +758,14 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                              qDebug() << "[TupLibraryObject::saveData()] - "
                                          "Image file saved successfully -> " << path << symbolName;
                          #endif
-                         return true;
+
+                          return true;
                      } else {
                          #ifdef TUP_DEBUG
                              qDebug() << "[TupLibraryObject::saveData()] - "
                                          "Fatal Error: Can't save image file -> " << path << symbolName;
                          #endif
+
                          return false;
                      }
                  } else {
@@ -756,6 +774,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                                      "Fatal Error: Insufficient permissions to save image file -> " << path << symbolName;
                      #endif
                      file.close();
+
                      return false;
                  }
             }

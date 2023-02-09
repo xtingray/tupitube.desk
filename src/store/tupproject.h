@@ -82,6 +82,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void setDescription(const QString &desc);
         void setDimension(const QSize size);
         void setFPS(const int value, const int sceneIndex=0);
+        void setVersion(const QString &value);
 
         QString getName() const;
         QString getAuthor() const;
@@ -90,6 +91,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         QColor getCurrentBgColor() const;
         QColor getSceneBgColor(int sceneIndex) const;
         int getFPS(const int sceneIndex=0) const;
+        float getVersion();
 
         void setDataDir(const QString &path);
         QString getDataDir() const;
@@ -170,6 +172,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         QSize dimension;
         int fps;
         QString cachePath;
+        float version;
 
         Scenes scenesList;
         Scenes undoScenes;

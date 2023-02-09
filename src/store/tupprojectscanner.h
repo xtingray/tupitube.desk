@@ -53,6 +53,8 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         virtual bool read(const QString &filename, const QString &tempFolder = QString());
 
         QString getProjectName() const;
+        float getProjectVersion();
+        QColor getProjectBgColor() const;
         int scenesCount();
         QList<QString> getSceneLabels();
         bool isLibraryEmpty();
@@ -60,6 +62,7 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         QList<QString> getScenePaths();
         QList<bool> getSceneLibraryFlags();
         QList<QString> getSceneContents();
+        void updateLibraryKey(int index, const QString &oldKey, const QString &key);
 
         struct LibraryObject {
             QString key;
@@ -80,6 +83,8 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         bool storeObject();
 
         QString projectName;
+        float projectVersion;
+        QColor bgColor;
         QString projectPath;
         int scenesTotal;
         QList<QString> sceneLabels;

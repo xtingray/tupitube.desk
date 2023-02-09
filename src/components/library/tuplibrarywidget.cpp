@@ -57,6 +57,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     isEffectSound = false;
     currentMode = TupProject::FRAMES_MODE;
     nativeFromFileSystem = false;
+    isExternalLibraryAsset = false;
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
     setWindowTitle(tr("Library"));
@@ -971,6 +972,12 @@ void TupLibraryWidget::importImageGroup()
     }
 }
 
+void TupLibraryWidget::importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type)
+{
+    isExternalLibraryAsset = true;
+    importLocalDroppedAsset(path, type);
+}
+
 void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type)
 {
     #ifdef TUP_DEBUG
@@ -1669,12 +1676,14 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          previewItem(item);
 
                          if (nativeFromFileSystem) {
-                             if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject())
+                             if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
+                                 && !isExternalLibraryAsset)
                                  insertObjectInWorkspace();
                              nativeFromFileSystem = false;
                          } else {
-                             if (currentMode == TupProject::VECTOR_STATIC_BG_MODE
-                                 || currentMode == TupProject::VECTOR_DYNAMIC_BG_MODE)
+                             if ((currentMode == TupProject::VECTOR_STATIC_BG_MODE
+                                  || currentMode == TupProject::VECTOR_DYNAMIC_BG_MODE)
+                                 && !isExternalLibraryAsset)
                              insertObjectInWorkspace();
                          }
                        }
@@ -1684,8 +1693,9 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          item->setIcon(0, QIcon(THEME_DIR + "icons/bitmap.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
+
                          if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
-                             && folderName.compare(tr("Raster Objects")) != 0)
+                             && folderName.compare(tr("Raster Objects")) != 0 && !isExternalLibraryAsset)
                              insertObjectInWorkspace();
                        }
                      break;
@@ -1694,7 +1704,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
-                         if (!isNetworked && !library->isLoadingProject())
+                         if (!isNetworked && !library->isLoadingProject() && !isExternalLibraryAsset)
                              insertObjectInWorkspace();
                        }
                      break;
@@ -1722,6 +1732,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                      break;
                  }
 
+                 if (isExternalLibraryAsset)
+                     isExternalLibraryAsset = false;
              } else {
                  #ifdef TUP_DEBUG
                      qDebug() << "[TupLibraryWidget::libraryResponse()] - No object found: " << id;

@@ -41,13 +41,8 @@
 #include "tuplibraryobject.h"
 
 #include <QObject>
-#include <QHash>
 #include <QMap>
 #include <QByteArray>
-#include <QTextStream>
-#include <QFileInfo>
-#include <QFile>
-#include <QDir>
 
 class TupProject;
 class TupLibraryFolder;
