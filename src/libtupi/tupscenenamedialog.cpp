@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,65 +33,92 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPEXPOSURESCENETABWIDGET_H
-#define TUPEXPOSURESCENETABWIDGET_H
+#include "tupscenenamedialog.h"
+#include "tseparator.h"
+#include "tapptheme.h"
 
-#include "tglobal.h"
-#include "tupexposuretable.h"
-#include "tapplicationproperties.h"
-
-#include <QTabWidget>
-#include <QList>
 #include <QLabel>
-#include <QFrame>
-#include <QWheelEvent>
-#include <QTabBar>
-#include <QVBoxLayout>
-#include <QDoubleSpinBox>
 
-/**
- * @author Gustav Gonzalez 
-*/
-
-class T_GUI_EXPORT TupExposureSceneTabWidget : public QFrame
+TupSceneNameDialog::TupSceneNameDialog(DialogType type, const QString &name, QWidget *parent) : QDialog(parent)
 {
-    Q_OBJECT
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSceneNameDialog::TupSceneNameDialog()]";
+    #endif
 
-    public:
-        TupExposureSceneTabWidget(QWidget *parent = nullptr);
-        ~TupExposureSceneTabWidget();
+    setModal(true);
+    actionType = type;
+    sceneName = name;
 
-        void addScene(int index, const QString &name, TupExposureTable *table = nullptr);
-        void restoreScene(int index, const QString &name);
-        void removeScene(int index, bool withBackup);
-        // void removeCleanScene(int index);
-        void renameScene(int index, const QString &name);
-        TupExposureTable* getCurrentTable();
-        TupExposureTable* getTable(int index);
-        void setCurrentIndex(int index);
-        int currentIndex();
-        bool isTableIndexValid(int index);
-        int count();
-        void setLayerOpacity(int sceneIndex, double opacity);
-        void setLayerVisibility(int sceneIndex, int layerIndex, bool visibility);
+    QString actionDesc = tr("Rename Scene");
+    if (actionType == Add)
+        actionDesc = tr("Add Scene");
+    else
+        oldName = name;
 
-    public slots:
-        void removeAllTabs();
+    setWindowTitle(actionDesc);
+    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/scenes.png")));
+    setStyleSheet(TAppTheme::themeSettings());
 
-    signals:
-        void currentChanged(int index);
-        void layerOpacityChanged(double opacity);
-        void sceneRenameRequested(int index);
-        // void exportActionCalled();
-        // void importActionCalled();
+    layout = new QVBoxLayout(this);
+    setUI(sceneName);
+}
 
-    private:
-        QList<TupExposureTable *> tables;
-        QList<TupExposureTable *> undoTables;
-        QTabWidget *tabber;
+TupSceneNameDialog::~TupSceneNameDialog()
+{
+}
 
-        QList<QDoubleSpinBox *> opacityControl;
-        QList<QDoubleSpinBox *> undoOpacities;
-};
+void TupSceneNameDialog::setUI(const QString &sceneName)
+{
+    QLabel *sceneLabel = new QLabel(tr("Scene Name:"));
+    sceneInput = new QLineEdit(sceneName);
+    connect(sceneInput, SIGNAL(textChanged(const QString &)), this, SLOT(checkInput(const QString &)));
 
-#endif
+    QWidget *formWidget = new QWidget;
+    QHBoxLayout *formLayout = new QHBoxLayout(formWidget);
+    formLayout->addWidget(sceneLabel);
+    formLayout->addWidget(sceneInput);
+
+    layout->addWidget(formWidget);
+
+    okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
+    okButton->setToolTip(actionDesc);
+    if (actionType == Rename)
+        okButton->setVisible(false);
+
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+    QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
+    closeButton->setToolTip(tr("Close"));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+
+    QWidget *buttonsWidget = new QWidget;
+    QHBoxLayout *buttonLayout = new QHBoxLayout(buttonsWidget);
+    buttonLayout->addWidget(okButton);
+    buttonLayout->addWidget(closeButton);
+
+    layout->addWidget(buttonsWidget, 1, Qt::AlignRight);
+    layout->addStretch(1);
+}
+
+QString TupSceneNameDialog::getSceneName() const
+{
+    return sceneName;
+}
+
+void TupSceneNameDialog::checkInput(const QString &input)
+{
+    bool flag = false;
+    if (!input.isEmpty()) {
+        if (actionType == Rename) {
+            if (input.compare(oldName) != 0) {
+                flag = true;
+                sceneName = input;
+            }
+        } else {
+            flag = true;
+            sceneName = input;
+        }
+    }
+
+    okButton->setVisible(flag);
+}

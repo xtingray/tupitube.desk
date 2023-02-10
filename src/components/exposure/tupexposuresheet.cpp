@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupexposuresheet.h"
+#include "tupscenenamedialog.h"
 
 #include <QHBoxLayout>
 #include <QButtonGroup>
@@ -91,6 +92,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     scenesContainer = new TupExposureSceneTabWidget(this);
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
     connect(scenesContainer, SIGNAL(layerOpacityChanged(double)), this, SLOT(requestUpdateLayerOpacity(double)));
+    connect(scenesContainer, SIGNAL(sceneRenameRequested(int)), this, SLOT(showRenameSceneDialog(int)));
 
     addChild(scenesContainer);
     createMenuForAFrame();
@@ -385,17 +387,22 @@ void TupExposureSheet::applyAction(int action)
         case TupProjectActionBar::InsertScene:
             {
                 int sceneTarget = scenesContainer->count();
-                TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Add, tr("Scene %1").arg(sceneTarget + 1));
-                emit requestTriggered(&request);
+                QString sceneName = tr("Scene %1").arg(sceneTarget + 1);
+                TupSceneNameDialog *dialog = new TupSceneNameDialog(TupSceneNameDialog::Add, sceneName);
+                if (dialog->exec() == QDialog::Accepted) {
+                    sceneName = dialog->getSceneName();
+                    TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Add, sceneName);
+                    emit requestTriggered(&request);
 
-                request = TupRequestBuilder::createLayerRequest(sceneTarget, 0, TupProjectRequest::Add, tr("Layer 1"));
-                emit requestTriggered(&request);
+                    request = TupRequestBuilder::createLayerRequest(sceneTarget, 0, TupProjectRequest::Add, tr("Layer 1"));
+                    emit requestTriggered(&request);
 
-                request = TupRequestBuilder::createFrameRequest(sceneTarget, 0, 0, TupProjectRequest::Add, tr("Frame"));
-                emit requestTriggered(&request);
+                    request = TupRequestBuilder::createFrameRequest(sceneTarget, 0, 0, TupProjectRequest::Add, tr("Frame"));
+                    emit requestTriggered(&request);
 
-                request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Select);
-                emit requestTriggered(&request);
+                    request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Select);
+                    emit requestTriggered(&request);
+                }
             }
         break;
 
@@ -1498,4 +1505,21 @@ void TupExposureSheet::removeBlock(TupExposureTable *table, int layerIndex, int 
 void TupExposureSheet::updateFPS(int fps)
 {
     currentTable->updateFPS(fps);
+}
+
+void TupExposureSheet::requestSceneRename(const QString &name)
+{
+    TupProjectRequest event = TupRequestBuilder::createSceneRequest(scenesContainer->currentIndex(),
+                                                                    TupProjectRequest::Rename, name);
+    emit requestTriggered(&event);
+}
+
+void TupExposureSheet::showRenameSceneDialog(int sceneIndex)
+{
+    TupScene *scene = project->sceneAt(sceneIndex);
+    QString name = scene->getSceneName();
+
+    TupSceneNameDialog *dialog = new TupSceneNameDialog(TupSceneNameDialog::Rename, name);
+    if (dialog->exec() == QDialog::Accepted)
+        requestSceneRename(dialog->getSceneName());
 }

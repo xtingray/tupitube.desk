@@ -52,6 +52,7 @@ void TupTimelineSceneContainer::addScene(int sceneIndex, TupTimeLineTable *frame
 
     scenes << framesTable;
     QTabWidget::insertTab(sceneIndex, framesTable, sceneName);
+    connect(tabBar(), SIGNAL(tabBarDoubleClicked(int)), this, SIGNAL(sceneRenameRequested(int)));
 }
 
 void TupTimelineSceneContainer::restoreScene(int sceneIndex, const QString &sceneName)
@@ -59,6 +60,7 @@ void TupTimelineSceneContainer::restoreScene(int sceneIndex, const QString &scen
     TupTimeLineTable *framesTable = undoScenes.takeLast();
     scenes << framesTable;
     QTabWidget::insertTab(sceneIndex, framesTable, sceneName);
+    connect(tabBar(), SIGNAL(tabBarDoubleClicked(int)), this, SLOT(editSceneLabel(int)));
 }
 
 void TupTimelineSceneContainer::removeScene(int sceneIndex, bool withBackup)

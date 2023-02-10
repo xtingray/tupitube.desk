@@ -97,11 +97,13 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         void requestSceneSelection(int sceneIndex);
 
         void requestUpdateLayerOpacity(double opacity);
+        void showRenameSceneDialog(int sceneIndex);
 
     private:
         void requestReverseFrameSelection();
         double getLayerOpacity(int sceneIndex, int layerIndex);
         void updateLayerOpacity(int sceneIndex, int layerIndex);
+        void requestSceneRename(const QString &name);
 
         TupTimelineSceneContainer *scenesContainer;
         TupTimeLineTable *currentTable;

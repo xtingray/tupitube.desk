@@ -47,7 +47,8 @@ HEADERS += tupgraphicalgorithm.h \
            tupbrushstatus.h \
            tuptoolstatus.h \ 
            tupcolorwidget.h \
-           tuppaintareastatus.h
+           tuppaintareastatus.h \
+           tupscenenamedialog.h
 
 SOURCES += tupgraphicalgorithm.cpp \
            tuppaintareaproperties.cpp \
@@ -67,7 +68,8 @@ SOURCES += tupgraphicalgorithm.cpp \
            tupbrushstatus.cpp \
            tuptoolstatus.cpp \
            tupcolorwidget.cpp \
-           tuppaintareastatus.cpp
+           tuppaintareastatus.cpp \
+           tupscenenamedialog.cpp
 
 FRAMEWORK_DIR = "../framework"
 include($$FRAMEWORK_DIR/framework.pri)

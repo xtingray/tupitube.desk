@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,65 +33,43 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPEXPOSURESCENETABWIDGET_H
-#define TUPEXPOSURESCENETABWIDGET_H
+#ifndef TUPSCENENAMEDIALOG_H
+#define TUPSCENENAMEDIALOG_H 
 
 #include "tglobal.h"
-#include "tupexposuretable.h"
 #include "tapplicationproperties.h"
 
-#include <QTabWidget>
-#include <QList>
-#include <QLabel>
-#include <QFrame>
-#include <QWheelEvent>
-#include <QTabBar>
+#include <QDialog>
 #include <QVBoxLayout>
-#include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QPushButton>
 
-/**
- * @author Gustav Gonzalez 
-*/
-
-class T_GUI_EXPORT TupExposureSceneTabWidget : public QFrame
+class TUPITUBE_EXPORT TupSceneNameDialog : public QDialog 
 {
     Q_OBJECT
 
     public:
-        TupExposureSceneTabWidget(QWidget *parent = nullptr);
-        ~TupExposureSceneTabWidget();
+        enum DialogType { Add = 0, Rename };
 
-        void addScene(int index, const QString &name, TupExposureTable *table = nullptr);
-        void restoreScene(int index, const QString &name);
-        void removeScene(int index, bool withBackup);
-        // void removeCleanScene(int index);
-        void renameScene(int index, const QString &name);
-        TupExposureTable* getCurrentTable();
-        TupExposureTable* getTable(int index);
-        void setCurrentIndex(int index);
-        int currentIndex();
-        bool isTableIndexValid(int index);
-        int count();
-        void setLayerOpacity(int sceneIndex, double opacity);
-        void setLayerVisibility(int sceneIndex, int layerIndex, bool visibility);
+        TupSceneNameDialog(DialogType type, const QString &sceneName, QWidget *parent = nullptr);
+        ~TupSceneNameDialog();
 
-    public slots:
-        void removeAllTabs();
+        QString getSceneName() const;
 
-    signals:
-        void currentChanged(int index);
-        void layerOpacityChanged(double opacity);
-        void sceneRenameRequested(int index);
-        // void exportActionCalled();
-        // void importActionCalled();
+    private slots:
+        void checkInput(const QString &input);
 
     private:
-        QList<TupExposureTable *> tables;
-        QList<TupExposureTable *> undoTables;
-        QTabWidget *tabber;
+        void setUI(const QString &sceneName);
 
-        QList<QDoubleSpinBox *> opacityControl;
-        QList<QDoubleSpinBox *> undoOpacities;
+        QVBoxLayout *layout;
+        QLineEdit *sceneInput;
+        QPushButton *okButton;
+
+        QString sceneName;
+        QString oldName;
+        DialogType actionType;
+        QString actionDesc;
 };
 
 #endif

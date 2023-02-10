@@ -40,15 +40,17 @@
 #include "tconfig.h"
 #include "tapplication.h"
 #include "tosd.h"
+#include "tapptheme.h"
 
 //SQA: Add a field to define the project description 
 
 TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
 {
     setWindowIcon(QPixmap(THEME_DIR + "icons/new.png"));
-
     setWindowTitle(tr("Create New Project"));
     setModal(true);
+
+    setStyleSheet(TAppTheme::themeSettings());
 
     QFrame *infoContainer = new QFrame();
     QGridLayout *layout = new QGridLayout(infoContainer);

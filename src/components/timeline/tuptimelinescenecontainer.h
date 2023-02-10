@@ -62,14 +62,17 @@ class T_GUI_EXPORT TupTimelineSceneContainer : public QTabWidget
         void removeAllScenes();
         bool isTableIndexValid(int index);
         
+    signals:
+        void sceneRenameRequested(int sceneIndex);
+
     protected:
     #ifndef QT_NO_WHEELEVENT
-            virtual void wheelEvent(QWheelEvent *e);
+        virtual void wheelEvent(QWheelEvent *e);
     #endif
 
     protected slots:
     #ifndef QT_NO_WHEELEVENT
-            virtual void wheelMove(int delta);
+        virtual void wheelMove(int delta);
     #endif
 
     private:

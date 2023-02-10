@@ -74,6 +74,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         // void copyTimeLine(int times);
         void removeBlock(TupExposureTable *table, int layerIndex, int frameIndex, 
                          int layersTotal, int framesTotal);
+        void requestSceneRename(const QString &name);
 
     protected:
         virtual void sceneResponse(TupSceneResponse *response);
@@ -115,6 +116,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void requestRenameLayer(int layerIndex, const QString &name);
         void moveLayer(int oldIndex, int newIndex);
         void actionTriggered(QAction *action);
+        void showRenameSceneDialog(int sceneIndex);
 
     private:
         TupProject *project;

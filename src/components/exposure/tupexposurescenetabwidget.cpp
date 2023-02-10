@@ -47,6 +47,8 @@ TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(p
 
     tabber = new QTabWidget;
     connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
+    connect(tabber->tabBar(), SIGNAL(tabBarDoubleClicked(int)), this, SIGNAL(sceneRenameRequested(int)));
+
     layout->addWidget(tabber);
 
     setLayout(layout);
@@ -257,7 +259,7 @@ void TupExposureSceneTabWidget::setLayerVisibility(int sceneIndex, int layerInde
         table->setLayerVisibility(layerIndex, visibility);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupExposureSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid scene index: " << sceneIndex;
+            qWarning() << "[TupExposureSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid scene index: " << sceneIndex;
         #endif
     }
 }

@@ -37,6 +37,7 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 #include "talgorithm.h"
+#include "tapptheme.h"
 
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -61,6 +62,7 @@ void TMsgDialog::setupGUI()
 {
     setWindowTitle(tr("Breaking News!"));
     setWindowIcon(QPixmap(THEME_DIR + "icons/bubble.png"));
+    setStyleSheet(TAppTheme::themeSettings());
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     textBrowser = new QTextBrowser;

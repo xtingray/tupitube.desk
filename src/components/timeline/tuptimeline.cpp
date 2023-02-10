@@ -40,6 +40,7 @@
 #include "tuplibraryobject.h"
 #include "tuplayer.h"
 #include "tuplibrary.h"
+#include "tupscenenamedialog.h"
 
 #include <QList>
 
@@ -115,6 +116,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(requestCommand(int)));
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestSceneSelection(int)));
+    connect(scenesContainer, SIGNAL(sceneRenameRequested(int)), this, SLOT(showRenameSceneDialog(int)));
 }
 
 TupTimeLine::~TupTimeLine()
@@ -739,24 +741,33 @@ bool TupTimeLine::requestLayerAction(int action, int layerIndex, int sceneIndex,
 
 bool TupTimeLine::requestSceneAction(int action, int sceneIndex, const QVariant &arg)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::requestSceneAction()]";
+    #endif
+
     TupProjectRequest request;
 
     switch (action) {
         case TupProjectActionBar::InsertScene:
-        {
+        {            
             int sceneTarget = scenesContainer->count();
-            request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Add, tr("Scene %1").arg(sceneTarget + 1));
-            emit requestTriggered(&request);
+            QString sceneName = tr("Scene %1").arg(sceneTarget + 1);
+            TupSceneNameDialog *dialog = new TupSceneNameDialog(TupSceneNameDialog::Add, sceneName);
+            if (dialog->exec() == QDialog::Accepted) {
+                sceneName = dialog->getSceneName();
+                request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Add, sceneName);
+                emit requestTriggered(&request);
 
-            request = TupRequestBuilder::createLayerRequest(sceneTarget, 0, TupProjectRequest::Add, tr("Layer 1"));
-            emit requestTriggered(&request);
+                request = TupRequestBuilder::createLayerRequest(sceneTarget, 0, TupProjectRequest::Add, tr("Layer 1"));
+                emit requestTriggered(&request);
 
-            request = TupRequestBuilder::createFrameRequest(sceneTarget, 0, 0, TupProjectRequest::Add, tr("Frame"));
-            emit requestTriggered(&request);
+                request = TupRequestBuilder::createFrameRequest(sceneTarget, 0, 0, TupProjectRequest::Add, tr("Frame"));
+                emit requestTriggered(&request);
 
-            request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Select);
-            emit requestTriggered(&request);
-            
+                request = TupRequestBuilder::createSceneRequest(sceneTarget, TupProjectRequest::Select);
+                emit requestTriggered(&request);
+            }
+
             return true;
         }
         case TupProjectActionBar::RemoveScene:
@@ -1083,4 +1094,21 @@ void TupTimeLine::updateFramesState()
               }
          }
     }
+}
+
+void TupTimeLine::requestSceneRename(const QString &name)
+{
+    TupProjectRequest event = TupRequestBuilder::createSceneRequest(scenesContainer->currentIndex(),
+                                                                    TupProjectRequest::Rename, name);
+    emit requestTriggered(&event);
+}
+
+void TupTimeLine::showRenameSceneDialog(int sceneIndex)
+{
+    TupScene *scene = project->sceneAt(sceneIndex);
+    QString name = scene->getSceneName();
+
+    TupSceneNameDialog *dialog = new TupSceneNameDialog(TupSceneNameDialog::Rename, name);
+    if (dialog->exec() == QDialog::Accepted)
+        requestSceneRename(dialog->getSceneName());
 }

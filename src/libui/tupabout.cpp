@@ -35,6 +35,7 @@
 
 #include "tupabout.h"
 #include "tapplicationproperties.h"
+#include "tapptheme.h"
 
 #include <QTextBrowser>
 #include <QLabel>
@@ -50,6 +51,7 @@ TupAbout::TupAbout(QWidget *parent) : TabDialog(Close, parent)
     // SQA: Check if these instructions are doing something for real
     setWindowIcon(QIcon(THEME_DIR + "icons/about.png"));
     setWindowTitle(tr("About TupiTube Desk"));
+    setStyleSheet(TAppTheme::themeSettings());
     setFixedSize(525, 458);
 
     QStringList path;
