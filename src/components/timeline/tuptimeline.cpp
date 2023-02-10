@@ -880,7 +880,6 @@ void TupTimeLine::requestFrameSelection(int layerIndex, int frameIndex)
 
 void TupTimeLine::removeFrameSelection()
 {
-    // requestRemoveFrame(false);
     actionBar->emitActionSelected(TupProjectActionBar::RemoveFrame);
 }
 

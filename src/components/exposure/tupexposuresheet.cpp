@@ -786,24 +786,6 @@ void TupExposureSheet::layerResponse(TupLayerResponse *response)
                     }
                 }
             break;
-            /*
-            case TupProjectRequest::AddLipSync:
-                {
-                    QString xml = response->getArg().toString();
-                    TupLipSync *lipsync = new TupLipSync();
-                    lipsync->fromXml(xml);
-                    currentTable->updateFrameState(response->getLayerIndex(), lipsync->getInitFrame(), TupExposureTable::Used);
-                }
-            break;
-            case TupProjectRequest::UpdateLipSync:
-                {
-                    QString xml = response->getArg().toString();
-                    TupLipSync *lipsync = new TupLipSync();
-                    lipsync->fromXml(xml);
-                    currentTable->updateFrameState(layerIndex, lipsync->getInitFrame(), TupExposureTable::Used);
-                }
-            break;
-            */
             case TupProjectRequest::RemoveLipSync:
                 {
                     TupScene *scene = project->sceneAt(sceneIndex);
@@ -1287,39 +1269,6 @@ void TupExposureSheet::updateSceneFramesState(int sceneIndex)
      }
 }
 
-/*
-void TupExposureSheet::copyTimeLine(int times) 
-{
-    int currentScene = scenesContainer->currentIndex();
-    int currentLayer = currentTable->currentLayer();
-    int currentFrame = currentTable->currentFrame();
-    int framesCount = currentTable->usedFrames(currentTable->currentLayer());
-
-    for (int i=0; i < times; i++) {
-        for (int j=0; j < framesCount; j++) {
-            TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentScene,
-                                                           currentLayer, j, TupProjectRequest::CopySelection, selection); 
-            emit localRequestTriggered(&request);
-
-            int frameIndex = currentTable->usedFrames(currentLayer);
-            insertFrame(currentLayer, frameIndex);
-
-            request = TupRequestBuilder::createFrameRequest(currentScene,
-                                                           currentLayer, frameIndex,
-                                                           TupProjectRequest::Paste);
-            emit localRequestTriggered(&request);
-        }
-    }
-
-    QString selection = QString::number(currentLayer) + "," + QString::number(currentLayer) + ","
-                                 + QString::number(currentFrame) + "," + QString::number(currentFrame);
-
-    TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentScene, currentLayer,
-                                                   currentFrame, TupProjectRequest::Select, selection);
-    emit requestTriggered(&request);
-}
-*/
-
 void TupExposureSheet::insertFramesFromMenu(QAction *action)
 {
     QString actionName = action->text();
@@ -1352,38 +1301,6 @@ void TupExposureSheet::insertFramesFromMenu(QAction *action)
     if (actionName.compare(tr("100 frames")) == 0)
         insertFrames(100);
 }
-
-/*
-void TupExposureSheet::copyTimeLineFromMenu(QAction *action)
-{
-    QString actionName = action->text();
-
-    if (actionName.compare(tr("1 time")) == 0) {
-        copyTimeLine(1);
-        return;
-    }
-
-    if (actionName.compare(tr("2 times")) == 0) {
-        copyTimeLine(2);
-        return;
-    }
-
-    if (actionName.compare(tr("3 times")) == 0) {
-        copyTimeLine(3);
-        return;
-    }
-
-    if (actionName.compare(tr("4 times")) == 0) {
-        copyTimeLine(4);
-        return;
-    }
-
-    if (actionName.compare(tr("5 times")) == 0) {
-        copyTimeLine(5);
-        return;
-    }
-}
-*/
 
 void TupExposureSheet::requestUpdateLayerOpacity(double opacity)
 {

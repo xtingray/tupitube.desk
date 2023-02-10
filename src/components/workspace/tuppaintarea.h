@@ -135,7 +135,6 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
 
     public slots:
         void deleteItems();
-        // void ungroupItems();
         void copyItems();
         void pasteItems();
         void pasteNextFive();

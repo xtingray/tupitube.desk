@@ -89,8 +89,6 @@ class TupMainWindow : public TabbedMainWindow
              Animation = 0x01,
              Player = 0x02,
              All = Animation | Player
-             // News = 0x04,
-             // All = Animation | Player | News
         };
 
         enum RequestType {
@@ -188,7 +186,6 @@ class TupMainWindow : public TabbedMainWindow
         void checkTupiTubeUpdates();
         void aboutTupiTube();
         void openYouTubeChannel();
-        // void showTipDialog();
         void importPalettes();
         void openRecentProject();
         void createPaintCommand(const TupPaintAreaEvent *event);

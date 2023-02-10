@@ -46,10 +46,8 @@
 #include "tupfilemanager.h"
 
 // TupiTube Framework
-// #include "tipdialog.h"
 #include "tmsgdialog.h"
 #include "tosd.h"
-// #include "taudioplayer.h"
 
 #include "tupapplication.h"
 #include "tuppluginmanager.h"
@@ -104,9 +102,6 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
 
     uiStyleSheet = TAppTheme::themeSettings();
     setStyleSheet(uiStyleSheet);
-
-    // Loading audio player plugin
-    // TAudioPlayer::instance()->loadEngine("gstreamer"); // FIXME: Move this to the settings 
 
     // Calling out the project manager
     m_projectManager = new TupProjectManager(this);
@@ -446,7 +441,6 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         TCONFIG->beginGroup("BrushParameters");
         int thickness = TCONFIG->value("Thickness", 3).toInt();
         m_brushWidget->init(thickness);
-        // m_brushWidget->setThickness(thickness);
 
         if (TupMainWindow::requestType == OpenLocalProject || TupMainWindow::requestType == OpenNetProject)
             TOsd::self()->display(TOsd::Info, tr("Project <b>%1</b> opened!").arg(m_projectManager->getProject()->getName()));
@@ -456,11 +450,6 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
 
         m_projectManager->clearUndoStack();
-
-        /*
-        if (internetOn && newsTab)
-            addWidget(newsTab);
-        */
     }
 }
 
@@ -921,21 +910,6 @@ void TupMainWindow::aboutTupiTube()
     about->show();
 }
 
-/*
-void TupMainWindow::showTipDialog()
-{
-    QStringList labels;
-    labels << tr("Tip Of The Day") << tr("Previous") << tr("Next") << tr("Close");
-    QString videos = QDir::homePath() + "/." + QCoreApplication::applicationName() + "/videos.xml";
-
-    TipDialog *tipDialog = new TipDialog(labels, videos, DATA_DIR + "tips.xml", this);
-    tipDialog->show();
-
-    tipDialog->move(static_cast<int> ((screen->geometry().width() - tipDialog->width()) / 2),
-                    static_cast<int> ((screen->geometry().height() - tipDialog->height()) / 2));
-}
-*/
-
 void TupMainWindow::openYouTubeChannel()
 {
     QDesktopServices::openUrl(QString("https://www.youtube.com/tupitube"));
@@ -995,9 +969,6 @@ void TupMainWindow::connectWidgetToManager(QWidget *widget)
 
     connect(m_projectManager, SIGNAL(responsed(TupProjectResponse*)), widget, 
             SLOT(handleProjectResponse(TupProjectResponse*)));
-
-    // SQA: Pending for revision
-    //connect(widget, SIGNAL(postPage(QWidget *)), this, SLOT(addPage(QWidget *)));
 }
 
 void TupMainWindow::connectWidgetToLocalManager(QWidget *widget)

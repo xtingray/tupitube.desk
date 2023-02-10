@@ -168,16 +168,6 @@ void TupExposureSceneTabWidget::removeScene(int index, bool withBackup)
     blockSignals(false);
 }
 
-/*
-void TupExposureSceneTabWidget::removeCleanScene(int index)
-{
-    tables.takeAt(index);
-    blockSignals(true);
-    tabber->removeTab(index);
-    blockSignals(false);
-}
-*/
-
 void TupExposureSceneTabWidget::renameScene(int index, const QString &name)
 {
     tabber->setTabText(index, name);

@@ -71,7 +71,6 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         // void createMenuForSelection();
         void requestExtendCurrentFrame(int times);
         void insertFrames(int times);
-        // void copyTimeLine(int times);
         void removeBlock(TupExposureTable *table, int layerIndex, int frameIndex, 
                          int layersTotal, int framesTotal);
         void requestSceneRename(const QString &name);
@@ -104,7 +103,6 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         void requestUpdateLayerOpacity(double opacity);
 
         void insertFramesFromMenu(QAction *action);
-        // void copyTimeLineFromMenu(QAction *action);
         void clearFrame();
 
         void insertFrame(int layerIndex, int frameIndex);
