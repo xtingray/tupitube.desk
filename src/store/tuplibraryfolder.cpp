@@ -359,7 +359,6 @@ QString TupLibraryFolder::getId() const
 bool TupLibraryFolder::exists(const QString &key)
 {
     QStringList keys = objects.keys();
-    qDebug() << "keys -> " << keys;
     foreach (QString oid, keys) {
         if (oid.compare(key) == 0)
             return true;

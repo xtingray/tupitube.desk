@@ -63,8 +63,8 @@ bool TupCommandExecutor::createLayer(TupLayerResponse *response)
             if (!success)
                 return false;
         }
-
         emit responsed(response);
+
         return true;
     }
 
@@ -91,6 +91,7 @@ bool TupCommandExecutor::removeLayer(TupLayerResponse *response)
 
             if (scene->removeLayer(position)) {
                 emit responsed(response);
+
                 return true;
             } 
         } 
@@ -119,9 +120,11 @@ bool TupCommandExecutor::moveLayer(TupLayerResponse *response)
         #ifdef TUP_DEBUG
             qDebug() << "[TupCommandExecutor::moveLayer()] - Error while moving layer!";
         #endif	
+
         return false;
     } else {
         emit responsed(response);
+
         return true;
     }
 
@@ -144,6 +147,7 @@ bool TupCommandExecutor::lockLayer(TupLayerResponse *response)
     if (layer) {
         layer->setLocked(lock);
         emit responsed(response);
+
         return true;
     }
 
@@ -224,6 +228,7 @@ bool TupCommandExecutor::addLipSync(TupLayerResponse *response)
         #ifdef TUP_DEBUG
             qDebug() << "[TupCommandExecutor::addLipSync()] - Fatal Error: No scene at index -> " << scenePos;
         #endif
+
         return false;
     }
 
@@ -246,22 +251,27 @@ bool TupCommandExecutor::updateLipSync(TupLayerResponse *response)
         qWarning() << "[TupCommandExecutor::updateLipSync()] - Updating lipsync...";
     #endif
 
-    int scenePos = response->getSceneIndex();
-    QString xml = response->getArg().toString();
-
-    TupScene *scene = project->sceneAt(scenePos);
+    int sceneIndex = response->getSceneIndex();
+    TupScene *scene = project->sceneAt(sceneIndex);
     if (!scene) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupCommandExecutor::updateLipSync()] - Fatal Error: No scene at index -> " << scenePos;
+            qWarning() << "[TupCommandExecutor::updateLipSync()] - Fatal Error: No scene at index -> " << sceneIndex;
         #endif
+
         return false;
     }
 
+    QString xml = response->getArg().toString();
     TupLipSync *lipsync = new TupLipSync();
     lipsync->fromXml(xml);
     if (scene->updateLipSync(lipsync)) {
         emit responsed(response);
+
         return true;
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupCommandExecutor::updateLipSync()] - Fatal Error: Can't update lip-sync record -> " << sceneIndex;
+        #endif
     }
 
     return false;
@@ -281,6 +291,7 @@ bool TupCommandExecutor::removeLipSync(TupLayerResponse *response)
         project->releaseLipSyncVoices(scenePos, name);
         if (scene->removeLipSync(name)) {
             emit responsed(response);
+
             return true;
         }
     }

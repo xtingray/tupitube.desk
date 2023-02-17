@@ -55,9 +55,12 @@ TupBreakdownDialog::TupBreakdownDialog(int wordIndex, QStringList wordsList, QSt
     isPhrase = true;
     currentIndex = wordIndex;
 
-    setInitVars(wordsList.at(wordIndex), mouthsPath);
+    QString word = wordsList.at(wordIndex);
+    QString phonemes = phonemesList.at(wordIndex);
+
+    setInitVars(word, mouthsPath);
     setStyleSheet(TAppTheme::themeSettings());
-    setUI(wordsList.at(wordIndex), phonemesList.at(wordIndex));
+    setUI(word, phonemes);
 }
 
 TupBreakdownDialog::~TupBreakdownDialog()

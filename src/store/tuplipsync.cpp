@@ -53,12 +53,6 @@ TupTransformation::~TupTransformation()
 
 void TupTransformation::setTransformationDom(const QDomElement &e)
 {
-    /*
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupTransformation::setTransformationDom()]";
-    #endif
-    */
-
     transDom = e;
 
     QPointF pos;
@@ -99,10 +93,35 @@ void TupTransformation::fromXml(const QString &xml)
     QDomDocument document;
     if (document.setContent(xml))
         transDom = document.documentElement();
+
+    /*
+    QDomDocument document;
+    if (document.setContent(xml)) {
+        transDom = document.documentElement();
+
+        transStructure.scaleFactor.setX(transDom.attribute("scale_x").toInt());
+        transStructure.scaleFactor.setY(transDom.attribute("scale_y").toInt());
+        transStructure.rotationAngle = transDom.attribute("rotation").toInt();
+
+        qDebug() << "TupTransformation::fromXml() - rotation YYY -> " << transDom.attribute("rotation");
+        qDebug() << "TupTransformation::fromXml() - rotation YYY -> " << transDom.attribute("rotation").toInt();
+        qDebug() << "TupTransformation::fromXml() - rotation ZZZ -> " << transStructure.rotationAngle;
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupTransformation::fromXml()] - Warning: XML file is corrupted -> " << xml;
+        #endif
+    }
+    */
 }
 
 QDomElement TupTransformation::toXml(QDomDocument &doc) const
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTransformation::toXml()]";
+    #endif
+    */
+
     QDomElement element = doc.createElement("properties");
     element.setAttribute("pos", "(" + QString::number(transStructure.pos.x()) + "," +
                                        QString::number(transStructure.pos.y()) + ")");
@@ -161,6 +180,7 @@ TupTransformation::Parameters TupPhoneme::getTransformationParams() const
         return transformation->getTransformationParams();
 
     TupTransformation::Parameters params;
+
     return params;
 }
 
@@ -343,9 +363,11 @@ void TupWord::fromXml(const QString &xml)
 
 QDomElement TupWord::toXml(QDomDocument &doc) const
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupWord::toXml()]";
     #endif
+    */
 
     QDomElement root = doc.createElement("word");
     root.setAttribute("initFrame", initIndex);
@@ -445,6 +467,7 @@ TupTransformation::Parameters TupPhrase::getTransformationParams(int frame)
         return word->getTransformationParams(frame);
 
     TupTransformation::Parameters params;
+
     return params;
 }
 
@@ -489,9 +512,11 @@ void TupPhrase::fromXml(const QString &xml)
 
 QDomElement TupPhrase::toXml(QDomDocument &doc) const
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupPhrase::toXml()]";
     #endif
+    */
 
     QDomElement root = doc.createElement("phrase");
     root.setAttribute("initFrame", initIndex);
@@ -540,7 +565,7 @@ QDomElement TupVoice::setDefaultTransformation(int x, int y)
 
     QDomDocument doc;
     transformation = doc.createElement("properties");
-    transformation = doc.createElement("properties");
+    // transformation = doc.createElement("properties");
     transformation.setAttribute("pos", "(" + QString::number(x) + "," + QString::number(y) + ")");
     transformation.setAttribute("scale_x", "1");
     transformation.setAttribute("scale_y", "1");
@@ -564,9 +589,11 @@ QDomElement TupVoice::getTransformationDomAt(int frame) const
 
 void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupVoice::updateMouthTransformation()] - frame -> " << frame;
     #endif
+    */
 
     int index = frame - initIndex;
     // Look for phoneme for this frame index
@@ -695,9 +722,11 @@ void TupVoice::fromXml(const QString &xml)
 
 QDomElement TupVoice::toXml(QDomDocument &doc) const
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupVoice::toXml()]";
     #endif
+    */
 
     QDomElement root = doc.createElement("voice");
     root.setAttribute("name", title);
@@ -724,8 +753,6 @@ TupLipSync::TupLipSync(const QString &name, const QString &sound, int init) : QO
     lipSyncName = name;
     soundFile = sound;
     initFrame = init;
-
-    // mouthIndex = 0;
 }
 
 TupLipSync::~TupLipSync()
@@ -808,9 +835,8 @@ void TupLipSync::fromXml(const QString &xml)
     QDomDocument document;   
     if (!document.setContent(xml)) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLipSync::fromXml()] - Content:";
-            qDebug() << xml;
-            qDebug() << "[TupLipSync::fromXml()] - File corrupted!";
+            qWarning() << "[TupLipSync::fromXml()] - Fatal Error: XML input is corrupted!";
+            qWarning() << xml;
         #endif
         return;
     }
@@ -844,9 +870,11 @@ void TupLipSync::fromXml(const QString &xml)
 
 QDomElement TupLipSync::toXml(QDomDocument &doc) const
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupLipSync::toXml()]";
     #endif
+    */
 
     QDomElement root = doc.createElement("lipsync");
     root.setAttribute("name", lipSyncName);

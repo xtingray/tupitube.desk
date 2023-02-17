@@ -233,10 +233,8 @@ void NodeManager::restoreItem()
 void NodeManager::scale(qreal sx, qreal sy)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodeManager::scale()]";
-        qWarning() << "Scale X: " << sx;
-        qWarning() << "Scale Y: " << sy;
-        qWarning() << "Rotation: " << rotationValue;
+        qDebug() << "[NodeManager::scale()] - Scale X -> " << sx;
+        qDebug() << "[NodeManager::scale()] - Scale Y -> " << sy;
     #endif
 
     QTransform transform;
@@ -260,7 +258,7 @@ void NodeManager::scale(qreal sx, qreal sy)
 void NodeManager::rotate(double angle)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodeManager::rotate()] - New angle -> " << angle;
+        qDebug() << "[NodeManager::rotate()] - angle -> " << angle;
     #endif
 
     QTransform transform;
@@ -276,6 +274,7 @@ void NodeManager::rotate(double angle)
 
     syncNodesFromParent();
     rotationValue = angle;
+
     parent->setData(TupGraphicObject::Rotate, rotationValue);
 
     emit rotationUpdated(static_cast<int>(angle));

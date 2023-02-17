@@ -198,7 +198,8 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
             if (angle < 0)
                 angle = 360 - fabs(angle);
-            if (angle > 359)
+
+            if (angle > 360)
                 angle = 0;
 
             manager->rotate(angle);

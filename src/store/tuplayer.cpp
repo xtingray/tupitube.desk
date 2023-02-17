@@ -124,25 +124,18 @@ qreal TupLayer::getOpacity()
     return opacity;
 }
 
-TupFrame *TupLayer::createFrame(QString name, int position, bool loaded)
+TupFrame *TupLayer::createFrame(QString name, int index, bool loaded)
 {
-    /*
-    if (position < 0 || position > frames.count()) {
-        tFatal() << "TupLayer::createFrame -> index is out of range: " << position << " - frames.count(): " << frames.count();
-        return 0;
-    }
-    */
-
-    if (position < 0)
+    if (index < 0)
         return nullptr;
 
     TupFrame *frame = new TupFrame(this);
     framesCounter++;
     frame->setFrameName(name);
-    frames.insert(position, frame);
+    frames.insert(index, frame);
 
     if (loaded)
-        TupProjectLoader::createFrame(parentScene()->objectIndex(), objectIndex(), position, name, parentProject());
+        TupProjectLoader::createFrame(parentScene()->objectIndex(), objectIndex(), index, name, parentProject());
 
     return frame;
 }
@@ -174,6 +167,7 @@ bool TupLayer::updateLipSync(int index, TupLipSync *lipsync)
     if (index > -1 && index < lipsyncList.count()) {
         delete lipsyncList.takeAt(index);
         lipsyncList << lipsync;
+
         return true;
     }
 
@@ -197,8 +191,10 @@ bool TupLayer::restoreFrame(int index)
         if (frame) {
             frames.insert(index, frame);
             framesCounter++;
+
             return true;
         }
+
         return false;
     } else {
         #ifdef TUP_DEBUG
@@ -234,6 +230,7 @@ bool TupLayer::removeLipSync(const QString &name)
          TupLipSync *lipsync = lipsyncList.at(i);
          if (lipsync->getLipSyncName().compare(name) == 0) {
              lipsyncList.removeAt(i);
+
              return true;
          }
     }
@@ -264,6 +261,7 @@ bool TupLayer::restoreResettedFrame(int pos)
         if (frame) {
             frames.removeAt(pos);
             frames.insert(pos, frame);
+
             return true;
         }
     } else {
@@ -314,6 +312,7 @@ bool TupLayer::moveFrame(int from, int to)
             origin->setFrameName(targetLabel);
             frames.insert(to, origin);
             frames.insert(from, frame);
+
             return true;
         }
     }
@@ -328,6 +327,7 @@ bool TupLayer::exchangeFrame(int from, int to)
             qDebug() << "[TupLayer::exchangeFrame()] - Fatal Error: frame indexes are invalid -> from: "
                      <<  from << " / to: " << to;
         #endif
+
         return false;
     }
 
@@ -447,7 +447,6 @@ QDomElement TupLayer::toXml(QDomDocument &doc) const
 TupScene *TupLayer::parentScene() const
 {
     return scene;
-    // return static_cast<TupScene *>(parent());
 }
 
 TupProject *TupLayer::parentProject() const
@@ -584,6 +583,7 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
                 object->removeTween(i);
                 if (total == 1)
                     removeTweenObject(object);
+
                 return true;
             }
         }
@@ -598,6 +598,7 @@ bool TupLayer::removeTween(const QString &name, TupItemTweener::Type type)
                 object->removeTween(i);
                 if (total == 1)
                     removeTweenObject(object);
+
                 return true;
             }
         }

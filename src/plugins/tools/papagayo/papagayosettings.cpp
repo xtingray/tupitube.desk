@@ -215,13 +215,6 @@ void PapagayoSettings::setInnerForm()
 
     // Bottom section
 
-    /*
-    TImageButton *saveButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
-    saveButton->setToolTip(tr("Save Mouth Changes"));
-    saveButton->setMaximumWidth(50);
-    connect(saveButton, SIGNAL(clicked()), this, SIGNAL(saveMouthTransRequested()));
-    */
-
     TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 22);
     resetButton->setToolTip(tr("Reset Mouth"));
     resetButton->setMaximumWidth(50);
@@ -234,7 +227,6 @@ void PapagayoSettings::setInnerForm()
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     buttonsLayout->setSpacing(20);
-    // buttonsLayout->addWidget(saveButton);
     buttonsLayout->addWidget(resetButton);
     buttonsLayout->addWidget(closeButton);
 

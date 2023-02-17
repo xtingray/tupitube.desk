@@ -42,9 +42,7 @@
 #include "tuplipsync.h"
 
 #include <QFrame>
-#include <QLabel>
 #include <QBoxLayout>
-#include <QListWidgetItem>
 
 /**
  * @author Gustav Gonzalez 

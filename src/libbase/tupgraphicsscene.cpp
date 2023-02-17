@@ -1143,6 +1143,7 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
 
                                      item->setToolTip(tr("lipsync:") + name);
                                      item->setZValue(zValue);
+                                     onionSkin.accessMap.insert(item, false); // Disable item for Selection tool
                                      addItem(item);
                                  } else {
                                      #ifdef TUP_DEBUG
@@ -1172,8 +1173,6 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      if (item) {
                                          QDomElement properties = phoneme->getTransformationDom();
                                          TupSerializer::loadProperties(item, properties);
-                                         // QDomElement properties = voice->getDefaultTransformation();
-                                         // TupSerializer::loadProperties(item, properties);
 
                                          /*
                                          QRectF rect = item->boundingRect();
@@ -1652,11 +1651,9 @@ void TupGraphicsScene::sceneResponse(TupSceneResponse *response)
 
 void TupGraphicsScene::layerResponse(TupLayerResponse *response)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupGraphicsScene::layerResponse()]";
     #endif
-    */
 
     if (gTool)
         gTool->layerResponse(response);
@@ -1724,8 +1721,13 @@ void TupGraphicsScene::setSelectionRange()
         qDebug() << "[TupGraphicsScene::setSelectionRange()]";
     #endif
 
-    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener)
+    if (onionSkin.accessMap.empty() || gTool->toolType() == TupToolInterface::Tweener) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupGraphicsScene::setSelectionRange()] - Warning: Map of items is empty!";
+        #endif
+
         return;
+    }
 
     QHash<QGraphicsItem *, bool>::iterator it = onionSkin.accessMap.begin();
     if (gTool->toolId() == TAction::ObjectSelection || gTool->toolId() == TAction::NodesEditor

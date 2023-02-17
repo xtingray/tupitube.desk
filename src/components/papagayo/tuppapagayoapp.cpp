@@ -1035,10 +1035,11 @@ void TupPapagayoApp::runManualBreakdownAction()
                         "Fatal Error: Voice text is empty!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Voice text is empty!"));
+
         return;
     }
 
-    if (currentLanguage == English) {
+    if (currentLanguage == English || currentLanguage == Spanish) {
         runBreakdownAction();
     } else {
         #ifdef TUP_DEBUG
@@ -1053,6 +1054,24 @@ void TupPapagayoApp::runManualBreakdownAction()
 
 void TupPapagayoApp::openBreakdownDialog(int wordIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::openBreakdownDialog()] - wordIndex -> " << wordIndex;
+        qDebug() << "[TupPapagayoApp::openBreakdownDialog()] - wordsList -> " << wordsList;
+        qDebug() << "[TupPapagayoApp::openBreakdownDialog()] - phonemesList -> " << phonemesList;
+    #endif
+
+    if (wordsList.isEmpty() || phonemesList.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPapagayoApp::openBreakdownDialog()] - Fatal Error: No word list!";
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Voice text seems to be empty!"));
+
+        return;
+    }
+
+    if (wordIndex < 0 || wordIndex >= wordsList.size() || wordIndex >= phonemesList.size())
+        wordIndex = 0;
+
     TupBreakdownDialog *breakdownDialog = new TupBreakdownDialog(wordIndex, wordsList, phonemesList,
                                                                  currentMouthPath, this);
     if (breakdownDialog->exec() == QDialog::Accepted) {
@@ -1178,6 +1197,7 @@ void TupPapagayoApp::openImagesDialog()
                             qWarning() << "[TupPapagayoApp::openImagesDialog()] - "
                                         "Fatal Error: Image file is missing -> " << path;
                         #endif
+
                         return;
                     }
                 }
@@ -1240,12 +1260,14 @@ bool TupPapagayoApp::validateLipsyncForm()
     QString title = voiceName->text();
     if (title.isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Voice name is empty!"));
+
         return false;
     }
 
     QString words = voiceText->toPlainText();
     if (words.isEmpty()) {
         TOsd::self()->display(TOsd::Error, tr("Voice text is empty!"));
+
         return false;
     }
 
@@ -1254,6 +1276,7 @@ bool TupPapagayoApp::validateLipsyncForm()
         QString path = mouthsPath->text();
         if (path.isEmpty()) {
             TOsd::self()->display(TOsd::Error, tr("Customized mouths path is unset!"));
+
             return false;
         }
     }
@@ -1263,6 +1286,7 @@ bool TupPapagayoApp::validateLipsyncForm()
             qDebug() << "[TupPapagayoApp::validateLipsyncForm()] - "
                         "Warning: No lip-sync document!";
         #endif
+
         return false;
     }
 
@@ -1280,6 +1304,7 @@ bool TupPapagayoApp::validateLipsyncForm()
             QApplication::restoreOverrideCursor();
             TOsd::self()->display(TOsd::Warning, tr("Some phonemes are missing!"));
             openBreakdownDialog(i);
+
             return false;
         }
         i++;
@@ -1608,7 +1633,8 @@ bool TupPapagayoApp::updateLipsyncRecord()
         return false;
     }
 
-    if (!TAlgorithm::copyFolder(currentMouthPath, tempMouthPath)) {
+    QString source = currentMouthPath.left(currentMouthPath.length() - 1);
+    if (!TAlgorithm::copyFolder(source, tempMouthPath)) {
         #ifdef TUP_DEBUG
             qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't copy mouths folder -> " << tempMouthPath;

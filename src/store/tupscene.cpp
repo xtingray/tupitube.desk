@@ -148,9 +148,8 @@ void TupScene::setBasicStructure()
     layers.insert(0, layer);
 }
 
-/**
- * Set the layers list, this function overwrites the old layers
- */
+// Set the layers list, this function overwrites the old layers
+
 void TupScene::setLayers(const Layers &sLayers)
 {
     layers = sLayers;
@@ -249,11 +248,8 @@ bool TupScene::removeLayer(int index)
     return false;
 }
 
-/**
- * Retorna el layer que se encuentra en la posicion indicada
- * @param position 
- * @return 
- */
+// Return the layer at the index requested
+
 TupLayer *TupScene::layerAt(int index) const
 {
     if (index < 0 || index >= layers.count()) {
@@ -290,7 +286,8 @@ void TupScene::fromXml(const QString &xml)
     if (!doc.setContent(xml)) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupScene::fromXml()] - Error while processing XML file! -> " << xml;
-        #endif  
+        #endif
+
         return;
     }
 
@@ -302,22 +299,11 @@ void TupScene::fromXml(const QString &xml)
     if (!color.isEmpty())
         setBgColor(QColor(color));
 
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupScene::fromXml()] - Entering while...";
-    #endif
-
     QDomNode n = root.firstChild();
     while (!n.isNull()) {
-           #ifdef TUP_DEBUG
-               qDebug() << "[TupScene::fromXml()] - While iteration...";
-           #endif
-
            QDomElement e = n.toElement();
            if (!e.isNull()) {
                if (e.tagName() == "layer") {
-                   #ifdef TUP_DEBUG
-                       qDebug() << "[TupScene::fromXml()] - Processing layer...";
-                   #endif 
                    int layerIndex = layers.count();
                    TupLayer *layer = createLayer(e.attribute("name"), layerIndex, true);
 
@@ -361,10 +347,6 @@ void TupScene::fromXml(const QString &xml)
            n = n.nextSibling();
 
     } // end while
-
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupScene::fromXml()] - Ending reading...";
-    #endif
 }
 
 QDomElement TupScene::toXml(QDomDocument &doc) const
@@ -484,17 +466,6 @@ void TupScene::removeTweenObject(int layerIndex, TupSvgItem *object)
         layer->removeTweenObject(object);
 }
 
-/*
-QList<TupGraphicObject *> TupScene::tweeningGraphicObjects() const
-{
-    QList<TupGraphicObject *> list;
-    foreach(TupLayer *layer, layers)
-            list += layer->tweeningGraphicObjects();
-
-    return list;
-}
-*/
-
 QList<TupGraphicObject *> TupScene::getTweeningGraphicObjects(int layerIndex) const
 {
     QList<TupGraphicObject *> list;
@@ -504,17 +475,6 @@ QList<TupGraphicObject *> TupScene::getTweeningGraphicObjects(int layerIndex) co
 
     return list;
 }
-
-/*
-QList<TupSvgItem *> TupScene::tweeningSvgObjects() const
-{
-    QList<TupSvgItem *> list;
-    foreach(TupLayer *layer, layers)
-            list += layer->tweeningSvgObjects();
-
-    return list;
-}
-*/
 
 QList<TupSvgItem *> TupScene::getTweeningSvgObjects(int layerIndex) const
 {
@@ -701,18 +661,6 @@ QList<QGraphicsItem *> TupScene::getItemsFromTween(const QString &name, TupItemT
     return items;
 }
 
-/*
-int TupScene::getTotalTweens()
-{
-    int total = 0;
-
-    foreach(TupLayer *layer, layers) {
-            total += layer->tweensCount();
-
-    return total;
-}
-*/
-
 int TupScene::framesCount()
 {
     int total = 0;
@@ -878,7 +826,7 @@ int TupScene::getLipSyncLayerIndex(const QString &name)
 
 TupLipSync * TupScene::getLipSync(const QString &name)
 {
-    TupLipSync *project = nullptr;
+    TupLipSync *record = nullptr;
 
     if (layers.count()) {
         foreach (TupLayer *layer, layers) {
@@ -892,26 +840,33 @@ TupLipSync * TupScene::getLipSync(const QString &name)
         }
     }
 
-    return project;
+    return record;
 }
 
 bool TupScene::updateLipSync(TupLipSync *lipsync)
 {
     QString name = lipsync->getLipSyncName();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::updateLipSync()] - Lip-sync name -> " << name;
+    #endif
 
     if (layers.count()) {
+        QString name = lipsync->getLipSyncName();
         foreach (TupLayer *layer, layers) {
             if (layer->lipSyncCount() > 0) {
                 Mouths mouths = layer->getLipSyncList();
-                foreach (TupLipSync *record, mouths) {
-                    if (record->getLipSyncName().compare(name) == 0) {
-                        record = lipsync;
-                        return true;
-                    }
+                for (int i=0; i < mouths.size(); i++) {
+                    TupLipSync *record = mouths.at(i);
+                     if (record->getLipSyncName().compare(name) == 0)
+                         return layer->updateLipSync(i, lipsync);
                 }
             }
         }
     }
+
+    #ifdef TUP_DEBUG
+        qWarning() << "[TupScene::updateLipSync()] - Fatal Error: Can't update lip-sync record -> " << name;
+    #endif
 
     return false;
 }

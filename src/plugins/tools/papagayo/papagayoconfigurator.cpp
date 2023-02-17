@@ -38,6 +38,9 @@
 #include "tseparator.h"
 #include "mouthsdialog.h"
 
+#include <QLabel>
+#include <QListWidgetItem>
+
 PapagayoConfigurator::PapagayoConfigurator(QWidget *parent) : QFrame(parent)
 {
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);

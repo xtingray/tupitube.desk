@@ -58,7 +58,7 @@ PapagayoTool::~PapagayoTool()
 {
 }
 
-/* This method initializes the plugin */
+// This method initializes the plugin
 
 void PapagayoTool::init(TupGraphicsScene *gScene)
 {
@@ -82,16 +82,15 @@ void PapagayoTool::init(TupGraphicsScene *gScene)
         configPanel->loadLipSyncList(lipSyncList);
 }
 
-/* This method returns the plugin name */
+// This method returns the plugin name
 
 QList<TAction::ActionId> PapagayoTool::keys() const
 {
     return QList<TAction::ActionId>() << TAction::LipSyncTool;
 }
 
-/* This method makes an action when the mouse is pressed on the workspace 
- * depending on the active mode: Selecting an object or Creating a path  
-*/
+// This method makes an action when the mouse is pressed on the workspace
+// depending on the active mode: Selecting an object or Creating a path
 
 void PapagayoTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
@@ -100,7 +99,7 @@ void PapagayoTool::press(const TupInputDeviceInformation *input, TupBrushManager
     Q_UNUSED(scene)
 }
 
-/* This method is executed while the mouse is pressed and on movement */
+// This method is executed while the mouse is pressed and on movement
 
 void PapagayoTool::move(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
@@ -109,9 +108,8 @@ void PapagayoTool::move(const TupInputDeviceInformation *input, TupBrushManager 
     Q_UNUSED(scene)
 }
 
-/* This method finishes the action started on the press method depending
- * on the active mode: Selecting an object or Creating a path
-*/
+// This method finishes the action started on the press method depending
+// on the active mode: Selecting an object or Creating a path
 
 void PapagayoTool::release(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *scene)
 {
@@ -120,7 +118,7 @@ void PapagayoTool::release(const TupInputDeviceInformation *input, TupBrushManag
     Q_UNUSED(scene)
 }
 
-/* This method returns the list of actions defined in this plugin */
+// This method returns the list of actions defined in this plugin
 
 QMap<TAction::ActionId, TAction *> PapagayoTool::actions() const
 {
@@ -132,14 +130,14 @@ TAction * PapagayoTool::getAction(TAction::ActionId toolId)
     return pgActions[toolId];
 }
 
-/* This method returns the list of actions defined in this plugin */
+// This method returns the list of actions defined in this plugin
 
 int PapagayoTool::toolType() const
 {
     return TupToolInterface::LipSync;
 }
 
-/* This method returns the tool panel associated to this plugin */
+// This method returns the tool panel associated to this plugin
 
 QWidget * PapagayoTool::configurator()
 {
@@ -197,7 +195,7 @@ void PapagayoTool::resetCanvas()
     removeNodesManager();
 }
 
-/* This method is called when there's a change on/of scene */
+// This method is called when there's a change on/of scene
 
 void PapagayoTool::aboutToChangeScene(TupGraphicsScene *)
 {
@@ -206,7 +204,7 @@ void PapagayoTool::aboutToChangeScene(TupGraphicsScene *)
     #endif
 }
 
-/* This method is called when this plugin is off */
+// This method is called when the plugin is off
 
 void PapagayoTool::aboutToChangeTool()
 {
@@ -217,7 +215,7 @@ void PapagayoTool::aboutToChangeTool()
     init(scene);
 }
 
-/* This method defines the actions contained in this plugin */
+// This method defines the actions contained in this plugin
 
 void PapagayoTool::setupActions()
 {
@@ -238,13 +236,13 @@ void PapagayoTool::setupActions()
     realFactor = 1;
 }
 
-/* This method saves the settings of this plugin */
+// This method saves the settings of this plugin
 
 void PapagayoTool::saveConfig()
 {
 }
 
-/* This method updates the workspace when the plugin changes the scene */
+// This method updates the workspace when the plugin changes the scene
 
 void PapagayoTool::updateScene(TupGraphicsScene *scene)
 {     
@@ -483,13 +481,17 @@ void PapagayoTool::layerResponse(const TupLayerResponse *event)
     currentLipSync = new TupLipSync();
 
     if (event->getAction() == TupProjectRequest::AddLipSync) {
+        currentLipSync = new TupLipSync();
         currentLipSync->fromXml(xml);
         configPanel->addLipSyncRecord(currentLipSync->getLipSyncName());
+
         return;
     }
 
     if (event->getAction() == TupProjectRequest::UpdateLipSync) {
+        currentLipSync = new TupLipSync();
         currentLipSync->fromXml(xml);
+
         return;
     }
 
@@ -691,6 +693,10 @@ void PapagayoTool::updatePositionRecord(const QPointF &point)
 
 void PapagayoTool::updateRotationAngleRecord(int angle)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::updateRotationAngleRecord()] - angle -> " << angle;
+    #endif
+
     configPanel->updateRotationAngle(angle);
 }
 
@@ -713,6 +719,10 @@ void PapagayoTool::enableProportion(bool flag)
 
 void PapagayoTool::resetMouthTransformations()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::resetMouthTransformations()]";
+    #endif
+
     QSizeF projectSize = scene->currentScene()->getDimension();
     int projectX = projectSize.width() / 2;
     int projectY = projectSize.height() / 2;
@@ -747,5 +757,9 @@ void PapagayoTool::updateMouthTransformation()
                                                                               TupProjectRequest::UpdateLipSync, currentLipSync->toString());
             emit requested(&request);
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PapagayoTool::updateMouthTransformation()] - Warning: Nodes manager is NULL!";
+        #endif
     }
 }

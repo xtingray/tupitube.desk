@@ -134,12 +134,8 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         QList<QString> getTweenNames(TupItemTweener::Type type);
         QList<QGraphicsItem *> getItemsFromTween(const QString &name, TupItemTweener::Type type);
 
-        // int getTotalTweens();
-
-        // QList<TupGraphicObject *> tweeningGraphicObjects() const;
         QList<TupGraphicObject *> getTweeningGraphicObjects(int layerIndex) const;
 
-        // QList<TupSvgItem *> tweeningSvgObjects() const;
         QList<TupSvgItem *> getTweeningSvgObjects(int layerIndex) const;
 
         int framesCount();

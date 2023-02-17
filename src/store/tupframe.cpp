@@ -244,7 +244,8 @@ void TupFrame::fromXml(const QString &xml)
             qDebug() << "TupFrame::fromXml() - File corrupted!";
             qWarning() << "Content:";
             qWarning() << xml;
-        #endif        
+        #endif
+
         return;
     }
 
