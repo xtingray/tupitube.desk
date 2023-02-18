@@ -160,8 +160,8 @@ void TupGraphicsScene::drawCurrentPhotogram()
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupGraphicsScene::drawCurrentPhotogram()] - Fatal error: Invalid layer index -> "
-                        + QString::number(framePosition.layer);
+            qDebug() << "[TupGraphicsScene::drawCurrentPhotogram()] - Fatal Error: Invalid layer index -> "
+                     << framePosition.layer;
         #endif
     }
 }

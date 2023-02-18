@@ -246,7 +246,7 @@ bool TupCommandExecutor::moveFrame(TupFrameResponse *response)
                 return true;
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupCommandExecutor::moveFrame()] - Fatal error while moving frame!";
+                    qDebug() << "[TupCommandExecutor::moveFrame()] - Fatal Error: Can't move frame!";
                 #endif  
                 return false;
             }
@@ -590,24 +590,25 @@ bool TupCommandExecutor::reverseFrameSelection(TupFrameResponse *response)
             for (int i=initLayer; i<=endLayer; i++) {
                  TupLayer *layer = scene->layerAt(i);
                  if (layer) {
-                     int indexA = initFrame;
-                     int indexB = endFrame;
+                     int initIndex = initFrame;
+                     int endIndex = endFrame;
                      for (int j=0; j<iterations; j++) {
-                         // tError() << "TupCommandExecutor::reverseFrameSelection() - reversing -> " << indexA << ":"<<indexB;
-                         if (!layer->exchangeFrame(indexA, indexB)) {
+                         if (!layer->exchangeFrame(initIndex, endIndex)) {
                              #ifdef TUP_DEBUG
-                                 qDebug() << "[TupCommandExecutor::reverseFrameSelection()] - Fatal error while exchanging frames!";
+                                 qDebug() << "[TupCommandExecutor::reverseFrameSelection()] - Fatal Error: Can't exchange frames!";
                              #endif
+
                              return false;
                          }
-                         indexA++;
-                         indexB--;
+                         initIndex++;
+                         endIndex--;
                      }
                  } else {
                      return false;
                  }
             }
             emit responsed(response);
+
             return true;
         }
     }

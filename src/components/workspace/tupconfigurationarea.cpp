@@ -100,7 +100,7 @@ void TupConfigurationArea::shrink()
     QMainWindow *mainWindow = dynamic_cast<QMainWindow *>(parentWidget());
     if (!mainWindow || !widget()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupConfigurationArea::shrink() - Fatal error!";
+            qDebug() << "TupConfigurationArea::shrink() - Fatal Error: QMainWindow is NULL!";
         #endif
         return;
     }

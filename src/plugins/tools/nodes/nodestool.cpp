@@ -341,7 +341,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                  nodeGroup->resizeNodes(realFactor);
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "[NodesTool::itemResponse()] - Fatal error: No item was found";
+                     qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found";
                  #endif
              }
 

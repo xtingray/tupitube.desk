@@ -52,7 +52,7 @@ TupProjectCommand::TupProjectCommand(TupCommandExecutor *exec, const TupProjectR
     TupRequestParser parser;
     if (!parser.parse(request->getXml())) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProjectCommand::TupProjectCommand()] - Fatal error: request xml can't be parsed!";
+            qDebug() << "[TupProjectCommand::TupProjectCommand()] - Fatal Error: request xml can't be parsed!";
         #endif
         return;
     }

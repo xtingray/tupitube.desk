@@ -238,7 +238,7 @@ static QString runCommand(const QString &command, QStringList parameters)
     QProcess process;
     process.start(command, parameters);
     if (!process.waitForStarted()) {
-        qDebug() << "TupCrashHandler::runCommand() - Fatal error: Can't run command -> " << command;
+        qDebug() << "TupCrashHandler::runCommand() - Fatal Error: Can't run command -> " << command;
         return "FAILED TO START";
     }
 
@@ -255,7 +255,7 @@ static QString runCommand(const QString &command, QStringList parameters)
 
 void crashTrapper(int sig)
 {
-    qDebug("\n*** Fatal error: %s is crashing with signal %d :(", CHANDLER->program().toLocal8Bit().data(), sig);
+    qDebug("\n*** Fatal Error: %s is crashing with signal %d :(", CHANDLER->program().toLocal8Bit().data(), sig);
 
     if (sig == 6) {
         qDebug("Signal 6: The process itself has found that some essential pre-requisite");

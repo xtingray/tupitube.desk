@@ -520,7 +520,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
 
     if (!isOpen) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupProject::createSymbol()] - Fatal error: project is NOT open!";
+            qWarning() << "[TupProject::createSymbol()] - Fatal Error: Project is NOT open!";
         #endif
 
         return false;
@@ -528,7 +528,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
 
     if (library->createSymbol(TupLibraryObject::ObjectType(type), name, data, folder) == nullptr) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupProject::createSymbol()] - Fatal error: object can't be created. Data is NULL!";
+            qWarning() << "[TupProject::createSymbol()] - Fatal Error: Object can't be created. Data is NULL!";
         #endif    
 
         return false;

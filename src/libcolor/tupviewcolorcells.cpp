@@ -195,38 +195,19 @@ void TupViewColorCells::readPaletteFile(const QString &paletteFile)
                 addPalette(name, brushes, editable);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error while parsing palette file -> " << paletteFile;
+                    qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal Error: Can't parse palette file -> " << paletteFile;
                 #endif
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error while open palette file -> " << paletteFile;
+                qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal Error: Can't open palette file -> " << paletteFile;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error: palette file doesn't exist! -> " << paletteFile;
+            qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal Error: Palette file doesn't exist! -> " << paletteFile;
         #endif
     }
-
-    /*
-    if (file.exists()) {
-        if (parser.parse(&file)) {
-            QList<QBrush> brushes = parser.getBrushes();
-            QString name = parser.getPaletteName();
-            bool editable = parser.paletteIsEditable();
-            addPalette(name, brushes, editable);
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error while parsing palette file: " + paletteFile;
-            #endif
-        }
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupViewColorCells::readPaletteFile()] - Fatal error: palette file doesn't exist! -> " + paletteFile;
-        #endif
-    }
-    */
 }
 
 void TupViewColorCells::addPalette(const QString & name, const QList<QBrush> & brushes, bool editable)

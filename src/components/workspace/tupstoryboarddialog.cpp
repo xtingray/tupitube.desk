@@ -434,7 +434,7 @@ void TupStoryBoardDialog::updateForm(QListWidgetItem *current, QListWidgetItem *
             secSpinBox->setValue(duration.toDouble());
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupStoryBoardDialog::updateForm()] - Fatal error: image doesn't exist -> " << filename;
+                qDebug() << "[TupStoryBoardDialog::updateForm()] - Fatal Error: Image doesn't exist -> " << filename;
             #endif
             return;
         }

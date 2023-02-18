@@ -739,7 +739,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                      if (!dir.mkpath(path)) { 
                          #ifdef TUP_DEBUG
                              qDebug() << "[TupLibraryObject::saveData()] - "
-                                         "Fatal error: Can't create image path -> " << path;
+                                         "Fatal Error: Can't create image path -> " << path;
                          #endif
 
                          return false;

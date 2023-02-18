@@ -143,7 +143,7 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
 
     if (sceneIndex < 0 || sceneIndex > scenesContainer->count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::addScene()] - Fatal error: invalid scene index -> " + QString::number(sceneIndex);
+            qDebug() << "[TupTimeLine::addScene()] - Fatal Error: invalid scene index -> " << sceneIndex;
         #endif
         return;
     }

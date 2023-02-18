@@ -200,7 +200,7 @@ QGradient TupGradientViewer::gradient()
             default:
             {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupGradientViewer::gradient() - Fatal error: the gradient type doesn't exists!";
+                    qDebug() << "TupGradientViewer::gradient() - Fatal Error: The gradient type doesn't exist!";
                 #endif
             }
     }

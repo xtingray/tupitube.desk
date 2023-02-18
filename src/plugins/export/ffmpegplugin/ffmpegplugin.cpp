@@ -251,7 +251,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
         if (hasSound) {
             if (!generator->writeAudioStream()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal error while processing MP4 audio track!";
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't process MP4 audio track!";
                 #endif
                 return false;
             }

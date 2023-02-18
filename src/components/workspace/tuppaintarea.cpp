@@ -294,7 +294,7 @@ void TupPaintArea::frameResponse(TupFrameResponse *response)
     TupGraphicsScene *guiScene = graphicsScene();
     if (!guiScene->currentScene()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPaintArea::frameResponse()] - Fatal error: No TupScene available!";
+            qDebug() << "[TupPaintArea::frameResponse()] - Fatal Error: No TupScene available!";
         #endif
         return;
     }
@@ -1296,13 +1296,13 @@ void TupPaintArea::requestItemMovement(QAction *action)
                      emit requestTriggered(&event);
                  } else {
                      #ifdef TUP_DEBUG
-                         qDebug() << "[TupPaintArea::requestItemMovement()] - Fatal error: Invalid action [ "
+                         qDebug() << "[TupPaintArea::requestItemMovement()] - Fatal Error: Invalid action [ "
                                   << moveType << " ]";
                      #endif
                  }
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "[TupPaintArea::requestItemMovement()] - Fatal error: Invalid object index [ "
+                     qDebug() << "[TupPaintArea::requestItemMovement()] - Fatal Error: Invalid object index [ "
                               << index << " ]";
                  #endif
              }

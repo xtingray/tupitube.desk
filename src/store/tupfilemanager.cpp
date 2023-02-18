@@ -522,7 +522,7 @@ bool TupFileManager::createImageProject(const QString &projectCode, const QStrin
             QByteArray data = file.readAll();
             if (library->createSymbol(TupLibraryObject::Image, "image.png", data, "") == nullptr) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupProject::createImageProject()] - Fatal error: image object can't be created. Data is NULL!";
+                    qDebug() << "[TupProject::createImageProject()] - Fatal Error: Image object can't be created. Data is NULL!";
                 #endif
 
                 return false;

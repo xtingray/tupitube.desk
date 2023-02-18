@@ -157,7 +157,7 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
             }
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupMainWindow()] - Fatal error parsing file -> " + webMsgPath;
+                qWarning() << "[TupMainWindow()] - Fatal Error: XML file seems to be corrupted -> " << webMsgPath;
             #endif
         }
     }
