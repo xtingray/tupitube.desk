@@ -134,8 +134,8 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
 
     connect(paintArea, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)),
             this, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)));
-    connect(paintArea, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType)),
-            this, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType)));
+    connect(paintArea, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType, const QString &)),
+            this, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType, const QString &)));
     connect(paintArea, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
             this, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
     connect(paintArea, SIGNAL(libraryAssetDragged()), this, SIGNAL(libraryAssetDragged()));
@@ -2729,7 +2729,7 @@ void TupDocumentView::getLocalAsset(const QString &assetPath)
     paintArea->getLocalAsset(assetPath);
 }
 
-void TupDocumentView::importLocalProject(const QString &packagePath)
+void TupDocumentView::importLocalProject(const QString &packagePath, bool onlyLibrary)
 {
-    paintArea->importLocalProject(packagePath);
+    paintArea->importLocalProject(packagePath, onlyLibrary);
 }

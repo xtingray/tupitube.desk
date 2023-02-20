@@ -102,7 +102,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updatePenOnSelection(const QPen &pen);
         void getWebAsset(const QString &assetPath);
         void getLocalAsset(const QString &assetPath);
-        void importLocalProject(const QString &packagePath);
+        void importLocalProject(const QString &packagePath, bool onlyLibrary = false);
 
     private slots:
         void showModesSettings();
@@ -219,7 +219,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void imagePostRequested(const QString &);
         void soundRemoved(ModuleSource source, const QString &);
         void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
-        void libraryAssetImported(const QString &path, TupLibraryObject::ObjectType type);
+        void libraryAssetImported(const QString &path, TupLibraryObject::ObjectType type, const QString &folder);
         void webAssetDropped(const QString &name, const QString &extension,
                              TupLibraryObject::ObjectType type, QByteArray array);
         void libraryAssetDragged();

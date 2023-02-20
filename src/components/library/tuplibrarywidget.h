@@ -138,22 +138,24 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
     public slots:
         void addFolder(const QString &folderName = QString());
         void importImageGroup();
-        void importImage(const QString &image);
+        void importImage(const QString &image, const QString &folder = QString());
         void importSvgGroup();
-        void importSvg(const QString &svgPath);
+        void importSvg(const QString &svgPath, const QString &folder = QString());
         void importImageSequence();
         void importSvgSequence();
         void importSoundFile();
         void resetSoundPlayer();
-        void importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type);
-        void importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type);
+        void importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type,
+                                     const QString &folder);
+        void importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type,  const QString &folder);
         void importWebDroppedAsset(const QString &imageName, const QString &extension,
                                    TupLibraryObject::ObjectType type, QByteArray array);
 
     private slots:
         void openSearchDialog();
         void recoverMode();
-        void importSoundFileFromFolder(const QString &filePath);
+        void importLocalSoundFile(const QString &filePath);
+        void importSoundFileFromFolder(const QString &filePath, const QString &folder = QString());
 
     public slots:
         void updateSoundPlayer();
@@ -177,13 +179,14 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void verifyFramesAvailability(int filesTotal);
         void setDefaultPath(const QString &path);
         void saveDefaultPath(const QString &dir);
-        void importNativeObject(const QString &object);
+        void importNativeObject(const QString &object, const QString &folder = QString());
         QStringList naturalSort(QStringList photograms);
         void refreshItemFromCollection(LibraryObjects collection);
-        void importImageFromByteArray(const QString &filename, const QString &extension, QByteArray data);
-        void importSvgFromByteArray(const QString &filename, QByteArray data);
-        void importNativeObjectFromByteArray(const QString &filename, QByteArray data);
-        void importSoundFileFromByteArray(const QString &filename, QByteArray data);
+        void importImageFromByteArray(const QString &filename, const QString &extension, QByteArray data,
+                                      const QString &folder = QString());
+        void importSvgFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
+        void importNativeObjectFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
+        void importSoundFileFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
 
         QScreen *screen;
         TupLibrary *library;

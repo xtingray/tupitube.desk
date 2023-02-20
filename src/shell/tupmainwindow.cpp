@@ -352,8 +352,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         connect(animationTab, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)),
                 m_libraryWidget, SLOT(importLocalDroppedAsset(const QString &, TupLibraryObject::ObjectType)));
-        connect(animationTab, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType)),
-                m_libraryWidget, SLOT(importExternalLibraryAsset(const QString &, TupLibraryObject::ObjectType)));
+        connect(animationTab, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType, const QString &)),
+                m_libraryWidget, SLOT(importExternalLibraryAsset(const QString &, TupLibraryObject::ObjectType, const QString &)));
         connect(animationTab, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
                 m_libraryWidget, SLOT(importWebDroppedAsset(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
         connect(animationTab, SIGNAL(libraryAssetDragged()), m_libraryWidget, SLOT(insertObjectInWorkspace()));
@@ -853,10 +853,10 @@ void TupMainWindow::updateRecentProjectList()
     }
 }
 
-void TupMainWindow::importProject()
+void TupMainWindow::importSourceFile(bool onlyLibrary)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::importProject()]";
+        qDebug() << "[TupMainWindow::importSourceFile()]";
     #endif
 
     TCONFIG->beginGroup("General");
@@ -868,7 +868,25 @@ void TupMainWindow::importProject()
     if (packagePath.isEmpty() || !packagePath.endsWith(".tup"))
         return;
 
-    animationTab->importLocalProject(packagePath);
+    animationTab->importLocalProject(packagePath, onlyLibrary);
+}
+
+void TupMainWindow::importLibrary()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::importLibrary()]";
+    #endif
+
+    importSourceFile(true);
+}
+
+void TupMainWindow::importProject()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::importProject()]";
+    #endif
+
+    importSourceFile();
 }
 
 /*
@@ -1735,7 +1753,8 @@ void TupMainWindow::dropEvent(QDropEvent *e)
     QString assetPath = list.at(0).toLocalFile();
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::dropEvent()] - object dropped -> " << assetPath;
+        qDebug() << "[TupMainWindow::dropEvent()] - Assets list size -> " << list.size();
+        qDebug() << "[TupMainWindow::dropEvent()] - Object dropped -> " << assetPath;
     #endif
 
     if (!assetPath.isEmpty()) {
@@ -1753,9 +1772,8 @@ void TupMainWindow::dropEvent(QDropEvent *e)
             }
         }
     } else {
-        TOsd::self()->display(TOsd::Error, tr("Sorry, this action is unsupported!"));
         #ifdef TUP_DEBUG
-            qDebug() << "[TupMainWindow::dropEvent()] - Fatal Error: Object filename is empty!";
+            qWarning() << "[TupMainWindow::dropEvent()] - Fatal Error: Object filename is empty!";
         #endif
     }
 }

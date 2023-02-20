@@ -972,27 +972,29 @@ void TupLibraryWidget::importImageGroup()
     }
 }
 
-void TupLibraryWidget::importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type)
+void TupLibraryWidget::importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type,
+                                                  const QString &folder)
 {
     isExternalLibraryAsset = true;
-    importLocalDroppedAsset(path, type);
+    importLocalDroppedAsset(path, type, folder);
 }
 
-void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type)
+void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type, const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - path -> " << path;
+        qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - folder -> " << folder;
     #endif
 
     if (type == TupLibraryObject::Image) {
-        importImage(path);
+        importImage(path, folder);
     } if (type == TupLibraryObject::Svg) {
-        importSvg(path);
+        importSvg(path, folder);
     } if (type == TupLibraryObject::Item) {
         nativeFromFileSystem = true;
-        importNativeObject(path);
+        importNativeObject(path, folder);
     } if (type == TupLibraryObject::Audio) {
-        importSoundFileFromFolder(path);
+        importSoundFileFromFolder(path, folder);
     }
 }
 
@@ -1022,7 +1024,8 @@ void TupLibraryWidget::importWebDroppedAsset(const QString &assetName, const QSt
     }
 }
 
-void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const QString &extension, QByteArray data)
+void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const QString &extension, QByteArray data,
+                                                const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importImageFromByteArray()]";
@@ -1075,13 +1078,13 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
         }
 
         TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, key,
-                                                                            TupLibraryObject::Image, project->spaceContext(), data, QString(),
+                                                                            TupLibraryObject::Image, project->spaceContext(), data, folder,
                                                                             currentFrame.scene, currentFrame.layer, currentFrame.frame);
         emit requestTriggered(&request);
     }
 }
 
-void TupLibraryWidget::importImage(const QString &imagePath)
+void TupLibraryWidget::importImage(const QString &imagePath, const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importImage()] - imagePath -> " << imagePath;
@@ -1103,7 +1106,7 @@ void TupLibraryWidget::importImage(const QString &imagePath)
 
         QByteArray data = imageFile.readAll();
         imageFile.close();
-        importImageFromByteArray(key, extension, data);
+        importImageFromByteArray(key, extension, data, folder);
         data.clear();
     } else {
         #ifdef TUP_DEBUG
@@ -1132,7 +1135,7 @@ void TupLibraryWidget::importSvgGroup()
     }
 }
 
-void TupLibraryWidget::importSvgFromByteArray(const QString &filename, QByteArray data)
+void TupLibraryWidget::importSvgFromByteArray(const QString &filename, QByteArray data, const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importSvg()] - Inserting SVG into project -> " << project->getName();
@@ -1143,17 +1146,18 @@ void TupLibraryWidget::importSvgFromByteArray(const QString &filename, QByteArra
     #endif
 
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
-                                                   TupLibraryObject::Svg, project->spaceContext(), data, QString(),
+                                                   TupLibraryObject::Svg, project->spaceContext(), data, folder,
                                                    currentFrame.scene, currentFrame.layer, currentFrame.frame);
     emit requestTriggered(&request);
 }
 
-void TupLibraryWidget::importSvg(const QString &svgPath)
+void TupLibraryWidget::importSvg(const QString &svgPath, const QString &folder)
 {
     if (svgPath.isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::importSvg()] - Warning: SVG path is empty!";
+            qWarning() << "[TupLibraryWidget::importSvg()] - Warning: SVG path is empty!";
         #endif
+
         return;
     }
 
@@ -1164,7 +1168,7 @@ void TupLibraryWidget::importSvg(const QString &svgPath)
         QByteArray data = file.readAll();
         file.close();
 
-        importSvgFromByteArray(key, data);
+        importSvgFromByteArray(key, data, folder);
     } else {
         TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(svgPath));
     }
@@ -1191,7 +1195,7 @@ void TupLibraryWidget::importNativeObjects()
     }
 }
 
-void TupLibraryWidget::importNativeObjectFromByteArray(const QString &filename, QByteArray data)
+void TupLibraryWidget::importNativeObjectFromByteArray(const QString &filename, QByteArray data, const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importNativeObjectFromByteArray()] - Inserting native object into project -> "
@@ -1199,12 +1203,12 @@ void TupLibraryWidget::importNativeObjectFromByteArray(const QString &filename, 
     #endif
 
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
-                                                   TupLibraryObject::Item, project->spaceContext(), data, QString(),
+                                                   TupLibraryObject::Item, project->spaceContext(), data, folder,
                                                    currentFrame.scene, currentFrame.layer, currentFrame.frame);
     emit requestTriggered(&request);
 }
 
-void TupLibraryWidget::importNativeObject(const QString &nativePath)
+void TupLibraryWidget::importNativeObject(const QString &nativePath, const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importNativeObject()] - object -> ";
@@ -1226,7 +1230,7 @@ void TupLibraryWidget::importNativeObject(const QString &nativePath)
         QByteArray data = file.readAll();
         file.close();
 
-        importNativeObjectFromByteArray(key, data);
+        importNativeObjectFromByteArray(key, data, folder);
     } else {
         TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(nativePath));
     }
@@ -1524,25 +1528,32 @@ void TupLibraryWidget::importSoundFile()
     #endif
 
     TupSoundDialog *soundDialog = new TupSoundDialog();
-    connect(soundDialog, &TupSoundDialog::soundFilePicked,
-            this, &TupLibraryWidget::importSoundFileFromFolder);
+
+    connect(soundDialog, SIGNAL(soundFilePicked(const QString &)),
+            this, SLOT(importLocalSoundFile(const QString &)));
     connect(soundDialog, &TupSoundDialog::lipsyncModuleCalled,
             this, &TupLibraryWidget::lipsyncModuleCalled);
     soundDialog->show();
 }
 
-void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QByteArray data)
+void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QByteArray data, const QString &folder)
 {
     isEffectSound = true;
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
-                                                   TupLibraryObject::Audio, project->spaceContext(), data);
+                                                   TupLibraryObject::Audio, project->spaceContext(), data, folder);
     emit requestTriggered(&request);
 }
 
-void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
+void TupLibraryWidget::importLocalSoundFile(const QString &filePath)
+{
+    importSoundFileFromFolder(filePath);
+}
+
+void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath, const QString &folder)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - filePath -> " << filePath;
+        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - folder -> " << folder;
     #endif
 
     QFile file(filePath);
@@ -1552,7 +1563,7 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath)
 
         QFileInfo fileInfo(file);
         QString key = library->getItemKey(fileInfo.fileName().toLower());
-        importSoundFileFromByteArray(key, data);
+        importSoundFileFromByteArray(key, data, folder);
         setDefaultPath(filePath);
     } else {
         file.close();

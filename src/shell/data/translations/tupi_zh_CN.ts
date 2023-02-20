@@ -3831,6 +3831,26 @@
         <source>Error while clearing cache!</source>
         <translation>清除缓存时出错！</translation>
     </message>
+    <message>
+        <source>Select TupiTube project</source>
+        <translation>选择 TupiTube 项目</translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation>库</translation>
+    </message>
+    <message>
+        <source>Import Project</source>
+        <translation>导入项目</translation>
+    </message>
+    <message>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <source>Import project</source>
+        <translation>导入项目</translation>
+    </message>
 </context>
 <context>
     <name>TupMicManager</name>
@@ -4338,6 +4358,26 @@
         <source>Confirmation</source>
         <translation>确认</translation>
     </message>
+    <message>
+        <source>Sorry, no library was found!</source>
+        <translation>抱歉，没有找到图书馆！</translation>
+    </message>
+    <message>
+        <source>Project assets imported successfully!</source>
+        <translation>项目资产导入成功！</translation>
+    </message>
+    <message>
+        <source>Sorry, TUP source file is invalid!</source>
+        <translation>抱歉，TUP 源文件无效！</translation>
+    </message>
+    <message>
+        <source>Sorry, file format not supported!</source>
+        <translation>抱歉，不支持文件格式！</translation>
+    </message>
+    <message>
+        <source>Network Fatal Error. Please, contact us!</source>
+        <translation>网络致命错误。 请联系我们！</translation>
+    </message>
 </context>
 <context>
     <name>TupPaintAreaBase</name>
@@ -4710,6 +4750,10 @@
         <source>Spanish</source>
         <translation>西班牙语</translation>
     </message>
+    <message>
+        <source>Voice text seems to be empty!</source>
+        <translation>语音文本似乎是空的！</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
@@ -4880,6 +4924,29 @@
     </message>
 </context>
 <context>
+    <name>TupProjectImporterDialog</name>
+    <message>
+        <source>Project Assets</source>
+        <translation>项目资产</translation>
+    </message>
+    <message>
+        <source>Please, pick the elements you want to import:</source>
+        <translation>请选择您要导入的元素：</translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation>库</translation>
+    </message>
+    <message>
+        <source>Import Assets</source>
+        <translation>导入资产</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+</context>
+<context>
     <name>TupProjectManager</name>
     <message>
         <source>Frame</source>
@@ -4994,6 +5061,25 @@
     <message>
         <source>Sound layer %1</source>
         <translation>音频图层</translation>
+    </message>
+</context>
+<context>
+    <name>TupSceneNameDialog</name>
+    <message>
+        <source>Rename Scene</source>
+        <translation>重命名场景</translation>
+    </message>
+    <message>
+        <source>Add Scene</source>
+        <translation>添加场景</translation>
+    </message>
+    <message>
+        <source>Scene Name:</source>
+        <translation>场景名称：</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>

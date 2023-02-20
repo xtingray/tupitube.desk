@@ -159,7 +159,10 @@ class TupMainWindow : public TabbedMainWindow
         void openProject();
         // void openProjectFromServer();
         // void importProjectToServer();
+
+        void importLibrary();
         void importProject();
+        void importSourceFile(bool onlyLibrary = false);
         bool saveAs();
         bool saveProject();
 

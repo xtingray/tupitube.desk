@@ -59,6 +59,7 @@
 #include "node.h"
 #include "tcontrolnode.h"
 #include "tupproject.h"
+#include "tupprojectscanner.h"
 
 #include <QGraphicsScene>
 #include <QMouseEvent>
@@ -107,7 +108,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void goOneLayerForward();
         void getLocalAsset(const QString &path);
         void getWebAsset(const QString &webPath);
-        void importLocalProject(const QString &path);
+        void importLocalProject(const QString &path, bool onlyLibrary = false);
 
     public slots:
         void updatePaintArea();
@@ -127,7 +128,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void newPerspective(int index);
         void eyeDropperLaunched();
         void localAssetDropped(const QString &path, TupLibraryObject::ObjectType type);
-        void libraryAssetImported(const QString &path, TupLibraryObject::ObjectType type);
+        void libraryAssetImported(const QString &path, TupLibraryObject::ObjectType type, const QString &folder);
         void webAssetDropped(const QString &name, const QString &extension,
                              TupLibraryObject::ObjectType type, QByteArray data);
         void libraryAssetDragged();
@@ -171,6 +172,9 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
 
     private:
         void multipasteObject(int pasteTotal);
+        void importExternalObjects(const QString &tempPath, const QString &projectName, bool scenesSelected,
+                                   QList<int> sceneIndexes, QList<bool> libraryFlags,
+                                   QList<TupProjectScanner::LibraryObject> objects, const QString &folder);
 
         TupProject *project;
         int globalSceneIndex;
@@ -188,6 +192,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         bool copyIsValid;
         bool canvasEnabled;
 
+        TupProjectScanner *projectScanner;
         QString webAssetName;
         bool webLock;
 };

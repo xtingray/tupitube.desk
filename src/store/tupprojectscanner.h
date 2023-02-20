@@ -79,7 +79,7 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
 
     private:
         QString readSceneName(const QString &xml) const;
-        bool scanLibrary(const QString &xml);
+        Folder scanLibrary(QDomNode domNode);
         bool storeObject();
 
         QString projectName;
@@ -93,12 +93,12 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         QList<bool> libraryFlags;
 
         Folder library;
-        QList<LibraryObject> objects;
+        // QList<LibraryObject> objects;
         int objectsTotal;
-        LibraryObject object;
+        // LibraryObject object;
 
         bool scanObjects(const QString &folderId, const QString &xml);
-        bool scanObject(QDomNode xml);
+        LibraryObject scanObject(QDomNode xml);
 };
 
 #endif

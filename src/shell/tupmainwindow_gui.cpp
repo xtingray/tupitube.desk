@@ -101,7 +101,7 @@ void TupMainWindow::createGUI()
     new TAction(QPixmap(THEME_DIR + "icons/sound_object.png"), tr("Audio File"), QKeySequence(tr("Alt+A")), m_libraryWidget, SLOT(importSoundFile()),
                 m_actionManager, "importAudioFile");
 
-    new TAction(QPixmap(THEME_DIR + "icons/library.png"), tr("Library"), QKeySequence("Alt+L"), this, SLOT(importProject()),
+    new TAction(QPixmap(THEME_DIR + "icons/library.png"), tr("Library"), QKeySequence("Alt+L"), this, SLOT(importLibrary()),
                 m_actionManager, "import_library");
 
     // SQA: Temporary code
