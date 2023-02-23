@@ -245,6 +245,11 @@ void TupPapagayoImporter::setMouthIndex(int mouthIndex)
     lipsync->setMouthIndex(mouthIndex);
 }
 
+void TupPapagayoImporter::updateTransformations(QList<TupWord *> words)
+{
+    lipsync->updateWordTransformations(words);
+}
+
 bool TupPapagayoImporter::fileIsValid()
 {
     return isValid;

@@ -75,6 +75,7 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
                         qWarning() << "[TupCustomizedMouthView::loadImages()] - "
                                     "Fatal Error: Image file is missing -> " << filename;
                     #endif
+
                     return;
                 }
             }

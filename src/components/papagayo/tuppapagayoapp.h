@@ -156,6 +156,7 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         TupLipsyncDictionary *dictionary;
         QString locale;
         QSpinBox *initFrameBox;
+        TupLipSync *oldLipsync;
 };
 
 #endif // TUPPAPAGAYOAPP_H

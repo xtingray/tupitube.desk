@@ -80,10 +80,9 @@ TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, TupLip
         qDebug() << "[TupPapagayoApp::TupPapagayoApp()] - Updating existing record...";
     #endif
 
-    Q_UNUSED(lipsync)
-
     this->mode = mode;
     tupProject = project;
+    oldLipsync = lipsync;
     document = new TupLipsyncDoc;
     dictionary = document->getDictionary();
     enableAutoBreakdown = true;
@@ -424,13 +423,17 @@ void TupPapagayoApp::setupUI()
     okButton = new QPushButton(lateralGroupBox);
     okButton->setMinimumWidth(60);
     okButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
-    okButton->setToolTip(tr("Save lip-sync record"));
 
+    QString label = "";
     if (mode == Update) {
+        label = tr("Update lip-sync record");
         connect(okButton, SIGNAL(clicked()), this, SLOT(callUpdateProcedure()));
     } else { // Insert | VoiceRecorded | AudioFromLibrary
+        label = tr("Save lip-sync record");
         connect(okButton, SIGNAL(clicked()), this, SLOT(createLipsyncRecord()));
     }
+
+    okButton->setToolTip(label);
 
     QPushButton *cancelButton = new QPushButton(lateralGroupBox);
     cancelButton->setMinimumWidth(60);
@@ -1512,6 +1515,10 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             currentMouthIndex = mouthsCombo->currentIndex();
                             parser->setMouthIndex(currentMouthIndex);
                             parser->setSoundFile(soundKey);
+                            if (mode == Update) {
+                                QList<TupWord *> words = oldLipsync->getVoiceWords();
+                                parser->updateTransformations(words);
+                            }
 
                             QString xml = parser->toString();
                             request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
@@ -1621,6 +1628,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
                 qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                             "Fatal Error: Can't remove temp folder -> " << tempMouthPath;
             #endif
+
             return false;
         }
     }
@@ -1630,6 +1638,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
             qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't create temp folder -> " << tempMouthPath;
         #endif
+
         return false;
     }
 
@@ -1639,6 +1648,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
             qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't copy mouths folder -> " << tempMouthPath;
         #endif
+
         return false;
     }
     currentMouthPath = tempMouthPath + "/";
@@ -1655,6 +1665,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
                 qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                             "Fatal Error: Can't remove previous temp sound file -> " << tempSoundFile;
             #endif
+
             return false;
         }
     }
@@ -1669,6 +1680,7 @@ bool TupPapagayoApp::updateLipsyncRecord()
             qWarning() << "[TupPapagayoApp::updateLipsyncRecord()] - "
                         "Fatal Error: Can't store temp sound file -> " << soundFilePath;
         #endif
+
         return false;
     }
 

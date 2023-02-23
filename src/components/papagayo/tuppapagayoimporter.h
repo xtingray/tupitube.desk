@@ -56,6 +56,7 @@ class TUPITUBE_EXPORT TupPapagayoImporter : public QObject
         int getFrameCount();
         int getFps();
         int getInitFrame();
+        void updateTransformations(QList<TupWord *> words);
 
     private:
         bool isValid;

@@ -93,25 +93,6 @@ void TupTransformation::fromXml(const QString &xml)
     QDomDocument document;
     if (document.setContent(xml))
         transDom = document.documentElement();
-
-    /*
-    QDomDocument document;
-    if (document.setContent(xml)) {
-        transDom = document.documentElement();
-
-        transStructure.scaleFactor.setX(transDom.attribute("scale_x").toInt());
-        transStructure.scaleFactor.setY(transDom.attribute("scale_y").toInt());
-        transStructure.rotationAngle = transDom.attribute("rotation").toInt();
-
-        qDebug() << "TupTransformation::fromXml() - rotation YYY -> " << transDom.attribute("rotation");
-        qDebug() << "TupTransformation::fromXml() - rotation YYY -> " << transDom.attribute("rotation").toInt();
-        qDebug() << "TupTransformation::fromXml() - rotation ZZZ -> " << transStructure.rotationAngle;
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupTransformation::fromXml()] - Warning: XML file is corrupted -> " << xml;
-        #endif
-    }
-    */
 }
 
 QDomElement TupTransformation::toXml(QDomDocument &doc) const
@@ -267,6 +248,11 @@ QList<TupPhoneme *> TupWord::phonemesList()
     return phonemes;
 }
 
+int TupWord::phonemesTotal()
+{
+    return phonemes.size();
+}
+
 bool TupWord::hasPhonemes()
 {
     return !phonemes.isEmpty();
@@ -320,7 +306,49 @@ TupTransformation::Parameters TupWord::getTransformationParams(int frame)
         return  phoneme->getTransformationParams();
 
     TupTransformation::Parameters params;
+
     return params;
+}
+
+QList<QDomElement> TupWord::getWordTransformations()
+{
+    QList<QDomElement> transformations;
+    for(int i=0; i<phonemes.size(); i++) {
+        TupPhoneme *phoneme = phonemes.at(i);
+        transformations << phoneme->getTransformationDom();
+    }
+
+    return transformations;
+}
+
+void TupWord::setWordTransformations(QList<QDomElement> transformations)
+{
+    int newLength = phonemesTotal();
+    int oldLength = transformations.size();
+
+    if (newLength > oldLength) {
+        // Updating the first phonemes of the new word with
+        // the few phonemes transformations of the old word
+        for(int i=0; i<oldLength; i++) {
+            TupPhoneme *phoneme = phonemes.at(i);
+            phoneme->setTransformationDom(transformations.at(i));
+        }
+
+        // Updating the last phonemes of the new word with
+        // the last phoneme transformations of the old word
+        int index = oldLength - 1;
+        for(int i=oldLength; i<newLength; i++) {
+            TupPhoneme *phoneme = phonemes.at(i);
+            phoneme->setTransformationDom(transformations.at(index));
+        }
+    } else { // if (newLength <= oldLength)
+        // Updating all the phonemes of the new word with
+        // the first phoneme transformations of the old world
+        for(int i=0; i<newLength; i++) {
+            TupPhoneme *phoneme = phonemes.at(i);
+            phoneme->setTransformationDom(transformations.at(i));
+        }
+    }
 }
 
 void TupWord::fromXml(const QString &xml)
@@ -428,7 +456,7 @@ void TupPhrase::insertWord(int index, TupWord *word)
         words.insert(index, word);
 }
 
-QList<TupWord *> TupPhrase::wordsList()
+QList<TupWord *> TupPhrase::getWords()
 {
     return words;
 }
@@ -530,6 +558,40 @@ QDomElement TupPhrase::toXml(QDomDocument &doc) const
     return root;
 }
 
+void TupPhrase::updateWordsTransformations(QList<TupWord *> oldWords)
+{
+    int oldSize = oldWords.size();
+    int newSize = words.size();
+
+    if (newSize <= oldSize) {
+        for (int i=0; i < newSize; i++) {
+            TupWord *word = words.at(i);
+            QList<QDomElement> transformations = oldWords.at(i)->getWordTransformations();
+            word->setWordTransformations(transformations);
+        }
+    } else { // if (newSize > oldSize)
+        QDomElement transformation;
+        // Updating the transformations using all the old words
+        for (int i=0; i < oldSize; i++) {
+            TupWord *word = words.at(i);
+            QList<QDomElement> transformations = oldWords.at(i)->getWordTransformations();
+            word->setWordTransformations(transformations);
+            if (i == oldSize - 1)
+                transformation = transformations.at(transformations.size() - 1);
+        }
+
+        // Updating the pending new words using the last transformation of the last old word
+        for (int i=oldSize; i < newSize; i++) {
+            TupWord *word = words.at(i);
+            int wordSize = word->phonemesTotal();
+            QList<QDomElement> transformations;
+            for (int j=0; j < wordSize; j++)
+                transformations << transformation;
+            word->setWordTransformations(transformations);
+        }
+    }
+}
+
 // Voice
 
 TupVoice::TupVoice()
@@ -565,7 +627,6 @@ QDomElement TupVoice::setDefaultTransformation(int x, int y)
 
     QDomDocument doc;
     transformation = doc.createElement("properties");
-    // transformation = doc.createElement("properties");
     transformation.setAttribute("pos", "(" + QString::number(x) + "," + QString::number(y) + ")");
     transformation.setAttribute("scale_x", "1");
     transformation.setAttribute("scale_y", "1");
@@ -600,7 +661,7 @@ void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame)
     int i = 0;
     if (phrase->contains(index)) {
         int j = 0;
-        QList<TupWord *> wordList = phrase->wordsList();
+        QList<TupWord *> wordList = phrase->getWords();
         foreach (TupWord *word, wordList ) {
             int initFrame = word->initFrame();
             if (word->contains(index)) {
@@ -661,7 +722,7 @@ TupPhrase * TupVoice::getPhrase()
 TupPhoneme * TupVoice::getPhonemeAt(int frame)
 {
     if (phrase->contains(frame)) {
-        foreach (TupWord *word, phrase->wordsList()) {
+        foreach (TupWord *word, phrase->getWords()) {
             int initFrame = word->initFrame();
             int index = frame - initFrame;
             if (initFrame <= frame) {
@@ -734,6 +795,21 @@ QDomElement TupVoice::toXml(QDomDocument &doc) const
     root.appendChild(phrase->toXml(doc));
 
     return root;
+}
+
+void TupVoice::updateWordsTransformations(QList<TupWord *> words)
+{
+    if (phrase)
+        phrase->updateWordsTransformations(words);
+}
+
+QList<TupWord *> TupVoice::getPhraseWords()
+{
+    QList<TupWord *> words;
+    if (phrase)
+        words = phrase->getWords();
+
+    return words;
 }
 
 // LipSync
@@ -907,7 +983,7 @@ void TupLipSync::verifyStructure()
          TupPhrase *phrase = voice->getPhrase();
          if (phrase->contains(frame)) {
              int i = -1;
-             foreach (TupWord *word, phrase->wordsList()) {
+             foreach (TupWord *word, phrase->getWords()) {
                  i++;
                  int initFrame = word->initFrame();
                  if (initFrame <= frame) {
@@ -972,4 +1048,19 @@ QString TupLipSync::toString() const
     }
 
     return xml;
+}
+
+void TupLipSync::updateWordTransformations(QList<TupWord *> words)
+{
+    if (voice)
+        voice->updateWordsTransformations(words);
+}
+
+QList<TupWord *> TupLipSync::getVoiceWords()
+{
+    QList<TupWord *> words;
+    if (voice)
+        words = voice->getPhraseWords();
+
+    return words;
 }
