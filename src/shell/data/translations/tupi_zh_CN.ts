@@ -613,6 +613,10 @@
         <source>Mouth Position</source>
         <translation>嘴的位置</translation>
     </message>
+    <message>
+        <source>Apply Forward</source>
+        <translation>向前应用转换</translation>
+    </message>
 </context>
 <context>
     <name>PapagayoTool</name>
@@ -4753,6 +4757,10 @@
     <message>
         <source>Voice text seems to be empty!</source>
         <translation>语音文本似乎是空的！</translation>
+    </message>
+    <message>
+        <source>Update lip-sync record</source>
+        <translation>更新口型记录</translation>
     </message>
 </context>
 <context>
