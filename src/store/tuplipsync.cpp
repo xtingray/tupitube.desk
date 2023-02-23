@@ -648,7 +648,7 @@ QDomElement TupVoice::getTransformationDomAt(int frame) const
     return phrase->getTransformationDom(frame);
 }
 
-void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame)
+void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame, bool forward)
 {
     /*
     #ifdef TUP_DEBUG
@@ -658,7 +658,6 @@ void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame)
 
     int index = frame - initIndex;
     // Look for phoneme for this frame index
-    int i = 0;
     if (phrase->contains(index)) {
         int j = 0;
         QList<TupWord *> wordList = phrase->getWords();
@@ -670,22 +669,24 @@ void TupVoice::updateMouthTransformation(const QDomElement &doc, int frame)
                 TupPhoneme *phoneme = phonemeList.at(position);
                 phoneme->setTransformationDom(doc);
 
-                for (int n=position+1; n<phonemeList.count(); n++) {
-                    TupPhoneme *p = phonemeList.at(n);
-                    p->setTransformationDom(doc);
+                if (forward) {
+                    for (int n=position+1; n<phonemeList.count(); n++) {
+                        TupPhoneme *p = phonemeList.at(n);
+                        p->setTransformationDom(doc);
+                    }
+
+                    for (int n=j+1; n<wordList.count(); n++) {
+                        TupWord *w = wordList.at(n);
+                        foreach (TupPhoneme *p, w->phonemesList())
+                            p->setTransformationDom(doc);
+                    }
                 }
 
-                for (int n=j+1; n<wordList.count(); n++) {
-                    TupWord *w = wordList.at(n);
-                    foreach (TupPhoneme *p, w->phonemesList())
-                        p->setTransformationDom(doc);
-                }
                 return;
             }
             j++;
         }
     }
-    i++;
 }
 
 void TupVoice::setText(const QString &content)
@@ -965,10 +966,10 @@ QDomElement TupLipSync::toXml(QDomDocument &doc) const
     return root;
 }
 
-void TupLipSync::updateMouthTransformation(const QDomElement &doc, int frame)
+void TupLipSync::updateMouthTransformation(const QDomElement &doc, int frame, bool forward)
 {
     if (voice)
-        voice->updateMouthTransformation(doc, frame);
+        voice->updateMouthTransformation(doc, frame, forward);
 }
 
 // This method looks for "holes" inside the lipsync record, and fill them with "rest words"

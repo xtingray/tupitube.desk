@@ -178,7 +178,7 @@ class TUPITUBE_EXPORT TupVoice : public QObject, public TupAbstractSerializable
 
         QDomElement getTransformationDomAt(int frame) const;
         TupTransformation::Parameters getTransformationParamsAt(int frame) const;
-        void updateMouthTransformation(const QDomElement &doc, int frame);
+        void updateMouthTransformation(const QDomElement &doc, int frame, bool forward);
         void updateWordsTransformations(QList<TupWord *> words);
 
         void setText(const QString &content);
@@ -231,7 +231,7 @@ class TUPITUBE_EXPORT TupLipSync : public QObject, public TupAbstractSerializabl
         void setVoice(TupVoice *voice);
         TupVoice * getVoice();
 
-        void updateMouthTransformation(const QDomElement &doc, int frame);
+        void updateMouthTransformation(const QDomElement &doc, int frame, bool forward);
         void updateWordTransformations(QList<TupWord *> words);
 
         void verifyStructure();

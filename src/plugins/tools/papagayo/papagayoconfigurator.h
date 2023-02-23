@@ -94,6 +94,7 @@ class TUPITUBE_PLUGIN PapagayoConfigurator : public QFrame
 
         void objectHasBeenReset();
         void proportionActivated(bool flag);
+        void forwardActivated(int);
 
     private slots:
         void editCurrentLipSync(const QString &name);
@@ -109,6 +110,7 @@ class TUPITUBE_PLUGIN PapagayoConfigurator : public QFrame
         QBoxLayout *settingsLayout;
         PapagayoSettings *settingsPanel;
         LipSyncManager *manager;
+        QWidget *mouthsWidget;
 };
 
 #endif

@@ -68,6 +68,7 @@ void PapagayoTool::init(TupGraphicsScene *gScene)
 
     nodesManager = nullptr;
     managerIncluded = false;
+    forwardFlag = false;
     scene = gScene;
     mode = TupToolPlugin::View;
 
@@ -163,6 +164,7 @@ QWidget * PapagayoTool::configurator()
 
         connect(configPanel, SIGNAL(objectHasBeenReset()), this, SLOT(resetMouthTransformations()));
         connect(configPanel, SIGNAL(proportionActivated(bool)), this, SLOT(enableProportion(bool)));
+        connect(configPanel, SIGNAL(forwardActivated(int)), this, SLOT(enableTransformationForward(int)));
 
         /* SQA: These connection don't work on Windows
         connect(configPanel, &PapagayoConfigurator::lipsyncCreatorRequested, this, &PapagayoTool::lipsyncCreatorRequested);
@@ -717,6 +719,18 @@ void PapagayoTool::enableProportion(bool flag)
     }
 }
 
+void PapagayoTool::enableTransformationForward(int flag)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::enableTransformationForward()] - flag -> " << flag;
+    #endif
+
+    if (flag == Qt::Checked)
+        forwardFlag = true;
+    else
+        forwardFlag = false;
+}
+
 void PapagayoTool::resetMouthTransformations()
 {
     #ifdef TUP_DEBUG
@@ -751,7 +765,7 @@ void PapagayoTool::updateMouthTransformation()
         if (item) {
             QDomDocument doc;
             currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
-                                                      (scene->currentFrameIndex() - currentLipSync->getInitFrame()));
+                                                      (scene->currentFrameIndex() - currentLipSync->getInitFrame()), forwardFlag);
 
             TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
                                                                               TupProjectRequest::UpdateLipSync, currentLipSync->toString());

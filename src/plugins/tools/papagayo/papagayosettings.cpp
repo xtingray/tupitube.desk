@@ -213,6 +213,11 @@ void PapagayoSettings::setInnerForm()
     scaleLayout->addWidget(propCheck);
     scaleLayout->setAlignment(propCheck, Qt::AlignHCenter);
 
+    forwardCheck = new QCheckBox(tr("Apply Forward"), this);
+    connect(forwardCheck, SIGNAL(stateChanged(int)), this, SIGNAL(forwardActivated(int)));
+    scaleLayout->addWidget(forwardCheck);
+    scaleLayout->setAlignment(forwardCheck, Qt::AlignHCenter);
+
     // Bottom section
 
     TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 22);
@@ -256,7 +261,7 @@ void PapagayoSettings::setInnerForm()
     innerLayout->addWidget(scaleLabel);
     innerLayout->addLayout(scaleLayout);
 
-    innerLayout->addSpacing(10);
+    innerLayout->addSpacing(5);
     innerLayout->addLayout(buttonsLayout);
     innerLayout->addSpacing(5);
 

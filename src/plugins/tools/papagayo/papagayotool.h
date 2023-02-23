@@ -121,6 +121,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
 
         void resetMouthTransformations();
         void enableProportion(bool flag);
+        void enableTransformationForward(int flag);
         void updateMouthTransformation();
 
     private:
@@ -144,6 +145,7 @@ class TUPITUBE_PLUGIN PapagayoTool : public TupToolPlugin
         NodeManager *nodesManager;
         bool managerIncluded;
         QString key;
+        bool forwardFlag;
 };
 
 #endif

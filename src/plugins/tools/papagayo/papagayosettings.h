@@ -76,7 +76,6 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
     signals:
         void initFrameHasChanged(int index);
         void selectMouth(const QString &id, int index);
-        // void saveMouthTransRequested();
         void closeLipSyncProperties();
 
         void xPosChanged(int x);
@@ -86,6 +85,7 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
 
         void objectHasBeenReset();
         void proportionActivated(bool flag);
+        void forwardActivated(int flag);
 
     private slots:
         void updateInitFrame(int index);
@@ -94,7 +94,6 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         void notifyXScale(double factor);
         void notifyYScale(double factor);
         void enableProportion(int flag);
-        // void resetTransformations();
 
     private:
         void setInnerForm();
@@ -116,6 +115,7 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         QDoubleSpinBox *factorXField;
         QDoubleSpinBox *factorYField;
         QCheckBox *propCheck;
+        QCheckBox *forwardCheck;
 
         QString name;
         int initFrame;

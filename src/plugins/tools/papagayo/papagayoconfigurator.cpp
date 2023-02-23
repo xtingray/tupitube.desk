@@ -64,7 +64,8 @@ PapagayoConfigurator::PapagayoConfigurator(QWidget *parent) : QFrame(parent)
 
     layout->addLayout(settingsLayout);
 
-    QHBoxLayout *mouthsLayout = new QHBoxLayout;
+    mouthsWidget = new QWidget;
+    QHBoxLayout *mouthsLayout = new QHBoxLayout(mouthsWidget);
     QPushButton *mouthsButton = new QPushButton(" " + tr("Mouth Samples"));
     mouthsButton->setStyleSheet("QPushButton { padding: 5px; }");
     mouthsButton->setIcon(QIcon(THEME_DIR + "icons/mouth_samples.png"));
@@ -72,7 +73,7 @@ PapagayoConfigurator::PapagayoConfigurator(QWidget *parent) : QFrame(parent)
     mouthsLayout->addWidget(new QWidget);
     mouthsLayout->addWidget(mouthsButton);
     mouthsLayout->addWidget(new QWidget);
-    layout->addLayout(mouthsLayout);
+    layout->addWidget(mouthsWidget);
 
     layout->addStretch(2);
 }
@@ -99,6 +100,7 @@ void PapagayoConfigurator::setPropertiesPanel()
 
     connect(settingsPanel, SIGNAL(objectHasBeenReset()), this, SIGNAL(objectHasBeenReset()));
     connect(settingsPanel, SIGNAL(proportionActivated(bool)), this, SIGNAL(proportionActivated(bool)));
+    connect(settingsPanel, SIGNAL(forwardActivated(int)), this, SIGNAL(forwardActivated(int)));
 
     /* SQA: These connections don't work on Windows
     connect(settingsPanel, &PapagayoSettings::selectMouth, this, &PapagayoConfigurator::selectMouth);
@@ -167,6 +169,7 @@ void PapagayoConfigurator::editCurrentLipSync(const QString &name)
     emit mouthEditionRequested(name);
 
     activeLipSyncManagerPanel(false);
+    mouthsWidget->setVisible(false);
     activePropertiesPanel(true);
 }
 
@@ -190,6 +193,7 @@ void PapagayoConfigurator::closeSettingsPanel()
 void PapagayoConfigurator::closePanels()
 {
     activeLipSyncManagerPanel(true);
+    mouthsWidget->setVisible(true);
     activePropertiesPanel(false);
 }
 
