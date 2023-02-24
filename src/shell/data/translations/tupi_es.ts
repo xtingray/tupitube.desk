@@ -5787,8 +5787,8 @@
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="192"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="811"/>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="812"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1253"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1254"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1249"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1250"/>
         <source>Play</source>
         <translation>Reproducir</translation>
     </message>
@@ -5902,7 +5902,7 @@
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="419"/>
-        <source>Breakdown</source>
+        <source>Phonetic Breakdown</source>
         <translation>Editar Fonemas</translation>
     </message>
     <message>
@@ -5947,13 +5947,13 @@
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="596"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1334"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1330"/>
         <source>Lip-sync item added!</source>
         <translation>Registro de voz adicionado!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="614"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1749"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1745"/>
         <source>Lip-sync item updated!</source>
         <translation>Registro de voz actualizado!</translation>
     </message>
@@ -5985,105 +5985,105 @@
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1040"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1272"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1268"/>
         <source>Voice text is empty!</source>
         <translation>El texto de la voz está vacío!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1070"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1066"/>
         <source>Voice text seems to be empty!</source>
         <translation>El texto de voz parece estar vacío!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1178"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1174"/>
         <source>Choose the images directory...</source>
         <translation>Escoge el directorio de imágenes...</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1198"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1194"/>
         <source>Mouth image is missing!</source>
         <translation>Falta la imagen de la boca!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1214"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1567"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1210"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1563"/>
         <source>Mouth images are incomplete!</source>
         <translation>Las imágenes de las bocas están incompletas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1221"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1576"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1217"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1572"/>
         <source>Images directory is empty!</source>
         <translation>El directorio de imágenes está vacío!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1265"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1261"/>
         <source>Voice name is empty!</source>
         <translation>El nombre de la voz está vacío!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1281"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1277"/>
         <source>Customized mouths path is unset!</source>
         <translation>La ruta de las bocas personalizadas no está definida!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1308"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1304"/>
         <source>Some phonemes are missing!</source>
         <translation>Faltan algunos fonemas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1363"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1359"/>
         <source>Error while saving lip-sync!</source>
         <translation>Error mientras se guardaba el registro de voz!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1437"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1433"/>
         <source>Can&apos;t load mouth image!</source>
         <translation>No se pueden cargar las imágenes de bocas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1473"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1469"/>
         <source>Can&apos;t remove temporary voice sound!</source>
         <translation>No se puede eliminar el archivo temporal de voz!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1498"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1494"/>
         <source>Can&apos;t load voice sound!</source>
         <translation>No se puede cargar el archivo de la voz!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1509"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1505"/>
         <source>Can&apos;t set lip-sync voice item!</source>
         <translation>No se puede actualizar la voz del lip-sync!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1543"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1539"/>
         <source>Frame</source>
         <translation>Marco</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1556"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1552"/>
         <source>Papagayo file has been imported successfully</source>
         <translation>El archivo PGO ha sido importado satisfactoriamente</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1558"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1554"/>
         <source>Papagayo file is invalid!</source>
         <translation>Archivo de Lip-sync es invalido!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1585"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1594"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1581"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1590"/>
         <source>Papagayo project is invalid!</source>
         <translation>Proyecto Papagayo es inválido!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1607"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1603"/>
         <source>Error while saving lip-sync record!</source>
         <translation>Error mientras se guardaba el registro de voz!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1756"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1752"/>
         <source>Error while updating lip-sync!</source>
         <translation>Error mientras se actualizaba el registro de voz!</translation>
     </message>

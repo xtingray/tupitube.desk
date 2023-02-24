@@ -4607,10 +4607,6 @@
         <translation>其他语言</translation>
     </message>
     <message>
-        <source>Breakdown</source>
-        <translation>分解</translation>
-    </message>
-    <message>
         <source>Save lip-sync record</source>
         <translation>保存唇型同步记录</translation>
     </message>
@@ -4761,6 +4757,10 @@
     <message>
         <source>Update lip-sync record</source>
         <translation>更新口型记录</translation>
+    </message>
+    <message>
+        <source>Phonetic Breakdown</source>
+        <translation>编辑音素</translation>
     </message>
 </context>
 <context>

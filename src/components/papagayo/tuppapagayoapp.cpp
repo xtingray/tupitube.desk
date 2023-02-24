@@ -416,7 +416,7 @@ void TupPapagayoApp::setupUI()
     languageHorizontalLayout->addWidget(languageChoice);
 
     breakdownButton = new QPushButton(lateralGroupBox);
-    breakdownButton->setText(tr("Breakdown"));
+    breakdownButton->setText(tr("Phonetic Breakdown"));
     connect(breakdownButton, SIGNAL(clicked()), this, SLOT(runManualBreakdownAction()));
     breakdownButton->setEnabled(false);
 
@@ -1034,7 +1034,7 @@ void TupPapagayoApp::runManualBreakdownAction()
 
         waveformView->update();
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - "
+            qWarning() << "[TupPapagayoApp::runManualBreakdownProcess()] - "
                         "Fatal Error: Voice text is empty!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Voice text is empty!"));
@@ -1042,17 +1042,13 @@ void TupPapagayoApp::runManualBreakdownAction()
         return;
     }
 
-    if (currentLanguage == English || currentLanguage == Spanish) {
-        runBreakdownAction();
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - Calling breakdown dialog...";
-            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - wordsList -> " << wordsList;
-            qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - phonemesList -> " << phonemesList;
-        #endif
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - Calling breakdown dialog...";
+        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - wordsList -> " << wordsList;
+        qDebug() << "[TupPapagayoApp::runManualBreakdownProcess()] - phonemesList -> " << phonemesList;
+    #endif
 
-        openBreakdownDialog(0);
-    }
+    openBreakdownDialog(0);
 }
 
 void TupPapagayoApp::openBreakdownDialog(int wordIndex)
@@ -1065,7 +1061,7 @@ void TupPapagayoApp::openBreakdownDialog(int wordIndex)
 
     if (wordsList.isEmpty() || phonemesList.isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPapagayoApp::openBreakdownDialog()] - Fatal Error: No word list!";
+            qWarning() << "[TupPapagayoApp::openBreakdownDialog()] - Fatal Error: No word list!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Voice text seems to be empty!"));
 
