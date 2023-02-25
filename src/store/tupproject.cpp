@@ -138,6 +138,11 @@ void TupProject::setCurrentBgColor(const QColor &bgColor)
 
 void TupProject::setSceneBgColor(int sceneIndex, const QColor &bgColor)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::setSceneBgColor()] - sceneIndex -> " << sceneIndex;
+        qDebug() << "[TupProject::setSceneBgColor()] - bgColor.name() -> " << bgColor.name();
+    #endif
+
     setCurrentBgColor(bgColor);
 
     TupScene *scene = scenesList.at(sceneIndex);

@@ -105,7 +105,7 @@ TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::F
     }
 }
 
-bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, const QList<TupScene *> &scenes,
+bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath, const QList<TupScene *> &scenes,
                                   TupExportInterface::Format fmt, const QSize &size, const QSize &newSize, int fps,
                                   TupProject *project, bool waterMark)
 {
@@ -216,7 +216,7 @@ bool FFmpegPlugin::exportToFormat(const QColor color, const QString &filePath, c
     }
 
     TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration, aacAudioPath);
-    TupAnimationRenderer renderer(color, library, waterMark);
+    TupAnimationRenderer renderer(library, waterMark);
     {
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();

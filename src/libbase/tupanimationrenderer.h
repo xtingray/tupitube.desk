@@ -41,14 +41,13 @@
 #include "tupscene.h"
 #include "tuplibrary.h"
 
-#include <QColor>
 #include <QSize>
 #include <QPainter>
 
 class TUPITUBE_EXPORT TupAnimationRenderer
 {
     public:
-        TupAnimationRenderer(const QColor color, TupLibrary *library = nullptr, bool waterMark = false);
+        TupAnimationRenderer(TupLibrary *library = nullptr, bool waterMark = false);
         ~TupAnimationRenderer();
 
         void setScene(TupScene *scene, QSize dimension);
@@ -64,7 +63,6 @@ class TUPITUBE_EXPORT TupAnimationRenderer
         TupGraphicsScene *gScene;
         int totalPhotograms;
         int currentPhotogram;
-        QColor bgColor;
 };
 
 #endif

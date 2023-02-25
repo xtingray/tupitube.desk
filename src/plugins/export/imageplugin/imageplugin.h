@@ -69,9 +69,6 @@ class TUPITUBE_PLUGIN ImagePlugin : public TupExportPluginObject
         virtual QString getExceptionMsg() const;
         QString errorMsg;
 
-        // virtual const char* getExceptionMsg();
-        // const char *errorMsg;
-
     signals:
         void messageChanged(const QString &msg);
         void progressChanged(int percent);

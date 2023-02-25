@@ -103,7 +103,7 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                  break;
     }
 
-    TupAnimationRenderer renderer(bgColor, project->getLibrary(), waterMark);
+    TupAnimationRenderer renderer(project->getLibrary(), waterMark);
     foreach (TupScene *scene, scenes) {
         renderer.setScene(scene, size);
 
@@ -182,7 +182,7 @@ bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString 
     QColor bgColor = color;
     bgColor.setAlpha(255);
 
-    TupAnimationRenderer renderer(bgColor, project->getLibrary(), waterMark);
+    TupAnimationRenderer renderer(project->getLibrary(), waterMark);
     renderer.setScene(scene, size);
     renderer.renderPhotogram(frameIndex);
 
@@ -243,5 +243,3 @@ bool ImagePlugin::exportToAnimatic(const QString &filePath, const QList<QImage> 
 
     return true;
 }
-
-// Q_EXPORT_PLUGIN(ImagePlugin);

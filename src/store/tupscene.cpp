@@ -85,6 +85,10 @@ int TupScene::getFPS()
 
 void TupScene::setBgColor(const QColor color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::setBgColor()] - color -> " << color.name();
+    #endif
+
     bgColor = color;
 }
 
@@ -159,7 +163,7 @@ TupLayer *TupScene::createLayer(QString name, int position, bool loadingFromFile
 {
     if (position < 0 || position > layers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupScene::createLayer()] - Invalid index -> " + QString::number(position);
+            qDebug() << "[TupScene::createLayer()] - Invalid index -> " << position;
         #endif    
         
         return nullptr;
@@ -258,6 +262,7 @@ TupLayer *TupScene::layerAt(int index) const
             qDebug() << "[TupScene::layerAt()] - Fatal Error: index out of bound -> " << index;
             qDebug() << "[TupScene::layerAt()] - Fatal Error: The layer requested doesn't exist anymore";
         #endif
+
         return nullptr;
     }
 
@@ -270,6 +275,7 @@ TupSoundLayer *TupScene::soundLayer(int index) const
         #ifdef TUP_DEBUG
             qDebug() << "[TupScene::soundLayer()] - Fatal Error: index out of bound -> " << index;
         #endif
+
         return nullptr;
     }
 
@@ -376,6 +382,7 @@ bool TupScene::moveLayer(int from, int to)
         #ifdef TUP_DEBUG
             qDebug() << "[TupScene::moveLayer()] - Fatal Error: Layer index out of bound " << to;
         #endif
+
         return false;
     }
 
@@ -546,6 +553,7 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
                          object->removeTween(i);
                          if (total == 1)
                              removeTweenObject(layer->layerIndex(), object);
+
                          return true;
                      }
                 }

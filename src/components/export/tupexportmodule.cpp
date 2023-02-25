@@ -392,7 +392,7 @@ void TupExportModule::exportIt()
         QList<TupScene *> scenes = scenesToExport();
 
         #ifdef TUP_DEBUG
-            qWarning() << "TupExportModule::exportIt() - Exporting " + QString::number(scenes.count()) << " scenes";
+            qWarning() << "TupExportModule::exportIt() - Exporting " << scenes.count() << " scenes";
         #endif
 
         if (scenes.count() > 0) {

@@ -572,43 +572,43 @@ void TupScreen::render()
     renderOn = true;
     emit isRendering(0);
 
-    if (!project->sceneAt(sceneIndex)) {
+    TupScene *scene = project->sceneAt(sceneIndex);
+    if (scene) {
+        clearPhotograms();
+
+        renderer = new TupAnimationRenderer(library);
+        renderer->setScene(scene, project->getDimension());
+        int i = 1;
+        while (renderer->nextPhotogram()) {
+            renderized = QImage(project->getDimension(), QImage::Format_RGB32);
+            painter = new QPainter(&renderized);
+            painter->setRenderHint(QPainter::Antialiasing);
+
+            renderer->render(painter);
+            painter->end();
+            painter = nullptr;
+            delete painter;
+
+            if (isScaled)
+                photograms << renderized.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
+            else
+                photograms << renderized;
+
+            emit isRendering(i);
+            i++;
+        }
+
+        animationList.replace(sceneIndex, photograms);
+        renderControl.replace(sceneIndex, true);
+
+        renderer = nullptr;
+        delete renderer;
+    } else {
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::render()] - Fatal Error: Scene is NULL! -> index: "
                        << sceneIndex;
         #endif
-        return;
     }
-
-    clearPhotograms();
-
-    renderer = new TupAnimationRenderer(project->getCurrentBgColor(), library);
-    renderer->setScene(project->sceneAt(sceneIndex), project->getDimension());
-    int i = 1;
-    while (renderer->nextPhotogram()) {
-        renderized = QImage(project->getDimension(), QImage::Format_RGB32);
-        painter = new QPainter(&renderized);
-        painter->setRenderHint(QPainter::Antialiasing);
-
-        renderer->render(painter);
-        painter->end();
-        painter = nullptr;
-        delete painter;
-
-        if (isScaled)
-            photograms << renderized.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
-        else
-            photograms << renderized;
-
-        emit isRendering(i); 
-        i++;
-    }
-
-    animationList.replace(sceneIndex, photograms);
-    renderControl.replace(sceneIndex, true);
-
-    renderer = nullptr;
-    delete renderer;
 
     emit isRendering(0); 
     renderOn = false;
@@ -749,7 +749,7 @@ void TupScreen::updateFirstFrame()
         if (scene) { 
             loadSoundRecords();
 
-            renderer = new TupAnimationRenderer(project->getCurrentBgColor(), library);
+            renderer = new TupAnimationRenderer(library);
             renderer->setScene(scene, project->getDimension());
             renderer->renderPhotogram(0);
 

@@ -38,16 +38,16 @@
 #include "tupframe.h"
 #include "tupgraphicobject.h"
 
-TupAnimationRenderer::TupAnimationRenderer(const QColor color, TupLibrary *library, bool waterMark)
+TupAnimationRenderer::TupAnimationRenderer(TupLibrary *library, bool waterMark)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupAnimationRenderer()] - bgColor -> " << color.name();
     #endif
+    */
 
-    bgColor = color;
     gScene = new TupGraphicsScene;
     gScene->setLibrary(library);
-    gScene->setBackgroundBrush(bgColor);
     gScene->setWaterMarkFlag(waterMark);
 }
 
@@ -57,11 +57,12 @@ TupAnimationRenderer::~TupAnimationRenderer()
 
 void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension)
 {
+    gScene->setBackgroundBrush(scene->getBgColor());
     gScene->setCurrentScene(scene);
-    gScene->setSceneRect(QRectF(QPointF(0,0), dimension));
+    gScene->setSceneRect(QRectF(QPointF(0, 0), dimension));
 
     currentPhotogram = -1;
-    totalPhotograms = scene->totalPhotograms(); // calculateTotalPhotograms(scene);
+    totalPhotograms = scene->totalPhotograms();
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupAnimationRenderer::setScene()] - Photograms Total -> " << totalPhotograms;
