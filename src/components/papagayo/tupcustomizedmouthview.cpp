@@ -64,7 +64,13 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
                      QString phonemeLower = phoneme.toLower();
                      if (nameLower.compare(phonemeLower) == 0) {
                          QString path = folderPath + "/" + name + extension;
-                         mouths.insert(phoneme, new QImage(path));
+                         QImage img(path);
+                         if (img.width() > img.height())
+                             img = img.scaledToWidth(2*(height()/3), Qt::SmoothTransformation);
+                         else
+                             img = img.scaledToHeight(2*(width()/3), Qt::SmoothTransformation);
+
+                         mouths.insert(phoneme, img);
                          found = true;
                          break;
                      }
@@ -119,11 +125,16 @@ void TupCustomizedMouthView::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-    if (!assetsLoaded)
+    if (!assetsLoaded) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupCustomizedMouthView::paintEvent()] - Fatal Error: Assets are not loaded!";
+        #endif
+
         return;
+    }
 
     QString phoneme;
-    QImage *img = nullptr;
+    QImage img;
     QPainter dc(this);
 
     if (document && document->getVoice())
@@ -135,21 +146,16 @@ void TupCustomizedMouthView::paintEvent(QPaintEvent *event)
         phoneme = document->getVolumePhonemeAtFrame(frame);
 
     img = mouths.value(phoneme);
-    if (img) {
+    if (!img.isNull()) {
         int32 x = 0, y = 0;
         int32 w = width();
         int32 h = height();
-        QColor backCol(255, 255, 255);
-        if (w > h) {
-			dc.fillRect(QRect(x, y, w, h), backCol);
-			x = (w - h) / 2;
-			w = h;
-        } else if (h > w) {
-			dc.fillRect(QRect(x, y, w, h), backCol);
-			y = (h - w) / 2;
-			h = w;
-		}
-		dc.drawImage(QRect(x, y, w, h), *img);
+        QColor backCol(Qt::white);
+        dc.fillRect(QRect(x, y, w, h), backCol);
+        x = (w - (img.width()))/2;
+        y = (h - (img.height()))/2;
+
+        dc.drawImage(QPoint(x, y), img);
     } else {
 		dc.eraseRect(0, 0, width(), height());
     }

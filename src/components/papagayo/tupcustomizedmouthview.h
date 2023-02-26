@@ -45,7 +45,8 @@ class TUPITUBE_EXPORT TupCustomizedMouthView : public QWidget
     private:
         TupLipsyncDoc *document;
         int32 frame;
-        QHash<QString, QImage *> mouths;
+        // QHash<QString, QImage *> mouths;
+        QHash<QString, QImage> mouths;
         bool assetsLoaded;
         QString imagesPath;
 
