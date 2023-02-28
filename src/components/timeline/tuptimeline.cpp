@@ -594,6 +594,7 @@ void TupTimeLine::requestCommand(int action)
                 qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame action has failed!";
             #endif
         }
+
         return;
     }
 
@@ -603,6 +604,7 @@ void TupTimeLine::requestCommand(int action)
                 qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer action has failed!";
             #endif
         }
+
         return;
     }
 
@@ -612,6 +614,7 @@ void TupTimeLine::requestCommand(int action)
                 qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene action has failed! - sceneIndex -> " << sceneIndex;
             #endif
         }
+
         return;
     }
 }
@@ -649,22 +652,26 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
             }
 
             requestFrameSelection(layerIndex, lastFrame + 1);
+
             return true;
         }
         case TupProjectActionBar::ExtendFrame:
         {
             extendFrameForward(layerIndex, currentFrame);
+
             return true;
         }
         case TupProjectActionBar::RemoveFrame:
         {
             requestRemoveFrame(true);
+
             return true;
         }
         case TupProjectActionBar::MoveFrameBackward:
         {
             TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame, TupProjectRequest::Exchange, currentFrame - 1);
             emit requestTriggered(&request);
+
             return true;
         }
         case TupProjectActionBar::MoveFrameForward:
@@ -678,21 +685,25 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
 
             TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, currentFrame, TupProjectRequest::Exchange, currentFrame + 1);
             emit requestTriggered(&request);
+
             return true;
         }
         case TupProjectActionBar::ReverseFrameSelection:
         {
             requestReverseFrameSelection();
+
             return true;
         }
         case TupProjectActionBar::CopyFrame:
         {
             requestCopyFrameSelection();
+
             return true;
         }
         case TupProjectActionBar::PasteFrame:
         {
             requestPasteSelectionInCurrentFrame();
+
             return true;
         }
         default:

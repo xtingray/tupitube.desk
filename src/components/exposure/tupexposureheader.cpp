@@ -70,10 +70,6 @@ void TupExposureHeader::notifyVisibilityChange(int section)
 
 void TupExposureHeader::setSectionVisibility(int section, bool visibility)
 {
-    // Q_UNUSED(visibility);
-    // FIXME: in tupexpousertable.cpp visibility or !m_sections[logicalndex].isVisible
-    // m_sections[logicalndex].isVisible = !m_sections[logicalndex].isVisible;
-
     m_sections[section].isVisible = visibility;
     updateSection(section);
 }

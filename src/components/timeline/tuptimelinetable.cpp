@@ -73,9 +73,8 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
     QItemDelegate::paint(painter, option, index);
     TupTimeLineTable *table = qobject_cast<TupTimeLineTable *>(index.model()->parent());
     TupTimeLineTableItem *item = dynamic_cast<TupTimeLineTableItem *>(table->itemFromIndex(index));
-    
+
     // draw the background color
-    // QVariant value = index.data(Qt::BackgroundColorRole);
     QVariant value = index.data(Qt::BackgroundRole);
     if (value.isValid()) {
         painter->save();
@@ -118,6 +117,7 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
         int offset = option.rect.width() / 3;
         if (item->isUsed()) {
             painter->save();
+
             QColor gray(80, 80, 80);
             painter->setPen(QPen(gray, 1, Qt::SolidLine));
             painter->setBrush(gray);
@@ -186,9 +186,6 @@ bool TupTimeLineTableItem::isSound()
 
 TupTimeLineTable::TupTimeLineTable(int index, int fps, QWidget *parent) : QTableWidget(0, 200, parent)
 {
-    setItemSize(5, 5);
-    // setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-
     isLocalRequest = false;
     sceneIndex = index;
     frameIndex = 0;
@@ -197,6 +194,7 @@ TupTimeLineTable::TupTimeLineTable(int index, int fps, QWidget *parent) : QTable
     removingLayer = false;
     removingFrame = false;
 
+    setItemSize(5, 5);
     setTableHeaders(fps);
 }
 
@@ -508,32 +506,6 @@ void TupTimeLineTable::removeFrameSelection(int layerIndex, int frameIndex, int 
     viewport()->update();
 }
 
-/*
-void TupTimeLineTable::lockFrame(int layerIndex, int frameIndex, bool lock)
-{
-    if (layerIndex < 0 || layerIndex >= rowCount())
-        return;
-    
-    setAttribute(layerIndex, frameIndex, TupTimeLineTableItem::IsLocked, lock);
-    viewport()->update();
-}
-
-bool TupTimeLineTable::frameIsLocked(int layerIndex, int frameIndex)
-{
-    TupTimeLineTableItem *frame = dynamic_cast<TupTimeLineTableItem *>(item(layerIndex, frameIndex));
-
-    if (frame) {
-        return frame->isLocked(); 
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "TupTimeLineTable::frameIsLocked() - Layer: " + QString::number(layerIndex) + QString(", Frame: ") + QString::number(frameIndex) + QString(" doesn't exist");
-        #endif
-    }
-
-    return false;
-}
-*/
-
 void TupTimeLineTable::setAttribute(int layerIndex, int frameIndex, TupTimeLineTableItem::Attributes att, bool value)
 {
     /*
@@ -562,7 +534,8 @@ void TupTimeLineTable::fixSize()
          layersColumn->resizeSection(row, rectHeight);
 }
 
-void TupTimeLineTable::requestFrameSelection(int currentLayerIndex, int currentFrameIndex, int previousLayerIndex, int previousFrameIndex)
+void TupTimeLineTable::requestFrameSelection(int currentLayerIndex, int currentFrameIndex,
+                                             int previousLayerIndex, int previousFrameIndex)
 {
     if (!removingLayer) {
         if (removingFrame) {
@@ -627,7 +600,6 @@ void TupTimeLineTable::mousePressEvent(QMouseEvent *event)
 
 void TupTimeLineTable::mouseMoveEvent(QMouseEvent *event)
 {
-    // int frameIndex = columnAt(event->y());
     QList<int> selection = currentSelection();
 
     for (int j=selection.at(0); j<=selection.at(1); j++) {
@@ -806,7 +778,6 @@ void TupTimeLineTable::selectFrame(int layerIndex, int frameIndex, const QString
 
         selectionModel()->clearSelection();
 
-        // QModelIndexList indexes;
         for (int i=initLayer; i<=lastLayer; i++) {
             for (int j=initFrame; j<=lastFrame; j++)
                 selectionModel()->select(model()->index(i, j), QItemSelectionModel::Select);

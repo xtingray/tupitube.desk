@@ -237,16 +237,20 @@ bool TupScene::restoreLayer(int index)
 bool TupScene::removeLayer(int index)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::removeLayer()] - layers total -> " << layers.size();
         qDebug() << "[TupScene::removeLayer()] - index -> " << index;
     #endif
 
-    TupLayer *layer = this->layerAt(index);
-    if (layer) {
-        removeTweensFromLayer(index + 1);
-        undoLayers << layers.takeAt(index);
-        layerCount--;
+    if (!layers.isEmpty()) {
+        TupLayer *layer = this->layerAt(index);
+        if (layer) {
+            // removeTweensFromLayer(index + 1);
+            removeTweensFromLayer(index);
+            undoLayers << layers.takeAt(index);
+            layerCount--;
 
-        return true;
+            return true;
+        }
     }
 
     return false;

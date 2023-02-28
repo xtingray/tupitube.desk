@@ -1049,7 +1049,7 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
 
         if (picWidth > projectWidth || picHeight > projectHeight) {
             QMessageBox msgBox;
-            msgBox.setWindowTitle(tr("Information"));
+            msgBox.setWindowTitle(tr("File:") + " " + imageName);
             msgBox.setIcon(QMessageBox::Question);
             msgBox.setText(tr("Image is bigger than workspace."));
             msgBox.setInformativeText(tr("Do you want to resize it?"));
@@ -1066,13 +1066,32 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
                 if (pixmap->loadFromData(data, ext)) {
                     QPixmap newpix;
                     if (picWidth > picHeight) {
-                        newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
-                    } else {
-                        newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
+                        if (picWidth > projectWidth)
+                            newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
+                        else
+                            newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
+                    } else { // picHeight >= picWidth
+                        if (picHeight > projectHeight)
+                            newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
+                        else
+                            newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
                     }
+
                     QBuffer buffer(&data);
                     buffer.open(QIODevice::WriteOnly);
-                    newpix.save(&buffer, ext);
+                    if (newpix.save(&buffer, ext)) {
+                        #ifdef TUP_DEBUG
+                            qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image resize successfully! -> " << imageName;
+                        #endif
+                    } else {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't save resized image -> " << imageName;
+                        #endif
+                    }
+                } else {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't load large image -> " << imageName;
+                    #endif
                 }
             }
         }
@@ -1094,6 +1113,7 @@ void TupLibraryWidget::importImage(const QString &imagePath, const QString &fold
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::importImage()] - Warning: Image path is empty!";
         #endif
+
         return;
     }
 

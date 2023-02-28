@@ -37,7 +37,6 @@
 
 TupTimelineSceneContainer::TupTimelineSceneContainer(QWidget *parent) : QTabWidget(parent)
 {
-    // setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 }
 
 TupTimelineSceneContainer::~TupTimelineSceneContainer()
@@ -105,6 +104,7 @@ TupTimeLineTable * TupTimelineSceneContainer::currentScene()
 TupTimeLineTable * TupTimelineSceneContainer::getTable(int index)
 {
     TupTimeLineTable *framesTable = scenes.at(index);
+
     return framesTable;
 }
 

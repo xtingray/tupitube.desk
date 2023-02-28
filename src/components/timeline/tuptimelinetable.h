@@ -88,7 +88,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         void setLayerName(int layerIndex, const QString &name);
         void selectFrame(int layerIndex, int frameIndex);
         void selectFrame(int layerIndex, int frameIndex, const QString &selection);
-        // bool frameIsLocked(int layerIndex, int frameIndex);
+
         QList<int> currentSelection();
         int framesCountAtCurrentLayer();
         void updateFrameState(int layerIndex, int frameIndex, bool value);
@@ -114,7 +114,6 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         void removeFrame(int layerIndex, int frameIndex);
         void removeFrameSelection(int layerIndex, int frameIndex, int layers, int frames, bool doSelection = false);
 
-        // void lockFrame(int layerIndex, int frameIndex, bool lock);
         void setItemSize(int w, int h);
         void exchangeFrame(int currentFrameIndex, int currentLayerIndex, int newFrameIndex, int newLayerIndex);
         void updateFPS(int fps);
