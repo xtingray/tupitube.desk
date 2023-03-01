@@ -273,20 +273,11 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         qDebug() << "[TupMainWindow::setWorkSpace()]";
     #endif
 
-    // TCONFIG->beginGroup("General");
-    // bool getNews = TCONFIG->value("GetNews", true).toBool();
-    // #ifdef TUP_DEBUG
-    //     qDebug() << "---";
-    //     qDebug() << "[TupMainWindow::setWorkSpace()] - GetNews -> " << TCONFIG->value("GetNews").toBool();;
-    // #endif
-    // if (getNews) {
-
     // Downloading MaeFloresta news 
     TupNewsCollector *newsCollector = new TupNewsCollector();
     newsCollector->start();
     connect(newsCollector, SIGNAL(pageReady()), this, SLOT(enableUpdatesDialog()));
     connect(newsCollector, SIGNAL(newUpdate(bool)), this, SLOT(setUpdateFlag(bool)));
-    // }
 
     if (m_projectManager->isOpen()) {
         if (TupMainWindow::requestType == NewLocalProject || TupMainWindow::requestType == NewNetProject)
@@ -352,6 +343,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         connect(animationTab, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)),
                 m_libraryWidget, SLOT(importLocalDroppedAsset(const QString &, TupLibraryObject::ObjectType)));
+
         connect(animationTab, SIGNAL(libraryAssetImported(const QString &, TupLibraryObject::ObjectType, const QString &)),
                 m_libraryWidget, SLOT(importExternalLibraryAsset(const QString &, TupLibraryObject::ObjectType, const QString &)));
         connect(animationTab, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
@@ -397,20 +389,14 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         // Player widget must be hidden while the Player tab is not visible
         cameraWidget->setVisible(false);
-
         connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
-
         m_libraryWidget->setNetworking(isNetworked);
-
-        if (isNetworked)
-            connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
+        connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
 
         /*
         if (isNetworked) {
             connect(cameraWidget, SIGNAL(requestForExportVideoToServer(const QString &, const QString &, const QString &, int, const QList<int>)), 
                     netProjectManager, SLOT(sendVideoRequest(const QString &, const QString &, const QString &, int, const QList<int>)));
-        } else {
-            connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
         }
         */
 
@@ -427,12 +413,10 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
         connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 
-        exposureView->expandDock(true);
-        currentDock = TupDocumentView::ExposureSheet;
+        // exposureView->expandDock(true);
+        timeView->expandDock(true);
 
-        // SQA: Code useful for future features
-        // if (!isNetworked) 
-        //     connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
+        currentDock = TupDocumentView::ExposureSheet;
 
         m_projectManager->setModificationStatus(false);
         m_colorPalette->init();
@@ -450,6 +434,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(this, SIGNAL(tabHasChanged(int)), this, SLOT(updateCurrentTab(int)));
 
         m_projectManager->clearUndoStack();
+
+        // m_timeLine->adjustCellsSize();
     }
 }
 
@@ -561,9 +547,13 @@ bool TupMainWindow::closeProject()
         qDebug() << "[TupMainWindow::closeProject()]";
     #endif
 
-    // SQA: Verify this conditional
-    if (!m_projectManager->isOpen())
+    if (!m_projectManager->isOpen()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::closeProject()] - No project is open!";
+        #endif
+
         return true;
+    }
 
     if (!mainToolBar->isVisible())
         hideTopPanels();

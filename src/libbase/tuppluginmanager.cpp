@@ -62,7 +62,8 @@ TupPluginManager *TupPluginManager::instance()
 void TupPluginManager::loadPlugins()
 {
     #ifdef TUP_DEBUG
-        qWarning() << "[TupPluginManager::loadPlugins()] - Searching for plugins...";
+        qDebug() << "---";
+        qDebug() << "[TupPluginManager::loadPlugins()] - Searching for plugins...";
     #endif
 
     filters.clear();
@@ -71,7 +72,7 @@ void TupPluginManager::loadPlugins()
     
     QDir pluginDirectory = QDir(kAppProp->pluginDir());
     #ifdef TUP_DEBUG
-        qWarning() << "[TupPluginManager::loadPlugins()] - plugin dir -> " << pluginDirectory.path();
+        qDebug() << "[TupPluginManager::loadPlugins()] - plugin dir -> " << pluginDirectory.path();
     #endif
 
     foreach (QString fileName, pluginDirectory.entryList(QStringList() << "*.so" << "*.dll" << "*.dylib", QDir::Files)) {
@@ -79,8 +80,8 @@ void TupPluginManager::loadPlugins()
         QObject *plugin = qobject_cast<QObject*>(loader->instance());
 
         #ifdef TUP_DEBUG
-            qWarning() << "[TupPluginManager::loadPlugins()] - Loading plugin from -> " << fileName;
-            qWarning() << "[TupPluginManager::loadPlugins()] - Plugin is loaded? -> " << loader->isLoaded();
+            qDebug() << "[TupPluginManager::loadPlugins()] - Loading plugin from -> " << fileName;
+            qDebug() << "[TupPluginManager::loadPlugins()] - Plugin is loaded? -> " << loader->isLoaded();
         #endif
 
         if (plugin) {
@@ -103,10 +104,14 @@ void TupPluginManager::loadPlugins()
             loaders << loader;
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupPluginManager::loadPlugins()] - Fatal Error while loading plugin -> " << loader->errorString();
+                qWarning() << "[TupPluginManager::loadPlugins()] - Fatal Error: Something happened while loading the plugin -> " << loader->errorString();
             #endif
         }
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+    #endif
 }
 
 void TupPluginManager::unloadPlugins()

@@ -145,6 +145,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSvgSequence();
         void importSoundFile();
         void resetSoundPlayer();
+        void importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type);
         void importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type,
                                      const QString &folder);
         void importExternalLibraryAsset(const QString &path, TupLibraryObject::ObjectType type,  const QString &folder);

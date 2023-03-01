@@ -979,6 +979,11 @@ void TupLibraryWidget::importExternalLibraryAsset(const QString &path, TupLibrar
     importLocalDroppedAsset(path, type, folder);
 }
 
+void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type)
+{
+    importLocalDroppedAsset(path, type, "");
+}
+
 void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type, const QString &folder)
 {
     #ifdef TUP_DEBUG

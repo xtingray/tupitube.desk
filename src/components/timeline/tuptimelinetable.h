@@ -92,6 +92,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         QList<int> currentSelection();
         int framesCountAtCurrentLayer();
         void updateFrameState(int layerIndex, int frameIndex, bool value);
+        void adjustCellsSize();
 
     public slots:
         // Layers
@@ -123,7 +124,6 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         void generateFrames(int layerIndex, int layers, int frames);
  
     protected:
-        void fixSize();
         void mousePressEvent(QMouseEvent *event);
         void mouseMoveEvent(QMouseEvent *event);
 

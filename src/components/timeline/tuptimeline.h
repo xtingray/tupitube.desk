@@ -56,6 +56,8 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         void initLayerVisibility();
         void closeAllScenes();
         void updateFramesState();
+
+        void adjustCellsSize();
         
     private:
         TupTimeLineTable *framesTable(int sceneIndex);
