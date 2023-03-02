@@ -57,8 +57,6 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         void closeAllScenes();
         void updateFramesState();
 
-        void adjustCellsSize();
-        
     private:
         TupTimeLineTable *framesTable(int sceneIndex);
         void requestRemoveFrame(bool flag);

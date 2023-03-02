@@ -1123,19 +1123,3 @@ void TupTimeLine::showRenameSceneDialog(int sceneIndex)
     if (dialog->exec() == QDialog::Accepted)
         requestSceneRename(dialog->getSceneName());
 }
-
-void TupTimeLine::adjustCellsSize()
-{
-    qDebug() << "";
-    qDebug() << "DEAL 1";
-
-    if (scenesContainer) {
-        currentTable = scenesContainer->getTable(0);
-        if (currentTable)
-            currentTable->adjustCellsSize();
-        else
-            qDebug() << "NO DEAL 2!";
-    } else {
-        qDebug() << "NO DEAL 1!";
-    }
-}

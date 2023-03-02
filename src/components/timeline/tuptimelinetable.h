@@ -70,8 +70,6 @@ class TUPITUBE_EXPORT TupTimeLineTableItem : public QTableWidgetItem
         bool isSound();
 };
 
-// class TupTimeLineRuler;
-
 class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
 {
     Q_OBJECT
