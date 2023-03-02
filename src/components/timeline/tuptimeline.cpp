@@ -142,8 +142,9 @@ void TupTimeLine::addScene(int sceneIndex, const QString &name)
 
     if (sceneIndex < 0 || sceneIndex > scenesContainer->count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::addScene()] - Fatal Error: invalid scene index -> " << sceneIndex;
+            qWarning() << "[TupTimeLine::addScene()] - Fatal Error: invalid scene index -> " << sceneIndex;
         #endif
+
         return;
     }
 
@@ -197,6 +198,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
                 TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
                 emit requestTriggered(&request);
             }
+
             return;
         }
         case TupProjectRequest::Remove:
@@ -252,7 +254,7 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         break;
         default:
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTimeLine::sceneResponse()] : Unknown action -> " << response->getAction();
+                qWarning() << "[TupTimeLine::sceneResponse()] : Unknown action -> " << response->getAction();
             #endif
         break;
     }
@@ -565,7 +567,7 @@ void TupTimeLine::requestCommand(int action)
     int sceneIndex = scenesContainer->currentIndex();
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene index is invalid -> " << sceneIndex;
+            qWarning() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene index is invalid -> " << sceneIndex;
         #endif
 
         return;
@@ -574,7 +576,7 @@ void TupTimeLine::requestCommand(int action)
     int layerIndex = framesTable(sceneIndex)->currentLayer();
     if (layerIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer index is invalid -> " << layerIndex;
+            qWarning() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer index is invalid -> " << layerIndex;
         #endif
 
         return;
@@ -583,7 +585,7 @@ void TupTimeLine::requestCommand(int action)
     int frameIndex = framesTable(sceneIndex)->lastFrameByLayer(layerIndex);
     if (frameIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame index is invalid -> " << frameIndex;
+            qWarning() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame index is invalid -> " << frameIndex;
         #endif
 
         return;
@@ -592,7 +594,7 @@ void TupTimeLine::requestCommand(int action)
     if (TupProjectActionBar::FrameActions & action) {
         if (!requestFrameAction(action, frameIndex, layerIndex, sceneIndex)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame action has failed!";
+                qWarning() << "[TupTimeLine::requestCommand()] - Fatal Error: Frame action has failed!";
             #endif
         }
 
@@ -602,7 +604,7 @@ void TupTimeLine::requestCommand(int action)
     if (TupProjectActionBar::LayerActions & action) {
         if (!requestLayerAction(action, layerIndex, sceneIndex)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer action has failed!";
+                qWarning() << "[TupTimeLine::requestCommand()] - Fatal Error: Layer action has failed!";
             #endif
         }
 
@@ -612,7 +614,7 @@ void TupTimeLine::requestCommand(int action)
     if (TupProjectActionBar::SceneActions & action) {
         if (!requestSceneAction(action, sceneIndex)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene action has failed! - sceneIndex -> " << sceneIndex;
+                qWarning() << "[TupTimeLine::requestCommand()] - Fatal Error: Scene action has failed! - sceneIndex -> " << sceneIndex;
             #endif
         }
 
@@ -1022,7 +1024,7 @@ void TupTimeLine::requestReverseFrameSelection()
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::requestReverseFrameSelection()] - Selection must include at least 2 frames of the same layer";
+            qWarning() << "[TupTimeLine::requestReverseFrameSelection()] - Selection must include at least 2 frames of the same layer";
         #endif
     }
 }
@@ -1055,12 +1057,12 @@ double TupTimeLine::getLayerOpacity(int sceneIndex, int layerIndex)
             opacity = layer->getOpacity();
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupTimeLine::getLayerOpacity()] - Fatal Error: No layer at index -> " << layerIndex;
+                qWarning() << "[TupTimeLine::getLayerOpacity()] - Fatal Error: No layer at index -> " << layerIndex;
             #endif
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupTimeLine::getLayerOpacity()] - Fatal Error: No scene at index -> " << sceneIndex;
+            qWarning() << "[TupTimeLine::getLayerOpacity()] - Fatal Error: No scene at index -> " << sceneIndex;
         #endif
     }
 

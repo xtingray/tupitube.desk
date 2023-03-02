@@ -43,6 +43,7 @@
 bool TupCommandExecutor::createLayer(TupLayerResponse *response)
 {	
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupCommandExecutor::createLayer()]";
     #endif
 

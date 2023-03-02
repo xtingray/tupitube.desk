@@ -57,6 +57,7 @@ void TupCommandExecutor::getScenes(TupSceneResponse *response)
 bool TupCommandExecutor::createScene(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupCommandExecutor::createScene()]";
     #endif
 

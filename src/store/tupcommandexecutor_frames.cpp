@@ -44,6 +44,7 @@
 bool TupCommandExecutor::createFrame(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupCommandExecutor::createFrame()]";
     #endif
 
