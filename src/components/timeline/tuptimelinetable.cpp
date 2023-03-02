@@ -145,6 +145,8 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
                     painter->drawEllipse(option.rect.x() + ((option.rect.width() - offset)/2),
                                          option.rect.y() + ((option.rect.height() - offset)/2),
                                          offset, offset);
+
+                    qDebug() << "TupTimeLineTableItemDelegate::paint() - RECT -> " << option.rect.size();
                 }
             } else {
                 painter->setBrush(QColor(0, 136, 0));
