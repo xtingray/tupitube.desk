@@ -109,8 +109,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     toolbarLayout->addLayout(toolsLayout);
 
     addChild(toolBar, Qt::AlignHCenter);
-    
-    // scenesContainer = new TupTimelineSceneContainer(this);
+
     scenesContainer = new TupTimelineSceneContainer;
     addChild(scenesContainer);
     
@@ -278,6 +277,7 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
                     if (layer) {
                         if (response->getMode() == TupProjectResponse::Do) {
                             framesTable->insertLayer(layerIndex, response->getArg().toString());
+
                             return;
                         } else {
                             framesTable->insertLayer(layerIndex, layer->getLayerName());
@@ -285,6 +285,7 @@ void TupTimeLine::layerResponse(TupLayerResponse *response)
                             int total = frames.count();
                             for (int i=0; i<total; i++)
                                 framesTable->insertFrame(layerIndex);
+
                             return;
                         }
                     }

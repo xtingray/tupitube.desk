@@ -114,7 +114,6 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         QString frameSelection;
         bool doSelection;
         QDoubleSpinBox *opacitySpinBox;
-        // QList<double> layerOpacityList;
 };
 
 #endif

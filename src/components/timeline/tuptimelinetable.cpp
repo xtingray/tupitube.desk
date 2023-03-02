@@ -44,6 +44,7 @@ class TupTimeLineTableItemDelegate : public QItemDelegate
         TupTimeLineTableItemDelegate(QObject *parent = nullptr);
         ~TupTimeLineTableItemDelegate();
 
+        // virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
         virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     private:
@@ -60,6 +61,16 @@ TupTimeLineTableItemDelegate::~TupTimeLineTableItemDelegate()
 {
 }
 
+/*
+QSize TupTimeLineTableItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    Q_UNUSED(option)
+    Q_UNUSED(index)
+
+    return QSize(5, 5);
+}
+*/
+
 void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     /*
@@ -74,7 +85,7 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
     TupTimeLineTable *table = qobject_cast<TupTimeLineTable *>(index.model()->parent());
     TupTimeLineTableItem *item = dynamic_cast<TupTimeLineTableItem *>(table->itemFromIndex(index));
 
-    // draw the background color
+    // Draw the background color
     QVariant value = index.data(Qt::BackgroundRole);
     if (value.isValid()) {
         painter->save();
@@ -127,7 +138,7 @@ void TupTimeLineTableItemDelegate::paint(QPainter *painter, const QStyleOptionVi
                 if (item->isLocked()) {
                     painter->setPen(QPen(Qt::red, 1, Qt::SolidLine));
                     painter->setBrush(Qt::red);
-                } else {
+                } else { // Painting a circle inside every frame
                     if (item->isEmpty())
                         painter->setBrush(Qt::transparent);
 
@@ -186,6 +197,10 @@ bool TupTimeLineTableItem::isSound()
 
 TupTimeLineTable::TupTimeLineTable(int index, int fps, QWidget *parent) : QTableWidget(0, 200, parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::TupTimeLineTable()]";
+    #endif
+
     isLocalRequest = false;
     sceneIndex = index;
     frameIndex = 0;
@@ -193,6 +208,11 @@ TupTimeLineTable::TupTimeLineTable(int index, int fps, QWidget *parent) : QTable
 
     removingLayer = false;
     removingFrame = false;
+
+    setItemDelegate(new TupTimeLineTableItemDelegate(this));
+    setSelectionBehavior(QAbstractItemView::SelectItems);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     setItemSize(5, 5);
     setTableHeaders(fps);
@@ -202,16 +222,38 @@ TupTimeLineTable::~TupTimeLineTable()
 {
 }
 
+void TupTimeLineTable::setItemSize(int w, int h)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::setItemSize()] - w -> " << w;
+        qDebug() << "[TupTimeLineTable::setItemSize()] - h -> " << h;
+    #endif
+
+    rectWidth = w;
+    rectHeight = h;
+}
+
+void TupTimeLineTable::adjustCellsSize()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::adjustCellsSize()] - rectWidth -> " << rectWidth;
+        qDebug() << "[TupTimeLineTable::adjustCellsSize()] - rectHeight -> " << rectHeight;
+    #endif
+
+    int framesTotal = columnCount();
+    for (int column = 0; column < framesTotal; column++)
+         horizontalHeader()->resizeSection(column, rectWidth);
+
+    int layerTotal = rowCount();
+    for (int row = 0; row < layerTotal; row++)
+         layersColumn->resizeSection(row, rectHeight);
+}
+
 void TupTimeLineTable::setTableHeaders(int fps)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupTimeLineTable::setTableHeaders()]";
     #endif
-
-    setItemDelegate(new TupTimeLineTableItemDelegate(this));
-    setSelectionBehavior(QAbstractItemView::SelectItems);
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     TupTimeLineRuler *ruler = new TupTimeLineRuler(fps, this);
     setHorizontalHeader(ruler);
@@ -260,14 +302,6 @@ void TupTimeLineTable::requestLayerMove(int logicalIndex, int oldLayerIndex, int
     }
 }
 
-void TupTimeLineTable::setItemSize(int w, int h)
-{
-    rectHeight = h;
-    rectWidth = w;
-    
-    fixSize();
-}
-
 bool TupTimeLineTable::isSoundLayer(int layerIndex)
 {
     if (layerIndex < 0 && layerIndex >= rowCount())
@@ -284,14 +318,14 @@ void TupTimeLineTable::insertLayer(int layerIndex, const QString &name)
 
     insertRow(layerIndex);
     layersColumn->insertSection(layerIndex, name);
-    fixSize();
+    adjustCellsSize();
 }
 
 void TupTimeLineTable::insertSoundLayer(int layerIndex, const QString &name)
 {
     insertRow(layerIndex);
     layersColumn->insertSection(layerIndex, name);
-    fixSize();
+    adjustCellsSize();
 }
 
 void TupTimeLineTable::removeLayer(int layerIndex)
@@ -376,6 +410,10 @@ int TupTimeLineTable::lastFrameByLayer(int layerIndex)
 
 void TupTimeLineTable::insertFrame(int layerIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLineTable::insertFrame()] - layerIndex -> " << layerIndex;
+    #endif
+
     if (layerIndex < 0 || layerIndex >= rowCount())
         return;
 
@@ -386,6 +424,8 @@ void TupTimeLineTable::insertFrame(int layerIndex)
     setAttribute(layerIndex, lastFrame, TupTimeLineTableItem::IsUsed, true);
     setAttribute(layerIndex, lastFrame, TupTimeLineTableItem::IsEmpty, true);
     setAttribute(layerIndex, lastFrame, TupTimeLineTableItem::IsSound, false);
+
+    adjustCellsSize();
 }
 
 void TupTimeLineTable::restoreFrameSelection(int layerIndex, int frameIndex, const QString &selection)
@@ -523,17 +563,6 @@ void TupTimeLineTable::setAttribute(int layerIndex, int frameIndex, TupTimeLineT
     item->setData(att, value);
 }
 
-void TupTimeLineTable::fixSize()
-{
-    int framesTotal = columnCount();
-    for (int column = 0; column < framesTotal; column++)
-         horizontalHeader()->resizeSection(column, rectWidth);
-
-    int layerTotal = rowCount();
-    for (int row = 0; row < layerTotal; row++)
-         layersColumn->resizeSection(row, rectHeight);
-}
-
 void TupTimeLineTable::requestFrameSelection(int currentLayerIndex, int currentFrameIndex,
                                              int previousLayerIndex, int previousFrameIndex)
 {
@@ -592,7 +621,7 @@ void TupTimeLineTable::mousePressEvent(QMouseEvent *event)
         int newTotal = total + 100;
         for (int i=total; i < newTotal; i++)
              insertColumn(i);
-        fixSize();
+        adjustCellsSize();
     }
 
     QTableWidget::mousePressEvent(event);
@@ -651,6 +680,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
                 selectionModel()->select(model()->index(j, frame), QItemSelectionModel::Select);
             emit selectionCopied();
         }
+
         return;
     }
 
@@ -662,12 +692,14 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
                 selectFrame(i, j);
         }
         emit selectionCopied();
+
         return;
     }
 
     if (event->key() == Qt::Key_V) {
         if (event->modifiers() == Qt::ControlModifier)
             emit selectionPasted();
+
         return;
     }
 
@@ -676,16 +708,19 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
             emit selectionCopied();
             emit selectionRemoved();
         }
+
         return;
     }
 
     if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         emit selectionRemoved();
+
         return;
     }
 
     if (event->key() == Qt::Key_Return) {
         emit newPerspective(4);
+
         return;
     }
 
@@ -698,6 +733,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
             else
                 setCurrentCell(currentRow(), next);
         }
+
         return;
     }    
 
@@ -712,6 +748,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
             if (next == -1 && event->modifiers() == Qt::ControlModifier)
                 emit selectionRemoved();
         }
+
         return;
     }
 
@@ -719,6 +756,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
         int next = currentRow() - 1;
         if (next >= 0) 
             setCurrentCell(next, currentColumn());
+
         return;
     }
 
@@ -727,6 +765,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
         int next = currentRow() + 1;
         if (next <= limit)
             setCurrentCell(next, currentColumn());
+
         return;
     }
 
