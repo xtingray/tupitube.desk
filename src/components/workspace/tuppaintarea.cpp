@@ -1829,6 +1829,11 @@ void TupPaintArea::importExternalObjects(const QString &tempPath, const QString 
 
 void TupPaintArea::importLocalProject(const QString &objectPath, bool onlyLibrary)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintArea::importLocalProject()] - objectPath -> " << objectPath;
+        qDebug() << "[TupPaintArea::importLocalProject()] - onlyLibrary -> " << onlyLibrary;
+    #endif
+
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QString tempFolder = TAlgorithm::randomString(10);

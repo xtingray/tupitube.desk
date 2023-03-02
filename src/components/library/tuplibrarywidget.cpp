@@ -1052,51 +1052,53 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
                     << " | Project Size: " << "[" << projectWidth << ", " << projectHeight << "] - Extension -> " << ext;
         #endif
 
-        if (picWidth > projectWidth || picHeight > projectHeight) {
-            QMessageBox msgBox;
-            msgBox.setWindowTitle(tr("File:") + " " + imageName);
-            msgBox.setIcon(QMessageBox::Question);
-            msgBox.setText(tr("Image is bigger than workspace."));
-            msgBox.setInformativeText(tr("Do you want to resize it?"));
-            msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            msgBox.show();
+        if (!isExternalLibraryAsset) {
+            if (picWidth > projectWidth || picHeight > projectHeight) {
+                QMessageBox msgBox;
+                msgBox.setWindowTitle(tr("File:") + " " + imageName);
+                msgBox.setIcon(QMessageBox::Question);
+                msgBox.setText(tr("Image is bigger than workspace."));
+                msgBox.setInformativeText(tr("Do you want to resize it?"));
+                msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+                msgBox.setDefaultButton(QMessageBox::Ok);
+                msgBox.show();
 
-            msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                        static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
 
-            if (msgBox.exec() == QMessageBox::Yes) {
-                msgBox.close();
-                pixmap = new QPixmap();
-                if (pixmap->loadFromData(data, ext)) {
-                    QPixmap newpix;
-                    if (picWidth > picHeight) {
-                        if (picWidth > projectWidth)
-                            newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
-                        else
-                            newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
-                    } else { // picHeight >= picWidth
-                        if (picHeight > projectHeight)
-                            newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
-                        else
-                            newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
-                    }
+                if (msgBox.exec() == QMessageBox::Yes) {
+                    msgBox.close();
+                    pixmap = new QPixmap();
+                    if (pixmap->loadFromData(data, ext)) {
+                        QPixmap newpix;
+                        if (picWidth > picHeight) {
+                            if (picWidth > projectWidth)
+                                newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
+                            else
+                                newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
+                        } else { // picHeight >= picWidth
+                            if (picHeight > projectHeight)
+                                newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
+                            else
+                                newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
+                        }
 
-                    QBuffer buffer(&data);
-                    buffer.open(QIODevice::WriteOnly);
-                    if (newpix.save(&buffer, ext)) {
-                        #ifdef TUP_DEBUG
-                            qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image resize successfully! -> " << imageName;
-                        #endif
+                        QBuffer buffer(&data);
+                        buffer.open(QIODevice::WriteOnly);
+                        if (newpix.save(&buffer, ext)) {
+                            #ifdef TUP_DEBUG
+                                qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image resize successfully! -> " << imageName;
+                            #endif
+                        } else {
+                            #ifdef TUP_DEBUG
+                                qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't save resized image -> " << imageName;
+                            #endif
+                        }
                     } else {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't save resized image -> " << imageName;
+                            qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't load large image -> " << imageName;
                         #endif
                     }
-                } else {
-                    #ifdef TUP_DEBUG
-                        qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't load large image -> " << imageName;
-                    #endif
                 }
             }
         }
