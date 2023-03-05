@@ -3397,6 +3397,10 @@
         <source>It&apos;s a directory! Please, pick a library object</source>
         <translation>这是目录！ 请选择一个库对象</translation>
     </message>
+    <message>
+        <source>File:</source>
+        <translation>文件：</translation>
+    </message>
 </context>
 <context>
     <name>TupLipsyncDoc</name>
@@ -4382,6 +4386,18 @@
         <source>Network Fatal Error. Please, contact us!</source>
         <translation>网络致命错误。 请联系我们！</translation>
     </message>
+    <message>
+        <source>Project Dimension Conflict</source>
+        <translation>项目维度冲突</translation>
+    </message>
+    <message>
+        <source>Imported scenes require a different dimension than the current to fit accurately.</source>
+        <translation>导入的场景需要与当前场景不同的尺寸才能准确匹配。</translation>
+    </message>
+    <message>
+        <source>Do you want to resize your current project?</source>
+        <translation>您要调整当前项目的大小吗？</translation>
+    </message>
 </context>
 <context>
     <name>TupPaintAreaBase</name>
@@ -4950,8 +4966,8 @@
         <translation>导入资产</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation>关闭</translation>
+        <source>Cancel</source>
+        <translation>取消</translation>
     </message>
 </context>
 <context>
