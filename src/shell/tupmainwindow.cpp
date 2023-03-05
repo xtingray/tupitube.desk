@@ -401,7 +401,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         }
         */
 
-        playerTab = new TupAnimationspace(cameraWidget);
+        playerTab = new TupAnimationSpace(cameraWidget);
         playerTab->setWindowIcon(QIcon(THEME_DIR + "icons/play_small.png"));
         playerTab->setWindowTitle(tr("Player"));                    
         connect(playerTab, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
@@ -1683,16 +1683,22 @@ void TupMainWindow::updateUsersOnLine(const QString &login, int state)
 
 void TupMainWindow::resizeProjectDimension(const QSize dimension)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::resizeProjectDimension()] - dimension -> " << dimension;
+    #endif
+
     m_projectManager->updateProjectDimension(dimension);
+    disconnect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString&)),
+            this, SLOT(updateProjectAuthor(const QString&)));
     disconnectWidgetToManager(cameraWidget);
     delete cameraWidget;
 
-    cameraWidget = new TupCameraWidget(m_projectManager->getProject());
+    playerTab->setCameraWidget(m_projectManager->getProject());
+
+    cameraWidget = playerTab->getCameraWidget();
     connect(cameraWidget, SIGNAL(projectAuthorUpdated(const QString&)),
             this, SLOT(updateProjectAuthor(const QString&)));
     connectWidgetToManager(cameraWidget);
-
-    playerTab->setCameraWidget(cameraWidget);
 }
 
 void TupMainWindow::saveDefaultPath(const QString &dir)

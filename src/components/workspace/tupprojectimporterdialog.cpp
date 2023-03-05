@@ -83,20 +83,20 @@ void TupProjectImporterDialog::setUI(QStringList scenes)
         layout->addWidget(separator);
     }
 
+    QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
+    closeButton->setToolTip(tr("Cancel"));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+
     okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
     okButton->setToolTip(tr("Import Assets"));
     okButton->setVisible(false);
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
-    QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
-    closeButton->setToolTip(tr("Close"));
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
-
     QWidget *buttonsWidget = new QWidget;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttonsWidget);
-    buttonLayout->addWidget(okButton);
     buttonLayout->addWidget(closeButton);
+    buttonLayout->addWidget(okButton);
 
     layout->addWidget(buttonsWidget, 1, Qt::AlignRight);
     layout->addStretch(1);

@@ -139,8 +139,11 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     connect(paintArea, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)),
             this, SIGNAL(webAssetDropped(const QString &, const QString &, TupLibraryObject::ObjectType, QByteArray)));
     connect(paintArea, SIGNAL(libraryAssetDragged()), this, SIGNAL(libraryAssetDragged()));
-    connect(paintArea, SIGNAL(sceneCreated(int)), this, SIGNAL(sceneCreated(int)));
 
+    connect(paintArea, SIGNAL(resizeActionRequested(const QSize &)),
+            this, SLOT(resizeProjectDimension(const QSize &)));
+
+    connect(paintArea, SIGNAL(sceneCreated(int)), this, SIGNAL(sceneCreated(int)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), verticalRuler, SLOT(movePointers(const QPointF&)));
     connect(paintArea, SIGNAL(cursorPosition(const QPointF &)), horizontalRuler, SLOT(movePointers(const QPointF&)));
     connect(paintArea, SIGNAL(changedZero(const QPointF&)), this, SLOT(changeRulerOrigin(const QPointF&)));
@@ -2301,18 +2304,18 @@ void TupDocumentView::cameraInterface()
     }
 }
 
-void TupDocumentView::resizeProjectDimension(const QSize dimension)
+void TupDocumentView::resizeProjectDimension(const QSize &size)
 {
     #ifdef TUP_DEBUG
        qDebug() << "[TupDocumentView::resizeProjectDimension(QSize)]";
     #endif
 
-    paintArea->updateDimension(dimension);
+    paintArea->updateDimension(size);
 
     int width = wsDimension.width();
     int height = wsDimension.height();
-    int pWidth = dimension.width();
-    int pHeight = dimension.height();
+    int pWidth = size.width();
+    int pHeight = size.height();
 
     double proportion = 1;
 
@@ -2331,7 +2334,7 @@ void TupDocumentView::resizeProjectDimension(const QSize dimension)
         setZoomPercent("75");
     }
 
-    emit projectSizeHasChanged(dimension);
+    emit projectSizeHasChanged(size);
     paintArea->updatePaintArea();
 }
 

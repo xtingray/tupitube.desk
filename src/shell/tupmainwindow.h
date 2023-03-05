@@ -222,7 +222,7 @@ class TupMainWindow : public TabbedMainWindow
     private:
         QScreen *screen;
         TupDocumentView *animationTab;
-        TupAnimationspace *playerTab;
+        TupAnimationSpace *playerTab;
         TupNewsDialog *newsDialog;
         TupStatusBar *m_statusBar;
         TActionManager *m_actionManager;

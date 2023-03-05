@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupinfodialog.h"
+#include "tapptheme.h"
 
 #include <QBoxLayout>
 #include <QLabel>
@@ -41,6 +42,8 @@
 
 TupInfoDialog::TupInfoDialog(const QString &author, const QString &desc, QWidget *parent) : QDialog(parent)
 {
+    setStyleSheet(TAppTheme::themeSettings());
+
     setWindowTitle(tr("Project Information"));
     setModal(true);
 
@@ -61,9 +64,12 @@ TupInfoDialog::TupInfoDialog(const QString &author, const QString &desc, QWidget
     descLayout->addWidget(descLabel);
     descLayout->addWidget(descText);
 
-    QPushButton *okButton = new QPushButton(tr("Update"), this);
+    QPushButton *okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
+    okButton->setToolTip(tr("Update"));
     connect(okButton, SIGNAL(pressed()), this, SLOT(updateInfo()));
-    QPushButton *cancelButton = new QPushButton(tr("Cancel"), this);
+
+    QPushButton *cancelButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
+    cancelButton->setToolTip(tr("Cancel"));
     connect(cancelButton, SIGNAL(pressed()), this, SLOT(reject()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;

@@ -79,6 +79,7 @@ bool TupProjectScanner::read(const QString &filename, const QString &tempFolder)
         projectName = project->getName();
         projectVersion = project->getVersion();
         bgColor = project->getCurrentBgColor();
+        dimension = project->getDimension();
         objectsTotal = 0;
         QFile *libraryFile = new QFile(projectDir.path() + "/library.tpl");
         if (libraryFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -92,7 +93,6 @@ bool TupProjectScanner::read(const QString &filename, const QString &tempFolder)
             }
             QDomElement root = document.documentElement();
             QDomNode domNode = root.firstChild();
-            // QDomNode node = domNode.firstChild();
             library = scanLibrary(domNode);
             libraryFile->close();
             delete libraryFile;
@@ -182,6 +182,11 @@ float TupProjectScanner::getProjectVersion()
 QColor TupProjectScanner::getProjectBgColor() const
 {
     return bgColor;
+}
+
+QSize TupProjectScanner::getProjectDimension() const
+{
+    return dimension;
 }
 
 int TupProjectScanner::scenesCount()
@@ -298,101 +303,6 @@ TupProjectScanner::LibraryObject TupProjectScanner::scanObject(QDomNode node)
 
     return object;
 }
-
-/*
-bool TupProjectScanner::scanObjects(const QString &folderId, const QString &xml)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectScanner::scanObjects()] - Folder -> " << folderId;
-    #endif
-
-    objects.clear();
-    QDomDocument document;
-    if (!document.setContent(xml)) {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupProjectScanner::scanObjects()] - Fatal Error: Can't read XML input!";
-        #endif
-
-        return false;
-    }
-
-    QDomElement root = document.documentElement();
-    QDomNode domNode = root.firstChild();
-    while (!domNode.isNull()) {
-        QDomElement e = domNode.toElement();
-        if (!e.isNull()) {
-            if (e.tagName() == "object") {
-                if (scanObject(domNode)) {
-                    objects << object;
-                } else {
-                    #ifdef TUP_DEBUG
-                        qWarning() << "[TupProjectScanner::scanObjects()] - Fatal Error: Library XML file is invalid!";
-                    #endif
-
-                    return false;
-                }
-            } else if (e.tagName() == "folder") {
-                qDebug() << "Inner folder found! -> " << e.attribute("id");
-            }
-        }
-        domNode = domNode.nextSibling();
-    }
-
-    return true;
-}
-*/
-
-/*
-bool TupProjectScanner::scanObject(QDomNode node)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectScanner::scanObject()]";
-    #endif
-
-    QDomDocument objectDocument;
-    objectDocument.appendChild(objectDocument.importNode(node, true));
-    QString xml = objectDocument.toString(0);
-
-    QDomDocument document;
-    if (!document.setContent(xml)) {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupProjectScanner::scanObject()] - Fatal Error: Invalid XML structure!";
-        #endif
-
-        return false;
-    }
-
-    QDomElement objectTag = document.documentElement();
-    if (objectTag.tagName() == "object") {
-        object.key = objectTag.attribute("id");
-        if (object.key.isEmpty()) {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupProjectScanner::scanObject()] - Fatal Error: Symbol name is empty!";
-            #endif
-
-            return false;
-        }
-
-        bool isOk = false;
-        int index = objectTag.attribute("type").toInt(&isOk);
-        if (isOk) {
-            object.type = TupLibraryObject::ObjectType(index);
-        } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupProjectScanner::scanObject()] - Fatal Error: Invalid object type!";
-            #endif
-
-            return false;
-        }
-
-        object.path = objectTag.attribute("path");
-    }
-
-    objectsTotal++;
-
-    return true;
-}
-*/
 
 bool TupProjectScanner::isLibraryEmpty()
 {

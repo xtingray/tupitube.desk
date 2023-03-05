@@ -93,7 +93,6 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void setZoomPercent(const QString &percent);
         QSize workSpaceSize() const;
         void updateUsersOnLine(const QString &login, int state);
-        void resizeProjectDimension(const QSize dimension);
         void updatePerspective();
         QColor currentBGColor() const;
         void updateWorkspace();
@@ -162,6 +161,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void importImageToLibrary(const QString &imgPath);
 
     public slots:
+        void resizeProjectDimension(const QSize &size);
         void undo();
         void redo();
         void selectTool();

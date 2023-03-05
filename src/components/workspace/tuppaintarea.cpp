@@ -1866,6 +1866,34 @@ void TupPaintArea::importLocalProject(const QString &objectPath, bool onlyLibrar
             bool scenesSelected = !sceneIndexes.isEmpty();
 
             if (scenesSelected) {
+                QSize newSize = projectScanner->getProjectDimension();
+                QSize currentSize = project->getDimension();
+
+                if (newSize != currentSize) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupPaintArea::importLocalProject()] - Current project dimension -> " << currentSize;
+                        qDebug() << "[TupPaintArea::importLocalProject()] - Imported project dimension -> " << newSize;
+                    #endif
+
+                    QMessageBox msgBox;
+                    msgBox.setWindowTitle(tr("Project Dimension Conflict"));
+                    msgBox.setIcon(QMessageBox::Question);
+                    msgBox.setText(tr("Imported scenes require a different dimension than the current to fit accurately."));
+                    msgBox.setInformativeText(tr("Do you want to resize your current project?"));
+                    msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+                    msgBox.setDefaultButton(QMessageBox::Ok);
+                    msgBox.show();
+
+                    QScreen *screen = QGuiApplication::screens().at(0);
+                    msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                                static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+
+                    if (msgBox.exec() == QMessageBox::Yes) {
+                        msgBox.close();
+                        emit resizeActionRequested(newSize);
+                    }
+                }
+
                 // Checking if the library is required by at least one scene
                 foreach(int index, sceneIndexes) {
                     if (libraryFlags.at(index)) {

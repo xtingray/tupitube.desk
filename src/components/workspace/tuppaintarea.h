@@ -89,8 +89,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void paintBackground();
         void paintForeground();
         void updateSpaceContext();
-        virtual void keyPressEvent(QKeyEvent *event);
-        // virtual void keyReleaseEvent(QKeyEvent *event);
+
         void goOneFrameBack();
         void goOneFrameForward();
         void goToFrame(int frameIndex, int layerIndex, int sceneIndex);
@@ -109,6 +108,9 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         void getLocalAsset(const QString &path);
         void getWebAsset(const QString &webPath);
         void importLocalProject(const QString &path, bool onlyLibrary = false);
+
+    protected:
+        virtual void keyPressEvent(QKeyEvent *event);
 
     public slots:
         void updatePaintArea();
@@ -133,6 +135,7 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
                              TupLibraryObject::ObjectType type, QByteArray data);
         void libraryAssetDragged();
         void sceneCreated(int index);
+        void resizeActionRequested(const QSize &size);
 
     public slots:
         void deleteItems();

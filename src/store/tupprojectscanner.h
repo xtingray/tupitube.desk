@@ -55,6 +55,7 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         QString getProjectName() const;
         float getProjectVersion();
         QColor getProjectBgColor() const;
+        QSize getProjectDimension() const;
         int scenesCount();
         QList<QString> getSceneLabels();
         bool isLibraryEmpty();
@@ -85,6 +86,7 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         QString projectName;
         float projectVersion;
         QColor bgColor;
+        QSize dimension;
         QString projectPath;
         int scenesTotal;
         QList<QString> sceneLabels;
@@ -93,9 +95,7 @@ class TUPITUBE_EXPORT TupProjectScanner : public QObject
         QList<bool> libraryFlags;
 
         Folder library;
-        // QList<LibraryObject> objects;
         int objectsTotal;
-        // LibraryObject object;
 
         bool scanObjects(const QString &folderId, const QString &xml);
         LibraryObject scanObject(QDomNode xml);

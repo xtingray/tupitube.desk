@@ -41,15 +41,16 @@
 
 #include <QMainWindow>
 
-class TUPITUBE_EXPORT TupAnimationspace : public QWidget
+class TUPITUBE_EXPORT TupAnimationSpace : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent = nullptr);
-        ~TupAnimationspace();
+        TupAnimationSpace(TupCameraWidget *playerUI, QWidget *parent = nullptr);
+        ~TupAnimationSpace();
 
-        void setCameraWidget(TupCameraWidget *playerUI);
+        void setCameraWidget(TupProject *project);
+        TupCameraWidget * getCameraWidget();
         void clearInterface();
 
     protected:
@@ -62,6 +63,7 @@ class TUPITUBE_EXPORT TupAnimationspace : public QWidget
     private:
         TupCameraWidget *playerInterface;
         bool playOn;
+        QVBoxLayout *layout;
 };
 
 #endif

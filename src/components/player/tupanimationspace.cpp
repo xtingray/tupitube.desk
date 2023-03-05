@@ -35,41 +35,54 @@
 
 #include "tupanimationspace.h"
 
-TupAnimationspace::TupAnimationspace(TupCameraWidget *playerUI, QWidget *parent): QWidget(parent)
+TupAnimationSpace::TupAnimationSpace(TupCameraWidget *playerUI, QWidget *parent): QWidget(parent)
 {
+    #ifdef TUP_DEBUG
+         qDebug() << "[TupAnimationSpace::TupAnimationSpace()]";
+    #endif
+
     // TODO: Try a nice dark color for this window
     // setStyleSheet("QMainWindow { background-color: #d0d0d0; }");
 
     playerInterface = playerUI;
-    playOn = false;    
-    setCameraWidget(playerInterface);
+    playOn = false;
+
+    layout = new QVBoxLayout(this);
+    layout->addWidget(playerInterface, 0, Qt::AlignCenter);
 }
 
-TupAnimationspace::~TupAnimationspace()
+TupAnimationSpace::~TupAnimationSpace()
 {
     #ifdef TUP_DEBUG
-         qDebug() << "[~TupCameraWidget()]";
+         qDebug() << "[~TupAnimationSpace()]";
     #endif
 
     playerInterface = nullptr;
     delete playerInterface;
 }
 
-void TupAnimationspace::setCameraWidget(TupCameraWidget *playerUI) 
+void TupAnimationSpace::setCameraWidget(TupProject *project)
 {
-    playerInterface = playerUI;
-    QVBoxLayout *layout = new QVBoxLayout();
-    layout->addWidget(playerInterface, 0, Qt::AlignCenter);
-    setLayout(layout);
+    layout->removeWidget(playerInterface);
+
+    playerInterface = new TupCameraWidget(project, this);
+    layout->addStretch();
+    layout->addWidget(playerInterface, 0, Qt::AlignHCenter);
+    layout->addStretch();
 }
 
-void TupAnimationspace::mousePressEvent(QMouseEvent *event)
+TupCameraWidget * TupAnimationSpace::getCameraWidget()
+{
+    return playerInterface;
+}
+
+void TupAnimationSpace::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
     setFocus();
 }
 
-void TupAnimationspace::keyPressEvent(QKeyEvent *event) 
+void TupAnimationSpace::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupAnimationspace::keyPressEvent(QKeyEvent)]";
@@ -122,7 +135,7 @@ void TupAnimationspace::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void TupAnimationspace::clearInterface()
+void TupAnimationSpace::clearInterface()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupAnimationspace::clearInterface()]";
