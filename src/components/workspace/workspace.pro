@@ -91,6 +91,7 @@ HEADERS += tuppaintarea.h \
            tupmodessettingsdialog.h \
            tupmodeslist.h \
            tupprojectimporterdialog.h \
+           tupprojectsizedialog.h \
            tupdocumentview.h
 
 SOURCES += tuppaintarea.cpp \
@@ -117,4 +118,5 @@ SOURCES += tuppaintarea.cpp \
            tupmodessettingsdialog.cpp \
            tupmodeslist.cpp \
            tupprojectimporterdialog.cpp \
+           tupprojectsizedialog.cpp \
            tupdocumentview.cpp

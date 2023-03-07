@@ -35,12 +35,14 @@
 
 #include "txyspinbox.h"
 
-TXYSpinBox::TXYSpinBox(const QString &title, QWidget *parent) : QGroupBox(title, parent), m_modifyTogether(false)
+TXYSpinBox::TXYSpinBox(const QString &title, const QString &xLabel, const QString &yLabel,
+                       QWidget *parent) : QGroupBox(title, parent), m_modifyTogether(false)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
 
     QGridLayout *internal = new QGridLayout;
-    m_textX = new QLabel("X: ");
+    // m_textX = new QLabel("X: ");
+    m_textX = new QLabel(xLabel + " ");
     internal->addWidget(m_textX, 0, 0, Qt::AlignRight);
 
     m_x = new QSpinBox;
@@ -50,7 +52,8 @@ TXYSpinBox::TXYSpinBox(const QString &title, QWidget *parent) : QGroupBox(title,
 
     m_textX->setBuddy(m_x);
 
-    m_textY = new QLabel("Y: ");
+    // m_textY = new QLabel("Y: ");
+    m_textY = new QLabel(yLabel + " ");
     internal->addWidget(m_textY, 1, 0, Qt::AlignRight);
 
     m_y = new QSpinBox;

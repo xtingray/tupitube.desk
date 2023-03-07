@@ -57,7 +57,8 @@ class TupNewProject : public TabDialog
     Q_OBJECT
 
     public:
-        enum Format { FREE = 0, 
+        /*
+        enum ProjectDimension { FREE = 0,
                       FORMAT_520,
                       FORMAT_640,
                       FORMAT_480,
@@ -67,6 +68,7 @@ class TupNewProject : public TabDialog
                       FORMAT_1080_VERTICAL,
                       FORMAT_1080
                     };
+        */
 
         TupNewProject(QWidget *parent = nullptr);
         ~TupNewProject();

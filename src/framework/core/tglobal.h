@@ -98,6 +98,18 @@ enum PapagayoAppViewType { Predefined = 0, Customized };
 
 enum ModuleSource { Library = 0, PapagayoApp };
 
+enum ProjectDimension {
+    FREE = 0,
+    FORMAT_520,
+    FORMAT_640,
+    FORMAT_480,
+    FORMAT_576,
+    FORMAT_720,
+    FORMAT_MOBILE,
+    FORMAT_1080_VERTICAL,
+    FORMAT_1080
+};
+
 #define CUSTOMIZED_MOUTH 5
 #define MOUTHS_PACKAGE_SIZE 10
 

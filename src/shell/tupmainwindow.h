@@ -106,7 +106,7 @@ class TupMainWindow : public TabbedMainWindow
     private:
         void createGUI();
         void setupFileActions();
-        void setPreferencesAction();
+        void setPreferenceActions();
         void setupToolBar();
         void setupMenu();
 
@@ -182,6 +182,7 @@ class TupMainWindow : public TabbedMainWindow
 
         void resizeProjectDimension(const QSize size);
         void updateProjectAuthor(const QString &artist);
+        void editProjectSize();
 
     private slots:
         void preferences();

@@ -2511,6 +2511,10 @@
         <source>Papagayo Lip-sync Module</source>
         <translation>Papagayo 唇形同步模块</translation>
     </message>
+    <message>
+        <source>Project Canvas Size</source>
+        <translation>项目画布大小</translation>
+    </message>
 </context>
 <context>
     <name>TupExportModule</name>
@@ -3716,10 +3720,6 @@
         <translation>保存项目</translation>
     </message>
     <message>
-        <source>Opens the preferences dialog box</source>
-        <translation>打开首选项对话框</translation>
-    </message>
-    <message>
         <source>Export project to several video formats</source>
         <translation>将项目导出为多种视频格式</translation>
     </message>
@@ -3858,6 +3858,18 @@
     <message>
         <source>Import project</source>
         <translation>导入项目</translation>
+    </message>
+    <message>
+        <source>Open the preferences dialog box</source>
+        <translation>打开首选项对话框</translation>
+    </message>
+    <message>
+        <source>Project Canvas Size</source>
+        <translation>项目画布大小</translation>
+    </message>
+    <message>
+        <source>Set the project canvas size</source>
+        <translation>设置项目画布大小</translation>
     </message>
 </context>
 <context>
@@ -4205,6 +4217,14 @@
     <message>
         <source>1080 (Full HD Vertical) - 24</source>
         <translation>1080 (Full HD纵向) - 24</translation>
+    </message>
+    <message>
+        <source>X:</source>
+        <translation>X:</translation>
+    </message>
+    <message>
+        <source>Y:</source>
+        <translation>Y:</translation>
     </message>
 </context>
 <context>
@@ -4983,6 +5003,69 @@
     <message>
         <source>Scene %1</source>
         <translation>场景</translation>
+    </message>
+</context>
+<context>
+    <name>TupProjectSizeDialog</name>
+    <message>
+        <source>Project Canvas Size</source>
+        <translation>项目画布大小</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>应用</translation>
+    </message>
+    <message>
+        <source>Please, set the project canvas size:</source>
+        <translation>请设置项目画布大小：</translation>
+    </message>
+    <message>
+        <source>Free Format</source>
+        <translation>自由格式</translation>
+    </message>
+    <message>
+        <source>520x380 - 24</source>
+        <translation>520x380 - 24</translation>
+    </message>
+    <message>
+        <source>640x480 - 24</source>
+        <translation>640x480 - 24</translation>
+    </message>
+    <message>
+        <source>480 (PAL DV/DVD) - 25</source>
+        <translation>480 (PAL DV/DVD) - 25</translation>
+    </message>
+    <message>
+        <source>576 (PAL DV/DVD) - 25</source>
+        <translation>576 (PAL DV/DVD) - 25</translation>
+    </message>
+    <message>
+        <source>720 (HD) - 24</source>
+        <translation>720 (HD) - 24</translation>
+    </message>
+    <message>
+        <source>1080 (Mobile) - 24</source>
+        <translation>1080 （移动端） - 24</translation>
+    </message>
+    <message>
+        <source>1080 (Full HD Vertical) - 24</source>
+        <translation>1080 (Full HD纵向) - 24</translation>
+    </message>
+    <message>
+        <source>1080 (Full HD) - 24</source>
+        <translation>1080 (Full HD) - 24</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>宽度:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>高度:</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
     </message>
 </context>
 <context>

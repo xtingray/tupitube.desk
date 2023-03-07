@@ -186,6 +186,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         // void exportAnimaticVideo(const QString &path, const QPixmap &pixmap, int fps);
         void postImage();
         void launchLipsyncModule(PapagayoAppMode mode, const QString &soundFile);
+        void editProjectSize();
 
     signals:
         void requestTriggered(const TupProjectRequest *event);

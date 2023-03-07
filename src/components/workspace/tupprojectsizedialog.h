@@ -6,7 +6,7 @@
  *                                                                         *
  *   Developers:                                                           *
  *   2010:                                                                 *
- *    Gustavo Gonzalez / xtingray                                          *
+ *    Gustavo Gonzalez                                                     *
  *                                                                         *
  *   KTooN's versions:                                                     * 
  *                                                                         *
@@ -33,52 +33,43 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TXYSPINBOX_H
-#define TXYSPINBOX_H
+#ifndef TUPPROJECTSIZEDIALOG_H
+#define TUPPROJECTSIZEDIALOG_H 
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
-#include "tapplication.h"
+#include "txyspinbox.h"
 
-#include <QGroupBox>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QComboBox>
 #include <QPushButton>
-#include <QSpinBox>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QSizePolicy>
 
-class T_GUI_EXPORT TXYSpinBox : public QGroupBox
+class TUPITUBE_EXPORT TupProjectSizeDialog : public QDialog 
 {
     Q_OBJECT
 
     public:
-        TXYSpinBox(const QString &title, const QString &xLabel, const QString &yLabel, QWidget *parent = nullptr);
-        ~TXYSpinBox();
+        TupProjectSizeDialog(const QSize &size, QWidget *parent = nullptr);
+        ~TupProjectSizeDialog();
 
-        void setSingleStep(int step);
-        void setMinimum(int min);
-        void setMaximum(int max);
-        void setX(int x);
-        void setY(int y);
-        int x();
-        int y();
-        void setModifyTogether(bool enable);
-
-    signals:
-        void valuesHaveChanged();
+        QSize getSize();
 
     private slots:
-        void updateXValue();
-        void updateYValue();
-        void toggleModify();
+        void setPresets(const QSize &size);
+        void setPresets(int index);
+        void updatePresetsCombo();
 
     private:
-        QLabel *m_textX;
-        QLabel *m_textY;
-        QSpinBox *m_x;
-        QSpinBox *m_y;
-        QPushButton *m_separator;
-        bool m_modifyTogether;
+        void setUI(const QSize &size);
+        void checkDimensions(const QSize &size);
+        void enableOkButton();
+
+        QVBoxLayout *layout;
+        QPushButton *okButton;
+        QSize projectSize;
+        QComboBox *presetsCombo;
+        TXYSpinBox *sizeSpin;
 };
 
 #endif

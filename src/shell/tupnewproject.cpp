@@ -129,7 +129,7 @@ TupNewProject::TupNewProject(QWidget *parent) : TabDialog(parent)
     subLayout->addWidget(colorButton);
     subLayout->addLayout(fpsLayout);
 
-    size = new TXYSpinBox(tr("Dimension"), infoContainer);
+    size = new TXYSpinBox(tr("Dimension"), tr("X:"), tr("Y:"), infoContainer);
     size->setMinimum(50);
     size->setMaximum(15000);
     size->setX(520);

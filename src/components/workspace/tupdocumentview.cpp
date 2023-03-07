@@ -60,6 +60,7 @@
 #include "tupmodessettingsdialog.h"
 #include "tuppapagayoapp.h"
 #include "tuplipsync.h"
+#include "tupprojectsizedialog.h"
 
 #include <QDir>
 #include <QApplication>
@@ -405,6 +406,10 @@ void TupDocumentView::setupDrawActions()
 
     new TAction(QPixmap(THEME_DIR + "icons/delete.png"), tr("Delete"), QKeySequence(),
                 paintArea, SLOT(deleteItems()), actionManager, "delete");
+
+    new TAction(QPixmap(THEME_DIR + "icons/size.png"), tr("Project Canvas Size"),
+                                        QKeySequence(tr("")), this, SLOT(editProjectSize()),
+                                        actionManager, "edit_project_size");
 
     /* 
     TAction *group = new TAction(QPixmap(THEME_DIR + "icons/group.png"), tr("&Group"), QKeySequence(tr("Ctrl+G")), 
@@ -1348,6 +1353,8 @@ void TupDocumentView::createToolBar()
     connect(onionFactorSpin, SIGNAL(valueChanged(double)), this, SLOT(setOnionFactor(double)));
 
     barGrid->addWidget(onionFactorSpin);
+    barGrid->addSeparator();
+    barGrid->addAction(actionManager->find("edit_project_size"));
 
     addToolBarBreak();
 
@@ -2735,4 +2742,11 @@ void TupDocumentView::getLocalAsset(const QString &assetPath)
 void TupDocumentView::importLocalProject(const QString &packagePath, bool onlyLibrary)
 {
     paintArea->importLocalProject(packagePath, onlyLibrary);
+}
+
+void TupDocumentView::editProjectSize()
+{
+    TupProjectSizeDialog *dialog = new TupProjectSizeDialog(project->getDimension());
+    if (dialog->exec() == QDialog::Accepted)
+        resizeProjectDimension(dialog->getSize());
 }

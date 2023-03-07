@@ -212,10 +212,11 @@ void TupMainWindow::setupMenu()
     m_fileMenu->addAction(m_actionManager->find("Exit"));
 
     // Setting up the Preferences menu
-    setPreferencesAction();
+    setPreferenceActions();
     m_settingsMenu = menuBar()->addMenu(tr("&Edit"));
 
     m_settingsMenu->addAction(m_actionManager->find("preferences"));
+    m_settingsMenu->addAction(m_actionManager->find("edit_project_size"));
 
     // Menu Insert
     m_insertMenu = menuBar()->addMenu(tr("&Import"));
@@ -294,6 +295,8 @@ void TupMainWindow::setMenuItemsContext(bool flag)
     m_actionManager->enable("save_project_as", flag);
     m_actionManager->enable("close_project", flag);
     m_actionManager->enable("hideaction", flag);
+
+    m_actionManager->enable("edit_project_size", flag);
 
 #ifndef TUP_32BIT
     m_actionManager->enable("export", flag);
@@ -417,12 +420,18 @@ void TupMainWindow::openTupiTubeNetwork()
     QDesktopServices::openUrl(QString("https://www.tupitube.com/?desk"));
 }
 
-void TupMainWindow::setPreferencesAction()
+void TupMainWindow::setPreferenceActions()
 {
     TAction *preferences = new TAction(QPixmap(THEME_DIR + "icons/properties.png"), tr("Pr&eferences..."), 
                                         QKeySequence(tr("Ctrl+P")), this, SLOT(preferences()),
                                         m_actionManager, "preferences");
-    preferences->setStatusTip(tr("Opens the preferences dialog box"));
+    preferences->setStatusTip(tr("Open the preferences dialog box"));
+
+    TAction *projectSize = new TAction(QPixmap(THEME_DIR + "icons/size.png"), tr("Project Canvas Size"),
+                                        QKeySequence(tr("")), this, SLOT(editProjectSize()),
+                                        m_actionManager, "edit_project_size");
+    projectSize->setStatusTip(tr("Set the project canvas size"));
+    m_actionManager->insert(projectSize, "edit_project_size", "edit");
 }
 
 void TupMainWindow::setupHelpActions()
@@ -662,4 +671,9 @@ void TupMainWindow::updateBgColorInPalette(int sceneIndex)
 {
     QColor color = m_projectManager->getSceneBgColor(sceneIndex);
     m_colorPalette->setBgColor(color);
+}
+
+void TupMainWindow::editProjectSize()
+{
+    animationTab->editProjectSize();
 }
