@@ -66,9 +66,7 @@ void TupAnimationSpace::setCameraWidget(TupProject *project)
     layout->removeWidget(playerInterface);
 
     playerInterface = new TupCameraWidget(project, this);
-    layout->addStretch();
-    layout->addWidget(playerInterface, 0, Qt::AlignHCenter);
-    layout->addStretch();
+    layout->addWidget(playerInterface, 0, Qt::AlignCenter);
 }
 
 TupCameraWidget * TupAnimationSpace::getCameraWidget()

@@ -228,21 +228,15 @@ TupProjectScanner::Folder TupProjectScanner::scanLibrary(QDomNode domNode)
     if (!domNode.isNull()) {
         QDomElement rootElement = domNode.toElement();
         if (!rootElement.isNull()) {
-            qDebug() << "rootElement.tagName() -> " << rootElement.tagName();
-            qDebug() << "rootElement.attribute() -> " << rootElement.attribute("id");
             library.key = rootElement.attribute("id");
 
             QDomNode node = domNode.firstChild();
             while(!node.isNull()) {
                 QDomElement e = node.toElement();
-                qDebug() << "e.tagName() -> " << e.tagName();
-                qDebug() << "e.attribute() -> " << e.attribute("id");
                 if (e.tagName() == "folder") {
-                    qDebug() << "Processing folder...";
                     Folder innerFolder = scanLibrary(node);
                     library.folders << innerFolder;
                 } else if (e.tagName() == "object") {
-                    qDebug() << "Processing object...";
                     library.objects << scanObject(e);
                 }
                 node = node.nextSibling();
@@ -306,8 +300,6 @@ TupProjectScanner::LibraryObject TupProjectScanner::scanObject(QDomNode node)
 
 bool TupProjectScanner::isLibraryEmpty()
 {
-    qDebug() << "[TupProjectScanner::isLibraryEmpty()] - objectsTotal -> " << objectsTotal;
-
     return objectsTotal == 0;
 }
 

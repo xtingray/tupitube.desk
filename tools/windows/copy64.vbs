@@ -56,7 +56,7 @@ fileSystem.CopyFile sourceDir & "\components\import\release\tupimport.dll", tupi
 fileSystem.CopyFile sourceDir & "\components\library\release\tupilibrary.dll", tupiDir & "\lib\tupilibrary.dll"
 fileSystem.CopyFile sourceDir & "\components\workspace\release\tupiworkspace.dll", tupiDir & "\lib\tupiworkspace.dll"
 fileSystem.CopyFile sourceDir & "\components\brush\release\tupibrush.dll", tupiDir & "\lib\tupibrush.dll"
-fileSystem.CopyFile sourceDir & "\components\scenes\release\tupiscenes.dll", tupiDir & "\lib\tupiscenes.dll"
+REM fileSystem.CopyFile sourceDir & "\components\scenes\release\tupiscenes.dll", tupiDir & "\lib\tupiscenes.dll"
 fileSystem.CopyFile sourceDir & "\components\timeline\release\tupitimeline.dll", tupiDir & "\lib\tupitimeline.dll"
 fileSystem.CopyFile sourceDir & "\components\news\release\tupinews.dll", tupiDir & "\lib\tupinews.dll"
 fileSystem.CopyFile sourceDir & "\components\micmanager\release\tupimicmanager.dll", tupiDir & "\lib\tupimicmanager.dll"

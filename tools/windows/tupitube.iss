@@ -1,7 +1,7 @@
 [Setup]
 SetupIconFile=bin\raw\icon\tupitube.ico
 AppName=TupiTube Desk
-AppVersion=0.2.19
+AppVersion=0.2.20
 AppPublisher=MaeFloresta
 AppPublisherURL=https://www.tupitube.com/
 DefaultDirName={commonpf}\TupiTube
@@ -28,6 +28,8 @@ Name: "{app}\data\html\examples"
 Name: "{app}\data\html\images"
 Name: "{app}\data\html\pages"
 Name: "{app}\data\dictionaries"
+Name: "{app}\data\dictionaries\en"
+Name: "{app}\data\dictionaries\es"
 Name: "{app}\data\mouths"
 Name: "{app}\data\mouths\1"
 Name: "{app}\data\mouths\2"
@@ -75,7 +77,8 @@ Source: "data\html\css\*"; DestDir: "{app}\data\html\css"
 Source: "data\html\examples\*"; DestDir: "{app}\data\html\examples"
 Source: "data\html\images\*"; DestDir: "{app}\data\html\images"
 Source: "data\html\pages\*"; DestDir: "{app}\data\html\pages"
-Source: "data\dictionaries\*"; DestDir: "{app}\data\dictionaries"
+Source: "data\dictionaries\en\*"; DestDir: "{app}\data\dictionaries\en"
+Source: "data\dictionaries\es\*"; DestDir: "{app}\data\dictionaries\es"
 Source: "data\mouths\1\*"; DestDir: "{app}\data\mouths\1"
 Source: "data\mouths\2\*"; DestDir: "{app}\data\mouths\2"
 Source: "data\mouths\3\*"; DestDir: "{app}\data\mouths\3"
