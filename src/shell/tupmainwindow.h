@@ -193,7 +193,7 @@ class TupMainWindow : public TabbedMainWindow
         void importPalettes();
         void openRecentProject();
         void createPaintCommand(const TupPaintAreaEvent *event);
-        bool callSave();
+        bool callSaveProcedure();
         void restoreFramesMode(TupProject::Mode contextMode);
         void resetMousePointer();
         void updateUsersOnLine(const QString &login, int state);
@@ -282,6 +282,7 @@ class TupMainWindow : public TabbedMainWindow
         QSize webMsgSize;
         TAction *updatesAction;
         TupDocumentView::DockType currentDock;
+        QString examplePath;
 
     signals:
         void responsed(TupProjectResponse *);

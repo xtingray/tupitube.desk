@@ -25,6 +25,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QScreen>
 
 TupBreakdownDialog::TupBreakdownDialog(const QString &word, const QString &phonemes,
                                        const QString &mouthsPath, QWidget *parent) : QDialog(parent)
@@ -78,6 +79,17 @@ void TupBreakdownDialog::setInitVars(const QString &word, const QString &mouthsP
     QStringList mouthsList = directory.entryList(QStringList(), QDir::Files);
     QFileInfo info(mouthsList.at(0));
     extension = info.suffix();
+
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    int screenHeight = screen->geometry().height();
+
+    QPixmap pix(info.absoluteFilePath());
+    pixWidth = pix.width();
+    pixHeight = pix.height();
+
+    pixNewWidth = ((screenWidth*50)/500);
+    pixNewHeight = ((screenHeight*50)/200);
 }
 
 void TupBreakdownDialog::setUI(const QString &word, const QString &phonemes)
@@ -181,15 +193,19 @@ QWidget * TupBreakdownDialog::createMouthsCollection()
 
 QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupBreakdownDialog::createMouthPanel()] - row, column -> " << row << ", " << column;
+    #endif
+
     int labelIndex = column;
     if (row == 1)
         labelIndex = 5 + column;
-    QString text = mouthLabels.at(labelIndex);
+    QString phoneme = mouthLabels.at(labelIndex);
 
     QWidget *panel = new QWidget;
     QVBoxLayout *panelLayout = new QVBoxLayout(panel);
 
-    TButton *phonemeButton = new TButton(text);
+    TButton *phonemeButton = new TButton(phoneme);
     connect(phonemeButton, SIGNAL(clicked(const QString&)), this, SLOT(addPhoneme(const QString&)));
     mouthButtonsList << phonemeButton;
 
@@ -198,15 +214,15 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     */
     panelLayout->addWidget(phonemeButton);
 
-    QString imgPath = folder + text + "." + extension;
+    QString imgPath = folder + phoneme + "." + extension;
     if (!QFile().exists(imgPath))
-        imgPath = folder + text.toLower() + "." + extension;
+        imgPath = folder + phoneme.toLower() + "." + extension;
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupBreakdownDialog::createMouthPanel()] - imgPath -> " << imgPath;
     #endif
 
-    TImageLabel *mouthImage = new TImageLabel(text, QColor(200, 255, 200));
+    TImageLabel *mouthImage = new TImageLabel(phoneme, QColor(200, 255, 200));
     connect(mouthImage, SIGNAL(clicked(const QString&)), this, SLOT(addPhoneme(const QString&)));
     connect(phonemeButton, SIGNAL(clicked(QString)), mouthImage, SLOT(activateMark()));
     connect(mouthImage, SIGNAL(clicked(const QString&)), this, SLOT(updateButtons(const QString&)));
@@ -216,7 +232,12 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
     */
 
     mouthImage->setAlignment(Qt::AlignCenter);
-    mouthImage->setPixmap(QPixmap(imgPath));
+
+    if (pixWidth > pixHeight)
+        mouthImage->setPixmap(QPixmap(imgPath).scaledToWidth(pixNewWidth, Qt::SmoothTransformation));
+    else
+        mouthImage->setPixmap(QPixmap(imgPath).scaledToHeight(pixNewHeight, Qt::SmoothTransformation));
+
     mouthImage->setStyleSheet("QWidget { border: 1px solid #cccccc; border-radius: 3px; }");
     panelLayout->addWidget(mouthImage, Qt::AlignCenter);
 

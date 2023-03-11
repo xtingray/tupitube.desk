@@ -103,6 +103,12 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     uiStyleSheet = TAppTheme::themeSettings();
     setStyleSheet(uiStyleSheet);
 
+#ifdef Q_OS_WIN
+    examplePath = SHARE_DIR + "html/examples/example.tup";
+#else
+    examplePath = SHARE_DIR + "data/html/examples/example.tup";
+#endif
+
     // Calling out the project manager
     m_projectManager = new TupProjectManager(this);
 
@@ -392,7 +398,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
         m_libraryWidget->setNetworking(isNetworked);
         // Autosave event
-        connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSave()));
+        connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSaveProcedure()));
 
         /*
         if (isNetworked) {
@@ -751,18 +757,21 @@ void TupMainWindow::openExample()
     if (cancelChanges())
         return;
 
+    /*
     #ifdef Q_OS_WIN
-        QString example = SHARE_DIR + "html/examples/example.tup";
+        QString examplePath = SHARE_DIR + "html/examples/example.tup";
     #else
-        QString example = SHARE_DIR + "data/html/examples/example.tup";
+        QString examplePath = SHARE_DIR + "data/html/examples/example.tup";
     #endif
-    if (QFile::exists(example)) {
-        if (m_fileName.compare(example) != 0)
-            openProject(example);
+    */
+
+    if (QFile::exists(examplePath)) {
+        if (m_fileName.compare(examplePath) != 0)
+            openProject(examplePath);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupMainWindow::openExample()] - "
-                        "Fatal Error: Couldn't open example file -> " << QString(example);
+                        "Fatal Error: Couldn't open example file -> " << QString(examplePath);
         #endif
         TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
     }
@@ -1406,7 +1415,7 @@ void TupMainWindow::updateCurrentTab(int index)
 
 void TupMainWindow::exportProject()
 {
-    if (callSave()) {
+    if (callSaveProcedure()) {
         exportWidget = new TupExportWidget(m_projectManager->getProject(), this);
         connect(exportWidget, SIGNAL(isDone()), animationTab, SLOT(updatePaintArea()));
         exportWidget->show();
@@ -1432,7 +1441,7 @@ void TupMainWindow::postProject()
         }
     }
 
-    if (callSave()) {
+    if (callSaveProcedure()) {
         QFile file(m_fileName);
         double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
         if (fileSize < 10) {
@@ -1487,7 +1496,7 @@ void TupMainWindow::postFrame(const QString &imagePath)
         qDebug() << "[TupMainWindow::postFrame()] - imagePath -> " << imagePath;
     #endif
 
-    if (callSave()) {
+    if (callSaveProcedure()) {
         TCONFIG->beginGroup("Network");
         QString username = TCONFIG->value("Username").toString();
         QString password = TCONFIG->value("Password").toString();
@@ -1549,10 +1558,12 @@ void TupMainWindow::postFrame(const QString &imagePath)
     }
 }
 
-bool TupMainWindow::callSave()
+bool TupMainWindow::callSaveProcedure()
 {
-    if (m_projectManager->projectWasModified())
-        return saveProject();
+    if (m_fileName.compare(examplePath) != 0) {
+        if (m_projectManager->projectWasModified())
+            return saveProject();
+    }
 
     return true;
 }
