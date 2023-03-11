@@ -41,6 +41,8 @@
     <string>Created by MaeFloresta</string>
     <key>CFBundleIdentifier</key>
     <string>com.maefloresta.tupitube</string>
+    <key>NSCameraUsageDescription</key>
+    <string>APPNAME requires access to your computer’s camera.</string>
     <key>NOTE</key>
     <string>Package built by cristiandavid@me.com</string>
 </dict>

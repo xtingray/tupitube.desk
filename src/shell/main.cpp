@@ -78,7 +78,9 @@ int main(int argc, char ** argv)
     kAppProp->setCodeName(CODE_NAME);
 
     // Defining TupiTube Desk global variables
+    #if defined(Q_OS_MAC)
     QDir appDirPath(QApplication::applicationDirPath());
+    #endif
     TCONFIG->beginGroup("General");
 
     if (TCONFIG->value("RandomSeed", 0).toDouble() == 0.0) {

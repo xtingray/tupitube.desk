@@ -1954,18 +1954,18 @@ void TupPaintArea::importLocalProject(const QString &objectPath, bool onlyLibrar
         // Removing temporary folder
         QDir assetsDir(tempPath);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPaintArea::getLocalAsset()] - Removing temporary folder -> " << tempPath;
+            qDebug() << "[TupPaintArea::importLocalProject()] - Removing temporary folder -> " << tempPath;
         #endif
         if (assetsDir.exists()) {
             if (!assetsDir.removeRecursively()) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "[TupPaintArea::getLocalAsset(] - Error: Can't remove temporary folder -> " << tempPath;
+                    qWarning() << "[TupPaintArea::importLocalProject(] - Error: Can't remove temporary folder -> " << tempPath;
                 #endif
             }
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupPaintArea::getLocalAsset()] - Fatal Error: Can't open TUP source file -> " << objectPath;
+            qDebug() << "[TupPaintArea::importLocalProject()] - Fatal Error: Can't open TUP source file -> " << objectPath;
         #endif
         TOsd::self()->display(TOsd::Error, tr("Sorry, TUP source file is invalid!"));
     }
@@ -1976,11 +1976,16 @@ void TupPaintArea::importLocalProject(const QString &objectPath, bool onlyLibrar
 void TupPaintArea::getLocalAsset(const QString &path)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPaintArea::getLocalAsset(QString)]";
+        qDebug() << "[TupPaintArea::getLocalAsset(QString)] - path -> " << path;
     #endif
 
     QString objectPath = path;
-    objectPath = objectPath.replace("file://", "");
+    #ifdef Q_OS_WIN
+        objectPath = objectPath.replace("file:///", "");
+    #else
+        objectPath = objectPath.replace("file://", "");
+    #endif
+
     QString lowercase = objectPath.toLower();
 
     if (lowercase.endsWith(".tup")) { // Importing elements from external TUP source file
