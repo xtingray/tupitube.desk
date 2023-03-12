@@ -25,7 +25,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QScreen>
 
 TupBreakdownDialog::TupBreakdownDialog(const QString &word, const QString &phonemes,
                                        const QString &mouthsPath, QWidget *parent) : QDialog(parent)
@@ -80,16 +79,10 @@ void TupBreakdownDialog::setInitVars(const QString &word, const QString &mouthsP
     QFileInfo info(mouthsList.at(0));
     extension = info.suffix();
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
-    int screenHeight = screen->geometry().height();
-
-    QPixmap pix(info.absoluteFilePath());
+    QString imgPath = folder + mouthLabels.first() + "." + extension;
+    QPixmap pix(imgPath);
     pixWidth = pix.width();
     pixHeight = pix.height();
-
-    pixNewWidth = ((screenWidth*50)/500);
-    pixNewHeight = ((screenHeight*50)/200);
 }
 
 void TupBreakdownDialog::setUI(const QString &word, const QString &phonemes)
@@ -233,10 +226,14 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
 
     mouthImage->setAlignment(Qt::AlignCenter);
 
-    if (pixWidth > pixHeight)
-        mouthImage->setPixmap(QPixmap(imgPath).scaledToWidth(pixNewWidth, Qt::SmoothTransformation));
-    else
-        mouthImage->setPixmap(QPixmap(imgPath).scaledToHeight(pixNewHeight, Qt::SmoothTransformation));
+    if (pixWidth > 200 || pixHeight > 200) {
+        if (pixWidth > pixHeight)
+            mouthImage->setPixmap(QPixmap(imgPath).scaledToWidth(200, Qt::SmoothTransformation));
+        else
+            mouthImage->setPixmap(QPixmap(imgPath).scaledToHeight(200, Qt::SmoothTransformation));
+    } else {
+        mouthImage->setPixmap(QPixmap(imgPath));
+    }
 
     mouthImage->setStyleSheet("QWidget { border: 1px solid #cccccc; border-radius: 3px; }");
     panelLayout->addWidget(mouthImage, Qt::AlignCenter);

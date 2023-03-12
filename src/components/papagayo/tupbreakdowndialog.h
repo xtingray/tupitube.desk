@@ -77,8 +77,8 @@ class TUPITUBE_PLUGIN TupBreakdownDialog: public QDialog
         QList<TButton *> mouthButtonsList;
         int pixWidth;
         int pixHeight;
-        int pixNewWidth;
-        int pixNewHeight;
+        // int pixNewWidth;
+        // int pixNewHeight;
 };
 
 #endif
