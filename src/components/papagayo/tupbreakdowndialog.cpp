@@ -80,6 +80,9 @@ void TupBreakdownDialog::setInitVars(const QString &word, const QString &mouthsP
     extension = info.suffix();
 
     QString imgPath = folder + mouthLabels.first() + "." + extension;
+    if (!QFile().exists(imgPath))
+        imgPath = folder + mouthLabels.first().toLower() + "." + extension;
+
     QPixmap pix(imgPath);
     pixWidth = pix.width();
     pixHeight = pix.height();
@@ -226,11 +229,11 @@ QWidget * TupBreakdownDialog::createMouthPanel(int row, int column)
 
     mouthImage->setAlignment(Qt::AlignCenter);
 
-    if (pixWidth > 200 || pixHeight > 200) {
+    if (pixWidth > MOUTH_WIDTH || pixHeight > MOUTH_HEIGHT) {
         if (pixWidth > pixHeight)
-            mouthImage->setPixmap(QPixmap(imgPath).scaledToWidth(200, Qt::SmoothTransformation));
+            mouthImage->setPixmap(QPixmap(imgPath).scaledToWidth(MOUTH_WIDTH, Qt::SmoothTransformation));
         else
-            mouthImage->setPixmap(QPixmap(imgPath).scaledToHeight(200, Qt::SmoothTransformation));
+            mouthImage->setPixmap(QPixmap(imgPath).scaledToHeight(MOUTH_HEIGHT, Qt::SmoothTransformation));
     } else {
         mouthImage->setPixmap(QPixmap(imgPath));
     }

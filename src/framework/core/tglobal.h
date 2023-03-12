@@ -112,6 +112,8 @@ enum ProjectDimension {
 
 #define CUSTOMIZED_MOUTH 5
 #define MOUTHS_PACKAGE_SIZE 10
+#define MOUTH_WIDTH 200
+#define MOUTH_HEIGHT 200
 
 #define DARK_THEME 0
 #define LIGHT_THEME 1

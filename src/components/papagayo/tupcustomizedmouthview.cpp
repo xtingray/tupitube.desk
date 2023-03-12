@@ -65,10 +65,14 @@ void TupCustomizedMouthView::loadImages(const QString &folderPath)
                      if (nameLower.compare(phonemeLower) == 0) {
                          QString path = folderPath + "/" + name + extension;
                          QImage img(path);
-                         if (img.width() > img.height())
-                             img = img.scaledToWidth(2*(height()/3), Qt::SmoothTransformation);
-                         else
-                             img = img.scaledToHeight(2*(width()/3), Qt::SmoothTransformation);
+                         int width = img.width();
+                         int height = img.height();
+                         if (width > MOUTH_WIDTH || height > MOUTH_HEIGHT) {
+                             if (width > height)
+                                 img = QImage(img.scaledToWidth(MOUTH_WIDTH, Qt::SmoothTransformation));
+                             else
+                                 img = QImage(img.scaledToHeight(MOUTH_HEIGHT, Qt::SmoothTransformation));
+                         }
 
                          mouths.insert(phoneme, img);
                          found = true;
