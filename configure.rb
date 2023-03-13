@@ -38,6 +38,8 @@
 # TODO: This script must detect if every command line given is valid 
 #       Currently, it just try to check if some of them are included or not
 
+# Note: gem install os -v 0.9.6
+
 require 'fileutils'
 require_relative 'qonf/configure'
 require_relative 'qonf/info'
