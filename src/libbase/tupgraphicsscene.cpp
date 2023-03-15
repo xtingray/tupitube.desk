@@ -1144,8 +1144,13 @@ void TupGraphicsScene::addLipSyncObjects(TupLayer *layer, int photogram, int zVa
                                      item->setToolTip(tr("lipsync:") + name);
                                      item->setZValue(zValue);
                                      qreal opacity = layer->getOpacity();
-                                     if (opacity >= 0 && opacity <= 1)
+                                     if (opacity >= 0 && opacity <= 1) {
                                          item->setOpacity(opacity);
+                                         #ifdef TUP_DEBUG
+                                             qDebug() << "[TupGraphicsScene::addLipSyncObjects()] - Layer opacity -> "
+                                                     << opacity;
+                                         #endif
+                                     }
                                      onionSkin.accessMap.insert(item, false); // Disable item for Selection tool
                                      addItem(item);
                                  } else {
