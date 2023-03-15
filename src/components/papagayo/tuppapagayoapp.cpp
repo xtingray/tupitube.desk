@@ -760,7 +760,7 @@ void TupPapagayoApp::openFile()
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 #ifdef Q_OS_WIN
-    QString filter = tr("Audio files (*.wav)");
+    QString filter = tr("Audio files (*.mp3 *.wav)");
 #else
     QString filter = tr("Audio files (*.mp3 *.wav)");
 #endif
