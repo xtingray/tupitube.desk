@@ -2411,6 +2411,8 @@ void TupDocumentView::insertPictureInFrame(int id, const QString path)
     }
 }
 
+// New lip-sync entry
+
 void TupDocumentView::openLipSyncCreator()
 {
     #ifdef TUP_DEBUG
@@ -2437,6 +2439,8 @@ void TupDocumentView::openLipSyncCreator()
     QApplication::restoreOverrideCursor();
 }
 
+// Edit lip-sync entry
+
 void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
 {
     #ifdef TUP_DEBUG
@@ -2450,10 +2454,19 @@ void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
     if (scene) {
         TupLipSync *lipsync = scene->getLipSync(lipsyncName);
         if (lipsync) {
+            int layerIndex = scene->getLipSyncLayerIndex(lipsyncName);
+            int frameIndex = lipsync->getInitFrame();
+            QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                                + QString::number(frameIndex) + "," + QString::number(frameIndex);
+
+            TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
+                                                                              TupProjectRequest::Select, selection);
+            emit requestTriggered(&request);
+
             QList<int> indexes;
             indexes << sceneIndex;
-            indexes << scene->getLipSyncLayerIndex(lipsyncName);
-            indexes << lipsync->getInitFrame();
+            indexes << layerIndex;
+            indexes << frameIndex;
 
             TupPapagayoApp *papagayoApp = new TupPapagayoApp(Update, project, lipsync, indexes, this);
             connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),

@@ -778,6 +778,7 @@ void TupPapagayoApp::playVoice()
             qWarning() << "[TupPapagayoApp::playVoice()] - Fatal Error: Mouth images are unset!";
         #endif
         TOsd::self()->display(TOsd::Error, tr("Mouth images are unset!"));
+
         return;
     }
 
@@ -786,7 +787,6 @@ void TupPapagayoApp::playVoice()
             qWarning() << "[TupPapagayoApp::playVoice()] - Warning: No voice text to play!";
         #endif
         TOsd::self()->display(TOsd::Warning, tr("No voice text to play!"));
-        // return;
     }
 
     if (document && document->audioPlayerIsSet()) {

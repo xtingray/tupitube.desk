@@ -763,12 +763,23 @@ void PapagayoTool::updateMouthTransformation()
         nodesManager->syncNodesFromParent();
         QGraphicsItem *item = nodesManager->parentItem();
         if (item) {
+            TupScene *tupScene = scene->currentScene();
+            int frameIndex = scene->currentFrameIndex();
+            int layerIndex = tupScene->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
+
+            QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                                + QString::number(frameIndex) + "," + QString::number(frameIndex);
+
+            TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
+                                                            TupProjectRequest::Select, selection);
+            emit requested(&request);
+
             QDomDocument doc;
             currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
-                                                      (scene->currentFrameIndex() - currentLipSync->getInitFrame()), forwardFlag);
+                                                      (frameIndex - currentLipSync->getInitFrame()), forwardFlag);
 
-            TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
-                                                                              TupProjectRequest::UpdateLipSync, currentLipSync->toString());
+            request = TupRequestBuilder::createLayerRequest(sceneIndex, layerIndex,
+                                                            TupProjectRequest::UpdateLipSync, currentLipSync->toString());
             emit requested(&request);
         }
     } else {
