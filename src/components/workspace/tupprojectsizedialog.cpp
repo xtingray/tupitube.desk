@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupprojectsizedialog.h"
+#include "tapptheme.h"
 
 #include <QLabel>
 
@@ -42,6 +43,9 @@ TupProjectSizeDialog::TupProjectSizeDialog(const QSize &size, QWidget *parent) :
     setModal(true);
     setWindowTitle(tr("Project Canvas Size"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/size.png")));
+
+    QString uiStyleSheet = TAppTheme::themeSettings();
+    setStyleSheet(uiStyleSheet);
 
     projectSize = size;
     layout = new QVBoxLayout(this);

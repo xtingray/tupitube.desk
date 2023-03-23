@@ -361,15 +361,15 @@ void PapagayoTool::removeCurrentLipSync(const QString &lipsyncName)
 
 void PapagayoTool::addNodesManager()
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[PapagayoTool::addNodesManager()]";
-    #endif
-
     mode = TupToolPlugin::Edit;
 
     TupScene *sceneData = scene->currentScene();
     int initLayer = sceneData->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
     int initFrame = currentLipSync->getInitFrame();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[PapagayoTool::addNodesManager()] - initLayer -> " << initLayer;
+    #endif
 
     QString selection = QString::number(initLayer) + "," + QString::number(initLayer) + ","
                         + QString::number(initFrame) + "," + QString::number(initFrame);
@@ -558,11 +558,11 @@ void PapagayoTool::updateInitFrame(int index)
 
     configPanel->updateInterfaceRecords();
 
-    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, scene->currentLayerIndex(),
+    int initLayer = sceneData->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
+    TupProjectRequest request = TupRequestBuilder::createLayerRequest(sceneIndex, initLayer,
                                                                       TupProjectRequest::UpdateLipSync, currentLipSync->toString());
     emit requested(&request);
 
-    int initLayer = sceneData->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
     QString selection = QString::number(initLayer) + "," + QString::number(initLayer) + ","
                         + QString::number(index) + "," + QString::number(index);
 
@@ -766,6 +766,10 @@ void PapagayoTool::updateMouthTransformation()
             TupScene *tupScene = scene->currentScene();
             int frameIndex = scene->currentFrameIndex();
             int layerIndex = tupScene->getLipSyncLayerIndex(currentLipSync->getLipSyncName());
+
+            #ifdef TUP_DEBUG
+                qDebug() << "[PapagayoTool::updateMouthTransformation()] - layerIndex -> " << layerIndex;
+            #endif
 
             QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
                                 + QString::number(frameIndex) + "," + QString::number(frameIndex);

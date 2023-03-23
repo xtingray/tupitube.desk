@@ -382,9 +382,14 @@ QDomElement TupScene::toXml(QDomDocument &doc) const
 
 bool TupScene::moveLayer(int from, int to)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::moveLayer()] - from -> " << from;
+        qDebug() << "[TupScene::moveLayer()] - to -> " << to;
+    #endif
+
     if (from < 0 || from >= layers.count() || to < 0 || to >= layers.count()) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupScene::moveLayer()] - Fatal Error: Layer index out of bound " << to;
+            qDebug() << "[TupScene::moveLayer()] - Fatal Error: Layer index out of bound -> " << to;
         #endif
 
         return false;
@@ -788,7 +793,9 @@ QList<QString> TupScene::getLipSyncNames()
     QList<QString> names;
 
     if (layers.count()) {
-        foreach (TupLayer *layer, layers) {
+        // foreach (TupLayer *layer, layers) {
+        for (int i=0; i < layers.size(); i++) {
+            TupLayer *layer = layers.at(i);
             if (layer->lipSyncCount() > 0) {
                 Mouths mouths = layer->getLipSyncList();
                 foreach (TupLipSync *lipsync, mouths)
@@ -819,19 +826,37 @@ bool TupScene::lipSyncExists(const QString &name)
 
 int TupScene::getLipSyncLayerIndex(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::getLipSyncLayerIndex()] - name -> " << name;
+    #endif
+
     int index = 0;
     if (layers.count()) {
-        foreach (TupLayer *layer, layers) {
+        for (int i=0; i < layers.size(); i++) {
+            TupLayer *layer = layers.at(i);
             if (layer->lipSyncCount() > 0) {
                 Mouths mouths = layer->getLipSyncList();
                 foreach (TupLipSync *lipsync, mouths) {
-                    if (lipsync->getLipSyncName().compare(name) == 0)
+                    if (lipsync->getLipSyncName().compare(name) == 0) {
+                        index = i;
                         break;
-                    index++;
+                    }
                 }
+            } else {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupScene::getLipSyncLayerIndex()] - Warning: No lip-sync records at layer -> " << i;
+                #endif
             }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupScene::getLipSyncLayerIndex()] - Warning: No layers available!";
+        #endif
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScene::getLipSyncLayerIndex()] - index -> " << index;
+    #endif
 
     return index;
 }
