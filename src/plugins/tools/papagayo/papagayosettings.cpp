@@ -269,7 +269,7 @@ void PapagayoSettings::setInnerForm()
     layout->addWidget(innerPanel);
 }
 
-// Editing new LipSync 
+// Editing lip-sync record
 
 void PapagayoSettings::openLipSyncProperties(TupLipSync *lipsync)
 {
@@ -285,6 +285,9 @@ void PapagayoSettings::openLipSyncProperties(TupLipSync *lipsync)
     int endIndex = initFrame + framesCount;
     endingLabel->setText(tr("Ending at frame") + ": <b>" + QString::number(endIndex) + "</b>");
     totalLabel->setText(tr("Frames Total") + ": <b>" + QString::number(framesCount) + "</b>");
+
+    if (forwardCheck->isChecked())
+        forwardCheck->setChecked(false);
 }
 
 void PapagayoSettings::updateInitFrame(int index)

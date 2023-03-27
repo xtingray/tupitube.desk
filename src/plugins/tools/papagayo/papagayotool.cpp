@@ -514,8 +514,9 @@ void PapagayoTool::frameResponse(const TupFrameResponse *event)
         if (mode == TupToolPlugin::Edit) {
             int frameIndex = event->getFrameIndex();
             int lastFrame = currentLipSync->getInitFrame() + currentLipSync->getFramesTotal() - 1;
-            if (frameIndex >= currentLipSync->getInitFrame() && frameIndex <= lastFrame)
+            if (frameIndex >= currentLipSync->getInitFrame() && frameIndex <= lastFrame) {
                 setNodesManagerEnvironment();
+            }
         }
     }
 }
@@ -771,12 +772,16 @@ void PapagayoTool::updateMouthTransformation()
                 qDebug() << "[PapagayoTool::updateMouthTransformation()] - layerIndex -> " << layerIndex;
             #endif
 
-            QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
-                                + QString::number(frameIndex) + "," + QString::number(frameIndex);
+            TupProjectRequest request;
+            if (scene->currentLayerIndex() != layerIndex) {
+                removeNodesManager();
+                QString selection = QString::number(layerIndex) + "," + QString::number(layerIndex) + ","
+                                    + QString::number(frameIndex) + "," + QString::number(frameIndex);
 
-            TupProjectRequest request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
-                                                            TupProjectRequest::Select, selection);
-            emit requested(&request);
+                request = TupRequestBuilder::createFrameRequest(sceneIndex, layerIndex, frameIndex,
+                                                                TupProjectRequest::Select, selection);
+                emit requested(&request);
+            }
 
             QDomDocument doc;
             currentLipSync->updateMouthTransformation(TupSerializer::properties(item, doc, "", 0),
