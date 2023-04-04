@@ -68,10 +68,14 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
         void updateImagesOpacity(double transparency);
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
+        void updateGridLineThickness(int thickness);
         void updateGridColor(const QColor color);
         void flipSurface();
 
     private:
+        void loadGridParameters();
+        void loadSafeParameters();
+        void loadROTParameters();
         void calculateImageDepth();
 
         QWidget* targetWidget;
@@ -89,17 +93,21 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
         bool grid;
         int opacity;
         int historySize;
-        int gridSpace;
+
         int historyInit;
         int historyEnd;
         qreal rotation;
 
-        QPen gridAxesPen;
+        QColor gridColor;
         QPen gridPen;
-        QPen whitePen;
-        QPen grayPen;
-        QPen greenThickPen;
-        QPen greenThinPen;
+        QPen gridAxesPen;
+        int gridSeparation;
+        int gridLineThickness;
+
+        QPen safeRectPen;
+        QPen safeLinePen;
+        QColor rotColor;
+        QPen rotPen;
 };
 
 #endif // TUPVIDEOSURFACE_H

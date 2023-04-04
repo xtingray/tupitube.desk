@@ -123,4 +123,6 @@ enum ProjectDimension {
   #include <inttypes.h>
 #endif
 
+enum SafeLevel { Background = 0, Foreground };
+
 #endif

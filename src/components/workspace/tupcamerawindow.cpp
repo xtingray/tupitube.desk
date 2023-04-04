@@ -250,6 +250,11 @@ void TupCameraWindow::updateGridSpacing(int space)
     videoSurface->updateGridSpacing(space);
 }
 
+void TupCameraWindow::updateGridLineThickness(int thickness)
+{
+    videoSurface->updateGridLineThickness(thickness);
+}
+
 void TupCameraWindow::updateGridColor(const QColor color)
 {
     videoSurface->updateGridColor(color);

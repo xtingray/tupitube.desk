@@ -775,7 +775,7 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="286"/>
-        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="307"/>
+        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="310"/>
         <source>Ending at frame</source>
         <translation>Terminar en marco</translation>
     </message>
@@ -785,7 +785,7 @@
         <translation>Total de Marcos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="341"/>
+        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="344"/>
         <source>Current Phoneme</source>
         <translation>Fonema Actual</translation>
     </message>
@@ -808,7 +808,7 @@
         <translation>lipsync:</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="553"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="554"/>
         <source>Frame</source>
         <translation>Marco</translation>
     </message>
@@ -2222,53 +2222,53 @@
     <name>TupBreakdownDialog</name>
     <message>
         <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="72"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="253"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="287"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="274"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="308"/>
         <source>Word:</source>
         <translation>Palabra:</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="92"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="254"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="288"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="100"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="275"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="309"/>
         <source>Break down the word:</source>
         <translation>Escoge los fonemas para la palabra:</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="102"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="110"/>
         <source>Phonemes:</source>
         <translation>Fonemas:</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="108"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="116"/>
         <source>Clear phonemes</source>
         <translation>Remover fonemas</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="131"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="142"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="259"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="139"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="150"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="280"/>
         <source>Next word</source>
         <translation>Siguiente palabra</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="138"/>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="147"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="146"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="155"/>
         <source>Save word</source>
         <translation>Guardar palabra</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="157"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="165"/>
         <source>Close</source>
         <translation>Cerrar</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="301"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="322"/>
         <source>Save sentence</source>
         <translation>Guardar oración</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="335"/>
+        <location filename="../../../components/papagayo/tupbreakdowndialog.cpp" line="356"/>
         <source>Word phonemes are missing!</source>
         <translation>Faltan fonemas para esta palabra!</translation>
     </message>
@@ -2886,22 +2886,22 @@
 <context>
     <name>TupCustomizedMouthView</name>
     <message>
-        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="79"/>
+        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="83"/>
         <source>Mouth images are missing!</source>
         <translation>Faltan las imágenes de las bocas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="89"/>
+        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="93"/>
         <source>Customized mouths are loaded!</source>
         <translation>Imágenes de bocas cargadas con éxito!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="99"/>
+        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="103"/>
         <source>Mouth images are incomplete!</source>
         <translation>Las imágenes de las bocas están incompletas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="105"/>
+        <location filename="../../../components/papagayo/tupcustomizedmouthview.cpp" line="109"/>
         <source>Images directory is empty!</source>
         <translation>El directorio de imágenes está vacio!</translation>
     </message>
@@ -3042,7 +3042,7 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="995"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2632"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2645"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -3815,7 +3815,7 @@
     <name>TupGraphicsScene</name>
     <message>
         <location filename="../../../libbase/tupgraphicsscene.cpp" line="1144"/>
-        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1184"/>
+        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1192"/>
         <source>lipsync:</source>
         <translation>lipsync:</translation>
     </message>
@@ -4348,178 +4348,178 @@
 <context>
     <name>TupMainWindow</name>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="284"/>
+        <location filename="../../tupmainwindow.cpp" line="290"/>
         <source>Opening a new document...</source>
         <translation>Abriendo un nuevo proyecto...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="306"/>
-        <location filename="../../tupmainwindow.cpp" line="1212"/>
+        <location filename="../../tupmainwindow.cpp" line="312"/>
+        <location filename="../../tupmainwindow.cpp" line="1221"/>
         <location filename="../../tupmainwindow_gui.cpp" line="254"/>
         <source>Animation</source>
         <translation>Animación</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="406"/>
+        <location filename="../../tupmainwindow.cpp" line="412"/>
         <location filename="../../tupmainwindow_gui.cpp" line="262"/>
         <source>Player</source>
         <translation>Reproductor</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="432"/>
+        <location filename="../../tupmainwindow.cpp" line="438"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; opened!</source>
         <translation>Projecto &lt;b&gt;%1&lt;/b&gt; abierto!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="507"/>
+        <location filename="../../tupmainwindow.cpp" line="513"/>
         <source>The document has been modified.</source>
         <translation>El proyecto ha sido modificado.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="508"/>
+        <location filename="../../tupmainwindow.cpp" line="514"/>
         <source>Do you want to save the project?</source>
         <translation>Deseas guardar el proyecto?</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="510"/>
+        <location filename="../../tupmainwindow.cpp" line="516"/>
         <source>Save</source>
         <translation>Guardar cambios</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="511"/>
+        <location filename="../../tupmainwindow.cpp" line="517"/>
         <source>Discard</source>
         <translation>Descartar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="512"/>
+        <location filename="../../tupmainwindow.cpp" line="518"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="713"/>
-        <location filename="../../tupmainwindow.cpp" line="813"/>
-        <location filename="../../tupmainwindow.cpp" line="1060"/>
-        <location filename="../../tupmainwindow.cpp" line="1127"/>
-        <location filename="../../tupmainwindow.cpp" line="1780"/>
+        <location filename="../../tupmainwindow.cpp" line="719"/>
+        <location filename="../../tupmainwindow.cpp" line="822"/>
+        <location filename="../../tupmainwindow.cpp" line="1069"/>
+        <location filename="../../tupmainwindow.cpp" line="1136"/>
+        <location filename="../../tupmainwindow.cpp" line="1791"/>
         <source>by</source>
         <translation>por</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="735"/>
+        <location filename="../../tupmainwindow.cpp" line="741"/>
         <source>Open TupiTube project</source>
         <translation>Abrir proyecto TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="736"/>
-        <location filename="../../tupmainwindow.cpp" line="856"/>
-        <location filename="../../tupmainwindow.cpp" line="1020"/>
+        <location filename="../../tupmainwindow.cpp" line="742"/>
+        <location filename="../../tupmainwindow.cpp" line="865"/>
+        <location filename="../../tupmainwindow.cpp" line="1029"/>
         <source>TupiTube Project Package (*.tup)</source>
         <translation>Proyecto TupiTube (*.tup)</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="767"/>
-        <location filename="../../tupmainwindow.cpp" line="826"/>
+        <location filename="../../tupmainwindow.cpp" line="776"/>
+        <location filename="../../tupmainwindow.cpp" line="835"/>
         <source>Cannot open project!</source>
         <translation>No se puede abrir el proyecto!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1641"/>
+        <location filename="../../tupmainwindow.cpp" line="1652"/>
         <source>Close</source>
         <translation>Cerrar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="931"/>
+        <location filename="../../tupmainwindow.cpp" line="940"/>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
         <translation>Paleta Gimp (*.gpl *.txt *.css)</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="505"/>
+        <location filename="../../tupmainwindow.cpp" line="511"/>
         <source>Confirmation Required</source>
         <translation>Confirmación Requerida</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="647"/>
+        <location filename="../../tupmainwindow.cpp" line="653"/>
         <source>Error while clearing cache!</source>
         <translation>Error al limpiar el cache!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="855"/>
+        <location filename="../../tupmainwindow.cpp" line="864"/>
         <source>Select TupiTube project</source>
         <translation>Seleccionar proyecto TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="930"/>
+        <location filename="../../tupmainwindow.cpp" line="939"/>
         <source>Import Gimp Palettes</source>
         <translation>Importar Paletas De Gimp</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="966"/>
+        <location filename="../../tupmainwindow.cpp" line="975"/>
         <source>Gimp palette import was successful</source>
         <translation>La paleta de Gimp fue importada exitosamente</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="968"/>
+        <location filename="../../tupmainwindow.cpp" line="977"/>
         <source>Gimp palette import was unsuccessful</source>
         <translation>La paleta de Gimp no pudo ser importada</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1019"/>
+        <location filename="../../tupmainwindow.cpp" line="1028"/>
         <source>Save Project As</source>
         <translation>Guardar proyecto como</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1037"/>
+        <location filename="../../tupmainwindow.cpp" line="1046"/>
         <source>Directory does not exist! Please, choose another path.</source>
         <translation>El directorio no existe! Por favor, escoge otra ruta.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1046"/>
+        <location filename="../../tupmainwindow.cpp" line="1055"/>
         <source>Insufficient permissions. Please, pick another path.</source>
         <translation>Permisos insuficientes. Por favor, escoge otra ruta.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1120"/>
+        <location filename="../../tupmainwindow.cpp" line="1129"/>
         <source>Project &lt;b&gt;%1&lt;/b&gt; saved</source>
         <translation>Proyecto &lt;b&gt;%1&lt;/b&gt; guardado</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1213"/>
+        <location filename="../../tupmainwindow.cpp" line="1222"/>
         <source>New camera</source>
         <translation>Nueva cámara</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1427"/>
+        <location filename="../../tupmainwindow.cpp" line="1436"/>
         <source>To post video add more frames!</source>
         <translation>Para publicar el vídeo, agrega más marcos!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1460"/>
-        <location filename="../../tupmainwindow.cpp" line="1512"/>
+        <location filename="../../tupmainwindow.cpp" line="1469"/>
+        <location filename="../../tupmainwindow.cpp" line="1521"/>
         <source>Post canceled by user!</source>
         <translation>Publicación cancelada!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1479"/>
+        <location filename="../../tupmainwindow.cpp" line="1488"/>
         <source>Project is larger than 10 MB. Too big!</source>
         <translation>El proyecto pesa más de 10MB. Es demasiado grande!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1539"/>
+        <location filename="../../tupmainwindow.cpp" line="1548"/>
         <source>Error while posting image. File is too big!</source>
         <translation>Error mientras se publicaba la imagen. Archivo demasiado grande!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1637"/>
+        <location filename="../../tupmainwindow.cpp" line="1648"/>
         <source>Fatal Error</source>
         <translation>Error Fatal</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1639"/>
+        <location filename="../../tupmainwindow.cpp" line="1650"/>
         <source>The connection to the server has been lost.</source>
         <translation>La conexión con el servidor se ha perdido.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1640"/>
+        <location filename="../../tupmainwindow.cpp" line="1651"/>
         <source>Please, try to connect again in a while</source>
         <translation>Por favor, intenta conectarte en un rato</translation>
     </message>
@@ -5592,13 +5592,13 @@
         <translation>Lo sentimos, el archivo fuente TUP es inválido!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2002"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2092"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2007"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2097"/>
         <source>Sorry, file format not supported!</source>
         <translation>Lo sentimos, el formato de archivo no es soportado!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2106"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2111"/>
         <source>Network Fatal Error. Please, contact us!</source>
         <translation>Error Fatal de Red. Por favor, contáctanos!</translation>
     </message>
@@ -6003,10 +6003,6 @@
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="763"/>
-        <source>Audio files (*.wav)</source>
-        <translation>Archivos de audio (*.wav)</translation>
-    </message>
-    <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="765"/>
         <source>Audio files (*.mp3 *.wav)</source>
         <translation>Archivos de Audio (*.mp3 *.wav)</translation>
@@ -6017,7 +6013,7 @@
         <translation>Las imágenes de bocas no han sido seleccionadas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="788"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="789"/>
         <source>No voice text to play!</source>
         <translation>No hay texto de voz para reproducir!</translation>
     </message>
@@ -6390,77 +6386,77 @@
 <context>
     <name>TupProjectSizeDialog</name>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="43"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="44"/>
         <source>Project Canvas Size</source>
         <translation>Dimensión del Proyecto</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="58"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="62"/>
         <source>Apply</source>
         <translation>Aplicar</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="62"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="66"/>
         <source>Please, set the project canvas size:</source>
         <translation>Por favor, escoge la dimensión del proyecto:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="66"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="70"/>
         <source>Free Format</source>
         <translation>Formato Libre</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="67"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="71"/>
         <source>520x380 - 24</source>
         <translation>520x380 - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="68"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="72"/>
         <source>640x480 - 24</source>
         <translation>640x480 - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="69"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="73"/>
         <source>480 (PAL DV/DVD) - 25</source>
         <translation>480 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="70"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="74"/>
         <source>576 (PAL DV/DVD) - 25</source>
         <translation>576 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="71"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="75"/>
         <source>720 (HD) - 24</source>
         <translation>720 (HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="72"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="76"/>
         <source>1080 (Mobile) - 24</source>
         <translation>1080 (Móvil) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="73"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="77"/>
         <source>1080 (Full HD Vertical) - 24</source>
         <translation>1080 (Full HD Vertical) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="74"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="78"/>
         <source>1080 (Full HD) - 24</source>
         <translation>1080 (Full HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="79"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="83"/>
         <source>Width:</source>
         <translation>Ancho:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="79"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="83"/>
         <source>Height:</source>
         <translation>Alto:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="93"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="97"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -6581,13 +6577,13 @@
         <translation>Capa de sonido %1</translation>
     </message>
     <message>
-        <location filename="../../../store/tupscene.cpp" line="722"/>
+        <location filename="../../../store/tupscene.cpp" line="727"/>
         <source>Layer %1</source>
         <translation>Capa %1</translation>
     </message>
     <message>
         <location filename="../../../store/tupscene.cpp" line="150"/>
-        <location filename="../../../store/tupscene.cpp" line="723"/>
+        <location filename="../../../store/tupscene.cpp" line="728"/>
         <source>Frame</source>
         <translation>Marco</translation>
     </message>

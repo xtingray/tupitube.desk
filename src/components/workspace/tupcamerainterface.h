@@ -73,6 +73,7 @@ class TUPITUBE_EXPORT TupCameraInterface : public QFrame
         void updateImagesOpacity(double opacity);
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
+        void updateGridThickness(int thickness);
         void updateColour();
         void flipCamera();
 
