@@ -56,7 +56,9 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
         qDebug() << "[TupCameraInterface()]";
     #endif
 
-    setWindowTitle(tr("TupiTube Camera Manager") + " | " + tr("Current resolution:") + " " + title);
+    QString cameraModel = devicesCombo->itemText(0);
+
+    setWindowTitle(cameraModel + " | " + tr("Resolution:") + " " + title);
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/camera.png")));
 
     counter = i;
@@ -72,8 +74,9 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
         displaySize = QSize(width, height);
     } else {
         int maxWidth = 640;
-        if (desktopWidth > 800)
-            maxWidth = 800;
+        if (desktopWidth > 1000)
+            maxWidth = 1000;
+            // maxWidth = 800;
 
         if (cameraSize.width() > maxWidth) { // Limit display size to maxWidth
             int height = maxWidth * cameraSize.height() / cameraSize.width();
@@ -148,36 +151,63 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
     gridButton->setCheckable(true);
     connect(gridButton, SIGNAL(clicked()), this, SLOT(drawGrid()));
 
+    // Grid properties
+
     gridWidget = new QWidget;
     QGridLayout *gridLayout = new QGridLayout(gridWidget);
     gridLayout->setHorizontalSpacing(2);
+
+    // Spacing
 
     QLabel *gridLabel = new QLabel;
     gridLabel->setPixmap(QPixmap(THEME_DIR + "icons/grid_spacing.png"));
     gridLabel->setToolTip(tr("Grid spacing"));
     gridLabel->setMargin(2);
 
+    TCONFIG->beginGroup("PaintArea");
+    QString colorName = TCONFIG->value("GridColor", "#0000b4").toString();
+    gridColor = QColor(colorName);
+    gridColor.setAlpha(50);
+
     QSpinBox *gridSpacing = new QSpinBox;
     gridSpacing->setSingleStep(10);
     gridSpacing->setRange(10, 100);
-    gridSpacing->setValue(10);
+    gridSpacing->setValue(TCONFIG->value("GridSeparation", "10").toInt());
     connect(gridSpacing, SIGNAL(valueChanged(int)), this, SLOT(updateGridSpacing(int)));
+
+    // Thickness
+
+    QLabel *gridThicknessLabel = new QLabel;
+    gridThicknessLabel->setPixmap(QPixmap(THEME_DIR + "icons/grid_thickness.png"));
+    gridThicknessLabel->setToolTip(tr("Grid line thickness"));
+    gridThicknessLabel->setMargin(2);
+
+    QSpinBox *gridThicknessBox = new QSpinBox;
+    gridThicknessBox->setSingleStep(1);
+    gridThicknessBox->setRange(1, 5);
+    gridThicknessBox->setValue(TCONFIG->value("GridLineThickness", "1").toInt());
+    connect(gridThicknessBox, SIGNAL(valueChanged(int)), this, SLOT(updateGridThickness(int)));
+
+    // Color
 
     QLabel *colorLabel = new QLabel;
     colorLabel->setPixmap(QPixmap(THEME_DIR + "icons/color_palette.png"));
     colorLabel->setToolTip(tr("Grid color"));
     colorLabel->setMargin(2);
 
-    gridColor = QColor(0, 0, 180, 50);
     colorCell = new TupColorWidget(gridColor);
     connect(colorCell, SIGNAL(clicked()), this, SLOT(updateColour()));
 
     gridLayout->addWidget(gridLabel, 0, 0, Qt::AlignHCenter);
     gridLayout->addWidget(gridSpacing, 0, 1, Qt::AlignHCenter);
-    gridLayout->addWidget(colorLabel, 1, 0, Qt::AlignHCenter);
-    gridLayout->addWidget(colorCell, 1, 1, Qt::AlignHCenter);
+    gridLayout->addWidget(gridThicknessLabel, 1, 0, Qt::AlignHCenter);
+    gridLayout->addWidget(gridThicknessBox, 1, 1, Qt::AlignHCenter);
+    gridLayout->addWidget(colorLabel, 2, 0, Qt::AlignHCenter);
+    gridLayout->addWidget(colorCell, 2, 1, Qt::AlignHCenter);
 
     gridWidget->setVisible(false);
+
+    // Onion Skin
 
     historyButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/bitmap_array.png")), "");
     historyButton->setIconSize(QSize(20, 20));
@@ -237,7 +267,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
     takesLabel->setAlignment(Qt::AlignHCenter);
 
     QFont font = this->font();
-    font.setPointSize(50);
+    font.setPointSize(40);
     counterLabel = new QLabel("0");
     counterLabel->setAlignment(Qt::AlignHCenter);
     counterLabel->setFont(font);
@@ -381,8 +411,19 @@ void TupCameraInterface::updateImagesDepth(int depth)
     currentCamera->updateImagesDepth(depth);
 }
 
+void TupCameraInterface::updateGridThickness(int thickness)
+{
+    TCONFIG->beginGroup("PaintArea");
+    TCONFIG->setValue("GridLineThickness", thickness);
+
+    currentCamera->updateGridLineThickness(thickness);
+}
+
 void TupCameraInterface::updateGridSpacing(int space)
 {
+    TCONFIG->beginGroup("PaintArea");
+    TCONFIG->setValue("GridSeparation", space);
+
     currentCamera->updateGridSpacing(space);
 }
 
@@ -392,6 +433,8 @@ void TupCameraInterface::updateColour()
     if (color.isValid()) {
         currentCamera->updateGridColor(color);
         colorCell->setBrush(QBrush(color));
+        TCONFIG->beginGroup("PaintArea");
+        TCONFIG->setValue("GridColor", color.name());
     }
 }
 

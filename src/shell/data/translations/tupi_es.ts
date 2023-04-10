@@ -775,7 +775,7 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="286"/>
-        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="307"/>
+        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="310"/>
         <source>Ending at frame</source>
         <translation>Terminar en marco</translation>
     </message>
@@ -785,7 +785,7 @@
         <translation>Total de Marcos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="341"/>
+        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="344"/>
         <source>Current Phoneme</source>
         <translation>Fonema Actual</translation>
     </message>
@@ -808,7 +808,7 @@
         <translation>lipsync:</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="553"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="554"/>
         <source>Frame</source>
         <translation>Marco</translation>
     </message>
@@ -3042,7 +3042,7 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="995"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2632"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2645"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -6013,7 +6013,7 @@
         <translation>Las imágenes de bocas no han sido seleccionadas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="788"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="789"/>
         <source>No voice text to play!</source>
         <translation>No hay texto de voz para reproducir!</translation>
     </message>
@@ -6386,77 +6386,77 @@
 <context>
     <name>TupProjectSizeDialog</name>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="43"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="44"/>
         <source>Project Canvas Size</source>
         <translation>Dimensión del Proyecto</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="58"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="62"/>
         <source>Apply</source>
         <translation>Aplicar</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="62"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="66"/>
         <source>Please, set the project canvas size:</source>
         <translation>Por favor, escoge la dimensión del proyecto:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="66"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="70"/>
         <source>Free Format</source>
         <translation>Formato Libre</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="67"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="71"/>
         <source>520x380 - 24</source>
         <translation>520x380 - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="68"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="72"/>
         <source>640x480 - 24</source>
         <translation>640x480 - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="69"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="73"/>
         <source>480 (PAL DV/DVD) - 25</source>
         <translation>480 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="70"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="74"/>
         <source>576 (PAL DV/DVD) - 25</source>
         <translation>576 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="71"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="75"/>
         <source>720 (HD) - 24</source>
         <translation>720 (HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="72"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="76"/>
         <source>1080 (Mobile) - 24</source>
         <translation>1080 (Móvil) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="73"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="77"/>
         <source>1080 (Full HD Vertical) - 24</source>
         <translation>1080 (Full HD Vertical) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="74"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="78"/>
         <source>1080 (Full HD) - 24</source>
         <translation>1080 (Full HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="79"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="83"/>
         <source>Width:</source>
         <translation>Ancho:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="79"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="83"/>
         <source>Height:</source>
         <translation>Alto:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="93"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="97"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -6577,13 +6577,13 @@
         <translation>Capa de sonido %1</translation>
     </message>
     <message>
-        <location filename="../../../store/tupscene.cpp" line="722"/>
+        <location filename="../../../store/tupscene.cpp" line="727"/>
         <source>Layer %1</source>
         <translation>Capa %1</translation>
     </message>
     <message>
         <location filename="../../../store/tupscene.cpp" line="150"/>
-        <location filename="../../../store/tupscene.cpp" line="723"/>
+        <location filename="../../../store/tupscene.cpp" line="728"/>
         <source>Frame</source>
         <translation>Marco</translation>
     </message>

@@ -85,16 +85,18 @@ TupCameraDialog::TupCameraDialog(QComboBox *devices, const QSize dimension, QLis
 
     QLabel *resolutionLabel = new QLabel(tr("Available Camera Resolutions:"));
     resolutionCombo = new QComboBox();
-    int suggested = 0;
+    // int suggested = 0;
     for (int i = 0; i<resolutions.size(); i++) {
          QSize size = resolutions.at(i);
          QString label = QString::number(size.width()) + "x" + QString::number(size.height());
          resolutionCombo->addItem(label);
-         if (size.width() > projectSize.width())
-             suggested = i;
+         // if (size.width() > projectSize.width())
+         //     suggested = i;
     }
-    resolutionCombo->setCurrentIndex(suggested);
-    cameraSize = resolutions.at(suggested);
+    // resolutionCombo->setCurrentIndex(suggested);
+    // cameraSize = resolutions.at(suggested);
+    resolutionCombo->setCurrentIndex(0);
+    cameraSize = resolutions.at(0);
 
     connect(resolutionCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setCameraResolution(int)));
 

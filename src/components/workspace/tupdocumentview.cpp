@@ -2187,20 +2187,16 @@ void TupDocumentView::cameraInterface()
 
     int camerasTotal = QCameraInfo::availableCameras().count();
     if (camerasTotal > 0) {
-        // QList<QByteArray> cameraDevices;
         QList<QCameraInfo> cameraDevices;
         QComboBox *devicesCombo = new QComboBox;
-        // foreach(const QByteArray &deviceName, QCamera::availableDevices()) {
         foreach(QCameraInfo deviceName, QCameraInfo::availableCameras()) { 
-            // QCamera *device = new QCamera(deviceName);
-            // QString description = device->deviceDescription(deviceName);
             QString description = deviceName.description();
             bool found = false;
             for (int i=0; i<devicesCombo->count(); i++) {
                 QString item = devicesCombo->itemText(i);
                 if (item.compare(description) == 0) {
                     found = true;
-                         break;
+                    break;
                 }
             }
             if (!found) {
@@ -2209,11 +2205,12 @@ void TupDocumentView::cameraInterface()
             }
         }
 
-        /* SQA: This lines should be enabled in some point at the future
+        // SQA: This lines should be enabled in some point at the future
+        /*
         QCameraInfo cameraDevice = cameraDevices[0];
         QCamera *camera = new QCamera(cameraDevice);
         camera->load();
-        tError() << "TupDocumentView::cameraInterface() - Camera status: " << camera->status();
+        qDebug() << "[TupDocumentView::cameraInterface()] - Camera status -> " << camera->status();
         QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
         QList<QSize> resolutions = imageCapture->supportedResolutions();
         */
@@ -2226,14 +2223,6 @@ void TupDocumentView::cameraInterface()
         resolutions << QSize(800, 600);
         resolutions << QSize(640, 480);
 
-        /* SQA: Check if this resolutions have any sense
-        resolutions << QSize(352, 288);
-        resolutions << QSize(320, 240);
-        resolutions << QSize(176, 144);
-        resolutions << QSize(160, 120);
-        */
-
-        // QDesktopWidget desktop;
         QSize projectSize = project->getDimension();
 
         TupCameraDialog *cameraDialog = new TupCameraDialog(devicesCombo, projectSize, resolutions);

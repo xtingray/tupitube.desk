@@ -65,6 +65,7 @@ class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
         void updateImagesOpacity(double opacity);
         void updateImagesDepth(int depth);
         void updateGridSpacing(int space);
+        void updateGridLineThickness(int thickness);
         void updateGridColor(const QColor color);
         void flipCamera();
 

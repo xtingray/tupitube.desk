@@ -35,6 +35,7 @@
 
 #include "tupprojectimporterdialog.h"
 #include "tseparator.h"
+#include "tapptheme.h"
 
 #include <algorithm>
 #include <QLabel>
@@ -46,6 +47,8 @@ TupProjectImporterDialog::TupProjectImporterDialog(const QString &projectName, Q
     setModal(true);
     setWindowTitle(projectName + " - " + tr("Project Assets"));
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/open.png")));
+
+    setStyleSheet(TAppTheme::themeSettings());
 
     includeLibrary = libraryFlag;
     layout = new QVBoxLayout(this);

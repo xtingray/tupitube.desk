@@ -51,7 +51,7 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
     Q_OBJECT
 
     public:
-        enum SafeLevel { Background = 0, Foreground };
+        // enum SafeLevel { Background = 0, Foreground };
         TupPaintAreaBase(QWidget *parent = nullptr, QSize dimension = QSize(0, 0), TupLibrary *library = nullptr);
         ~TupPaintAreaBase();
 

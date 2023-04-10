@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tupvideosurface.h"
+#include "tconfig.h"
 
 #include <QScreen>
 #include <QGuiApplication>
@@ -57,16 +58,12 @@ TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &
     showPrevious = false;
     opacity = 127;
     historySize = 1;
-    gridSpace = 10;
     historyInit = 0;
     historyEnd = 0;
 
-    gridPen = QPen(QColor(0, 0, 180, 50), 1);
-    gridAxesPen = QPen(QColor(0, 135, 0, 150), 1);
-    whitePen = QPen(QColor(255, 255, 255, 255), 1);
-    grayPen = QPen(QColor(150, 150, 150, 255), 1);
-    greenThickPen = QPen(QColor(0, 135, 0, 255), 3);
-    greenThinPen = QPen(QColor(0, 135, 0, 255), 1);
+    loadGridParameters();
+    loadSafeParameters();
+    loadROTParameters();
 
     QRect rect = targetWidget->rect();
     widgetWidth = rect.size().width();
@@ -89,6 +86,43 @@ TupVideoSurface::~TupVideoSurface()
 {
 }
 
+void TupVideoSurface::loadGridParameters()
+{
+    TCONFIG->beginGroup("PaintArea");
+    QString colorName = TCONFIG->value("GridColor", "#0000b4").toString();
+    QColor gridColor(colorName);
+    gridColor.setAlpha(50);
+
+    int thickness = TCONFIG->value("GridLineThickness", "1").toInt();
+    gridPen = QPen(gridColor, thickness);
+    gridAxesPen = QPen(Qt::black, thickness);
+    gridSeparation = TCONFIG->value("GridSeparation", "10").toInt();
+}
+
+void TupVideoSurface::loadSafeParameters()
+{
+    TCONFIG->beginGroup("PaintArea");
+    QString rectColorName = TCONFIG->value("SafeAreaRectColor", "#008700").toString();
+    QString lineColorName = TCONFIG->value("SafeAreaLineColor", "#969696").toString();
+    gridLineThickness = TCONFIG->value("SafeLineThickness", 1).toInt();
+
+    QColor safeRectColor = QColor(rectColorName);
+    safeRectPen = QPen(safeRectColor, gridLineThickness);
+    QColor safeLineColor = QColor(lineColorName);
+    safeLinePen = QPen(safeLineColor, gridLineThickness);
+}
+
+void TupVideoSurface::loadROTParameters()
+{
+    TCONFIG->beginGroup("PaintArea");
+    QString colorName = TCONFIG->value("ROTColor", "#000000").toString();
+    int thickness = TCONFIG->value("ROTLineThickness", "1").toInt();
+
+    rotColor = QColor(colorName);
+    rotPen = QPen(rotColor, thickness);
+    rotColor.setAlpha(20);
+}
+
 bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
 {
     #ifdef TUP_DEBUG
@@ -101,6 +135,7 @@ bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
     if (imgFormat != QImage::Format_Invalid && !size.isEmpty()) {
         imageFormat = imgFormat;
         QAbstractVideoSurface::start(format);
+
         return true;
     } else {
         return false;
@@ -109,17 +144,21 @@ bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
 
 bool TupVideoSurface::present(const QVideoFrame &vFrame)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoSurface::present()]";
     #endif
+    */
 
     frame = vFrame;
     if (surfaceFormat().pixelFormat() != frame.pixelFormat() ||
         surfaceFormat().frameSize() != frame.size()) {
         stop();
+
         return false;
     } else {
         videoIF->updateVideo();
+
         return true;
     }
 }
@@ -181,29 +220,38 @@ void TupVideoSurface::paint(QPainter *painter)
 
         int midX = displaySize.width() / 2;
         int midY = displaySize.height() / 2;
-
         int minX = midX - (width/2);
         int maxX = midX + (width/2);
         int minY = midY - (height/2);
         int maxY = midY + (height/2);
 
         if (grid) {
+            /*
+            painter->setPen(gridPen);
+            int maxX = static_cast<int> (width + 100);
+            int maxY = static_cast<int> (height + 100);
+            for (int i = -100; i <= maxX; i += gridSeparation)
+                 painter->drawLine(i, -100, i, maxY);
+            for (int i = -100; i <= maxY; i += gridSeparation)
+                 painter->drawLine(-100, i, maxX, i);
+            */
+
             painter->setPen(gridPen);
 
-            int initX = midX - gridSpace;
-            for (int i=initX; i > minX; i -= gridSpace)
+            int initX = midX - gridSeparation;
+            for (int i=initX; i > minX; i -= gridSeparation)
                  painter->drawLine(i, minY, i, maxY);
 
-            initX = midX + gridSpace;
-            for (int i=initX; i < maxX; i += gridSpace)
+            initX = midX + gridSeparation;
+            for (int i=initX; i < maxX; i += gridSeparation)
                  painter->drawLine(i, minY, i, maxY);
 
-            int initY = midY - gridSpace;
-            for (int i=initY; i > minY; i -= gridSpace)
+            int initY = midY - gridSeparation;
+            for (int i=initY; i > minY; i -= gridSeparation)
                  painter->drawLine(minX, i, maxX, i);
 
-            initY = midY + gridSpace;
-            for (int i=initY; i < maxY; i += gridSpace)
+            initY = midY + gridSeparation;
+            for (int i=initY; i < maxY; i += gridSeparation)
                  painter->drawLine(minX, i, maxX, i);
 
             painter->setPen(gridAxesPen);
@@ -212,6 +260,47 @@ void TupVideoSurface::paint(QPainter *painter)
         }
 
         if (safeArea) {
+            painter->setPen(safeRectPen);
+            painter->setBrush(QBrush());
+            QRectF drawingRect = QRectF(QPointF(0, 0), displaySize); // QSize(width, height));
+            painter->drawRect(drawingRect);
+
+            int w = static_cast<int> (width);
+            int h = static_cast<int> (height);
+            int outerBorder = w / 19;
+            int innerBorder = w / 6;
+
+            QPointF left = drawingRect.topLeft() + QPointF(outerBorder, outerBorder);
+            QPointF right = drawingRect.bottomRight() - QPointF(outerBorder, outerBorder);
+
+            QRectF outerRect(left, right);
+            painter->drawRect(outerRect);
+
+            left = drawingRect.topLeft() + QPointF(innerBorder, innerBorder);
+            right = drawingRect.bottomRight() - QPointF(innerBorder, innerBorder);
+            QRectF innerRect(left, right);
+            painter->drawRect(innerRect);
+
+            painter->setPen(safeLinePen);
+            int middleX = w/2;
+            int middleY = h/2;
+            painter->drawLine(QPoint(0, middleY), QPoint(w, middleY));
+            painter->drawLine(QPoint(middleX, 0), QPoint(middleX, h));
+            int target = static_cast<int> (drawingRect.width() * (0.02));
+            QRect rect(QPoint(middleX - target, middleY - target),
+                       QPoint(middleX + target, middleY + target));
+            painter->drawRect(rect);
+
+            painter->setPen(rotPen);
+            int horizontalSpace = static_cast<int> (width / 3);
+            int verticalSpace = static_cast<int> (height / 3);
+
+            painter->drawLine(0, verticalSpace, width, verticalSpace);
+            painter->drawLine(0, verticalSpace*2, width, verticalSpace*2);
+            painter->drawLine(horizontalSpace, 0, horizontalSpace, height);
+            painter->drawLine(horizontalSpace*2, 0, horizontalSpace*2, height);
+
+            /*
             painter->setPen(whitePen);
             int outerBorder = width/19;
             int innerBorder = width/6;
@@ -264,6 +353,7 @@ void TupVideoSurface::paint(QPainter *painter)
             QRectF innerRect(left, right);
 
             painter->drawRect(innerRect);
+            */
         }
 
         frame.unmap();
@@ -351,7 +441,15 @@ void TupVideoSurface::updateImagesDepth(int depth)
 
 void TupVideoSurface::updateGridSpacing(int space)
 {
-    gridSpace = space;
+    gridSeparation = space;
+    videoIF->updateVideo();
+}
+
+void TupVideoSurface::updateGridLineThickness(int thickness)
+{
+    gridLineThickness = thickness;
+    gridPen.setWidth(thickness);
+    gridAxesPen.setWidth(thickness);
     videoIF->updateVideo();
 }
 
@@ -369,7 +467,7 @@ void TupVideoSurface::updateGridColor(const QColor color)
 {
     QColor gridColor = color;
     gridColor.setAlpha(50);
-    gridPen = QPen(gridColor);
+    gridPen = QPen(gridColor, gridLineThickness);
     videoIF->updateVideo();
 }
 
