@@ -4767,10 +4767,6 @@
         <translation>语音设置</translation>
     </message>
     <message>
-        <source>Audio files (*.wav)</source>
-        <translation>音频文件 (*.wav)</translation>
-    </message>
-    <message>
         <source>Some phonemes are missing!</source>
         <translation>有些音素丢失！</translation>
     </message>
