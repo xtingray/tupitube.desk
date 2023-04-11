@@ -55,9 +55,9 @@ TupAnimationRenderer::~TupAnimationRenderer()
 {
 }
 
-void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension)
+void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension, const QColor &bgColor)
 {
-    gScene->setBackgroundBrush(scene->getBgColor());
+    gScene->setBackgroundBrush(bgColor);
     gScene->setCurrentScene(scene);
     gScene->setSceneRect(QRectF(QPointF(0, 0), dimension));
 

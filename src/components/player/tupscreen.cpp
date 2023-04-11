@@ -577,7 +577,7 @@ void TupScreen::render()
         clearPhotograms();
 
         renderer = new TupAnimationRenderer(library);
-        renderer->setScene(scene, project->getDimension());
+        renderer->setScene(scene, project->getDimension(), scene->getBgColor());
         int i = 1;
         while (renderer->nextPhotogram()) {
             renderized = QImage(project->getDimension(), QImage::Format_RGB32);
@@ -750,7 +750,7 @@ void TupScreen::updateFirstFrame()
             loadSoundRecords();
 
             renderer = new TupAnimationRenderer(library);
-            renderer->setScene(scene, project->getDimension());
+            renderer->setScene(scene, project->getDimension(), scene->getBgColor());
             renderer->renderPhotogram(0);
 
             renderized = QImage(project->getDimension(), QImage::Format_RGB32);

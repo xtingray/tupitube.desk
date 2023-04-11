@@ -64,7 +64,7 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
 {
     #ifdef TUP_DEBUG
         qDebug() << "[ImagePlugin::exportToFormat()]";
-        qWarning() << "Size: " << size;
+        qWarning() << "Size -> " << size;
     #endif
 
     Q_UNUSED(fps)
@@ -103,9 +103,15 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                  break;
     }
 
+    QColor background;
+    if (bgColor.alpha() == 0)
+        background = Qt::transparent;
+    else
+        background = bgColor;
+
     TupAnimationRenderer renderer(project->getLibrary(), waterMark);
     foreach (TupScene *scene, scenes) {
-        renderer.setScene(scene, size);
+        renderer.setScene(scene, size, background);
 
         int photogram = 0;
         while (renderer.nextPhotogram()) {
@@ -122,7 +128,7 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
 
             if (QString(extension).compare("SVG") == 0) {
                 QString path = fileInfo.absolutePath() + "/"
-                               + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower());
+                               + QString(m_baseName + "%1.%2").arg(index, QString(extension).toLower());
 
                 QSvgGenerator generator;
                 generator.setFileName(path);
@@ -139,10 +145,7 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                 painter.end();
             } else {
                 QImage image(size, imageFormat);
-                if (bgColor.alpha() == 0)
-                    image.fill(Qt::transparent);
-                else
-                    image.fill(bgColor);
+                image.fill(background);
 
                 {
                     QPainter painter(&image);
@@ -153,14 +156,15 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                 if (size != newSize)
                     image = image.QImage::scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                 image.save(fileInfo.absolutePath() + "/"
-                           + QString(m_baseName + "%1.%2").arg(index).arg(QString(extension).toLower()),
-                           extension, 100);
+                           + QString(m_baseName + "%1.%2").arg(index, QString(extension).toLower()), extension, 100);
             }
             #ifdef TUP_DEBUG
                 qDebug() << "ImagePlugin::exportToFormat() - Rendering frame -> " << QString::number(photogram);
             #endif
             photogram++;
-            emit progressChanged((photogram * 100) / frames);
+
+            if (frames > 0)
+                emit progressChanged((photogram * 100) / frames);
         }
     }
 
@@ -183,7 +187,7 @@ bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString 
     bgColor.setAlpha(255);
 
     TupAnimationRenderer renderer(project->getLibrary(), waterMark);
-    renderer.setScene(scene, size);
+    renderer.setScene(scene, size, scene->getBgColor());
     renderer.renderPhotogram(frameIndex);
 
     if (filePath.endsWith(".SVG", Qt::CaseInsensitive)) {

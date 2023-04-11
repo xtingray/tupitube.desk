@@ -83,13 +83,6 @@ TMovieGeneratorInterface::Format FFmpegPlugin::videoFormat(TupExportInterface::F
             {
                 return TFFmpegMovieGenerator::AVI;
             }
-        /* SQA: MPEG codec was removed because it crashes. Check the issue
-        case TupExportInterface::MPEG:
-            {
-                return TFFmpegMovieGenerator::MPEG;
-            }
-        break;
-        */
         case TupExportInterface::MOV:
             {
                 return TFFmpegMovieGenerator::MOV;
@@ -109,6 +102,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                                   TupExportInterface::Format fmt, const QSize &size, const QSize &newSize, int fps,
                                   TupProject *project, bool waterMark)
 {
+    Q_UNUSED(bgColor)
     Q_UNUSED(newSize)
     #ifdef TUP_DEBUG
         qDebug() << "[FFmpegPlugin::exportToFormat()] - fps -> " << fps;
@@ -235,7 +229,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         emit messageChanged(tr("Rendering project..."));
         emit progressChanged(0);
         foreach (TupScene *scene, scenes) {
-            renderer.setScene(scene, size);
+            renderer.setScene(scene, size, scene->getBgColor());
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
                     qDebug() << "[FFmpegPlugin::exportToFormat()] - Rendering frame -> " << photogram;
@@ -253,6 +247,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                 #ifdef TUP_DEBUG
                     qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't process MP4 audio track!";
                 #endif
+
                 return false;
             }
         }
@@ -270,6 +265,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                 #ifdef TUP_DEBUG
                     qCritical() << "[FFmpegPlugin::exportToFormat()] - " << errorMsg;
                 #endif
+
                 return false;
             }
         }

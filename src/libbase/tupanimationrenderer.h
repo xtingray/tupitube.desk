@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupAnimationRenderer
         TupAnimationRenderer(TupLibrary *library = nullptr, bool waterMark = false);
         ~TupAnimationRenderer();
 
-        void setScene(TupScene *scene, QSize dimension);
+        void setScene(TupScene *scene, QSize dimension, const QColor &bgColor);
 
         bool nextPhotogram();
         void renderPhotogram(int index);
