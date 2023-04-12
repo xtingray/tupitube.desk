@@ -202,12 +202,12 @@
         <translation>Formatos de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="176"/>
+        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="170"/>
         <source>Processing final audio track...</source>
         <translation>Processando faixa de áudio final...</translation>
     </message>
     <message>
-        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="235"/>
+        <location filename="../../../plugins/export/ffmpegplugin/ffmpegplugin.cpp" line="229"/>
         <source>Rendering project...</source>
         <translation>Projeto de renderização...</translation>
     </message>
@@ -775,7 +775,7 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="286"/>
-        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="307"/>
+        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="310"/>
         <source>Ending at frame</source>
         <translation>Terminar no quadro</translation>
     </message>
@@ -785,7 +785,7 @@
         <translation>Total de Quadros</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="341"/>
+        <location filename="../../../plugins/tools/papagayo/papagayosettings.cpp" line="344"/>
         <source>Current Phoneme</source>
         <translation>Fonema Atual</translation>
     </message>
@@ -808,7 +808,7 @@
         <translation>lipsync:</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="553"/>
+        <location filename="../../../plugins/tools/papagayo/papagayotool.cpp" line="554"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
@@ -2388,22 +2388,22 @@
         <translation>Resoluções de Câmera Disponíveis:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcameradialog.cpp" line="101"/>
+        <location filename="../../../components/workspace/tupcameradialog.cpp" line="103"/>
         <source>Resize my project to fit camera resolution</source>
         <translation>Redimensionar meu projeto para ajustar à resolução da câmera</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcameradialog.cpp" line="104"/>
+        <location filename="../../../components/workspace/tupcameradialog.cpp" line="106"/>
         <source>Use the basic camera interface (low resources)</source>
         <translation>Usar a interface básica de câmera (poucos recursos)</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcameradialog.cpp" line="116"/>
+        <location filename="../../../components/workspace/tupcameradialog.cpp" line="118"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcameradialog.cpp" line="123"/>
+        <location filename="../../../components/workspace/tupcameradialog.cpp" line="125"/>
         <source>Ok</source>
         <translation>Ok</translation>
     </message>
@@ -2411,92 +2411,92 @@
 <context>
     <name>TupCameraInterface</name>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="59"/>
-        <source>TupiTube Camera Manager</source>
-        <translation>Gestor de Câmera do TupiTube</translation>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="61"/>
+        <source>Resolution:</source>
+        <translation>Resolução:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="59"/>
-        <source>Current resolution:</source>
-        <translation>Resolução atual:</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="121"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="124"/>
         <source>Cameras</source>
         <translation>Câmeras</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="123"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="126"/>
         <source>Camera</source>
         <translation>Câmera</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="129"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="132"/>
         <source>Take picture</source>
         <translation>Fotografar</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="134"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="137"/>
         <source>Flip camera</source>
         <translation>Rodar a câmera</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="139"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="142"/>
         <source>Show safe area</source>
         <translation>Mostrar área segura</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="140"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="143"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="146"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="149"/>
         <source>Show grid</source>
         <translation>Mostrar grelha</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="147"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="150"/>
         <source>#</source>
         <translation>#</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="157"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="164"/>
         <source>Grid spacing</source>
         <translation>Espaçamento da grelha</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="168"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="182"/>
+        <source>Grid line thickness</source>
+        <translation>Espessura da linha de grade</translation>
+    </message>
+    <message>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="195"/>
         <source>Grid color</source>
         <translation>Cor da grelha</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="184"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="214"/>
         <source>Show previous images</source>
         <translation>Exibir imagens anteriores</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="185"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="215"/>
         <source>P</source>
         <translation>P</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="195"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="225"/>
         <source>Image opacity level</source>
         <translation>Nível de opacidade da imagem</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="205"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="235"/>
         <source>Amount of images to show</source>
         <translation>Quantidade de imagens para exibir</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="232"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="262"/>
         <source>Close manager</source>
         <translation>Fechar gestor</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="319"/>
+        <location filename="../../../components/workspace/tupcamerainterface.cpp" line="349"/>
         <source>Can&apos;t create pictures directory</source>
         <translation>Não é possível criar diretório para fotografias</translation>
     </message>
@@ -3091,7 +3091,7 @@
         <translation>Por favor, feche o diálogo atual da câmera primeiro!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2378"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2367"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
@@ -3117,7 +3117,7 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="995"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2632"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2634"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -3178,7 +3178,7 @@
         <translation>Não é possível exportar quadro como imagem</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2310"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2299"/>
         <source>No cameras detected</source>
         <translation>Nenhuma câmera detetada</translation>
     </message>
@@ -6013,7 +6013,7 @@
         <translation>As imagens da boca não estão definidas!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="788"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="789"/>
         <source>No voice text to play!</source>
         <translation>Não há texto de voz para reproduzir!</translation>
     </message>
@@ -6340,27 +6340,27 @@
 <context>
     <name>TupProjectImporterDialog</name>
     <message>
-        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="47"/>
+        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="48"/>
         <source>Project Assets</source>
         <translation>Ativos do Projeto</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="61"/>
+        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="64"/>
         <source>Please, pick the elements you want to import:</source>
         <translation>Por favor, escolha os elementos que deseja importar:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="78"/>
+        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="81"/>
         <source>Library</source>
         <translation>Biblioteca</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="87"/>
+        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="90"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="91"/>
+        <location filename="../../../components/workspace/tupprojectimporterdialog.cpp" line="94"/>
         <source>Import Assets</source>
         <translation>Importar Ativos</translation>
     </message>
@@ -6386,77 +6386,77 @@
 <context>
     <name>TupProjectSizeDialog</name>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="43"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="44"/>
         <source>Project Canvas Size</source>
         <translation>Tamanho da Tela do Projeto</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="58"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="62"/>
         <source>Apply</source>
         <translation>Aplicar</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="62"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="66"/>
         <source>Please, set the project canvas size:</source>
         <translation>Por favor, defina o tamanho da tela do projeto:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="66"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="70"/>
         <source>Free Format</source>
         <translation>Formato Livre</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="67"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="71"/>
         <source>520x380 - 24</source>
         <translation>520x380 - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="68"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="72"/>
         <source>640x480 - 24</source>
         <translation>640x480 - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="69"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="73"/>
         <source>480 (PAL DV/DVD) - 25</source>
         <translation>480 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="70"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="74"/>
         <source>576 (PAL DV/DVD) - 25</source>
         <translation>576 (PAL DV/DVD) - 25</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="71"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="75"/>
         <source>720 (HD) - 24</source>
         <translation>720 (HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="72"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="76"/>
         <source>1080 (Mobile) - 24</source>
         <translation>1080 (Móvel) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="73"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="77"/>
         <source>1080 (Full HD Vertical) - 24</source>
         <translation>1080 (Full HD Vertical) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="74"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="78"/>
         <source>1080 (Full HD) - 24</source>
         <translation>1080 (Full HD) - 24</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="79"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="83"/>
         <source>Width:</source>
         <translation>Largura:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="79"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="83"/>
         <source>Height:</source>
         <translation>Altura:</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="93"/>
+        <location filename="../../../components/workspace/tupprojectsizedialog.cpp" line="97"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -6567,13 +6567,13 @@
 <context>
     <name>TupScene</name>
     <message>
-        <location filename="../../../store/tupscene.cpp" line="722"/>
+        <location filename="../../../store/tupscene.cpp" line="727"/>
         <source>Layer %1</source>
         <translation>Camada %1</translation>
     </message>
     <message>
         <location filename="../../../store/tupscene.cpp" line="150"/>
-        <location filename="../../../store/tupscene.cpp" line="723"/>
+        <location filename="../../../store/tupscene.cpp" line="728"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>

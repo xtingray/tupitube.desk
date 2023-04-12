@@ -139,6 +139,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -148,12 +149,12 @@ bool TFFmpegMovieGenerator::initVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
         #endif
+
         return false;
     }
 
     outputFormat = formatContext->oformat;
     videoCodecID = outputFormat->video_codec;
-    // audioOutputCodecID = outputFormat->audio_codec;
     audioOutputCodecID = AV_CODEC_ID_AAC;
 
     // AVStream
@@ -165,6 +166,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
+
             return false;
         }
     } else {
@@ -172,6 +174,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -183,7 +186,6 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #endif
             hasSound = false;
             goto safe;
-            // return false;
         }
 
         if (!openAudioInputStream()) {
@@ -193,7 +195,6 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #endif
             hasSound = false;
             goto safe;
-            // return false;
         }
 
         if (!openAudioOutputStream()) {
@@ -203,7 +204,6 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #endif
             hasSound = false;
             goto safe;
-            // return false;
         }
 
         if (!openAudioOutputCodec()) {
@@ -213,7 +213,6 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #endif
             hasSound = false;
             goto safe;
-            // return false;
         }
     }
 
@@ -227,6 +226,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
             #endif
+
             return false;
         }
     }
@@ -241,6 +241,7 @@ bool TFFmpegMovieGenerator::initVideoFile()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::initVideoFile()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -269,6 +270,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
             qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - Unavailable Codec ID -> "
                         << avcodec_get_name(videoCodecID);
         #endif
+
         return nullptr;
     }
 
@@ -278,6 +280,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
         #endif
+
         return nullptr;
     }
 
@@ -288,6 +291,7 @@ AVStream * TFFmpegMovieGenerator::addVideoStream()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::addVideoStream()] - " << errorMsg;
         #endif
+
         return nullptr;
     }
 
@@ -345,6 +349,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
                            "Warning: Could not open input file -> "
                         << inputFile;
         #endif
+
         return false;
     }
 
@@ -354,6 +359,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - "
                            "Failed to retrieve input stream information";
         #endif
+
         return false;
     }
 
@@ -368,6 +374,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -378,6 +385,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -387,6 +395,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -404,6 +413,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - Unavailable Codec ID -> "
                         << avcodec_get_name(audioInputCodecID);
         #endif
+
         return false;
     }
 
@@ -413,6 +423,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -422,6 +433,7 @@ bool TFFmpegMovieGenerator::loadInputAudio(const QString &soundPath)
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::loadInputAudio()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -441,6 +453,7 @@ bool TFFmpegMovieGenerator::openVideoStream()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::openVideoStream()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -452,6 +465,7 @@ bool TFFmpegMovieGenerator::openVideoStream()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::openVideoStream()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -462,6 +476,7 @@ bool TFFmpegMovieGenerator::openVideoStream()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::openVideoStream()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -481,6 +496,7 @@ bool TFFmpegMovieGenerator::openAudioInputStream()
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::openAudioInputStreams()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -503,6 +519,7 @@ bool TFFmpegMovieGenerator::openAudioOutputStream()
             qCritical() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - Unavailable Codec ID -> "
                         << avcodec_get_name(audioOutputCodecID);
         #endif
+
         return false;
     }
 
@@ -514,6 +531,7 @@ bool TFFmpegMovieGenerator::openAudioOutputStream()
                            "Fatal Error: Could not create new stream.";
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return false;
     }
 
@@ -526,6 +544,7 @@ bool TFFmpegMovieGenerator::openAudioOutputStream()
             qCritical() << "ERROR CODE -> " << error;
         #endif
         avcodec_free_context(&audioOutputCodecContext);
+
         return false;
     }
 
@@ -566,6 +585,7 @@ bool TFFmpegMovieGenerator::openAudioOutputCodec()
             qCritical() << "[TFFmpegMovieGenerator::openAudioOutputCodec()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return false;
     }
 
@@ -576,6 +596,7 @@ bool TFFmpegMovieGenerator::openAudioOutputCodec()
                            "Fatal Error: Could not initialize stream parameters.";
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return false;
     }
 
@@ -661,6 +682,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
         #ifdef TUP_DEBUG
             qCritical() << "[TFFmpegMovieGenerator::createVideoFrame()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -676,6 +698,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
             #ifdef TUP_DEBUG
                 qCritical() << "[TFFmpegMovieGenerator::createVideoFrame()] - " << errorMsg;
             #endif
+
             return false;
         }
 
@@ -686,6 +709,7 @@ bool TFFmpegMovieGenerator::createVideoFrame(const QImage &image)
            #ifdef TUP_DEBUG
                qCritical() << "[TFFmpegMovieGenerator::createVideoFrame()] - " << errorMsg;
            #endif
+
            return false;
         }
 
@@ -722,6 +746,7 @@ void TFFmpegMovieGenerator::handle(const QImage &image)
             qDebug() << "[TFFmpegMovieGenerator::handle()] - The total of frames has been "
                        "processed (" << mp4Duration << " seg)";
         #endif
+
         return;
     }
 
@@ -801,6 +826,7 @@ void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
                 qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Video path is NOT a file! -> "
                             << videoPath;
             #endif
+
             return;
         }
 
@@ -809,6 +835,7 @@ void TFFmpegMovieGenerator::copyMovieFile(const QString &videoPath)
                 qCritical() << "[TFFmpegMovieGenerator::copyMovieFile()] - Fatal Error: Can't remove file! -> "
                             << videoPath;
             #endif
+
             return;
         }
     }
@@ -943,6 +970,7 @@ bool TFFmpegMovieGenerator::writeAudioStream()
                 #ifdef TUP_DEBUG
                     qCritical() << "[TFFmpegMovieGenerator::writeAudioStreams()] - Error while muxing audio packet!";
                 #endif
+
                 return false;
             }
         } else {

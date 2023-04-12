@@ -1967,12 +1967,12 @@
         <translation>栅格間距</translation>
     </message>
     <message>
-        <source>TupiTube Camera Manager</source>
-        <translation>绘幻想相機管理器</translation>
+        <source>Resolution:</source>
+        <translation>解決：</translation>
     </message>
     <message>
-        <source>Current resolution:</source>
-        <translation>目前解析度</translation>
+        <source>Grid line thickness</source>
+        <translation>網格線粗細</translation>
     </message>
 </context>
 <context>
