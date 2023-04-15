@@ -1959,7 +1959,7 @@ void TupPaintArea::importLocalProject(const QString &objectPath, bool onlyLibrar
         if (assetsDir.exists()) {
             if (!assetsDir.removeRecursively()) {
                 #ifdef TUP_DEBUG
-                    qWarning() << "[TupPaintArea::importLocalProject(] - Error: Can't remove temporary folder -> " << tempPath;
+                    qWarning() << "[TupPaintArea::importLocalProject()] - Error: Can't remove temporary folder -> " << tempPath;
                 #endif
             }
         }

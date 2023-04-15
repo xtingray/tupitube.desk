@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<qonf optional="false" >
+	<test name="LibPNG">
+		<dir path="." />
+	</test>
+	<provide>
+		<defines>
+			<define value="HAVE_LIBPNG" />
+		</defines>
+		<libs>
+			<lib path="-lpng" />
+		</libs>
+	</provide>
+	<solution>
+		<linux package="libpng" url="http://www.libpng.org" comment="" >
+			<distribution name="gentoo" package="libpng" url="http://www.libpng.org/" comment="Try: emerge libpng" />
+			<distribution name="ubuntu" package="libpng-dev" url="http://www.libpng.org/" comment="Try: apt-get install libpng-dev" />
+		</linux>
+		<windows package="libpng" url="http://www.libpng.org/" comment="" />
+		<macosx package="libpng" url="http://www.libpng.org/" comment="" />
+	</solution>
+</qonf>

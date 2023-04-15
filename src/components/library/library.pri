@@ -1,7 +1,7 @@
 INCLUDEPATH += $$LIBRARY_DIR
 
 unix {
-    LIBS += -L$$LIBRARY_DIR -ltupilibrary
+    LIBS += -L$$LIBRARY_DIR -ltupilibrary -lpng
 }
 
 win32 {

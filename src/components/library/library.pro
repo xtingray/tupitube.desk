@@ -15,7 +15,9 @@ HEADERS += tupsounddialog.h \
            tupnewitemdialog.h \
            tuplibrarydisplay.h \
            tupsoundplayer.h \
-           tupsearchdialog.h
+           tupsearchdialog.h \
+           tupvideocutter.h \
+           tupvideoimporterdialog.h 
 
 SOURCES += tupsounddialog.cpp \
            tuplibrarywidget.cpp \
@@ -25,7 +27,9 @@ SOURCES += tupsounddialog.cpp \
            tupnewitemdialog.cpp \
            tuplibrarydisplay.cpp \
            tupsoundplayer.cpp \
-           tupsearchdialog.cpp
+           tupsearchdialog.cpp \
+           tupvideocutter.cpp \
+           tupvideoimporterdialog.cpp
            
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

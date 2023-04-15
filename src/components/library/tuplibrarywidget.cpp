@@ -42,6 +42,7 @@
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
 #include "tupsounddialog.h"
+#include "tupvideoimporterdialog.h"
 
 #define RETURN_IF_NOT_LIBRARY if (!library) return;
 
@@ -196,6 +197,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     itemType->addItem(QIcon(THEME_DIR + "icons/bitmap_array.png"), tr("Image Sequence"));
     itemType->addItem(QIcon(THEME_DIR + "icons/svg_array.png"), tr("Svg Sequence"));
     itemType->addItem(QIcon(THEME_DIR + "icons/sound_object.png"), tr("Audio File"));
+    itemType->addItem(QIcon(THEME_DIR + "icons/player.png"), tr("Video File"));
 
     comboLayout->addWidget(itemType);
 
@@ -1563,6 +1565,51 @@ void TupLibraryWidget::importSoundFile()
     soundDialog->show();
 }
 
+void TupLibraryWidget::importVideoFile()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importVideoFile()]";
+    #endif
+
+    TCONFIG->beginGroup("General");
+    QString videoPath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
+
+    QFileDialog dialog(this, tr("Choose a video file..."), videoPath);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        QStringList files = dialog.selectedFiles();
+        videoPath = files.at(0);
+        qDebug() << "[TupLibraryWidget::importVideoFile()] - path -> " << videoPath;
+
+        QFile file(videoPath);
+        double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
+        if (fileSize <= 2) {
+            TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath);
+            if (dialog->exec() == QDialog::Accepted) {
+                // Here: Import all the images created one by one (Progress dialog)
+
+                /*
+                // Removing temporary folder
+                QDir imgDir(imagesPath);
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryWidget::importVideoFile()] - Removing temporary folder -> " << imagesPath;
+                #endif
+                if (imgDir.exists()) {
+                    if (!imgDir.removeRecursively()) {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupLibraryWidget::importVideoFile()] - Error: Can't remove temporary folder -> " << imagesPath;
+                        #endif
+                    }
+                }
+                */
+            }
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Video file is larger than 2 MB. Too big!"));
+        }
+    }
+}
+
 void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QByteArray data, const QString &folder)
 {
     isEffectSound = true;
@@ -1909,6 +1956,11 @@ void TupLibraryWidget::importLibraryObject()
 
     if (option.compare(tr("Audio File")) == 0) {
         importSoundFile();
+        return;
+    }
+
+    if (option.compare(tr("Video File")) == 0) {
+        importVideoFile();
         return;
     }
 }
