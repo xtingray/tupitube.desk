@@ -38,6 +38,7 @@
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
+#include "tupvideocutter.h"
 
 #include <QDialog>
 #include <QVBoxLayout>
@@ -50,7 +51,7 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
     Q_OBJECT
 
     public:
-        TupVideoImporterDialog(const QString &filename, QWidget *parent = nullptr);
+        TupVideoImporterDialog(const QString &filename, const QSize &projectSize, QWidget *parent = nullptr);
         ~TupVideoImporterDialog();
 
         int getPhotogramsTotal();
@@ -78,11 +79,13 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
 
         QPushButton *okButton;
 
+        TupVideoCutter *videoCutter;
         QString videoPath;
         QString imagesPath;
         int imagesTotal;
         bool extractionStarted;
         int advance;
+        QSize videoSize;
 };
 
 #endif

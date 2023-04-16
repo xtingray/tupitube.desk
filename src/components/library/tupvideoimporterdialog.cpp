@@ -37,14 +37,14 @@
 #include "tconfig.h"
 #include "tseparator.h"
 #include "tapptheme.h"
-#include "tupvideocutter.h"
 #include "talgorithm.h"
 #include "tosd.h"
 #include "tupprojectrequest.h"
 
 #include <QPushButton>
 
-TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, QWidget *parent) : QDialog(parent)
+TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QSize &projectSize,
+                                               QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoImporterDialog::TupVideoImporterDialog()]";
@@ -63,6 +63,20 @@ TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, QWidget 
 
     layout = new QVBoxLayout(this);
     setUI();
+
+    videoCutter = new TupVideoCutter();
+    connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
+    connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
+
+    QString tempFolder = TAlgorithm::randomString(10);
+    imagesPath = CACHE_DIR + tempFolder + "/";
+    if (!videoCutter->loadFile(videoPath, imagesPath))
+        TOsd::self()->display(TOsd::Error, tr("Can't load video file!"));
+
+    videoSize = videoCutter->getVideoSize();
+
+    qDebug() << "[TupVideoImporterDialog::TupVideoImporterDialog()] - Project Size -> " << projectSize;
+    qDebug() << "[TupVideoImporterDialog::TupVideoImporterDialog()] - Video Size -> " << videoSize;
 }
 
 TupVideoImporterDialog::~TupVideoImporterDialog()
@@ -86,7 +100,7 @@ void TupVideoImporterDialog::setUI()
 
     progressBar = new QProgressBar;
     progressBar->setTextVisible(true);
-    progressBar->setRange(1, 50);
+    progressBar->setRange(0, 100);
 
     progressWidget = new QWidget;
     progressLabel = new QLabel("");
@@ -123,18 +137,15 @@ void TupVideoImporterDialog::startExtraction()
     #endif
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    imagesTotal = imagesBox->value();
+    advance = 100/imagesTotal;
+
     imagesBox->setEnabled(false);
     okButton->setVisible(false);
 
     progressWidget->setVisible(true);
     progressLabel->setText(tr("Starting procedure..."));
     extractionStarted = true;
-
-    imagesTotal = imagesBox->value();
-    advance = 100/imagesTotal;
-
-    QString tempFolder = TAlgorithm::randomString(10);
-    imagesPath = CACHE_DIR + tempFolder + "/";
 
     if (!QFile::exists(imagesPath)) {
         QDir dir;
@@ -148,20 +159,26 @@ void TupVideoImporterDialog::startExtraction()
         }
     }
 
-    TupVideoCutter *videoCutter = new TupVideoCutter();
-    connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
-    connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
+    videoCutter->setPhotogramsTotal(imagesTotal);
+    if (!videoCutter->startExtraction()) {
+        TOsd::self()->display(TOsd::Error, tr("Can't extract photograms!"));
+        videoCutter->releaseResources();
 
-    // Here: Compare video dimension and project dimension and ask the user to change it if it's necessary
+        return;
+    }
 
-    videoCutter->processFile(videoPath, imagesPath, imagesTotal);
+    videoCutter->releaseResources();
     extractionStarted = false;
 }
 
 void TupVideoImporterDialog::updateUI(int index)
 {
     progressLabel->setText(tr("Extracting photogram #") + QString::number(index));
-    progressBar->setValue(progressBar->value() + advance);
+    progressBar->setValue(advance);
+    advance += advance;
+
+    qDebug() << "[TupVideoImporterDialog::updateUI()] - progressBar->value() -> " << progressBar->value();
+    qDebug() << "[TupVideoImporterDialog::updateUI()] - advance -> " << advance;
 
     if (index == imagesBox->value()) {
         #ifdef TUP_DEBUG

@@ -119,6 +119,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         bool folderHasAudioObjects(const QString &folderName);
 
         QString getItemKey(const QString &filename);
+        QString getFolderKey(const QString &folderName);
 
     public:
         virtual void fromXml(const QString &xml);

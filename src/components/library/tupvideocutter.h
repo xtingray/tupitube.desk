@@ -61,7 +61,11 @@ class TUPITUBE_EXPORT TupVideoCutter : public QObject
         TupVideoCutter();
         ~TupVideoCutter();
 
-        int processFile(const QString &videoFile, const QString &outputPath, int frames);
+        bool loadFile(const QString &videoFile, const QString &outputPath);
+        void setPhotogramsTotal(int frames);
+        bool startExtraction();
+        QSize getVideoSize() const;
+        void releaseResources();
 
     signals:
         void msgSent(const QString &msg);
@@ -76,6 +80,13 @@ class TUPITUBE_EXPORT TupVideoCutter : public QObject
         QString filename;
         QString outputFolder;
         int imagesTotal;
+
+        AVFormatContext *formatContext;
+        AVCodecContext *inputCodecContext;
+        int videoStreamIndex;
+        AVFrame *inputFrame;
+        AVPacket *inputPacket;
+        QSize videoSize;
 };
 
 #endif

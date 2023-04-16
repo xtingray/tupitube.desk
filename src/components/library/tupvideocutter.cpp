@@ -43,31 +43,30 @@ TupVideoCutter::~TupVideoCutter()
 {
 }
 
-int TupVideoCutter::processFile(const QString &videoFile, const QString &outputPath, int frames)
+bool TupVideoCutter::loadFile(const QString &videoFile, const QString &outputPath)
 {
     emit msgSent(tr("Loading video file..."));
 
     outputFolder = outputPath;
-    imagesTotal = frames;
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupVideoCutter::processFile()] - Initializing all the containers, codecs and protocols...";
+        qDebug() << "[TupVideoCutter::loadFile()] - Initializing all the containers, codecs and protocols...";
     #endif
 
     // AVFormatContext holds the header information from the format (Container)
     // Allocating memory for this component
     // http://ffmpeg.org/doxygen/trunk/structAVFormatContext.html
-    AVFormatContext *formatContext = avformat_alloc_context();
+    formatContext = avformat_alloc_context();
     if (!formatContext) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - ERROR could not allocate memory for Format Context";
+            qWarning() << "[TupVideoCutter::loadFile()] - ERROR could not allocate memory for Format Context";
         #endif
 
-        return -1;
+        return false;
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupVideoCutter::processFile()] - Opening the input file and loading format (container) header - File -> " << videoFile;
+        qDebug() << "[TupVideoCutter::loadFile()] - Opening the input file and loading format (container) header - File -> " << videoFile;
     #endif
 
     // Open the file and read its header. The codecs are not opened.
@@ -82,20 +81,20 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
 
     if (avformat_open_input(&formatContext, inputFile, nullptr, nullptr) != 0) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - ERROR could not open the file";
+            qWarning() << "[TupVideoCutter::loadFile()] - ERROR could not open the file";
         #endif
 
-        return -1;
+        return false;
     }
 
     // Now we have access to some information about our file
     // since we read its header we can say what format (container) it's
     // and some other information related to the format itself.
     #ifdef TUP_DEBUG
-        qDebug() << "[TupVideoCutter::processFile()] - Format: " << formatContext->iformat->name
+        qDebug() << "[TupVideoCutter::loadFile()] - Format: " << formatContext->iformat->name
                  << ", Duration: " << formatContext->duration
                  << ", Bitrate: " << formatContext->bit_rate;
-        qDebug() << "[TupVideoCutter::processFile()] - Finding stream info from format...";
+        qDebug() << "[TupVideoCutter::loadFile()] - Finding stream info from format...";
     #endif
 
     // Read Packets from the Format to get stream information
@@ -109,10 +108,10 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
 
     if (avformat_find_stream_info(formatContext, nullptr) < 0) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - ERROR could not get the stream info";
+            qWarning() << "[TupVideoCutter::loadFile()] - ERROR could not get the stream info";
         #endif
 
-        return -1;
+        return false;
     }
 
     // The component that knows how to enCOde and DECode the stream
@@ -122,7 +121,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
     // this component describes the properties of a codec used by the stream i
     // https://ffmpeg.org/doxygen/trunk/structAVCodecParameters.html
     AVCodecParameters *inputCodecParameters = nullptr;
-    int videoStreamIndex = -1;
+    videoStreamIndex = -1;
 
     // Loop though all the streams and print its main information
     int streamsTotal = (int) formatContext->nb_streams;
@@ -130,13 +129,13 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         AVCodecParameters *codecParameters = nullptr;
         codecParameters = formatContext->streams[i]->codecpar;
         #ifdef TUP_DEBUG
-            qDebug() << "[TupVideoCutter::processFile()] - AVStream->time_base before open coded -> "
+            qDebug() << "[TupVideoCutter::loadFile()] - AVStream->time_base before open coded -> "
                      << formatContext->streams[i]->time_base.num << "/" << formatContext->streams[i]->time_base.den;
-            qDebug() << "[TupVideoCutter::processFile()] - AVStream->r_frame_rate before open coded -> "
+            qDebug() << "[TupVideoCutter::loadFile()] - AVStream->r_frame_rate before open coded -> "
                      << formatContext->streams[i]->r_frame_rate.num << "/" << formatContext->streams[i]->r_frame_rate.den;
-            qDebug() << "[TupVideoCutter::processFile()] - AVStream->start_time -> " << formatContext->streams[i]->start_time;
-            qDebug() << "[TupVideoCutter::processFile()] - AVStream->duration -> " << formatContext->streams[i]->duration;
-            qDebug() << "[TupVideoCutter::processFile()] - Finding the proper decoder (CODEC)";
+            qDebug() << "[TupVideoCutter::loadFile()] - AVStream->start_time -> " << formatContext->streams[i]->start_time;
+            qDebug() << "[TupVideoCutter::loadFile()] - AVStream->duration -> " << formatContext->streams[i]->duration;
+            qDebug() << "[TupVideoCutter::loadFile()] - Finding the proper decoder (CODEC)";
             qDebug() << "---";
         #endif
 
@@ -148,7 +147,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
 
         if (codec == nullptr) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupVideoCutter::processFile()] - ERROR unsupported codec!";
+                qWarning() << "[TupVideoCutter::loadFile()] - ERROR unsupported codec!";
             #endif
 
             // In this example if the codec is not found we just skip it
@@ -164,80 +163,96 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
             }
 
             #ifdef TUP_DEBUG
-                qDebug() << "[TupVideoCutter::processFile()] - Video Codec: resolution -> "
+                qDebug() << "[TupVideoCutter::loadFile()] - Video Codec: resolution -> "
                          << codecParameters->width
                          << " x " << codecParameters->height;
             #endif
         } else if (codecParameters->codec_type == AVMEDIA_TYPE_AUDIO) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupVideoCutter::processFile()] -  Audio Codec -> " << codecParameters->channels
+                qDebug() << "[TupVideoCutter::loadFile()] -  Audio Codec -> " << codecParameters->channels
                          << " channels, sample rate -> " << codecParameters->sample_rate;
             #endif
         }
 
         // Print its name, id and bitrate
         #ifdef TUP_DEBUG
-            qDebug() << "[TupVideoCutter::processFile()] - Codec -> " << codec->name
+            qDebug() << "[TupVideoCutter::loadFile()] - Codec -> " << codec->name
                      << ", ID " << codec->id << ", bit_rate " << codecParameters->bit_rate;
         #endif
     }
 
     if (videoStreamIndex == -1) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - File %s does not contain a video stream! -> " << videoFile;
+            qWarning() << "[TupVideoCutter::loadFile()] - File %s does not contain a video stream! -> " << videoFile;
         #endif
 
-        return -1;
+        return false;
     }
 
     // https://ffmpeg.org/doxygen/trunk/structAVCodecContext.html
-    AVCodecContext *inputCodecContext = avcodec_alloc_context3(inputCodec);
+    inputCodecContext = avcodec_alloc_context3(inputCodec);
     if (!inputCodecContext) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - Failed to allocated memory for AVCodecContext";
+            qWarning() << "[TupVideoCutter::loadFile()] - Failed to allocated memory for AVCodecContext";
         #endif
 
-        return -1;
+        return false;
     }
 
     // Fill the codec context based on the values from the supplied codec parameters
     // https://ffmpeg.org/doxygen/trunk/group__lavc__core.html
     if (avcodec_parameters_to_context(inputCodecContext, inputCodecParameters) < 0) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - Failed to copy codec params to codec context";
+            qWarning() << "[TupVideoCutter::loadFile()] - Failed to copy codec params to codec context";
         #endif
 
-        return -1;
+        return false;
     }
 
     // Initialize the AVCodecContext to use the given AVCodec.
     // https://ffmpeg.org/doxygen/trunk/group__lavc__core.html
     if (avcodec_open2(inputCodecContext, inputCodec, nullptr) < 0) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - Failed to open codec through avcodec_open2";
+            qWarning() << "[TupVideoCutter::loadFile()] - Failed to open codec through avcodec_open2";
         #endif
 
-        return -1;
+        return false;
     }
 
+    videoSize = QSize(inputCodecContext->width, inputCodecContext->height);
+
+    return true;
+}
+
+void TupVideoCutter::setPhotogramsTotal(int frames)
+{
+    imagesTotal = frames;
+}
+
+bool TupVideoCutter::startExtraction()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoCutter::startExtraction()] - Getting" << imagesTotal << "photograms...";
+    #endif
+
     // https://ffmpeg.org/doxygen/trunk/structAVFrame.html
-    AVFrame *inputFrame = av_frame_alloc();
+    inputFrame = av_frame_alloc();
     if (!inputFrame) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - Failed to allocate memory for AVFrame";
+            qWarning() << "[TupVideoCutter::startExtraction()] - Failed to allocate memory for AVFrame";
         #endif
 
-        return -1;
+        return false;
     }
 
     // https://ffmpeg.org/doxygen/trunk/structAVPacket.html
-    AVPacket *inputPacket = av_packet_alloc();
+    inputPacket = av_packet_alloc();
     if (!inputPacket) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupVideoCutter::processFile()] - Failed to allocate memory for AVPacket";
+            qWarning() << "[TupVideoCutter::startExtraction()] - Failed to allocate memory for AVPacket";
         #endif
 
-        return -1;
+        return false;
     }
 
     emit msgSent(tr("Extracting images..."));
@@ -251,7 +266,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         if (inputPacket->stream_index == videoStreamIndex) {
             #ifdef TUP_DEBUG
                 qDebug() << "---";
-                qDebug() << "[TupVideoCutter::processFile()]    - AVPacket->pts -> " << inputPacket->pts;
+                qDebug() << "[TupVideoCutter::startExtraction()]    - AVPacket->pts -> " << inputPacket->pts;
             #endif
             ret = decodePacket(inputPacket, inputCodecContext, inputFrame);
             if (ret < 0)
@@ -265,17 +280,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         av_packet_unref(inputPacket);
     }
 
-    #ifdef TUP_DEBUG
-        qDebug() << "---";
-        qDebug() << "[TupVideoCutter::processFile()] - Releasing all the resources...";
-    #endif
-
-    avformat_close_input(&formatContext);
-    av_packet_free(&inputPacket);
-    av_frame_free(&inputFrame);
-    avcodec_free_context(&inputCodecContext);
-
-    return 0;
+    return true;
 }
 
 int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext, AVFrame *frame)
@@ -462,4 +467,22 @@ int TupVideoCutter::saveFrameToPng(AVFrame *frame, const QString &outputFilename
     fclose(fp);
 
     return ret;
+}
+
+void TupVideoCutter::releaseResources()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupVideoCutter::releaseResources()] - Releasing all the resources...";
+    #endif
+
+    avformat_close_input(&formatContext);
+    av_packet_free(&inputPacket);
+    av_frame_free(&inputFrame);
+    avcodec_free_context(&inputCodecContext);
+}
+
+QSize TupVideoCutter::getVideoSize() const
+{
+    return videoSize;
 }

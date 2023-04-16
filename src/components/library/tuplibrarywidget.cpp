@@ -1451,7 +1451,7 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
     } else if (action == VideoAction) { // Importing images sequence extrated from video file
         verifyFramesAvailability(filesTotal);
 
-        QString directory = tr("Video");
+        QString directory = library->getFolderKey(tr("Video"));
         libraryTree->createFolder(directory);
         TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
         library->addFolder(folder);
@@ -1613,7 +1613,7 @@ void TupLibraryWidget::importVideoFile()
         QFile file(videoPath);
         double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
         if (fileSize <= 2) {
-            TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath);
+            TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath, project->getDimension());
             connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &)), SLOT(loadSequenceFromDirectory(ImportAction, const QString &)));
             connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
             dialog->show();

@@ -406,6 +406,33 @@ QString TupLibraryFolder::getItemKey(const QString &filename)
     return key;
 }
 
+QString TupLibraryFolder::getFolderKey(const QString &folderName)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::getFolderKey()] - folder -> " << folderName;
+    #endif
+
+    QFileInfo info(folderName);
+    QString base = info.baseName();
+    base = base.replace("(","_");
+    base = base.replace(")","_");
+    if (base.length() > 20)
+        base = base.left(20);
+
+    QString key = base;
+    int i = 0;
+    while (folderExists(key)) {
+        i++;
+        key = base + QString::number(i);
+    }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::getFolderKey()] - key -> " << key;
+    #endif
+
+    return key;
+}
+
 TupLibraryObject* TupLibraryFolder::getObject(const QString &key) const
 {
     #ifdef TUP_DEBUG
