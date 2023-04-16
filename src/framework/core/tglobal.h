@@ -124,5 +124,6 @@ enum ProjectDimension {
 #endif
 
 enum SafeLevel { Background = 0, Foreground };
+enum ImportAction {VideoAction=0, FolderAction};
 
 #endif

@@ -1284,22 +1284,12 @@ void TupLibraryWidget::verifyFramesAvailability(int filesTotal)
     }
 }
 
-QStringList TupLibraryWidget::naturalSort(QStringList photograms)
-{ 
-    QCollator coll;
-    coll.setNumericMode(true);
-    for (int i = photograms.size()-1; i >= 0; i--) {
-         for (int j = 1; j <= i; j++) {
-              if (coll.compare(photograms.at(j-1), photograms.at(j)) > 0)
-                  photograms.swapItemsAt(j-1, j);
-         }
-    }
-
-    return photograms;
-}
-
 void TupLibraryWidget::importImageSequence()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importImageSequence()]";
+    #endif
+
     TCONFIG->beginGroup("General");
     QString path = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
@@ -1311,132 +1301,178 @@ void TupLibraryWidget::importImageSequence()
     if (dialog.exec() == QDialog::Accepted) {
         QStringList files = dialog.selectedFiles();
         path = files.at(0);
+        loadSequenceFromDirectory(FolderAction, path);
+    }
+}
 
-        QDir source(path); 
-        QFileInfoList records = source.entryInfoList(QDir::Files, QDir::Name);
-        int filesTotal = records.size();
+bool TupLibraryWidget::importImageRecord(const QString &photogram, const QString &extension, const QSize imageSize,
+                                         const QSize projectSize, bool resize, const QString &directory)
+{
+    QFile file(photogram);
+    QFileInfo fileInfo(file);
+    QString symName = fileInfo.fileName().toLower();
+    symName = symName.replace("(","_");
+    symName = symName.replace(")","_");
 
-        // Ensuring to get only graphic files here. Check extensions! (PNG, JPG, GIF, XPM, WEBP)
-        int imagesCounter = 0; 
-        QStringList photograms;
-        for (int i = 0; i < filesTotal; ++i) {
-             if (records.at(i).isFile()) {
-                 QString extension = records.at(i).suffix().toUpper();
-                 if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
-                     extension.compare("GIF")==0 || extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
-                     imagesCounter++;
-                     photograms << records.at(i).absoluteFilePath();
-                 }
-             }
-        }
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray data = file.readAll();
+        file.close();
 
-        if (imagesCounter > 0) {
-            QString text = tr("Image files found: %1.").arg(imagesCounter);
-            bool resize = false;
-
-            QPixmap *pixmap = new QPixmap(photograms.at(0));
-            int picWidth = pixmap->width();
-            int picHeight = pixmap->height(); 
-            int projectWidth = project->getDimension().width();
-            int projectHeight = project->getDimension().height();
-
-            if (picWidth > projectWidth || picHeight > projectHeight) {
-                text = text + "\n" + tr("Files are too big, so they will be resized.") + "\n"
-                       + tr("Note: This task can take a while.");
-                resize = true;
-            }
-
-            QMessageBox msgBox;
-            msgBox.setWindowTitle(tr("Information"));  
-            msgBox.setIcon(QMessageBox::Question);
-            msgBox.setText(text);
-            msgBox.setInformativeText(tr("Do you want to continue?"));
-            msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
-            msgBox.setDefaultButton(QMessageBox::Ok);
-            msgBox.show();
-
-            msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                        static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
-
-            int answer = msgBox.exec();
-            if (answer == QMessageBox::Ok) {
-                msgBox.close();
-                verifyFramesAvailability(filesTotal);
-
-                QString directory = source.dirName();
-                libraryTree->createFolder(directory);
-
-                QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-                TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
-                library->addFolder(folder);
-
-                photograms = naturalSort(photograms);
-
-                int initFrame = currentFrame.frame;
-                int filesTotal = photograms.size();
+        if (resize) {
+            QPixmap *pixmap = new QPixmap();
+            QByteArray ba = extension.toLatin1();
+            const char* ext = ba.data();
+            if (pixmap->loadFromData(data, ext)) {
                 QPixmap newpix;
-                for (int i = 0; i < filesTotal; i++) {
-                     QFile file(photograms.at(i));
-                     QFileInfo fileInfo(file);
-                     QString extension = fileInfo.suffix().toUpper();
-                     if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
-                         extension.compare("GIF")==0 || extension.compare("XPM")==0 || extension.compare("WEBP")==0) {
-                         QString symName = fileInfo.fileName().toLower();
-                         symName = symName.replace("(","_");
-                         symName = symName.replace(")","_");
+                if (imageSize.width() > imageSize.height())
+                    newpix = QPixmap(pixmap->scaledToWidth(projectSize.width(), Qt::SmoothTransformation));
+                else
+                    newpix = QPixmap(pixmap->scaledToHeight(projectSize.height(), Qt::SmoothTransformation));
 
-                         if (file.open(QIODevice::ReadOnly)) {
-                             QByteArray data = file.readAll();
-                             file.close();
-
-                             if (resize) {
-                                 pixmap = new QPixmap();
-                                 QString extension = fileInfo.suffix().toUpper();
-                                 QByteArray ba = extension.toLatin1();
-                                 const char* ext = ba.data();
-                                 if (pixmap->loadFromData(data, ext)) {
-                                     if (picWidth > picHeight)
-                                         newpix = QPixmap(pixmap->scaledToWidth(projectWidth, Qt::SmoothTransformation));
-                                     else
-                                         newpix = QPixmap(pixmap->scaledToHeight(projectHeight, Qt::SmoothTransformation));
-                                     QBuffer buffer(&data);
-                                     buffer.open(QIODevice::WriteOnly);
-                                     newpix.save(&buffer, ext);
-                                 }
-                             }
-                           
-                             TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, symName,
-                                                         TupLibraryObject::Image, project->spaceContext(), data, directory);
-                             emit requestTriggered(&request);
-                             if (i < filesTotal-1) {
-                                 request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame + 1,
-                                                                                 TupProjectRequest::Select);
-                                 emit requestTriggered(&request);
-                             }
-
-                             /*
-                             progressDialog.setLabelText(tr("Loading image #%1").arg(index));
-                             progressDialog.setValue(index);
-                             index++;
-                             */
-                         } else {
-                             QMessageBox::critical(this, tr("ERROR!"), tr("ERROR: Can't open file %1. Please, check file permissions and try again.").arg(symName), QMessageBox::Ok);
-                             QApplication::restoreOverrideCursor();
-                             return;
-                         }
-                     }
-                }
-                saveDefaultPath(path);
-                TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
-                                                                                  TupProjectRequest::Select);
-                emit requestTriggered(&request);
-
-                QApplication::restoreOverrideCursor();
+                QBuffer buffer(&data);
+                buffer.open(QIODevice::WriteOnly);
+                newpix.save(&buffer, ext);
             }
-        } else {
-            TOsd::self()->display(TOsd::Error, tr("No image files were found.<br/>Please, try another directory"));
         }
+
+        TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, symName,
+                                    TupLibraryObject::Image, project->spaceContext(), data, directory);
+        emit requestTriggered(&request);
+    } else {
+        QMessageBox::critical(this, tr("ERROR!"),
+                              tr("ERROR: Can't open file %1. Please, check file permissions and try again.").arg(symName),
+                              QMessageBox::Ok);
+        QApplication::restoreOverrideCursor();
+
+        return false;
+    }
+
+    return true;
+}
+
+bool TupLibraryWidget::fileIsImage(const QString &extension)
+{
+    if (extension.compare("JPEG")==0 || extension.compare("JPG")==0 || extension.compare("PNG")==0 ||
+        extension.compare("GIF")==0 || extension.compare("XPM")==0 || extension.compare("WEBP")==0)
+        return true;
+
+    return false;
+}
+
+void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QString &path)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - path -> " << path;
+    #endif
+
+    QDir source(path);
+    QFileInfoList records = source.entryInfoList(QDir::Files, QDir::Name);
+    int filesTotal = records.size();
+
+    // Ensuring to get only graphic files here. Check extensions! (PNG, JPG, GIF, XPM, WEBP)
+    QString extension = "";
+    QStringList photograms;
+    for (int i = 0; i < filesTotal; ++i) { // Getting images list
+         if (records.at(i).isFile()) {
+             extension = records.at(i).suffix().toUpper();
+             if (fileIsImage(extension))
+                 photograms << records.at(i).absoluteFilePath();
+         }
+    }
+
+    filesTotal = photograms.size();
+
+    if (filesTotal == 0) {
+        TOsd::self()->display(TOsd::Error, tr("No image files were found.<br/>Please, try another directory"));
+
+        return;
+    }
+    photograms = TAlgorithm::naturalSort(photograms);
+
+    QString text = tr("Image files found: %1.").arg(filesTotal);
+    bool resize = false;
+
+    QPixmap *pixmap = new QPixmap(photograms.at(0));
+    int picWidth = pixmap->width();
+    int picHeight = pixmap->height();
+    int projectWidth = project->getDimension().width();
+    int projectHeight = project->getDimension().height();
+
+    if (action == FolderAction) { // Importing image sequence from a folder
+        if (picWidth > projectWidth || picHeight > projectHeight) {
+            text = text + "\n" + tr("Files are too big, so they will be resized.") + "\n"
+                   + tr("Note: This task can take a while.");
+            resize = true;
+        }
+
+        QMessageBox msgBox;
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Question);
+        msgBox.setText(text);
+        msgBox.setInformativeText(tr("Do you want to continue?"));
+        msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.show();
+
+        msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                    static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+
+        int answer = msgBox.exec();
+        if (answer == QMessageBox::Ok) {
+            msgBox.close();
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+            verifyFramesAvailability(filesTotal);
+
+            QString directory = source.dirName();
+            libraryTree->createFolder(directory);
+            TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
+            library->addFolder(folder);
+
+            int initFrame = currentFrame.frame;
+            for(int i = 0; i < filesTotal; i++) {
+                importImageRecord(photograms.at(i), extension, QSize(picWidth, picHeight),
+                                  QSize(projectWidth, projectHeight), resize, directory);
+                if (i < filesTotal-1) {
+                    TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame + 1,
+                                                                    TupProjectRequest::Select);
+                    emit requestTriggered(&request);
+                }
+
+            }
+
+            saveDefaultPath(path);
+            TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
+                                                                              TupProjectRequest::Select);
+            emit requestTriggered(&request);
+
+            QApplication::restoreOverrideCursor();
+        }
+    } else if (action == VideoAction) { // Importing images sequence extrated from video file
+        verifyFramesAvailability(filesTotal);
+
+        QString directory = tr("Video");
+        libraryTree->createFolder(directory);
+        TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
+        library->addFolder(folder);
+
+        int initFrame = currentFrame.frame;
+        for(int i = 0; i < filesTotal; i++) {
+            importImageRecord(photograms.at(i), extension, QSize(picWidth, picHeight),
+                              QSize(projectWidth, projectHeight), resize, directory);
+            if (i < filesTotal-1) {
+                TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame + 1,
+                                                                TupProjectRequest::Select);
+                emit requestTriggered(&request);
+            }
+
+        }
+
+        saveDefaultPath(path);
+        TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
+                                                                          TupProjectRequest::Select);
+        emit requestTriggered(&request);
+        emit imagesImportationDone();
     }
 }
 
@@ -1498,7 +1534,7 @@ void TupLibraryWidget::importSvgSequence()
                 TupLibraryFolder *folder = new TupLibraryFolder(directory, project);
                 library->addFolder(folder);
 
-                photograms = naturalSort(photograms);
+                photograms = TAlgorithm::naturalSort(photograms);
 
                 int initFrame = currentFrame.frame;
                 filesTotal = photograms.size();
@@ -1524,12 +1560,6 @@ void TupLibraryWidget::importSvgSequence()
                                                                                  TupProjectRequest::Select);
                                  emit requestTriggered(&request);
                              }
-
-                             /*
-                             progressDialog.setLabelText(tr("Loading SVG file #%1").arg(index));
-                             progressDialog.setValue(index);
-                             index++;
-                             */
                          } else {
                              QMessageBox::critical(this, tr("ERROR!"), tr("ERROR: Can't open file %1. Please, check file permissions and try again.").arg(symName), QMessageBox::Ok);
                              QApplication::restoreOverrideCursor();
@@ -1580,30 +1610,13 @@ void TupLibraryWidget::importVideoFile()
     if (dialog.exec() == QDialog::Accepted) {
         QStringList files = dialog.selectedFiles();
         videoPath = files.at(0);
-        qDebug() << "[TupLibraryWidget::importVideoFile()] - path -> " << videoPath;
-
         QFile file(videoPath);
         double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
         if (fileSize <= 2) {
             TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath);
-            if (dialog->exec() == QDialog::Accepted) {
-                // Here: Import all the images created one by one (Progress dialog)
-
-                /*
-                // Removing temporary folder
-                QDir imgDir(imagesPath);
-                #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::importVideoFile()] - Removing temporary folder -> " << imagesPath;
-                #endif
-                if (imgDir.exists()) {
-                    if (!imgDir.removeRecursively()) {
-                        #ifdef TUP_DEBUG
-                            qWarning() << "[TupLibraryWidget::importVideoFile()] - Error: Can't remove temporary folder -> " << imagesPath;
-                        #endif
-                    }
-                }
-                */
-            }
+            connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &)), SLOT(loadSequenceFromDirectory(ImportAction, const QString &)));
+            connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
+            dialog->show();
         } else {
             TOsd::self()->display(TOsd::Error, tr("Video file is larger than 2 MB. Too big!"));
         }

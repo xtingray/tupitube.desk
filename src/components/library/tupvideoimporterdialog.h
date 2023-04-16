@@ -55,6 +55,12 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
 
         int getPhotogramsTotal();
 
+    signals:
+        void extractionDone(ImportAction action, const QString &imagesPath);
+
+    public slots:
+        void endProcedure();
+
     private slots:
         void startExtraction();
         void updateStatus(const QString &);

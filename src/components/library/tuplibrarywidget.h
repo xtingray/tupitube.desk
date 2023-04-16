@@ -68,7 +68,6 @@
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
-#include <QProgressDialog>
 #include <QDesktopWidget>
 #include <QBuffer>
 #include <QGraphicsSvgItem>
@@ -158,6 +157,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void recoverMode();
         void importLocalSoundFile(const QString &filePath);
         void importSoundFileFromFolder(const QString &filePath, const QString &folder = QString());
+        void loadSequenceFromDirectory(ImportAction action, const QString &path);
 
     public slots:
         void updateSoundPlayer();
@@ -168,6 +168,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void lipsyncModuleCalled(PapagayoAppMode mode, const QString &filePath);
         void soundRemoved(ModuleSource source, const QString &objectKey);
         void folderWithAudiosRemoved();
+        void imagesImportationDone();
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);
@@ -182,14 +183,15 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void setDefaultPath(const QString &path);
         void saveDefaultPath(const QString &dir);
         void importNativeObject(const QString &object, const QString &folder = QString());
-        QStringList naturalSort(QStringList photograms);
         void refreshItemFromCollection(LibraryObjects collection);
         void importImageFromByteArray(const QString &filename, const QString &extension, QByteArray data,
                                       const QString &folder = QString());
         void importSvgFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
         void importNativeObjectFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
         void importSoundFileFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
-
+        bool fileIsImage(const QString &extension);
+        bool importImageRecord(const QString &photogram, const QString &extension, const QSize imageSize, const QSize projectSize,
+                               bool resize, const QString &directory);
         QScreen *screen;
         TupLibrary *library;
         TupProject *project;

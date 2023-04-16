@@ -53,6 +53,7 @@ class T_CORE_EXPORT TAlgorithm
         static QStringList header(const QString &input);
         static bool isKeyRandomic(const QString &id);
         static bool copyFolder(const QString &src, const QString &dst);
+        static QStringList naturalSort(QStringList elements);
 };
 
 #endif

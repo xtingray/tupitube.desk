@@ -150,6 +150,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
             #ifdef TUP_DEBUG
                 qWarning() << "[TupVideoCutter::processFile()] - ERROR unsupported codec!";
             #endif
+
             // In this example if the codec is not found we just skip it
             continue;
         }
@@ -185,6 +186,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::processFile()] - File %s does not contain a video stream! -> " << videoFile;
         #endif
+
         return -1;
     }
 
@@ -194,6 +196,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::processFile()] - Failed to allocated memory for AVCodecContext";
         #endif
+
         return -1;
     }
 
@@ -203,7 +206,8 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::processFile()] - Failed to copy codec params to codec context";
         #endif
-       return -1;
+
+        return -1;
     }
 
     // Initialize the AVCodecContext to use the given AVCodec.
@@ -212,6 +216,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::processFile()] - Failed to open codec through avcodec_open2";
         #endif
+
         return -1;
     }
 
@@ -221,6 +226,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::processFile()] - Failed to allocate memory for AVFrame";
         #endif
+
         return -1;
     }
 
@@ -230,6 +236,7 @@ int TupVideoCutter::processFile(const QString &videoFile, const QString &outputP
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::processFile()] - Failed to allocate memory for AVPacket";
         #endif
+
         return -1;
     }
 
@@ -281,6 +288,7 @@ int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::decodePacket()] - Error while sending a packet to the decoder -> " << ret;
         #endif
+
         return ret;
     }
 
@@ -294,6 +302,7 @@ int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext
             #ifdef TUP_DEBUG
                 qWarning() << "[TupVideoCutter::decodePacket()] - Error while receiving a frame from the decoder -> " << ret;
             #endif
+
             return ret;
         }
 
@@ -307,7 +316,7 @@ int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext
             #endif
 
             int photogram = codecContext->frame_number;
-            QString frameFilename = outputFolder + "/frame" + QString::number(photogram) + ".png";
+            QString frameFilename = outputFolder + "frame" + QString::number(photogram) + ".png";
 
             // Check if the frame is a planar YUV 4:2:0, 12bpp
             // That is the format of the provided .mp4 file
@@ -340,6 +349,7 @@ int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupVideoCutter::decodePacket()] - Error while preparing RGB frame -> " << ret;
                 #endif
+
                 return ret;
             }
 
@@ -352,6 +362,7 @@ int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupVideoCutter::decodePacket()] - Error while translating the frame format from YUV420P into RGB24 -> " << ret;
                 #endif
+
                 return ret;
             }
 
@@ -361,6 +372,7 @@ int TupVideoCutter::decodePacket(AVPacket *pPacket, AVCodecContext *codecContext
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupVideoCutter::decodePacket()] - Failed to write PNG file";
                 #endif
+
                 return -1;
             }
 
@@ -390,6 +402,7 @@ int TupVideoCutter::saveFrameToPng(AVFrame *frame, const QString &outputFilename
         #ifdef TUP_DEBUG
             qWarning() << "[TupVideoCutter::saveFrameToPng()] - Failed to open file -> " << outputFilename;
         #endif
+
         return -1;
     }
 

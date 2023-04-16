@@ -49,6 +49,7 @@
 #include <QSysInfo>
 #include <QCryptographicHash>
 #include <QRandomGenerator>
+#include <QCollator>
 
 int TAlgorithm::random()
 {
@@ -238,4 +239,18 @@ bool TAlgorithm::copyFolder(const QString &src, const QString &dst)
     }
 
     return true;
+}
+
+QStringList TAlgorithm::naturalSort(QStringList elements)
+{
+    QCollator coll;
+    coll.setNumericMode(true);
+    for (int i = elements.size()-1; i >= 0; i--) {
+         for (int j = 1; j <= i; j++) {
+              if (coll.compare(elements.at(j-1), elements.at(j)) > 0)
+                  elements.swapItemsAt(j-1, j);
+         }
+    }
+
+    return elements;
 }

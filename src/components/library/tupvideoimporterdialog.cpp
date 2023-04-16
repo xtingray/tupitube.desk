@@ -40,6 +40,7 @@
 #include "tupvideocutter.h"
 #include "talgorithm.h"
 #include "tosd.h"
+#include "tupprojectrequest.h"
 
 #include <QPushButton>
 
@@ -121,11 +122,13 @@ void TupVideoImporterDialog::startExtraction()
         qDebug() << "[TupVideoImporterDialog::startExtraction()]";
     #endif
 
-    progressWidget->setVisible(true);
-    progressLabel->setText(tr("Processing video..."));
-    extractionStarted = true;
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     imagesBox->setEnabled(false);
     okButton->setVisible(false);
+
+    progressWidget->setVisible(true);
+    progressLabel->setText(tr("Starting procedure..."));
+    extractionStarted = true;
 
     imagesTotal = imagesBox->value();
     advance = 100/imagesTotal;
@@ -148,6 +151,9 @@ void TupVideoImporterDialog::startExtraction()
     TupVideoCutter *videoCutter = new TupVideoCutter();
     connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
     connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
+
+    // Here: Compare video dimension and project dimension and ask the user to change it if it's necessary
+
     videoCutter->processFile(videoPath, imagesPath, imagesTotal);
     extractionStarted = false;
 }
@@ -161,7 +167,7 @@ void TupVideoImporterDialog::updateUI(int index)
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::updateUI()] - Extraction is complete!";
         #endif
-        close();
+        emit  extractionDone(VideoAction, imagesPath);
     }
 }
 
@@ -175,19 +181,23 @@ void TupVideoImporterDialog::closeDialog()
     if (extractionStarted)
         qDebug() << "[TupLibraryWidget::closeDialog()] - Do you want to cancel de project?";
 
+    endProcedure();
+}
+
+void TupVideoImporterDialog::endProcedure()
+{
     QDir imgDir(imagesPath);
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importVideoFile()] - Removing temporary folder -> " << imagesPath;
+        qDebug() << "[TupLibraryWidget::removeTempFolder()] - Removing temporary folder -> " << imagesPath;
     #endif
     if (imgDir.exists()) {
         if (!imgDir.removeRecursively()) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupLibraryWidget::importVideoFile()] - Error: Can't remove temporary folder -> " << imagesPath;
+                qWarning() << "[TupLibraryWidget::removeTempFolder()] - Error: Can't remove temporary folder -> " << imagesPath;
             #endif
         }
     }
-
+    QApplication::restoreOverrideCursor();
+    TOsd::self()->display(TOsd::Info, tr("Video imported successfully!"));
     close();
 }
-
-
