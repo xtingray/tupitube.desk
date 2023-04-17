@@ -181,6 +181,7 @@ class TupMainWindow : public TabbedMainWindow
         void updatePlayer(bool removeAction);
 
         void resizeProjectDimension(const QSize size);
+        void resizeCanvasDimension(const QSize size);
         void updateProjectAuthor(const QString &artist);
         void editProjectSize();
 

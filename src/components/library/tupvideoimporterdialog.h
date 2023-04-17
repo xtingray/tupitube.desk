@@ -45,19 +45,23 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QProgressBar>
+#include <QGroupBox>
+#include <QRadioButton>
 
 class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog 
 {
     Q_OBJECT
 
     public:
-        TupVideoImporterDialog(const QString &filename, const QSize &projectSize, QWidget *parent = nullptr);
+        TupVideoImporterDialog(const QString &filename, const QString &photogramsPath, const QSize &projectSize,
+                               TupVideoCutter *cutter, QWidget *parent = nullptr);
         ~TupVideoImporterDialog();
 
         int getPhotogramsTotal();
 
     signals:
-        void extractionDone(ImportAction action, const QString &imagesPath);
+        void extractionDone(ImportAction action, const QString &imagesPath, bool sizeFlag);
+        void projectSizeHasChanged(const QSize dimension);
 
     public slots:
         void endProcedure();
@@ -66,10 +70,9 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
         void startExtraction();
         void updateStatus(const QString &);
         void updateUI(int index);
-        void closeDialog();
 
     private:
-        void setUI();
+        void setUI(bool fixSize);
 
         QVBoxLayout *layout;
         QSpinBox *imagesBox;
@@ -77,15 +80,22 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
         QLabel *progressLabel;
         QProgressBar *progressBar;
 
-        QPushButton *okButton;
+        QWidget *buttonsWidget;
 
         TupVideoCutter *videoCutter;
         QString videoPath;
         QString imagesPath;
         int imagesTotal;
-        bool extractionStarted;
         int advance;
+        QSize projectSize;
         QSize videoSize;
+
+        bool fixSize;
+        bool sizeFlag;
+        QGroupBox *groupBox;
+        QRadioButton *checkButton1;
+        QRadioButton *checkButton2;
+        QRadioButton *checkButton3;
 };
 
 #endif

@@ -1712,6 +1712,16 @@ void TupMainWindow::resizeProjectDimension(const QSize dimension)
     connectWidgetToManager(cameraWidget);
 }
 
+void TupMainWindow::resizeCanvasDimension(const QSize size)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::resizeCanvasDimension()] - size -> " << size;
+    #endif
+
+    animationTab->resizeProjectDimension(size);
+    resizeProjectDimension(size);
+}
+
 void TupMainWindow::saveDefaultPath(const QString &dir)
 {
     TCONFIG->beginGroup("General");

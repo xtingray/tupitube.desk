@@ -40,11 +40,12 @@
 #include "talgorithm.h"
 #include "tosd.h"
 #include "tupprojectrequest.h"
+#include "tseparator.h"
 
 #include <QPushButton>
 
-TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QSize &projectSize,
-                                               QWidget *parent) : QDialog(parent)
+TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QString &photogramsPath, const QSize &canvasSize,
+                                               TupVideoCutter *cutter, QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoImporterDialog::TupVideoImporterDialog()]";
@@ -52,38 +53,34 @@ TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QS
 
     setModal(true);
     videoPath = filename;
+    projectSize = canvasSize;
 
     imagesTotal = 1;
-    extractionStarted = false;
+    sizeFlag = false;
 
     QFileInfo fileInfo(videoPath);
     setWindowTitle(tr("Photograms Extractor") + " (" + fileInfo.fileName() + ")");
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/scenes.png")));
     setStyleSheet(TAppTheme::themeSettings());
 
-    layout = new QVBoxLayout(this);
-    setUI();
-
-    videoCutter = new TupVideoCutter();
+    videoCutter = cutter;
     connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
     connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
 
-    QString tempFolder = TAlgorithm::randomString(10);
-    imagesPath = CACHE_DIR + tempFolder + "/";
-    if (!videoCutter->loadFile(videoPath, imagesPath))
-        TOsd::self()->display(TOsd::Error, tr("Can't load video file!"));
-
+    imagesPath = photogramsPath;
     videoSize = videoCutter->getVideoSize();
 
-    qDebug() << "[TupVideoImporterDialog::TupVideoImporterDialog()] - Project Size -> " << projectSize;
-    qDebug() << "[TupVideoImporterDialog::TupVideoImporterDialog()] - Video Size -> " << videoSize;
+    layout = new QVBoxLayout(this);
+    fixSize = projectSize != videoSize;
+    setUI(fixSize);
 }
 
 TupVideoImporterDialog::~TupVideoImporterDialog()
 {
+    delete videoCutter;
 }
 
-void TupVideoImporterDialog::setUI()
+void TupVideoImporterDialog::setUI(bool fixSize)
 {
     QLabel *importLabel = new QLabel(tr("Select the amount of photograms to import:"));
     imagesBox = new QSpinBox;
@@ -97,6 +94,45 @@ void TupVideoImporterDialog::setUI()
     formLayout->addWidget(imagesBox);
 
     layout->addWidget(formWidget);
+
+    if (fixSize) {
+        QWidget *sizeWidget = new QWidget;
+        QVBoxLayout *sizeLayout = new QVBoxLayout(sizeWidget);
+
+        TSeparator *div = new TSeparator();
+
+        QLabel *sizeLabel = new QLabel("<b>" + tr("Project size and video size are different:") + "</b>");
+        sizeLabel->setAlignment(Qt::AlignHCenter);
+
+        QLabel *canvasLabel = new QLabel(tr("Project Size:") + " <b>" + QString::number(projectSize.width())
+                                         + "x" + QString::number(projectSize.height()) + "</b>");
+        canvasLabel->setAlignment(Qt::AlignHCenter);
+        QLabel *videoLabel = new QLabel(tr("Video Size:") + " <b>" + QString::number(videoSize.width())
+                                         + "x" + QString::number(videoSize.height()) + "</b>");
+        videoLabel->setAlignment(Qt::AlignHCenter);
+
+        groupBox = new QGroupBox(tr("What do you want to do?"));
+        checkButton1 = new QRadioButton(tr("Keep original project and video sizes"));
+        checkButton2 = new QRadioButton(tr("Adjust video size to project size"));
+        checkButton3 = new QRadioButton(tr("Adjust project size to video size"));
+        checkButton1->setChecked(true);
+
+        QVBoxLayout *optionsBox = new QVBoxLayout;
+        optionsBox->addWidget(checkButton1);
+        optionsBox->addWidget(checkButton2);
+        optionsBox->addWidget(checkButton3);
+        optionsBox->addStretch(1);
+
+        groupBox->setLayout(optionsBox);
+
+        sizeLayout->addWidget(div);
+        sizeLayout->addWidget(sizeLabel);
+        sizeLayout->addWidget(canvasLabel);
+        sizeLayout->addWidget(videoLabel);
+        sizeLayout->addWidget(groupBox);
+
+        layout->addWidget(sizeWidget);
+    }
 
     progressBar = new QProgressBar;
     progressBar->setTextVisible(true);
@@ -113,15 +149,14 @@ void TupVideoImporterDialog::setUI()
 
     layout->addWidget(progressWidget);
 
-    okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
-
+    QPushButton *okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
     connect(okButton, SIGNAL(clicked()), this, SLOT(startExtraction()));
 
     QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
     closeButton->setToolTip(tr("Close"));
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(closeDialog()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
-    QWidget *buttonsWidget = new QWidget;
+    buttonsWidget = new QWidget;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttonsWidget);
     buttonLayout->addWidget(okButton);
     buttonLayout->addWidget(closeButton);
@@ -141,11 +176,26 @@ void TupVideoImporterDialog::startExtraction()
     advance = 100/imagesTotal;
 
     imagesBox->setEnabled(false);
-    okButton->setVisible(false);
+    buttonsWidget->setVisible(false);
+
+    if (fixSize) {
+        if (checkButton2->isChecked()) {
+            // Adjust photograms size
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupVideoImporterDialog::startExtraction()] - Resizing photograms...";
+            #endif
+            sizeFlag = true;
+        } if (checkButton3->isChecked()) {
+            // Adjust project size
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupVideoImporterDialog::startExtraction()] - Resizing project canvas...";
+            #endif
+            emit projectSizeHasChanged(videoSize);
+        }
+    }
 
     progressWidget->setVisible(true);
     progressLabel->setText(tr("Starting procedure..."));
-    extractionStarted = true;
 
     if (!QFile::exists(imagesPath)) {
         QDir dir;
@@ -168,37 +218,28 @@ void TupVideoImporterDialog::startExtraction()
     }
 
     videoCutter->releaseResources();
-    extractionStarted = false;
 }
 
 void TupVideoImporterDialog::updateUI(int index)
 {
-    progressLabel->setText(tr("Extracting photogram #") + QString::number(index));
+    QString msg = tr("Extracting photogram %1 of %2").arg(index).arg(imagesTotal);
+    progressLabel->setText(msg);
     progressBar->setValue(advance);
     advance += advance;
 
-    qDebug() << "[TupVideoImporterDialog::updateUI()] - progressBar->value() -> " << progressBar->value();
-    qDebug() << "[TupVideoImporterDialog::updateUI()] - advance -> " << advance;
-
-    if (index == imagesBox->value()) {
+    if (index == imagesTotal) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::updateUI()] - Extraction is complete!";
+            qDebug() << "[TupLibraryWidget::updateUI()] - Starting image importation...";
         #endif
-        emit  extractionDone(VideoAction, imagesPath);
+        progressLabel->setText(tr("Importing images..."));
+        emit extractionDone(VideoAction, imagesPath, sizeFlag);
     }
 }
 
 void TupVideoImporterDialog::updateStatus(const QString &msg)
 {
     progressLabel->setText(msg);
-}
-
-void TupVideoImporterDialog::closeDialog()
-{
-    if (extractionStarted)
-        qDebug() << "[TupLibraryWidget::closeDialog()] - Do you want to cancel de project?";
-
-    endProcedure();
 }
 
 void TupVideoImporterDialog::endProcedure()
@@ -214,6 +255,7 @@ void TupVideoImporterDialog::endProcedure()
             #endif
         }
     }
+
     QApplication::restoreOverrideCursor();
     TOsd::self()->display(TOsd::Info, tr("Video imported successfully!"));
     close();

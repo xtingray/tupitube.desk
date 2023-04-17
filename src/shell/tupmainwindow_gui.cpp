@@ -79,6 +79,7 @@ void TupMainWindow::createGUI()
     connect(m_libraryWidget, SIGNAL(soundRemoved(ModuleSource, const QString &)),
             this, SLOT(releaseSoundRecord(ModuleSource, const QString &)));
     connect(m_libraryWidget, SIGNAL(folderWithAudiosRemoved()), this, SLOT(releaseAudioResources()));
+    connect(m_libraryWidget, SIGNAL(projectSizeHasChanged(const QSize)), this, SLOT(resizeCanvasDimension(const QSize)));
 
     libraryView = addToolView(m_libraryWidget, Qt::LeftDockWidgetArea, Animation, "Library", QKeySequence(tr("Shift+L")));
     connect(libraryView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateLibraryPanelStatus(bool)));

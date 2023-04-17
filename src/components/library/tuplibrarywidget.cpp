@@ -1278,8 +1278,12 @@ void TupLibraryWidget::verifyFramesAvailability(int filesTotal)
                                                                                i, TupProjectRequest::Add, tr("Frame"));
              emit requestTriggered(&request);
         }
+
+        QString selection = QString::number(currentFrame.layer) + "," + QString::number(currentFrame.layer) + ","
+                            + QString::number(initFrame) + "," + QString::number(initFrame);
+
         TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
-                                                                          TupProjectRequest::Select);
+                                                                          TupProjectRequest::Select, selection);
         emit requestTriggered(&request);
     }
 }
@@ -1359,7 +1363,7 @@ bool TupLibraryWidget::fileIsImage(const QString &extension)
     return false;
 }
 
-void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QString &path)
+void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QString &path, bool resizeFlag)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - path -> " << path;
@@ -1381,7 +1385,6 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
     }
 
     filesTotal = photograms.size();
-
     if (filesTotal == 0) {
         TOsd::self()->display(TOsd::Error, tr("No image files were found.<br/>Please, try another directory"));
 
@@ -1434,16 +1437,21 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
                 importImageRecord(photograms.at(i), extension, QSize(picWidth, picHeight),
                                   QSize(projectWidth, projectHeight), resize, directory);
                 if (i < filesTotal-1) {
-                    TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame + 1,
-                                                                    TupProjectRequest::Select);
+                    int layer = currentFrame.layer;
+                    int frame = currentFrame.frame + 1;
+                    QString selection = QString::number(layer) + "," + QString::number(layer) + ","
+                                        + QString::number(frame) + "," + QString::number(frame);
+                    TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, layer, frame,
+                                                                    TupProjectRequest::Select, selection);
                     emit requestTriggered(&request);
                 }
-
             }
 
             saveDefaultPath(path);
+            QString selection = QString::number(currentFrame.layer) + "," + QString::number(currentFrame.layer) + ","
+                                + QString::number(initFrame) + "," + QString::number(initFrame);
             TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
-                                                                              TupProjectRequest::Select);
+                                                                              TupProjectRequest::Select, selection);
             emit requestTriggered(&request);
 
             QApplication::restoreOverrideCursor();
@@ -1459,18 +1467,24 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
         int initFrame = currentFrame.frame;
         for(int i = 0; i < filesTotal; i++) {
             importImageRecord(photograms.at(i), extension, QSize(picWidth, picHeight),
-                              QSize(projectWidth, projectHeight), resize, directory);
+                              QSize(projectWidth, projectHeight), resizeFlag, directory);
             if (i < filesTotal-1) {
-                TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame + 1,
-                                                                TupProjectRequest::Select);
+                int layer = currentFrame.layer;
+                int frame = currentFrame.frame + 1;
+                QString selection = QString::number(layer) + "," + QString::number(layer) + ","
+                                    + QString::number(frame) + "," + QString::number(frame);
+                TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, layer, frame,
+                                                                                  TupProjectRequest::Select, selection);
                 emit requestTriggered(&request);
             }
-
         }
 
         saveDefaultPath(path);
+        QString selection = QString::number(currentFrame.layer) + "," + QString::number(currentFrame.layer) + ","
+                            + QString::number(initFrame) + "," + QString::number(initFrame);
         TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
-                                                                          TupProjectRequest::Select);
+                                                                          TupProjectRequest::Select, selection);
+
         emit requestTriggered(&request);
         emit imagesImportationDone();
     }
@@ -1556,8 +1570,12 @@ void TupLibraryWidget::importSvgSequence()
                                                                             TupLibraryObject::Svg, project->spaceContext(), data, directory);
                              emit requestTriggered(&request);
                              if (i < filesTotal-1) {
-                                 request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame + 1,
-                                                                                 TupProjectRequest::Select);
+                                 int layer = currentFrame.layer;
+                                 int frame = currentFrame.frame + 1;
+                                 QString selection = QString::number(layer) + "," + QString::number(layer) + ","
+                                                     + QString::number(frame) + "," + QString::number(frame);
+                                 request = TupRequestBuilder::createFrameRequest(currentFrame.scene, layer, frame,
+                                                                                 TupProjectRequest::Select, selection);
                                  emit requestTriggered(&request);
                              }
                          } else {
@@ -1569,8 +1587,10 @@ void TupLibraryWidget::importSvgSequence()
                 }
                 saveDefaultPath(path);
                 
+                QString selection = QString::number(currentFrame.layer) + "," + QString::number(currentFrame.layer) + ","
+                                    + QString::number(initFrame) + "," + QString::number(initFrame);
                 TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, initFrame,
-                                                                                  TupProjectRequest::Select);
+                                                                                  TupProjectRequest::Select, selection);
                 emit requestTriggered(&request);
                 QApplication::restoreOverrideCursor();
             }
@@ -1604,7 +1624,7 @@ void TupLibraryWidget::importVideoFile()
     TCONFIG->beginGroup("General");
     QString videoPath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
-    QFileDialog dialog(this, tr("Choose a video file..."), videoPath);
+    QFileDialog dialog(this, tr("Choose a video file..."), videoPath, "(*.mp4 *.mov)");
     dialog.setFileMode(QFileDialog::ExistingFile);
 
     if (dialog.exec() == QDialog::Accepted) {
@@ -1613,10 +1633,20 @@ void TupLibraryWidget::importVideoFile()
         QFile file(videoPath);
         double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
         if (fileSize <= 2) {
-            TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath, project->getDimension());
-            connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &)), SLOT(loadSequenceFromDirectory(ImportAction, const QString &)));
-            connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
-            dialog->show();
+            TupVideoCutter *videoCutter = new TupVideoCutter();
+            QString tempFolder = TAlgorithm::randomString(10);
+            QString imagesPath = CACHE_DIR + tempFolder + "/";
+            if (videoCutter->loadFile(videoPath, imagesPath)) {
+                TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath, imagesPath, project->getDimension(), videoCutter);
+                connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &, bool)),
+                        SLOT(loadSequenceFromDirectory(ImportAction, const QString &, bool)));
+                connect(dialog, SIGNAL(projectSizeHasChanged(const QSize)), this, SIGNAL(projectSizeHasChanged(const QSize)));
+                connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
+
+                dialog->show();
+            } else {
+                TOsd::self()->display(TOsd::Error, tr("Can't load video file!"));
+            }
         } else {
             TOsd::self()->display(TOsd::Error, tr("Video file is larger than 2 MB. Too big!"));
         }
@@ -2193,8 +2223,10 @@ void TupLibraryWidget::updateItemFromSaveAction()
         refreshItemFromCollection(objects);
     }
 
+    QString selection = QString::number(currentFrame.layer) + "," + QString::number(currentFrame.layer) + ","
+                        + QString::number(currentFrame.frame) + "," + QString::number(currentFrame.frame);
     TupProjectRequest request = TupRequestBuilder::createFrameRequest(currentFrame.scene, currentFrame.layer, currentFrame.frame,
-                                                                      TupProjectRequest::Select);
+                                                                      TupProjectRequest::Select, selection);
     emit requestTriggered(&request);
 }
 

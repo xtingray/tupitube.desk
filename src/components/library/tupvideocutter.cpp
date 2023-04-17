@@ -41,12 +41,14 @@ TupVideoCutter::TupVideoCutter()
 
 TupVideoCutter::~TupVideoCutter()
 {
+    delete formatContext;
+    delete inputCodecContext;
+    delete inputFrame;
+    delete inputPacket;
 }
 
 bool TupVideoCutter::loadFile(const QString &videoFile, const QString &outputPath)
 {
-    emit msgSent(tr("Loading video file..."));
-
     outputFolder = outputPath;
 
     #ifdef TUP_DEBUG
@@ -261,16 +263,18 @@ bool TupVideoCutter::startExtraction()
     int counter = 0;
     // Fill the Packet with data from the Stream
     // https://ffmpeg.org/doxygen/trunk/group__lavf__decoding.html
-    while (av_read_frame(formatContext, inputPacket) >= 0) {
+    while (av_read_frame(formatContext, inputPacket) >= 0) {        
         // If it's the video stream
         if (inputPacket->stream_index == videoStreamIndex) {
             #ifdef TUP_DEBUG
                 qDebug() << "---";
                 qDebug() << "[TupVideoCutter::startExtraction()]    - AVPacket->pts -> " << inputPacket->pts;
             #endif
+
             ret = decodePacket(inputPacket, inputCodecContext, inputFrame);
             if (ret < 0)
                 break;
+
             // Stop it, otherwise we'll be saving hundreds of frames
             if (counter > imagesTotal)
                 break;
