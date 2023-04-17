@@ -37,7 +37,7 @@
 #include "tconfig.h"
 #include "tseparator.h"
 #include "tapptheme.h"
-#include "talgorithm.h"
+// #include "talgorithm.h"
 #include "tosd.h"
 #include "tupprojectrequest.h"
 #include "tseparator.h"

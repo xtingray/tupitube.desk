@@ -192,6 +192,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importSvgFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
         void importNativeObjectFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
         void importSoundFileFromByteArray(const QString &filename, QByteArray data, const QString &folder = QString());
+        void importVideoFileFromByteArray(const QString &filename, QByteArray data);
         bool fileIsImage(const QString &extension);
         bool importImageRecord(const QString &photogram, const QString &extension, const QSize imageSize, const QSize projectSize,
                                bool resize, const QString &directory);
@@ -227,6 +228,9 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
            int layer;
            int frame;
         } currentFrame;
+
+        bool removeTempVideo;
+        QString tempVideoPath;
 };
 
 #endif

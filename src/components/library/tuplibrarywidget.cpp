@@ -59,6 +59,8 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     currentMode = TupProject::FRAMES_MODE;
     nativeFromFileSystem = false;
     isExternalLibraryAsset = false;
+    removeTempVideo = false;
+    removeTempVideo = "";
 
     setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
     setWindowTitle(tr("Library"));
@@ -1030,6 +1032,8 @@ void TupLibraryWidget::importWebDroppedAsset(const QString &assetName, const QSt
         importNativeObjectFromByteArray(assetName, data);
     } if (type == TupLibraryObject::Audio) {
         importSoundFileFromByteArray(assetName, data);
+    } if (type == TupLibraryObject::Video) {
+        importVideoFileFromByteArray(assetName, data);
     }
 }
 
@@ -1491,6 +1495,24 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
 
         emit requestTriggered(&request);
         emit imagesImportationDone();
+
+        // Removing temporary video file
+        if (removeTempVideo && !tempVideoPath.isEmpty()) {
+            QDir videoDir(tempVideoPath);
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Removing temporary folder -> "
+                         << tempVideoPath;
+            #endif
+            if (videoDir.exists()) {
+                if (!videoDir.removeRecursively()) {
+                    #ifdef TUP_DEBUG
+                        qWarning() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Error: Can't remove temporary folder -> "
+                                   << tempVideoPath;
+                    #endif
+                }
+            }
+            removeTempVideo = false;
+        }
     }
 }
 
@@ -1633,7 +1655,10 @@ void TupLibraryWidget::importVideoFile()
 
     if (dialog.exec() == QDialog::Accepted) {
         QStringList files = dialog.selectedFiles();
-        videoPath = files.at(0);
+        // videoPath = files.at(0);
+        importVideoFileFromFolder(files.at(0));
+
+        /*
         QFile file(videoPath);
         double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
         if (fileSize <= 2) {
@@ -1655,6 +1680,7 @@ void TupLibraryWidget::importVideoFile()
         } else {
             TOsd::self()->display(TOsd::Error, tr("Video file is larger than 2 MB. Too big!"));
         }
+        */
     }
 }
 
@@ -1664,6 +1690,45 @@ void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QBy
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Add, filename,
                                                    TupLibraryObject::Audio, project->spaceContext(), data, folder);
     emit requestTriggered(&request);
+}
+
+void TupLibraryWidget::importVideoFileFromByteArray(const QString &filename, QByteArray data)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importVideoFileFromByteArray()] - filename -> " << filename;
+    #endif
+
+    removeTempVideo = true;
+    QString tempFolder = TAlgorithm::randomString(10);
+    tempVideoPath = CACHE_DIR + tempFolder;
+    if (!QFile::exists(tempVideoPath)) {
+        QDir dir;
+        if (!dir.mkpath(tempVideoPath)) {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupLibraryWidget::importVideoFileFromByteArray()] - Fatal Error: Couldn't create directory -> "
+                           << tempVideoPath;
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Couldn't create temporary directory!"));
+
+            return;
+        }
+    }
+
+    tempVideoPath += "/" + filename;
+
+    QFile videoFile(tempVideoPath);
+    if (videoFile.open(QIODevice::WriteOnly)) {
+        videoFile.write(data);
+        videoFile.close();
+
+        importVideoFileFromFolder(tempVideoPath);
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupLibraryWidget::importVideoFileFromByteArray()] - Fatal Error: Can't save temporary video file -> "
+                       << tempVideoPath;
+        #endif
+        videoFile.close();
+    }
 }
 
 void TupLibraryWidget::importLocalSoundFile(const QString &filePath)
