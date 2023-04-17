@@ -257,7 +257,7 @@ bool TupVideoCutter::startExtraction()
         return false;
     }
 
-    emit msgSent(tr("Extracting images..."));
+    // emit msgSent(tr("Extracting images..."));
 
     int ret = 0;
     int counter = 0;

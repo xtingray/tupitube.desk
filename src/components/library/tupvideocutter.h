@@ -68,7 +68,7 @@ class TUPITUBE_EXPORT TupVideoCutter : public QObject
         void releaseResources();
 
     signals:
-        void msgSent(const QString &msg);
+        // void msgSent(const QString &msg);
         void imageExtracted(int index);
         void extractionDone();
 

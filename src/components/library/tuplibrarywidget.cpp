@@ -1318,6 +1318,10 @@ void TupLibraryWidget::importImageSequence()
 bool TupLibraryWidget::importImageRecord(const QString &photogram, const QString &extension, const QSize imageSize,
                                          const QSize projectSize, bool resize, const QString &directory)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importImageRecord()] - photogram -> " << photogram;
+    #endif
+
     QFile file(photogram);
     QFileInfo fileInfo(file);
     QString symName = fileInfo.fileName().toLower();
@@ -1476,6 +1480,7 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
                               QSize(projectWidth, projectHeight), resizeFlag, directory);
             QString msg = tr("Importing image %1 of %2").arg(i).arg(imagesTotal);
             emit msgSent(msg);
+
             if (i < imagesTotal-1) {
                 int layer = currentFrame.layer;
                 int frame = currentFrame.frame + 1;
@@ -1498,16 +1503,23 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
 
         // Removing temporary video file
         if (removeTempVideo && !tempVideoPath.isEmpty()) {
-            QDir videoDir(tempVideoPath);
+            QFileInfo info(tempVideoPath);
+            QString tempDir = info.absolutePath();
+            QDir videoDir(tempDir);
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Removing temporary folder -> "
-                         << tempVideoPath;
+                qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Removing temporary (video) folder -> "
+                         << tempDir;
             #endif
             if (videoDir.exists()) {
                 if (!videoDir.removeRecursively()) {
                     #ifdef TUP_DEBUG
                         qWarning() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Error: Can't remove temporary folder -> "
-                                   << tempVideoPath;
+                                   << tempDir;
+                    #endif
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Temporary (video) folder was removed succesfully! -> "
+                                 << tempDir;
                     #endif
                 }
             }

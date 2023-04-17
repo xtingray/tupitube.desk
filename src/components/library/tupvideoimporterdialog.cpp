@@ -64,7 +64,7 @@ TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QS
     setStyleSheet(TAppTheme::themeSettings());
 
     videoCutter = cutter;
-    connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
+    // connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
     connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
     connect(videoCutter, SIGNAL(extractionDone()), this, SLOT(startImageImportation()));
 
@@ -202,7 +202,8 @@ void TupVideoImporterDialog::startExtraction()
         QDir dir;
         if (!dir.mkpath(imagesPath)) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::importVideoFile()] - Fatal Error: Couldn't create directory -> " << imagesPath;
+                qDebug() << "[TupVideoImporterDialog::startExtraction()] - Fatal Error: Couldn't create images directory -> "
+                         << imagesPath;
             #endif
             TOsd::self()->display(TOsd::Error, tr("Couldn't create temporary directory!"));
 
@@ -224,52 +225,45 @@ void TupVideoImporterDialog::startExtraction()
 void TupVideoImporterDialog::updateUI(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::updateUI()] - index -> " << index;
+        qDebug() << "[TupVideoImporterDialog::updateUI()] - index -> " << index;
     #endif
 
     QString msg = tr("Extracting photogram %1 of %2").arg(index).arg(imagesTotal);
     progressLabel->setText(msg);
     progressBar->setValue(advance);
     advance += advance;
-
-    /*
-    if (index == imagesTotal) {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::updateUI()] - Extraction is complete!";
-            qDebug() << "[TupLibraryWidget::updateUI()] - Starting image importation...";
-        #endif
-        progressLabel->setText(tr("Importing images..."));
-        emit extractionDone(VideoAction, imagesPath, sizeFlag);
-    }
-    */
 }
 
 void TupVideoImporterDialog::startImageImportation()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::startImageImportation()] - Extraction is complete!";
-        qDebug() << "[TupLibraryWidget::startImageImportation()] - Starting image importation...";
+        qDebug() << "[TupVideoImporterDialog::startImageImportation()] - Extraction is complete!";
+        qDebug() << "[TupVideoImporterDialog::startImageImportation()] - Starting image importation...";
     #endif
 
     progressLabel->setText(tr("Importing images..."));
+    progressBar->setValue(0);
     emit extractionDone(VideoAction, imagesPath, sizeFlag);
 }
 
 void TupVideoImporterDialog::updateStatus(const QString &msg)
 {
     progressLabel->setText(msg);
+    progressBar->setValue(advance);
+    advance += advance;
 }
 
 void TupVideoImporterDialog::endProcedure()
 {
     QDir imgDir(imagesPath);
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::removeTempFolder()] - Removing temporary folder -> " << imagesPath;
+        qDebug() << "[TupVideoImporterDialog::removeTempFolder()] - Removing temporary (images) folder -> " << imagesPath;
     #endif
     if (imgDir.exists()) {
         if (!imgDir.removeRecursively()) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupLibraryWidget::removeTempFolder()] - Error: Can't remove temporary folder -> " << imagesPath;
+                qWarning() << "[TupVideoImporterDialog::removeTempFolder()] - Error: Can't remove temporary (images) folder -> "
+                           << imagesPath;
             #endif
         }
     }
