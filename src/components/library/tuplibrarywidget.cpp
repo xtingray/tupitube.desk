@@ -1002,6 +1002,8 @@ void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryOb
         importNativeObject(path, folder);
     } if (type == TupLibraryObject::Audio) {
         importSoundFileFromFolder(path, folder);
+    } if (type == TupLibraryObject::Video) {
+        importVideoFileFromFolder(path);
     }
 }
 
@@ -1371,12 +1373,12 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
 
     QDir source(path);
     QFileInfoList records = source.entryInfoList(QDir::Files, QDir::Name);
-    int filesTotal = records.size();
+    int imagesTotal = records.size();
 
     // Ensuring to get only graphic files here. Check extensions! (PNG, JPG, GIF, XPM, WEBP)
     QString extension = "";
     QStringList photograms;
-    for (int i = 0; i < filesTotal; ++i) { // Getting images list
+    for (int i = 0; i < imagesTotal; ++i) { // Getting images list
          if (records.at(i).isFile()) {
              extension = records.at(i).suffix().toUpper();
              if (fileIsImage(extension))
@@ -1384,15 +1386,15 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
          }
     }
 
-    filesTotal = photograms.size();
-    if (filesTotal == 0) {
+    imagesTotal = photograms.size();
+    if (imagesTotal == 0) {
         TOsd::self()->display(TOsd::Error, tr("No image files were found.<br/>Please, try another directory"));
 
         return;
     }
     photograms = TAlgorithm::naturalSort(photograms);
 
-    QString text = tr("Image files found: %1.").arg(filesTotal);
+    QString text = tr("Image files found: %1.").arg(imagesTotal);
     bool resize = false;
 
     QPixmap *pixmap = new QPixmap(photograms.at(0));
@@ -1425,7 +1427,7 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
             msgBox.close();
             QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-            verifyFramesAvailability(filesTotal);
+            verifyFramesAvailability(imagesTotal);
 
             QString directory = source.dirName();
             libraryTree->createFolder(directory);
@@ -1433,10 +1435,10 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
             library->addFolder(folder);
 
             int initFrame = currentFrame.frame;
-            for(int i = 0; i < filesTotal; i++) {
+            for(int i = 0; i < imagesTotal; i++) {
                 importImageRecord(photograms.at(i), extension, QSize(picWidth, picHeight),
                                   QSize(projectWidth, projectHeight), resize, directory);
-                if (i < filesTotal-1) {
+                if (i < imagesTotal-1) {
                     int layer = currentFrame.layer;
                     int frame = currentFrame.frame + 1;
                     QString selection = QString::number(layer) + "," + QString::number(layer) + ","
@@ -1457,7 +1459,7 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
             QApplication::restoreOverrideCursor();
         }
     } else if (action == VideoAction) { // Importing images sequence extrated from video file
-        verifyFramesAvailability(filesTotal);
+        verifyFramesAvailability(imagesTotal);
 
         QString directory = library->getFolderKey(tr("Video"));
         libraryTree->createFolder(directory);
@@ -1465,10 +1467,12 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
         library->addFolder(folder);
 
         int initFrame = currentFrame.frame;
-        for(int i = 0; i < filesTotal; i++) {
+        for(int i = 0; i < imagesTotal; i++) {
             importImageRecord(photograms.at(i), extension, QSize(picWidth, picHeight),
                               QSize(projectWidth, projectHeight), resizeFlag, directory);
-            if (i < filesTotal-1) {
+            QString msg = tr("Importing image %1 of %2").arg(i).arg(imagesTotal);
+            emit msgSent(msg);
+            if (i < imagesTotal-1) {
                 int layer = currentFrame.layer;
                 int frame = currentFrame.frame + 1;
                 QString selection = QString::number(layer) + "," + QString::number(layer) + ","
@@ -1642,6 +1646,7 @@ void TupLibraryWidget::importVideoFile()
                         SLOT(loadSequenceFromDirectory(ImportAction, const QString &, bool)));
                 connect(dialog, SIGNAL(projectSizeHasChanged(const QSize)), this, SIGNAL(projectSizeHasChanged(const QSize)));
                 connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
+                connect(this, SIGNAL(msgSent(const QString &)), dialog, SLOT(updateStatus(const QString &)));
 
                 dialog->show();
             } else {
@@ -1685,6 +1690,35 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath, const 
     } else {
         file.close();
         TOsd::self()->display(TOsd::Error, tr("Error while opening file: %1").arg(filePath));
+    }
+}
+
+void TupLibraryWidget::importVideoFileFromFolder(const QString &videoPath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::importVideoFileFromFolder()] - videoPath -> " << videoPath;
+    #endif
+
+    QFile file(videoPath);
+    double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
+    if (fileSize <= 2) {
+        TupVideoCutter *videoCutter = new TupVideoCutter();
+        QString tempFolder = TAlgorithm::randomString(10);
+        QString imagesPath = CACHE_DIR + tempFolder + "/";
+        if (videoCutter->loadFile(videoPath, imagesPath)) {
+            TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath, imagesPath, project->getDimension(), videoCutter);
+            connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &, bool)),
+                    SLOT(loadSequenceFromDirectory(ImportAction, const QString &, bool)));
+            connect(dialog, SIGNAL(projectSizeHasChanged(const QSize)), this, SIGNAL(projectSizeHasChanged(const QSize)));
+            connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
+            connect(this, SIGNAL(msgSent(const QString &)), dialog, SLOT(updateStatus(const QString &)));
+
+            dialog->show();
+        } else {
+            TOsd::self()->display(TOsd::Error, tr("Can't load video file!"));
+        }
+    } else {
+        TOsd::self()->display(TOsd::Error, tr("Video file is larger than 2 MB. Too big!"));
     }
 }
 

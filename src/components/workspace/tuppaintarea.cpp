@@ -2000,6 +2000,8 @@ void TupPaintArea::getLocalAsset(const QString &path)
             type = TupLibraryObject::Item;
         else if (lowercase.endsWith(".mp3") || lowercase.endsWith(".wav"))
             type = TupLibraryObject::Audio;
+        else if (lowercase.endsWith(".mp4") || lowercase.endsWith(".mov"))
+            type = TupLibraryObject::Video;
 
         if (type != TupLibraryObject::None)
             emit localAssetDropped(objectPath, type);

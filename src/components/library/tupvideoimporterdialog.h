@@ -70,6 +70,7 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
         void startExtraction();
         void updateStatus(const QString &);
         void updateUI(int index);
+        void startImageImportation();
 
     private:
         void setUI(bool fixSize);

@@ -272,6 +272,9 @@ bool TupVideoCutter::startExtraction()
             #endif
 
             ret = decodePacket(inputPacket, inputCodecContext, inputFrame);
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupVideoCutter::startExtraction()]    - ret -> " << ret;
+            #endif
             if (ret < 0)
                 break;
 
@@ -283,6 +286,11 @@ bool TupVideoCutter::startExtraction()
         // https://ffmpeg.org/doxygen/trunk/group__lavc__packet.html
         av_packet_unref(inputPacket);
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoCutter::startExtraction()] - Process is done. Images extracted -> " << counter;
+    #endif
+    emit extractionDone();
 
     return true;
 }

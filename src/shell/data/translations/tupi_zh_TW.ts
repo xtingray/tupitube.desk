@@ -3405,6 +3405,26 @@
         <source>File:</source>
         <translation>文件：</translation>
     </message>
+    <message>
+        <source>Video File</source>
+        <translation type="unfinished">視訊檔</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a video file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t load video file!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video file is larger than 2 MB. Too big!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TupLipsyncDoc</name>
@@ -5655,6 +5675,80 @@ Cover</source>
     <message>
         <source>Current Tool</source>
         <translation>目前工具</translation>
+    </message>
+</context>
+<context>
+    <name>TupVideoCutter</name>
+    <message>
+        <source>Extracting images...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TupVideoImporterDialog</name>
+    <message>
+        <source>Photograms Extractor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select the amount of photograms to import:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project size and video size are different:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Project Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What do you want to do?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep original project and video sizes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust video size to project size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust project size to video size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">關閉</translation>
+    </message>
+    <message>
+        <source>Starting procedure...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Couldn&apos;t create temporary directory!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Can&apos;t extract photograms!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extracting photogram %1 of %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Importing images...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video imported successfully!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

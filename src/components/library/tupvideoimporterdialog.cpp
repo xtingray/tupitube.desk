@@ -66,6 +66,7 @@ TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QS
     videoCutter = cutter;
     connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
     connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
+    connect(videoCutter, SIGNAL(extractionDone()), this, SLOT(startImageImportation()));
 
     imagesPath = photogramsPath;
     videoSize = videoCutter->getVideoSize();
@@ -222,11 +223,16 @@ void TupVideoImporterDialog::startExtraction()
 
 void TupVideoImporterDialog::updateUI(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateUI()] - index -> " << index;
+    #endif
+
     QString msg = tr("Extracting photogram %1 of %2").arg(index).arg(imagesTotal);
     progressLabel->setText(msg);
     progressBar->setValue(advance);
     advance += advance;
 
+    /*
     if (index == imagesTotal) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLibraryWidget::updateUI()] - Extraction is complete!";
@@ -235,6 +241,18 @@ void TupVideoImporterDialog::updateUI(int index)
         progressLabel->setText(tr("Importing images..."));
         emit extractionDone(VideoAction, imagesPath, sizeFlag);
     }
+    */
+}
+
+void TupVideoImporterDialog::startImageImportation()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::startImageImportation()] - Extraction is complete!";
+        qDebug() << "[TupLibraryWidget::startImageImportation()] - Starting image importation...";
+    #endif
+
+    progressLabel->setText(tr("Importing images..."));
+    emit extractionDone(VideoAction, imagesPath, sizeFlag);
 }
 
 void TupVideoImporterDialog::updateStatus(const QString &msg)

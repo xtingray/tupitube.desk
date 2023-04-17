@@ -70,6 +70,7 @@ class TUPITUBE_EXPORT TupVideoCutter : public QObject
     signals:
         void msgSent(const QString &msg);
         void imageExtracted(int index);
+        void extractionDone();
 
     private:
         // Decode packets into frames

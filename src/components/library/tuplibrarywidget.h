@@ -157,6 +157,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void recoverMode();
         void importLocalSoundFile(const QString &filePath);
         void importSoundFileFromFolder(const QString &filePath, const QString &folder = QString());
+        void importVideoFileFromFolder(const QString &filePath);
         void loadSequenceFromDirectory(ImportAction action, const QString &path, bool resizeFlag = false);
 
     public slots:
@@ -170,6 +171,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void folderWithAudiosRemoved();
         void imagesImportationDone();
         void projectSizeHasChanged(const QSize dimension);
+        void msgSent(const QString &msg);
 
     private:
         void callExternalEditor(QTreeWidgetItem *item, const QString &software);
