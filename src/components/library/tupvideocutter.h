@@ -44,12 +44,12 @@
 #ifdef __cplusplus
 extern "C" {
 // Libav libraries
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libswscale/swscale.h>
+#include "libavcodec/avcodec.h"
+#include "libavformat/avformat.h"
+#include "libswscale/swscale.h"
 
 // Required to create the PNG files
-#include <png.h>
+#include "png.h"
 }
 #endif
 

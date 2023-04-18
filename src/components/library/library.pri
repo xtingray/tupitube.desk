@@ -5,7 +5,8 @@ unix {
 }
 
 win32 {
-    LIBS += -L$$LIBRARY_DIR/release/ -ltupilibrary
+    LIBPNG_DIR = C:/devel/sources/libpng
+    LIBS += -L$$LIBRARY_DIR/release/ -L$$LIBPNG_DIR/lib -lpng -ltupilibrary
 }
 
 linux-g++ {

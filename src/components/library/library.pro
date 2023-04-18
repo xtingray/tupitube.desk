@@ -60,6 +60,12 @@ unix {
 win32 {
     include(../../../win.pri)
 
+    LIBPNG_DIR = C:/devel/sources/libpng
+    INCLUDEPATH += $$LIBPNG_DIR/include
+    LIBS += -L$$LIBPNG_DIR/lib -lpng
+
+    include(../../../ffmpeg.win.pri)
+
     STORE_DIR = ../../store/
     INCLUDEPATH += $$STORE_DIR
     LIBS += -L$$STORE_DIR/release/ -ltupistore
