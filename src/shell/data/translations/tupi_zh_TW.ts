@@ -3407,23 +3407,31 @@
     </message>
     <message>
         <source>Video File</source>
-        <translation type="unfinished">視訊檔</translation>
+        <translation>視訊檔</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <translation>視頻</translation>
     </message>
     <message>
         <source>Choose a video file...</source>
-        <translation type="unfinished"></translation>
+        <translation>選擇一個視頻文件...</translation>
     </message>
     <message>
         <source>Can&apos;t load video file!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法加載視頻文件！</translation>
     </message>
     <message>
         <source>Video file is larger than 2 MB. Too big!</source>
-        <translation type="unfinished"></translation>
+        <translation>視頻文件大於 2 MB。 太大！</translation>
+    </message>
+    <message>
+        <source>Importing image %1 of %2</source>
+        <translation>正在導入圖像 %1，共 %2</translation>
+    </message>
+    <message>
+        <source>Couldn&apos;t create temporary directory!</source>
+        <translation>無法創建臨時目錄！</translation>
     </message>
 </context>
 <context>
@@ -5678,77 +5686,70 @@ Cover</source>
     </message>
 </context>
 <context>
-    <name>TupVideoCutter</name>
-    <message>
-        <source>Extracting images...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>TupVideoImporterDialog</name>
     <message>
         <source>Photograms Extractor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select the amount of photograms to import:</source>
-        <translation type="unfinished"></translation>
+        <translation>照片提取器</translation>
     </message>
     <message>
         <source>Project size and video size are different:</source>
-        <translation type="unfinished"></translation>
+        <translation>項目大小和視頻大小不同：</translation>
     </message>
     <message>
         <source>Project Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>項目規模：</translation>
     </message>
     <message>
         <source>Video Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>視頻尺寸：</translation>
     </message>
     <message>
         <source>What do you want to do?</source>
-        <translation type="unfinished"></translation>
+        <translation>你想讓我做什麼？</translation>
     </message>
     <message>
         <source>Keep original project and video sizes</source>
-        <translation type="unfinished"></translation>
+        <translation>保留原始項目和視頻大小</translation>
     </message>
     <message>
         <source>Adjust video size to project size</source>
-        <translation type="unfinished"></translation>
+        <translation>將視頻大小調整為項目大小</translation>
     </message>
     <message>
         <source>Adjust project size to video size</source>
-        <translation type="unfinished"></translation>
+        <translation>將項目大小調整為視頻大小</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">關閉</translation>
+        <translation>關閉</translation>
     </message>
     <message>
         <source>Starting procedure...</source>
-        <translation type="unfinished"></translation>
+        <translation>啟動程序...</translation>
     </message>
     <message>
         <source>Couldn&apos;t create temporary directory!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法創建臨時目錄！</translation>
     </message>
     <message>
         <source>Can&apos;t extract photograms!</source>
-        <translation type="unfinished"></translation>
+        <translation>無法提取照片！</translation>
     </message>
     <message>
         <source>Extracting photogram %1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation>正在提取照片 %1 of %2</translation>
     </message>
     <message>
         <source>Importing images...</source>
-        <translation type="unfinished"></translation>
+        <translation>導入圖像...</translation>
     </message>
     <message>
         <source>Video imported successfully!</source>
-        <translation type="unfinished"></translation>
+        <translation>視頻導入成功！</translation>
+    </message>
+    <message>
+        <source>Select the number of photograms to import:</source>
+        <translation>選擇要導入的照片數量：</translation>
     </message>
 </context>
 <context>

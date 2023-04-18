@@ -83,7 +83,7 @@ TupVideoImporterDialog::~TupVideoImporterDialog()
 
 void TupVideoImporterDialog::setUI(bool fixSize)
 {
-    QLabel *importLabel = new QLabel(tr("Select the amount of photograms to import:"));
+    QLabel *importLabel = new QLabel(tr("Select the number of photograms to import:"));
     imagesBox = new QSpinBox;
     imagesBox->setMinimum(1);
     imagesBox->setMaximum(100);
@@ -91,8 +91,10 @@ void TupVideoImporterDialog::setUI(bool fixSize)
 
     QWidget *formWidget = new QWidget;
     QHBoxLayout *formLayout = new QHBoxLayout(formWidget);
+    formLayout->addStretch();
     formLayout->addWidget(importLabel);
     formLayout->addWidget(imagesBox);
+    formLayout->addStretch();
 
     layout->addWidget(formWidget);
 
