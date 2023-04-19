@@ -4077,25 +4077,25 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="196"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2086"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2061"/>
         <source>Image</source>
         <translation>Imagem</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="199"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2091"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2066"/>
         <source>Image Sequence</source>
         <translation>Sequência de Imagens</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="197"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2096"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2071"/>
         <source>Svg File</source>
         <translation>Ficheiro Svg</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="201"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2111"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2086"/>
         <source>Audio File</source>
         <translation>Arquivo de Áudio</translation>
     </message>
@@ -4106,7 +4106,7 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="328"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2152"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2127"/>
         <source>Directory</source>
         <translation>Diretório</translation>
     </message>
@@ -4185,7 +4185,7 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="198"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2106"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2081"/>
         <source>Native Object</source>
         <translation>Objeto Nativo</translation>
     </message>
@@ -4196,13 +4196,13 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="200"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2101"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2076"/>
         <source>Svg Sequence</source>
         <translation>Sequência Svg</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="202"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2116"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2091"/>
         <source>Video File</source>
         <translation>Arquivo de Vídeo</translation>
     </message>
@@ -4348,27 +4348,27 @@
         <translation>Escolha um arquivo de vídeo...</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1723"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1698"/>
         <source>Couldn&apos;t create temporary directory!</source>
         <translation>Não foi possível criar o diretório temporário!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1795"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1770"/>
         <source>Can&apos;t load video file!</source>
         <translation>Não é possível carregar o arquivo de vídeo!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1798"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1773"/>
         <source>Video file is larger than 2 MB. Too big!</source>
         <translation>O arquivo de vídeo é maior que 2 MB. Muito grande!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1769"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1744"/>
         <source>Error while opening file: %1</source>
         <translation>Erro ao abrir ficheiro: %1</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1944"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1919"/>
         <source>Raster Objects</source>
         <translation>Objetos Raster</translation>
     </message>
@@ -4391,13 +4391,13 @@
     <message>
         <location filename="../../tupmainwindow.cpp" line="312"/>
         <location filename="../../tupmainwindow.cpp" line="1221"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="255"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="259"/>
         <source>Animation</source>
         <translation>Animação</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="412"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="263"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="267"/>
         <source>Player</source>
         <translation>Reprodutor</translation>
     </message>
@@ -4621,237 +4621,247 @@
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="105"/>
+        <source>Video</source>
+        <translation>Vídeo</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="105"/>
+        <source>Alt+V</source>
+        <translation>Alt+V</translation>
+    </message>
+    <message>
+        <location filename="../../tupmainwindow_gui.cpp" line="108"/>
         <source>Library</source>
         <translation>Biblioteca</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="133"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="136"/>
         <source>Shift+E</source>
         <translation>Shift+E</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="146"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="149"/>
         <source>Shift+T</source>
         <translation>Shift+T</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="183"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="186"/>
         <source>&amp;File</source>
         <translation>&amp;Ficheiro</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="193"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="196"/>
         <source>Open Recent</source>
         <translation>Abrir Recente</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="217"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="220"/>
         <source>&amp;Edit</source>
         <translation>&amp;Editar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="240"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="244"/>
         <source>&amp;Export</source>
         <translation>&amp;Export</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="245"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="249"/>
         <source>&amp;Post</source>
         <translation>&amp;Publicar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="250"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="254"/>
         <source>Modules</source>
         <translation>Módulos</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="276"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="280"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="322"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="326"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="322"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="326"/>
         <source>New Project</source>
         <translation>Novo Projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="324"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="328"/>
         <source>Open new project</source>
         <translation>Abrir novo projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="327"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="331"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="327"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="331"/>
         <source>Open Project</source>
         <translation>Abrir Projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="330"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="334"/>
         <source>Load existent project</source>
         <translation>Carregar projeto existente</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="343"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="347"/>
         <source>Open Example</source>
         <translation>Abrir Exemplo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="346"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="350"/>
         <source>Open example project</source>
         <translation>Abrir exemplo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="348"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="352"/>
         <source>Import Project</source>
         <translation>Importar Projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="348"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="352"/>
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="351"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="355"/>
         <source>Import project</source>
         <translation>Importar projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="354"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="358"/>
         <source>Save Project</source>
         <translation>Salvar Projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="359"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="363"/>
         <source>Save Project As...</source>
         <translation>Salvar Projeto Como...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="364"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="368"/>
         <source>Cl&amp;ose Project</source>
         <translation>Fechar Pr&amp;ojeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="370"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="374"/>
         <source>&amp;Import GIMP Palettes</source>
         <translation>&amp;Importar Paletas Do GIMP</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="371"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="375"/>
         <source>Shift+G</source>
         <translation>Shift+G</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="223"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="226"/>
         <source>&amp;Import</source>
         <translation>&amp;Importar</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="355"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="359"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="357"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="361"/>
         <source>Save current project in current location</source>
         <translation>Guardar projeto atual no local atual</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="360"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="364"/>
         <source>Ctrl+Shift+S</source>
         <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="361"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="365"/>
         <source>Open dialog box to save current project in any location</source>
         <translation>Abrir caixa de diálogo para guardar projeto atual em qualquer local</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="364"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="368"/>
         <source>Ctrl+W</source>
         <translation>Ctrl+W</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="366"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="370"/>
         <source>Close active project</source>
         <translation>Fechar projeto ativo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="372"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="376"/>
         <source>Import palettes</source>
         <translation>Importar paletas</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="375"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="379"/>
         <source>&amp;Import Papagayo Lip-sync</source>
         <translation>&amp;Importar Arquivo de Papagayo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="377"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="381"/>
         <source>Import Papagayo lip-sync</source>
         <translation>Importar Papagayo lip-sync</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="381"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="385"/>
         <source>&amp;Export Project</source>
         <translation>&amp;Exportar Projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="382"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="386"/>
         <source>Ctrl+R</source>
         <translation>Ctrl+R</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="383"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="387"/>
         <source>Export project to several video formats</source>
         <translation>Exportar projeto para vários formatos de vídeo</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="409"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="413"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="409"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="413"/>
         <source>Quit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="412"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="416"/>
         <source>Close application</source>
         <translation>Fechar aplicação</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="426"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="430"/>
         <source>Pr&amp;eferences...</source>
         <translation>Pr&amp;eferências...</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="393"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="427"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="397"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="431"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="403"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="407"/>
         <source>TupiTube Social Media</source>
         <translation>TupiTube Social Media</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="405"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="409"/>
         <source>Open TupiTube Network</source>
         <translation>Abrir a Rede TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="445"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="449"/>
         <source>Ctrl+K</source>
         <translation>Ctrl+K</translation>
     </message>
@@ -4871,97 +4881,97 @@
         <translation>Sequência SVG</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="376"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="380"/>
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="387"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="391"/>
         <source>Export Frame As Image</source>
         <translation>Exportar Quadro Como Imagem</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="388"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="392"/>
         <source>@</source>
         <translation>@</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="392"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="396"/>
         <source>&amp;Post Animation</source>
         <translation>&amp;Pós Animação</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="394"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="398"/>
         <source>Post project on TupiTube network</source>
         <translation>Postar projeto na rede TupiTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="398"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="402"/>
         <source>Post Frame</source>
         <translation>Postar O Quadro</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="399"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="403"/>
         <source>Ctrl+@</source>
         <translation>Ctrl+@</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="429"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="433"/>
         <source>Open the preferences dialog box</source>
         <translation>Abre a caixa de diálogo de preferências</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="431"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="435"/>
         <source>Project Canvas Size</source>
         <translation>Tamanho da Tela do Projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="434"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="438"/>
         <source>Set the project canvas size</source>
         <translation>Define o tamanho da tela do projeto</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="440"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="444"/>
         <source>YouTube Tutorials</source>
         <translation>Tutoriais do YouTube</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="440"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="444"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="442"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="446"/>
         <source>Check for Updates</source>
         <translation>Verificar Atualizações</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="445"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="449"/>
         <source>About TupiTube Desk</source>
         <translation>Sobre TupiTube Desk</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="451"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="455"/>
         <source>Actions Bar</source>
         <translation>Barra de Ações</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="536"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="540"/>
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="538"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="542"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="541"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="545"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="543"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="547"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
@@ -7268,72 +7278,72 @@ Storyboard</translation>
         <translation>Selecione o número de fotogramas a importar:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="105"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="107"/>
         <source>Project size and video size are different:</source>
         <translation>O tamanho do projeto e o tamanho do vídeo são diferentes:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="108"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="110"/>
         <source>Project Size:</source>
         <translation>Tamanho do Projeto:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="111"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="113"/>
         <source>Video Size:</source>
         <translation>Tamanho do Vídeo:</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="115"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="117"/>
         <source>What do you want to do?</source>
         <translation>O que você quer fazer?</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="116"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="118"/>
         <source>Keep original project and video sizes</source>
         <translation>Mantenha os tamanhos originais do projeto e do vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="117"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="119"/>
         <source>Adjust video size to project size</source>
         <translation>Ajustar o tamanho do vídeo ao tamanho do projeto</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="118"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="120"/>
         <source>Adjust project size to video size</source>
         <translation>Ajustar o tamanho do projeto ao tamanho do vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="157"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="159"/>
         <source>Close</source>
         <translation>Fechar</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="199"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="201"/>
         <source>Starting procedure...</source>
         <translation>Iniciando procedimento...</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="208"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="210"/>
         <source>Couldn&apos;t create temporary directory!</source>
         <translation>Não foi possível criar o diretório temporário!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="216"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="218"/>
         <source>Can&apos;t extract photograms!</source>
         <translation>Não é possível extrair fotogramas!</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="231"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="233"/>
         <source>Extracting photogram %1 of %2</source>
         <translation>A extrair o fotograma %1 de %2</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="244"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="246"/>
         <source>Importing images...</source>
         <translation>Importando imagens...</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="272"/>
+        <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="274"/>
         <source>Video imported successfully!</source>
         <translation>Vídeo importado com sucesso!</translation>
     </message>

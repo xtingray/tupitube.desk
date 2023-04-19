@@ -3899,6 +3899,14 @@
         <source>Set the project canvas size</source>
         <translation>設置項目畫布大小</translation>
     </message>
+    <message>
+        <source>Video</source>
+        <translation>視頻</translation>
+    </message>
+    <message>
+        <source>Alt+V</source>
+        <translation>Alt+V</translation>
+    </message>
 </context>
 <context>
     <name>TupMicManager</name>

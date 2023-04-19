@@ -102,6 +102,9 @@ void TupMainWindow::createGUI()
     new TAction(QPixmap(THEME_DIR + "icons/sound_object.png"), tr("Audio File"), QKeySequence(tr("Alt+A")), m_libraryWidget, SLOT(importSoundFile()),
                 m_actionManager, "importAudioFile");
 
+    new TAction(QPixmap(THEME_DIR + "icons/player.png"), tr("Video"), QKeySequence(tr("Alt+V")), m_libraryWidget, SLOT(importVideoFile()),
+                m_actionManager, "importVideoFile");
+
     new TAction(QPixmap(THEME_DIR + "icons/library.png"), tr("Library"), QKeySequence("Alt+L"), this, SLOT(importLibrary()),
                 m_actionManager, "import_library");
 
@@ -228,6 +231,7 @@ void TupMainWindow::setupMenu()
     m_insertMenu->addAction(m_actionManager->find("importSvg"));
     m_insertMenu->addAction(m_actionManager->find("importSvgSequence"));
     m_insertMenu->addAction(m_actionManager->find("importAudioFile"));
+    m_insertMenu->addAction(m_actionManager->find("importVideoFile"));
     m_insertMenu->addAction(m_actionManager->find("import_library"));
 
     m_insertMenu->addSeparator();

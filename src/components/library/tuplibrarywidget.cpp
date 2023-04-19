@@ -1667,32 +1667,7 @@ void TupLibraryWidget::importVideoFile()
 
     if (dialog.exec() == QDialog::Accepted) {
         QStringList files = dialog.selectedFiles();
-        // videoPath = files.at(0);
         importVideoFileFromFolder(files.at(0));
-
-        /*
-        QFile file(videoPath);
-        double fileSize = static_cast<double>(file.size()) / static_cast<double>(1000000);
-        if (fileSize <= 2) {
-            TupVideoCutter *videoCutter = new TupVideoCutter();
-            QString tempFolder = TAlgorithm::randomString(10);
-            QString imagesPath = CACHE_DIR + tempFolder + "/";
-            if (videoCutter->loadFile(videoPath, imagesPath)) {
-                TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath, imagesPath, project->getDimension(), videoCutter);
-                connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &, bool)),
-                        SLOT(loadSequenceFromDirectory(ImportAction, const QString &, bool)));
-                connect(dialog, SIGNAL(projectSizeHasChanged(const QSize)), this, SIGNAL(projectSizeHasChanged(const QSize)));
-                connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
-                connect(this, SIGNAL(msgSent(const QString &)), dialog, SLOT(updateStatus(const QString &)));
-
-                dialog->show();
-            } else {
-                TOsd::self()->display(TOsd::Error, tr("Can't load video file!"));
-            }
-        } else {
-            TOsd::self()->display(TOsd::Error, tr("Video file is larger than 2 MB. Too big!"));
-        }
-        */
     }
 }
 
