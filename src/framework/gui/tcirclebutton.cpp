@@ -259,7 +259,7 @@ void TCircleButton::animate()
     setMinimumSize(m_diameter, m_animator->aStep);
 }
 
-void TCircleButton::enterEvent(QEvent *)
+void TCircleButton::enterEvent(QEnterEvent *)
 {
     m_animator->aStep = m_diameter;
     

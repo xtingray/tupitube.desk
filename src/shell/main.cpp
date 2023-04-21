@@ -45,23 +45,13 @@
   #endif
 #endif
 
-#ifdef ENABLE_TUPISTYLE
-#include "twaitstyle.h"
-#endif
-
 #include <QFile>
-#include <QTextStream>
-// #include <QTextCodec>
-#include <QMessageBox>
 #include <QDir>
 #include <QLocale>
 #include <QTranslator>
-#include <QThread>
-#include <QStyleFactory>
 
 int main(int argc, char ** argv)
 {
-    // QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     TupApplication application(argc, argv);
 
 #ifdef Q_OS_UNIX
@@ -160,9 +150,6 @@ int main(int argc, char ** argv)
     #ifdef TUP_DEBUG
         qWarning() << "[main.cpp] - CACHE path -> " << cachePath;
     #endif
-
-    QStyle *style = QStyleFactory::create("fusion");
-    QApplication::setStyle(style);
 
     if (locale.compare("en") != 0) {
         #ifdef Q_OS_WIN

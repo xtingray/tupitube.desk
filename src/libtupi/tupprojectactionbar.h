@@ -98,6 +98,7 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
         TImageButton *button(Action action);
         
     public slots:
+        void emitActionSelected(QAbstractButton *button);
         void emitActionSelected(int action);
         
     signals:
@@ -110,7 +111,7 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
         QString container;
         Qt::Orientation orientation;
         int fixedSize;
-        QButtonGroup actions;
+        QButtonGroup *actions;
         QBoxLayout *buttonLayout;
         bool isAnimated;
 };

@@ -216,7 +216,7 @@ void TupConfigurationArea::shrink()
     mainWindow->setMouseTracking(mouseTrackingFlag);
 }
 
-void TupConfigurationArea::enterEvent(QEvent *event)
+void TupConfigurationArea::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event)
 

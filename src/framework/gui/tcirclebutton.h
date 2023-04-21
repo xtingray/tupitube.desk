@@ -72,7 +72,7 @@ class T_GUI_EXPORT TCircleButton : public QPushButton
         /**
          * Init animation
          */
-        void enterEvent(QEvent *);
+        void enterEvent(QEnterEvent *);
         /**
          * End animation
          */

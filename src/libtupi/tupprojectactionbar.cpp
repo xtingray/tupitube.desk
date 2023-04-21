@@ -35,7 +35,6 @@
 
 #include "tupprojectactionbar.h"
 
-// #include <QDesktopWidget>
 #include <QScreen>
 
 TupProjectActionBar::TupProjectActionBar(const QString &tag, QList<Action> actionsList,
@@ -43,7 +42,10 @@ TupProjectActionBar::TupProjectActionBar(const QString &tag, QList<Action> actio
 {
     container = tag;
     orientation = direction;
-    connect(&actions, SIGNAL(buttonClicked(int)), this, SLOT(emitActionSelected(int)));
+    isAnimated = false;
+
+    actions = new QButtonGroup;
+    connect(actions, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(emitActionSelected(QAbstractButton*)));
     setup(actionsList);
     setFixedSize(22);
 }
@@ -75,12 +77,14 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
         }
         break;
     }
-    
+
+    QMargins margins(1, 1, 1, 1);
+
     mainLayout->setSpacing(0);
-    // mainLayout->setMargin(1);
+    mainLayout->setContentsMargins(margins);
     
     buttonLayout->setSpacing(1);
-    // buttonLayout->setMargin(1);
+    buttonLayout->setContentsMargins(margins);
     buttonLayout->addStretch();
     int size = 16;
 
@@ -89,7 +93,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             TImageButton *button = new TImageButton(QIcon(THEME_DIR + "icons/add_frame.png"), size);
             button->setToolTip(tr("Insert frame"));
             button->setShortcut(QKeySequence(Qt::Key_9));
-            actions.addButton(button, InsertFrame);
+            actions->addButton(button, InsertFrame);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -100,7 +104,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             button->setToolTip(tr("Extend frame"));
             // button->setShortcut(QKeySequence());
 
-            actions.addButton(button, ExtendFrame);
+            actions->addButton(button, ExtendFrame);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -112,63 +116,58 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             // SQA: This short-cut has been moved to Zoom Out feature
             button->setShortcut(QKeySequence(Qt::Key_0));
 
-            actions.addButton(button, RemoveFrame);
+            actions->addButton(button, RemoveFrame);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
         }
 
         if (action == MoveFrameBackward) {
-            TImageButton *button = nullptr;
+            TImageButton *button = new TImageButton();
             if (container.compare("Exposure") == 0) {
                 button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_up.png"), size);
-            } else {
-                if (container.compare("TimeLine") == 0)
-                    button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_backward.png"), size);
+            } else if (container.compare("TimeLine") == 0) {
+                button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_backward.png"), size);
             }
 
             button->setToolTip(tr("Move frame backward"));
             button->setShortcut(QKeySequence(tr("F8")));
 
-            actions.addButton(button, MoveFrameBackward);
+            actions->addButton(button, MoveFrameBackward);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
         }
 
         if (action == MoveFrameForward) {
-            TImageButton *button = nullptr;
+            TImageButton *button = new TImageButton();
 
             if (container.compare("Exposure") == 0) {
                 button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_down.png"), size);
-            } else {
-                if (container.compare("TimeLine") == 0)
-                    button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_forward.png"), size);
+            } else if (container.compare("TimeLine") == 0) {
+                button = new TImageButton(QIcon(THEME_DIR + "icons/move_frame_forward.png"), size);
             }
 
             button->setToolTip(tr("Move frame forward"));
             button->setShortcut(QKeySequence(tr("F9")));
 
-            actions.addButton(button, MoveFrameForward);
+            actions->addButton(button, MoveFrameForward);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
         }
 
         if (action == ReverseFrameSelection) {
-            TImageButton *button = nullptr;
+            TImageButton *button = new TImageButton();
 
             if (container.compare("Exposure") == 0) {
                 button = new TImageButton(QIcon(THEME_DIR + "icons/reverse_v.png"), size);
-            } else {
-                if (container.compare("TimeLine") == 0)
-                    button = new TImageButton(QIcon(THEME_DIR + "icons/reverse_h.png"), size);
+            } else if (container.compare("TimeLine") == 0) {
+                button = new TImageButton(QIcon(THEME_DIR + "icons/reverse_h.png"), size);
             }
 
             button->setToolTip(tr("Reverse frame selection"));
-            // button->setShortcut(QKeySequence(tr("F9")));
-
-            actions.addButton(button, ReverseFrameSelection);
+            actions->addButton(button, ReverseFrameSelection);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -177,7 +176,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
         if (action == CopyFrame) {
             TImageButton *button = new TImageButton(QIcon(THEME_DIR + "icons/copy.png"), size);
             button->setToolTip(tr("Copy frame"));
-            actions.addButton(button, CopyFrame);
+            actions->addButton(button, CopyFrame);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -186,7 +185,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
         if (action == PasteFrame) {
             TImageButton *button = new TImageButton(QIcon(THEME_DIR + "icons/paste.png"), size);
             button->setToolTip(tr("Paste frame"));
-            actions.addButton(button, PasteFrame);
+            actions->addButton(button, PasteFrame);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -197,7 +196,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             button->setToolTip(tr("Insert layer"));
             button->setShortcut(QKeySequence(tr("F5")));
 
-            actions.addButton(button, InsertLayer);
+            actions->addButton(button, InsertLayer);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -208,7 +207,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             button->setToolTip(tr("Remove layer"));
             button->setShortcut(QKeySequence(tr("F6")));
 
-            actions.addButton(button, RemoveLayer);
+            actions->addButton(button, RemoveLayer);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -218,7 +217,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             TImageButton *button = new TImageButton(QIcon(THEME_DIR + "icons/add_scene.png"), size);
             button->setToolTip(tr("Insert scene"));
 
-            actions.addButton(button, InsertScene);
+            actions->addButton(button, InsertScene);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -228,7 +227,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             TImageButton *button = new TImageButton(QIcon(THEME_DIR + "icons/remove_scene.png"), size);
             button->setToolTip(tr("Remove scene"));
 
-            actions.addButton(button, RemoveScene);
+            actions->addButton(button, RemoveScene);
 
             buttonLayout->addWidget(button);
             button->setAnimated(isAnimated);
@@ -265,17 +264,26 @@ void TupProjectActionBar::insertBlankSpace(int position)
 
 TImageButton *TupProjectActionBar::button(Action action)
 {
-    return qobject_cast<TImageButton *>(actions.button(action));
+    return qobject_cast<TImageButton *>(actions->button(action));
+}
+
+void TupProjectActionBar::emitActionSelected(QAbstractButton *button)
+{
+    int action = actions->id(button);
+    emitActionSelected(action);
 }
 
 void TupProjectActionBar::emitActionSelected(int action)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "TupProjectActionBar::emitActionSelected()] - button id -> " << action;
+    #endif
+
     QScreen *screen = QGuiApplication::screens().at(0); 
     int screenW = screen->geometry().width();
     int screenH = screen->geometry().height();
 
-    switch(action)
-    {
+    switch(action) {
         case RemoveFrame:
         {
             TCONFIG->beginGroup("General");

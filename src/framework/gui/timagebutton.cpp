@@ -42,12 +42,14 @@ class TImageButton::Animation
         {
             aTimer = new QTimer;
         }
-        ~Animation() {};
+
+        ~Animation() {}
         
         void begin()
         {
             aTimer->start(m_interval);
         }
+
         void end()
         {
             aTimer->stop();
@@ -60,6 +62,11 @@ class TImageButton::Animation
     private:
         int m_interval;
 };
+
+TImageButton::TImageButton()
+{
+
+}
 
 TImageButton::TImageButton(const QIcon &icon, int size, QWidget *parent, bool animate) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
 {
@@ -95,10 +102,8 @@ void TImageButton::setup()
     setFocusPolicy(Qt::NoFocus);
 }
 
-void TImageButton::enterEvent(QEvent *)
-{
-    // setIconSize(QSize(m_imageSize-10,m_imageSize-10));
-    
+void TImageButton::enterEvent(QEnterEvent *)
+{    
     if (m_isAnimated) {
         m_animator->begin();
         m_animator->aBeginning = true;
@@ -140,42 +145,11 @@ void TImageButton::animate()
     }
 }
 
-/*
-void TImageButton::resizeEvent(QResizeEvent *e)
+void TImageButton::setImage(const QIcon &icon)
 {
-    QPainter painter(&m_drawer);
-
-    painter.setBackgroundColor(paletteBackgroundColor());
-    painter.eraseRect(m_drawer.rect());
-    painter.end();
- 
-    QPixmap buffer = getPixmap();
- 
-    bitBlt(&m_drawer, size().width(), size().height(), &buffer, 0, 0, buffer.width(), buffer.height(), Qt::CopyROP);
- 
-    repaint(false);
-}
-*/
-
-void TImageButton::setImage(const QIcon & icon)
-{
-    setIconSize(QSize(m_imageSize,m_imageSize));
+    setIconSize(QSize(m_imageSize, m_imageSize));
     QPushButton::setIcon(icon);
 }
-
-/*
-void TImageButton::paintEvent(QPaintEvent *e)
-{
-    QPushButton::paintEvent(e);
-     
-    QStyleOptionButton opt;
-    opt.init(this);
-    opt.iconSize = QSize(m_imageSize,m_imageSize);
-    
-    QStylePainter p(this);
-    p.drawControl(QStyle::CE_PushButton, opt);
-}
-*/
 
 void TImageButton::setAnimated(bool anim)
 {

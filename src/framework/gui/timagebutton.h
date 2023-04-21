@@ -46,24 +46,26 @@
 #include <QPainter>
 #include <QLayout>
 #include <QBitmap>
-#include <QStyle>
-#include <QStyleOptionButton>
-#include <QStylePainter>
+// #include <QStyle>
+// #include <QStyleOptionButton>
+// #include <QStylePainter>
 
 class T_GUI_EXPORT TImageButton : public QPushButton
 {
     Q_OBJECT
 
     public:
+        TImageButton();
         TImageButton(const QIcon &icon, int size, QWidget *parent = nullptr, bool animate = false);
         TImageButton(const QIcon &icon, int size, QObject *reciever, const  char *slot, QWidget *parent = nullptr, bool animate = false);
         ~TImageButton();
 
-        virtual void setImage(const QIcon &icon);
+        // virtual void setImage(const QIcon &icon);
+        void setImage(const QIcon &icon);
         void setAnimated(bool anim);
         
     protected:
-        void enterEvent(QEvent *event);
+        void enterEvent(QEnterEvent *event);
         void leaveEvent(QEvent *event);
         
     private slots:
@@ -78,12 +80,6 @@ class T_GUI_EXPORT TImageButton : public QPushButton
         Animation *m_animator;
         
         bool m_isAnimated;
-/*      
-    protected:
-        void resizeEvent(QResizeEvent *e);
-        void paintEvent(QPaintEvent *e);
-        QPixmap getPixmap();
-*/
 };
 
 #endif

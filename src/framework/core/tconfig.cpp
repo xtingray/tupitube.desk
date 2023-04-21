@@ -88,15 +88,22 @@ TConfig *TConfig::instance()
 
 void TConfig::checkConfigFile()
 {
-    QFile config(path);
+    QFile configFile(path);
+    if (!configFile.open(QIODevice::ReadOnly)) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Can't open config file -> " << path;
+        #endif
+
+        return;
+    }
     isConfigOk = false;
 
-    if (config.exists()) {
+    if (configFile.exists()) {
         QString errorMsg = "";
         int errorLine = 0;
         int errorColumn = 0;
 
-        isConfigOk = domDocument.setContent(&config, &errorMsg, &errorLine, &errorColumn);
+        isConfigOk = domDocument.setContent(&configFile, &errorMsg, &errorLine, &errorColumn);
         if (!isConfigOk) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TConfig::checkConfigFile()] - Fatal Error: Configuration file is corrupted - Line -> "
@@ -108,7 +115,7 @@ void TConfig::checkConfigFile()
                 isConfigOk = false;
         }
 
-        config.close();
+        configFile.close();
     }
 
     if (!isConfigOk)
@@ -163,6 +170,9 @@ void TConfig::sync()
         file.close();
     } else {
         isConfigOk = false;
+        #ifdef TUP_DEBUG
+                qDebug() << "[TConfig::sync()] - Fatal Error: Can't open config file -> " << path;
+        #endif
     }
 
     checkConfigFile();

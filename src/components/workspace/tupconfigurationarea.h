@@ -64,7 +64,7 @@ class TUPITUBE_EXPORT TupConfigurationArea : public QDockWidget
         void toggleLock();
 
    protected:
-        void enterEvent(QEvent *event);
+        void enterEvent(QEnterEvent *event);
         void leaveEvent(QEvent *event);
         void paintEvent (QPaintEvent *event);
 
