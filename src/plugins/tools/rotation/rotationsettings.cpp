@@ -56,7 +56,7 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    nameLayout->setMargin(0);
+    // nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -74,7 +74,7 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    buttonsLayout->setMargin(0);
+    // buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(apply);
     buttonsLayout->addWidget(remove);
@@ -121,14 +121,14 @@ void RotationSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    startLayout->setMargin(0);
+    // startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    endLayout->setMargin(0);
+    // endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
     endLayout->addWidget(endFrame);
@@ -137,7 +137,7 @@ void RotationSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    totalLayout->setMargin(0);
+    // totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -151,7 +151,7 @@ void RotationSettings::setInnerForm()
     typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *typeLayout = new QHBoxLayout;
     typeLayout->setAlignment(Qt::AlignHCenter);
-    typeLayout->setMargin(0);
+    // typeLayout->setMargin(0);
     typeLayout->setSpacing(0);
     typeLayout->addWidget(typeLabel);
     typeLayout->addWidget(rotationTypeCombo);
@@ -169,13 +169,13 @@ void RotationSettings::setInnerForm()
 
     QVBoxLayout *speedLayout = new QVBoxLayout;
     speedLayout->setAlignment(Qt::AlignHCenter);
-    speedLayout->setMargin(0);
+    // speedLayout->setMargin(0);
     speedLayout->setSpacing(0);
     speedLayout->addWidget(speedLabel);
 
     QVBoxLayout *speedLayout2 = new QVBoxLayout;
     speedLayout2->setAlignment(Qt::AlignHCenter);
-    speedLayout2->setMargin(0);
+    // speedLayout2->setMargin(0);
     speedLayout2->setSpacing(0);
     speedLayout2->addWidget(degreesPerFrame);
 
@@ -191,7 +191,7 @@ void RotationSettings::setInnerForm()
 
     QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom); // , clockPanel);
     clockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    clockLayout->setMargin(0);
+    // clockLayout->setMargin(0);
     clockLayout->setSpacing(0);
 
     QLabel *directionLabel = new QLabel(tr("Direction") + ": ");
@@ -236,7 +236,7 @@ void RotationSettings::setRangeForm()
     rangePanel = new QWidget;
     QBoxLayout *rangeLayout = new QBoxLayout(QBoxLayout::TopToBottom, rangePanel);
     rangeLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    rangeLayout->setMargin(0);
+    // rangeLayout->setMargin(0);
     rangeLayout->setSpacing(0);
  
     QLabel *rangeLabel = new QLabel(tr("Degrees Range") + ": ");
@@ -253,7 +253,7 @@ void RotationSettings::setRangeForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    startLayout->setMargin(0);
+    // startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startLabel);
     startLayout->addWidget(rangeStart);
@@ -269,7 +269,7 @@ void RotationSettings::setRangeForm()
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    endLayout->setMargin(0);
+    // endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endLabel);
     endLayout->addWidget(rangeEnd);
@@ -280,7 +280,7 @@ void RotationSettings::setRangeForm()
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
-    loopLayout->setMargin(0);
+    // loopLayout->setMargin(0);
     loopLayout->setSpacing(0);
     loopLayout->addWidget(rangeLoopBox);
     reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), rangePanel);
@@ -289,7 +289,7 @@ void RotationSettings::setRangeForm()
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
-    reverseLayout->setMargin(0);
+    // reverseLayout->setMargin(0);
     reverseLayout->setSpacing(0);
     reverseLayout->addWidget(reverseLoopBox);
 

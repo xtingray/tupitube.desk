@@ -44,7 +44,11 @@
 #include <QPushButton>
 #include <QScreen>
 
+/*
 TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo,
+                                                 int cameraIndex, const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
+*/
+TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QComboBox *devicesCombo,
                                                  int cameraIndex, const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
@@ -76,19 +80,20 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
         }
     }
 
+    /*
     if (cameraDevices.count() == 1) {
-        QCameraInfo device = cameraDevices.at(0);
+        // QCameraInfo device = cameraDevices.at(0);
         QCamera *camera = new QCamera(device);
-        QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
-        connect(imageCapture, SIGNAL(imageSaved(int, const QString)),
-                this, SLOT(imageSavedFromCamera(int, const QString)));
-        QCameraViewfinder *viewfinder = new QCameraViewfinder;
-        viewfinder->setFixedSize(displaySize);
-        camera->setViewfinder(viewfinder);
+        //  QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
+        //  connect(imageCapture, SIGNAL(imageSaved(int, const QString)),
+        //          this, SLOT(imageSavedFromCamera(int, const QString)));
+        // QCameraViewfinder *viewfinder = new QCameraViewfinder;
+        // viewfinder->setFixedSize(displaySize);
+        // camera->setViewfinder(viewfinder);
         cameras << camera;
-        imageCaptors << imageCapture;
+        // imageCaptors << imageCapture;
 
-        widgetStack->addWidget(viewfinder);
+        // widgetStack->addWidget(viewfinder);
     } else {
         for (int i=0; i < cameraDevices.size(); i++) {
              QCameraInfo device = cameraDevices.at(i);
@@ -105,7 +110,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
              widgetStack->addWidget(viewfinder);
         }
     } 
-
+    */
     widgetStack->setCurrentIndex(cameraIndex);
 
     QWidget *menuWidget = new QWidget;
@@ -154,7 +159,7 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
     dialogLayout->addWidget(menuWidget);
 
     currentCamera = (QCamera *) cameras.at(cameraIndex);
-    currentImageCaptor = (QCameraImageCapture *) imageCaptors.at(cameraIndex);
+    // currentImageCaptor = (QCameraImageCapture *) imageCaptors.at(cameraIndex);
     currentCamera->start();
 }
 
@@ -173,8 +178,10 @@ void TupBasicCameraInterface::closeEvent(QCloseEvent *event)
 
     Q_UNUSED(event)
 
+    /*
     if (currentCamera->state() == QCamera::ActiveState)
         currentCamera->stop();
+    */
 
     QDir dir(path);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
@@ -223,13 +230,13 @@ void TupBasicCameraInterface::takePicture()
     QString imagePath = path + "/" + prev + QString::number(counter) + ".jpg";
 
     // on half pressed shutter button
-    currentCamera->searchAndLock();
+    // currentCamera->searchAndLock();
 
     // on shutter button pressed
-    currentImageCaptor->capture(imagePath);
+    // currentImageCaptor->capture(imagePath);
 
     // on shutter button released
-    currentCamera->unlock();
+    // currentCamera->unlock();
 }
 
 void TupBasicCameraInterface::changeCameraDevice(int index)
@@ -241,7 +248,7 @@ void TupBasicCameraInterface::changeCameraDevice(int index)
     currentCamera->stop();
     widgetStack->setCurrentIndex(index);
     currentCamera = (QCamera *) cameras.at(index);
-    currentImageCaptor = (QCameraImageCapture *) imageCaptors.at(index);
+    // currentImageCaptor = (QCameraImageCapture *) imageCaptors.at(index);
 
     currentCamera->start();
 }

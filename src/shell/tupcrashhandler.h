@@ -60,7 +60,6 @@ extern "C"
 #include <QTemporaryFile>
 #include <QProcess>
 #include <QTranslator>
-#include <QDesktopWidget>
 #include <csignal>
 #include <cstdio>
 

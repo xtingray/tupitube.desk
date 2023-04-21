@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += widgets svgwidgets opengl core gui svg xml network core5compat
 TEMPLATE = lib
 TARGET = tupistore
 
@@ -29,9 +29,9 @@ contains("DEFINES", "ADD_HEADERS") {
     headers.path = /include/tupistore/
 }
 
-HEADERS += tuplayer.h \
-           tuppalettedocument.h \
+HEADERS += tuppalettedocument.h \
            tupframe.h \
+           tuplayer.h \
            tupprojectrequest.h \
            tupscene.h \
            tupproject.h \
@@ -78,9 +78,9 @@ HEADERS += tuplayer.h \
            tuplipsync.h \
            tupprojectscanner.h
 
-SOURCES += tuplayer.cpp \
-           tuppalettedocument.cpp \
+SOURCES += tuppalettedocument.cpp \
            tupframe.cpp \
+           tuplayer.cpp \
            tupprojectrequest.cpp \
            tupscene.cpp \
            tupproject.cpp \

@@ -51,6 +51,7 @@
 #include <QHBoxLayout>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QActionGroup>
 
 /**
  * This class provides a search line for filtering the items in

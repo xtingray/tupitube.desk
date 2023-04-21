@@ -115,11 +115,11 @@ void RasterColorWidget::setupColorDisplay()
 {
     QFrame *topPanel = new QFrame(this);
     QBoxLayout *generalLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    generalLayout->setMargin(0);
+    // generalLayout->setMargin(0);
     topPanel->setLayout(generalLayout);
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    mainLayout->setMargin(0);
+    // mainLayout->setMargin(0);
     mainLayout->setSpacing(1);
 
     mainLayout->addWidget(new QWidget());
@@ -162,7 +162,7 @@ void RasterColorWidget::setupColorDisplay()
     generalLayout->addWidget(new TSeparator(Qt::Horizontal));    
 
     QBoxLayout *bgLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    bgLayout->setMargin(0);
+    // bgLayout->setMargin(0);
     bgLayout->setSpacing(1);
 
     bgLayout->addWidget(new QWidget());

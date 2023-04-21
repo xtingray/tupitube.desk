@@ -103,7 +103,7 @@ void EyeDropper::release(const TupInputDeviceInformation *, TupBrushManager *, T
 QColor EyeDropper::grabColorFromScreen() const
 {
     const QPoint p = QCursor::pos();
-    const QPixmap pixmap = QGuiApplication::primaryScreen()->grabWindow(desktop->winId(), p.x(), p.y(), 1, 1);
+    const QPixmap pixmap = QGuiApplication::primaryScreen()->grabWindow(p.x(), p.y(), 1, 1);
     QImage i = pixmap.toImage();
 
     return i.pixel(0, 0);

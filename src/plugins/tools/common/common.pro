@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += widgets svgwidgets opengl core gui svg xml network
 TEMPLATE = lib
 TARGET = tupiplugincommon
 

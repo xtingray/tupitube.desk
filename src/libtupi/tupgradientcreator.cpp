@@ -40,7 +40,7 @@ TupGradientCreator::TupGradientCreator(QWidget *parent) : QFrame(parent)
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::LeftToRight);
 
     layout->setSpacing(2);
-    layout->setMargin(2);
+    // layout->setMargin(2);
     setLayout(layout);
     
     QBoxLayout *selectorAndViewer = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -82,7 +82,7 @@ TupGradientCreator::TupGradientCreator(QWidget *parent) : QFrame(parent)
     subLayout->addWidget(spinControl);
     
     subLayout->setSpacing(2);
-    subLayout->setMargin(2);
+    // subLayout->setMargin(2);
     
     setFrameStyle(QFrame::StyledPanel);
     
@@ -177,5 +177,6 @@ QSize TupGradientCreator::sizeHint() const
 {
     QSize size = QFrame::sizeHint();
     
-    return size.expandedTo(QApplication::globalStrut());
+    // return size.expandedTo(QApplication::globalStrut());
+    return size;
 }

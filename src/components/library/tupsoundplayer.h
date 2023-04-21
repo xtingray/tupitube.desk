@@ -82,7 +82,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void startPlayer();
         void positionChanged(qint64 value);
         void durationChanged(qint64 value);
-        void stateChanged(QMediaPlayer::State state);
+        void stateChanged(QMediaPlayer::PlaybackState state);
         void updateSoundPos(int pos);
         void updateLoopState();
         void muteAction();

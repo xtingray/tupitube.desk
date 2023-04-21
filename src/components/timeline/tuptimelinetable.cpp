@@ -614,7 +614,7 @@ void TupTimeLineTable::updateFrameState(int layerIndex, int frameIndex, bool val
 
 void TupTimeLineTable::mousePressEvent(QMouseEvent *event)
 {
-    int frameIndex = columnAt(event->x());
+    int frameIndex = columnAt(event->position().x());
 
     int total = columnCount();
     if ((frameIndex >= total - 11) && (frameIndex <= total - 1)) {
@@ -772,7 +772,7 @@ void TupTimeLineTable::keyPressEvent(QKeyEvent *event)
     QTableWidget::keyPressEvent(event);
 }
 
-void TupTimeLineTable::enterEvent(QEvent *event)
+void TupTimeLineTable::enterEvent(QEnterEvent *event)
 {
     if (!hasFocus())
         setFocus();

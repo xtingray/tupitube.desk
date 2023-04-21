@@ -49,7 +49,7 @@ TupPaletteParser::~TupPaletteParser()
 bool TupPaletteParser::processPalette()
 {
     if (readNextStartElement()) {
-        if (name() == "Palette"){
+         if (name() == QString("Palette")){
             paletteName = attributes().value("name").toString();
 
             isEditable = false;
@@ -57,7 +57,7 @@ bool TupPaletteParser::processPalette()
                 isEditable = true;
 
             while (readNextStartElement()) {
-                if (name() == "Color") {
+                if (name() == QString("Color")) {
                     QColor c = QColor(attributes().value("colorName"));
                     c.setAlpha(attributes().value("alpha").toInt());
 
@@ -69,7 +69,7 @@ bool TupPaletteParser::processPalette()
                         #endif
                         return false;
                     }
-                } else if (name() == "Gradient") {
+                } else if (name() == QString("Gradient")) {
                     if (gradient)
                         delete gradient;
 
@@ -110,7 +110,7 @@ bool TupPaletteParser::processPalette()
                     }
 
                     gradient->setSpread(spread);
-                } else if (name() == "Stop") {
+                } else if (name() == QString("Stop")) {
                     QColor c(attributes().value("colorName") );
                     c.setAlpha(attributes().value("alpha").toInt());
                     gradientStops << qMakePair((qreal)(attributes().value("value").toDouble()), c);

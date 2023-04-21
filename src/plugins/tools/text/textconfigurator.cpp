@@ -141,7 +141,7 @@ QWidget * TextConfigurator::createTransformationTools()
     connect(yPosField, SIGNAL(valueChanged(int)), this, SIGNAL(yPosChanged(int)));
 
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    xLayout->setMargin(0);
+    // xLayout->setMargin(0);
     xLayout->setSpacing(0);
     xLayout->addStretch();
     xLayout->addWidget(xLabel);
@@ -149,7 +149,7 @@ QWidget * TextConfigurator::createTransformationTools()
     xLayout->addStretch();
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    yLayout->setMargin(0);
+    // yLayout->setMargin(0);
     yLayout->setSpacing(0);
     yLayout->addStretch();
     yLayout->addWidget(yLabel);
@@ -179,7 +179,7 @@ QWidget * TextConfigurator::createTransformationTools()
     connect(angleField, SIGNAL(valueChanged(int)), this, SIGNAL(rotationChanged(int)));
 
     QBoxLayout *rotationBlockLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    rotationBlockLayout->setMargin(0);
+    // rotationBlockLayout->setMargin(0);
     rotationBlockLayout->setSpacing(10);
     rotationBlockLayout->addStretch();
     rotationBlockLayout->addWidget(rotationLabel);
@@ -203,7 +203,7 @@ QWidget * TextConfigurator::createTransformationTools()
     connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
 
     QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    factorXLayout->setMargin(0);
+    // factorXLayout->setMargin(0);
     factorXLayout->setSpacing(0);
     factorXLayout->addStretch();
     factorXLayout->addWidget(factorXLabel);
@@ -222,7 +222,7 @@ QWidget * TextConfigurator::createTransformationTools()
     connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
 
     QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    factorYLayout->setMargin(0);
+    // factorYLayout->setMargin(0);
     factorYLayout->setSpacing(0);
     factorYLayout->addStretch();
     factorYLayout->addWidget(factorYLabel);

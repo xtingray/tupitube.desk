@@ -39,7 +39,7 @@
 #include "tglobal.h"
 
 #include <QItemDelegate>
-#include <QRegExp>
+// #include <QRegularExpression>
 #include <QtGui>
 
 class TUPITUBE_EXPORT TupTreeDelegate : public QItemDelegate

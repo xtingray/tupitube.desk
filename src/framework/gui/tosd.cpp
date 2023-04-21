@@ -40,7 +40,7 @@
 
 TOsd *TOsd::s_osd = 0;
 
-TOsd::TOsd(QWidget * parent) : QWidget(parent), m_timer(0)
+TOsd::TOsd(QWidget *parent) : QWidget(parent), m_timer(0)
 {
     TCONFIG->beginGroup("Theme");
     uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
@@ -190,8 +190,9 @@ void TOsd::display(Level level, const QString &message,int ms)
 
 TOsd *TOsd::self()
 {
-    if (! s_osd)
-        s_osd = new TOsd(QApplication::desktop());
+    if (!s_osd)
+        s_osd = new TOsd();
+        //  s_osd = new TOsd(QApplication::desktop());
 
     return s_osd;
 }

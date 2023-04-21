@@ -244,7 +244,7 @@ void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
     }
 
     if (!gScene->userIsDrawing() && (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier))) {
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
 
@@ -285,7 +285,7 @@ void TupPaintAreaBase::tabletEvent(QTabletEvent *event)
 }
 */
 
-void TupPaintAreaBase::enterEvent(QEvent *event)
+void TupPaintAreaBase::enterEvent(QEnterEvent *event)
 {
     /*
     #ifdef TUP_DEBUG

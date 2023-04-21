@@ -39,7 +39,7 @@ TCircleButtonBar::TCircleButtonBar(int radio, QWidget *parent) : QFrame(parent),
 {    
     m_layout = new QBoxLayout(QBoxLayout::LeftToRight, this);
     m_layout->setSpacing(0);
-    m_layout->setMargin(0);
+    // m_layout->setMargin(0);
 
     m_mask = QPixmap((m_buttonCount+1)*m_radio+m_offset*2+m_offset/2, m_radio+10);
     m_mask.fill(Qt::transparent);

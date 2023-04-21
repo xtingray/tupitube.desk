@@ -40,16 +40,18 @@
 
 #include <QtGui>
 #include <QWidget>
-#include <QAbstractVideoSurface>
-#include <QVideoRendererControl>
-#include <QVideoSurfaceFormat>
+// #include <QAbstractVideoSurface>
+#include <QVideoSink>
+#include <QVideoFrame>
+// #include <QVideoRendererControl>
+// #include <QVideoSurfaceFormat>
 
 class TUPITUBE_EXPORT VideoIF {
     public:
         virtual void updateVideo() = 0;
 };
 
-class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
+class TUPITUBE_EXPORT TupVideoSurface: public QVideoSink // QAbstractVideoSurface
 {
     Q_OBJECT
 
@@ -57,9 +59,10 @@ class TUPITUBE_EXPORT TupVideoSurface: public QAbstractVideoSurface
         TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &displaySize, bool isScaled, int orientation, QObject *parent = nullptr);
         ~TupVideoSurface();
 
-        bool start(const QVideoSurfaceFormat &format);
+        bool start(/* const QVideoSurfaceFormat &format */);
         bool present(const QVideoFrame &frame);
-        QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType = QAbstractVideoBuffer::NoHandle) const;
+        // QList<QVideoFrameFormat::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType = QAbstractVideoBuffer::NoHandle) const;
+        QList<QVideoFrameFormat::PixelFormat> supportedPixelFormats(/* QAbstractVideoBuffer::HandleType handleType = QAbstractVideoBuffer::NoHandle*/ ) const;
         void paint(QPainter *painter);
         void drawGrid(bool flag);
         void drawActionSafeArea(bool flag);

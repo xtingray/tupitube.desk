@@ -1,3 +1,4 @@
+QT += openglwidgets
 TEMPLATE = app
 CONFIG -= moc
 TARGET = opengl 

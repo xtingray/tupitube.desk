@@ -663,14 +663,14 @@ bool TupExposureTable::edit(const QModelIndex & index, EditTrigger trigger, QEve
 
 void TupExposureTable::mousePressEvent(QMouseEvent *event)
 {
-    int frameIndex = rowAt(event->y());
+    int frameIndex = rowAt(event->position().y());
     int layerIndex = currentLayer();
     if (event->button() == Qt::RightButton) {
         if (frameIndex <= header->lastFrame(layerIndex)) {
             int frames = selectedItems().count();
             if (frames == 1) {
                 if (singleMenu)
-                    singleMenu->exec(event->globalPos());
+                    singleMenu->exec(event->globalPosition().toPoint());
             }
             /* SQA: PopUp menu for multiple selection
             } else if (frames > 1) {
@@ -691,7 +691,7 @@ void TupExposureTable::mousePressEvent(QMouseEvent *event)
 void TupExposureTable::mouseMoveEvent(QMouseEvent *event)
 {
     int layerIndex = currentLayer();
-    int frameIndex = rowAt(event->y()); 
+    int frameIndex = rowAt(event->position().y()); 
     QList<int> layers = currentSelection();
 
     if (!layers.isEmpty()) {
@@ -884,7 +884,7 @@ void TupExposureTable::notifyCellClicked(int frame, int layer)
     emit cellClicked(frame, layer);
 }
 
-void TupExposureTable::enterEvent(QEvent *event)
+void TupExposureTable::enterEvent(QEnterEvent *event)
 {
     if (!hasFocus())
         setFocus();

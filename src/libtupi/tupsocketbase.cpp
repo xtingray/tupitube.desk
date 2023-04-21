@@ -65,7 +65,8 @@ void TupSocketBase::send(const QString &message)
 {
     if (state() == QAbstractSocket::ConnectedState) {
         QTextStream stream(this);
-        stream.setCodec("UTF-8");
+        stream.setEncoding(QStringConverter::Utf8);
+        // stream.setCodec("UTF-8");
         // stream << message.toLocal8Bit().toBase64() << "%%" << endl;
         stream << message.toUtf8().toBase64() << "%%" << Qt::endl;
     } else {

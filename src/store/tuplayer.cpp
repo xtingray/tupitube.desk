@@ -37,6 +37,10 @@
 #include "tupscene.h"
 #include "tupprojectloader.h"
 
+TupLayer::TupLayer()
+{
+}
+
 TupLayer::TupLayer(TupScene *parentScene, int pos)
 {
     scene = parentScene;

@@ -93,7 +93,8 @@ void TupSerializer::loadProperties(QGraphicsItem *item, const QXmlStreamAttribut
     TupSvg2Qt::parsePointF(atts.value("pos").toString(), pos);
 
     item->setPos(pos);
-    item->setEnabled(atts.value("pos") != "0"); // default true
+    // item->setEnabled(atts.value("pos") != "0"); // default true
+    item->setEnabled(true);
     item->setFlags(QGraphicsItem::GraphicsItemFlags(atts.value("flags").toInt()));
     item->setData(TupGraphicObject::Rotate, atts.value("rotation").toInt());
     double sx = atts.value("scale_x").toDouble();

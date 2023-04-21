@@ -126,7 +126,7 @@ class TUPITUBE_EXPORT TupTimeLineTable : public QTableWidget
         void mouseMoveEvent(QMouseEvent *event);
 
         void keyPressEvent(QKeyEvent *event);
-        void enterEvent(QEvent *event);
+        void enterEvent(QEnterEvent *event);
         void leaveEvent(QEvent *event);
         
     private slots:

@@ -47,7 +47,12 @@
 #include <QSpinBox>
 #include <QColorDialog>
 
+/*
 TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString &resolution, QCameraInfo cameraDevice, 
+                                       const QSize cameraSize, int i, QWidget *parent) : QDialog(parent)
+*/
+
+TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString &resolution,
                                        const QSize cameraSize, int i, QWidget *parent) : QDialog(parent)
 {
     #ifdef TUP_DEBUG
@@ -83,12 +88,13 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
 
     randomPath();
 
-    camera = new QCamera(cameraDevice);
-    imageCapture = new QCameraImageCapture(camera);
-    camera->setCaptureMode(QCamera::CaptureStillImage);
+    camera = new QCamera();
+    // camera = new QCamera(cameraDevice);
+    // imageCapture = new QCameraImageCapture(camera);
+    // camera->setCaptureMode(QCamera::CaptureStillImage);
 
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(error(QCamera::Error)));
-    connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
+    // connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
 
     cameraScreen = new TupReflexRenderArea(displaySize);
 
@@ -265,18 +271,18 @@ void TupReflexInterface::takePicture()
         prev += "0";
     QString imagePath = path + "/" + prev + QString::number(counter) + ".jpg";
 
-    camera->load();
+    // camera->load();
     camera->start();
 
     // on half pressed shutter button
-    camera->searchAndLock();
+    // camera->searchAndLock();
     // on shutter button pressed
-    imageCapture->capture(imagePath);
+    // imageCapture->capture(imagePath);
     //on shutter button released
-    camera->unlock();
+    // camera->unlock();
 
     camera->stop();
-    camera->unload();
+    // camera->unload();
 
     // Take picture here
     counter++;
@@ -288,8 +294,8 @@ void TupReflexInterface::reset()
         qDebug() << "[TupReflexInterface::reset()]";
     #endif
 
-    if (camera->state() == QCamera::ActiveState)
-        camera->stop();
+    // if (camera->state() == QCamera::ActiveState)
+    //     camera->stop();
 
     QDir dir(path);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
@@ -309,7 +315,7 @@ void TupReflexInterface::error(QCamera::Error error)
     #ifdef TUP_DEBUG
         qDebug() << "[TupReflexInterface::error()] - Fatal Error: Camera error code -> " << error;
     #endif
-
+    /*
     switch (error) {
         case QCamera::NoError:
         {
@@ -336,6 +342,7 @@ void TupReflexInterface::error(QCamera::Error error)
             break;
         }
     };
+    */
 }
 
 void TupReflexInterface::imageSavedFromCamera(int id, const QString folder)

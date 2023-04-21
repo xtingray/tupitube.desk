@@ -77,10 +77,10 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
     }
     
     mainLayout->setSpacing(0);
-    mainLayout->setMargin(1);
+    // mainLayout->setMargin(1);
     
     buttonLayout->setSpacing(1);
-    buttonLayout->setMargin(1);
+    // buttonLayout->setMargin(1);
     buttonLayout->addStretch();
     int size = 16;
 

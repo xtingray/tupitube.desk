@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += widgets svgwidgets opengl core gui svg xml network core5compat
 CONFIG += plugin warn_on
 TEMPLATE = lib
 TARGET = tupifilltool

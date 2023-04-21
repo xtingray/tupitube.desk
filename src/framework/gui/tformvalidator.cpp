@@ -90,7 +90,8 @@ bool TFormValidator::validatesRegExp(const QString &regexp)
 
     foreach (QObject *child, m_parent->children()) {
              if (QLineEdit *line = qobject_cast<QLineEdit *>(child)) {
-                 line->setValidator(new QRegExpValidator(QRegExp(regexp), line));
+                 // line->setValidator(new QRegExpValidator(QRegExp(regexp), line));
+                 line->setValidator(new QRegularExpressionValidator(QRegularExpression(regexp), line));
                  ok = true;
              }
     }
@@ -144,7 +145,8 @@ bool TFormValidator::validatesRegExpOf(const QString &regexp, const QString &nam
     foreach (QObject *child, m_parent->children()) {
              if (child->objectName() == name) {
                  if (QLineEdit *line = qobject_cast<QLineEdit *>(child)) {
-                     line->setValidator(new QRegExpValidator(QRegExp(regexp), line));
+                     line->setValidator(new QRegularExpressionValidator(QRegularExpression(regexp), line));
+                     // line->setValidator(new QRegExpValidator(QRegExp(regexp), line));
                      ok = true;
                  }
              }
@@ -247,7 +249,8 @@ void TFormValidator::validatesRangeOf(int i, int e, QLineEdit *line)
 
 void TFormValidator::validatesRegExpOf(const QString &regexp, QLineEdit *line)
 {
-    line->setValidator(new QRegExpValidator(QRegExp(regexp), line));
+    // line->setValidator(new QRegExpValidator(QRegExp(regexp), line));
+    line->setValidator(new QRegularExpressionValidator(QRegularExpression(regexp), line));
     m_childs << line;
 }
 

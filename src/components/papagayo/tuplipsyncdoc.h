@@ -217,9 +217,9 @@ class TupLipsyncDoc : public QObject
         bool audioPlayerIsSet();
         void setPlayerPosition(real f);
         void playVoice();
-        void setPlayerNotifyInterval(int value);
+        // void setPlayerNotifyInterval(int value);
 
-        QMediaPlayer::State getAudioPlayerState();
+        QMediaPlayer::PlaybackState getAudioPlayerState();
         TupAudioExtractor * getAudioExtractor();
 
         int32 getDuration() { return audioDuration; }

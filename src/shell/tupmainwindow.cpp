@@ -73,7 +73,6 @@
 #include <QDomDocument>
 #include <QMessageBox>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QThread>
 #include <QClipboard>
 #include <QDesktopServices>

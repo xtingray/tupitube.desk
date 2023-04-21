@@ -51,18 +51,17 @@
 
 #include <QFile>
 #include <QTextStream>
-#include <QTextCodec>
+// #include <QTextCodec>
 #include <QMessageBox>
 #include <QDir>
 #include <QLocale>
 #include <QTranslator>
-#include <QDesktopWidget>
 #include <QThread>
 #include <QStyleFactory>
 
 int main(int argc, char ** argv)
 {
-    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    // QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     TupApplication application(argc, argv);
 
 #ifdef Q_OS_UNIX
@@ -180,8 +179,8 @@ int main(int argc, char ** argv)
         if (QFile::exists(langFile)) {
             // Loading localization files...
             QTranslator *translator = new QTranslator;
-            translator->load(langFile);
-            application.installTranslator(translator);
+            if (translator->load(langFile))
+                application.installTranslator(translator);
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[main.cpp] - Error: Can't open file -> " << langFile;

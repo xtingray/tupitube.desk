@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += widgets svgwidgets opengl core gui svg xml network
 CONFIG += plugin
 TEMPLATE = lib
 TARGET = tupigeometrictool

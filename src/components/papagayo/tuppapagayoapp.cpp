@@ -544,7 +544,7 @@ void TupPapagayoApp::openFile(QString filePath)
         mouthView->setDocument(document);
         customView->setDocument(document);
 
-        document->setPlayerNotifyInterval(17); // 60 fps
+        // document->setPlayerNotifyInterval(17); // 60 fps
         connect(document->getAudioPlayer(), SIGNAL(positionChanged(qint64)),
                 waveformView, SLOT(positionChanged(qint64)));
         connect(document->getAudioPlayer(), SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),

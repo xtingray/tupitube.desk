@@ -105,7 +105,6 @@ void TNodeGroup::syncNodesFromParent()
     if (nodeParentItem) {
         if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem))
             syncNodes(nodeParentItem->sceneTransform().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
-            // syncNodes(nodeParentItem->sceneMatrix().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
     }
 }
 
@@ -203,8 +202,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
     if (pathItem) {
         qDeleteAll(nodes);
         nodes.clear();
-        
-        // QPainterPath path = pathItem->sceneMatrix().map(pathItem->path());
+
         QPainterPath path = pathItem->sceneTransform().map(pathItem->path());
         saveParentProperties();
         int index = 0;

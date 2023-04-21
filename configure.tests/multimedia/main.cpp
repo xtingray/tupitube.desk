@@ -33,36 +33,18 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-/*
-#include <stdio.h>
-#include <string.h>
-#include "zlib.h"
-*/
-
-#include <QCameraInfo>
+#include <QCameraDevice>
+#include <QMediaDevices>
 #include <QCamera>
-#include <QCameraImageCapture>
-#include <QCameraViewfinder>
+#include <QDebug>
 
 int main()
 {
-    // QByteArray cameraDevice = QCamera::availableDevices()[0];
-
-    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-    // foreach (const QCameraInfo &cameraInfo, cameras)
-    //     qDebug() << cameraInfo.deviceName();
-
-    if (cameras.length() > 0) {
-        QCamera *camera = new QCamera(cameras.at(0));
-        QCameraViewfinder *viewFinder = new QCameraViewfinder();
-        camera->setViewfinder(viewFinder);
-
-        camera->setCaptureMode(QCamera::CaptureStillImage);
-        new QCameraImageCapture(camera);
-
-        if (camera->state() == QCamera::ActiveState)
-            camera->stop();
- 
-        camera->start();
+    const QList<QCameraDevice> cameras = QMediaDevices::videoInputs();
+    for(const QCameraDevice &cameraDevice : cameras) {
+        if (cameraDevice.description() == "mycamera") {
+            QCamera *camera = new QCamera(cameraDevice);
+            qDebug() << camera->isActive();  
+        }
     }
 }

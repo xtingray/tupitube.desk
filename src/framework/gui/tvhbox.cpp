@@ -42,7 +42,7 @@ TVHBox::TVHBox(QWidget *parent, Qt::Orientation o) : QFrame(parent)
     else
         m_pLayout = new QHBoxLayout(this);
     
-    m_pLayout->setMargin(1);
+    // m_pLayout->setMargin(1);
     m_pLayout->setSpacing(1);
 }
 
@@ -53,7 +53,7 @@ TVHBox::TVHBox(QWidget *parent, bool isVertical) : QFrame(parent)
     else 
         m_pLayout = new QHBoxLayout(this);
     
-    m_pLayout->setMargin(1);
+    // m_pLayout->setMargin(1);
     m_pLayout->setSpacing(1);
 }
 

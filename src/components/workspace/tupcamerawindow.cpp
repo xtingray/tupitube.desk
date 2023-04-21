@@ -35,20 +35,24 @@
 
 #include "tupcamerawindow.h"
 
-#include <QCameraExposure>
-#include <QCameraFocus>
-#include <QCameraInfo>
+// #include <QCameraExposure>
+// #include <QCameraFocus>
+// #include <QCameraInfo>
 #include <QMessageBox>
 
+/*
 TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSize &displaySize, QCameraImageCapture *capture,
+                                 const QString &path, QWidget *parent) : QWidget(parent)
+*/
+TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSize &displaySize,
                                  const QString &path, QWidget *parent) : QWidget(parent)
 {
     setFixedSize(displaySize + QSize(1, 1));
 
     picturesPath = path;
     camera = input;
-    imageCapture = capture;
-    camera->setCaptureMode(QCamera::CaptureStillImage);
+    // imageCapture = capture;
+    // camera->setCaptureMode(QCamera::CaptureStillImage);
 
     /*
     QCameraExposure *exposure = camera->exposure();
@@ -59,29 +63,29 @@ TupCameraWindow::TupCameraWindow(QCamera *input, const QSize &camSize, const QSi
     */
 
     connect(camera, SIGNAL(error(QCamera::Error)), this, SLOT(error(QCamera::Error)));
-    connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
+    // connect(imageCapture, SIGNAL(imageSaved(int, const QString)), this, SLOT(imageSavedFromCamera(int, const QString)));
 
-    QMediaService *service = camera->service();
+    // QMediaService *service = camera->service();
 
     // QVideoEncoderControl *encoderControl = service->requestControl<QVideoEncoderControl*>();
     // QVideoEncoderSettings settings = encoderControl->videoSettings();
     // settings.setResolution(camSize);
     // encoderControl->setVideoSettings(settings);
 
-    QVideoRendererControl *rendererControl = service->requestControl<QVideoRendererControl*>();
+    // QVideoRendererControl *rendererControl = service->requestControl<QVideoRendererControl*>();
 
-    bool isScaled = false; 
-    if (camSize != displaySize)
-        isScaled = true; // Camera Size is bigger than Display Size
+    // bool isScaled = false;
+    // if (camSize != displaySize)
+    //     isScaled = true; // Camera Size is bigger than Display Size
 
-    QCameraInfo cameraInfo(*input); 
+    // QCameraInfo cameraInfo(*input);
 
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWindow()] - Camera Orientation: " << cameraInfo.orientation();
-    #endif
+    // #ifdef TUP_DEBUG
+    //     qDebug() << "[TupCameraWindow()] - Camera Orientation: " << cameraInfo.orientation();
+    // #endif
 
-    videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, cameraInfo.orientation(), this);
-    rendererControl->setSurface(videoSurface);
+    // videoSurface = new TupVideoSurface(this, this, displaySize, isScaled, cameraInfo.orientation(), this);
+    // rendererControl->setSurface(videoSurface);
 }
 
 TupCameraWindow::~TupCameraWindow()
@@ -104,8 +108,8 @@ void TupCameraWindow::stopCamera()
         qDebug() << "[TupCameraWindow::stopCamera()]";
     #endif
 
-    if (camera->state() == QCamera::ActiveState)
-        camera->stop();
+    // if (camera->state() == QCamera::ActiveState)
+    //     camera->stop();
 }
 
 void TupCameraWindow::reset()
@@ -114,11 +118,11 @@ void TupCameraWindow::reset()
         qDebug() << "[TupCameraWindow::reset()]";
     #endif
 
-    if (videoSurface)
-        videoSurface->stop();
+    // if (videoSurface)
+    //     videoSurface->stop();
 
-    if (camera->state() == QCamera::ActiveState)
-        camera->stop();
+    // if (camera->state() == QCamera::ActiveState)
+    //     camera->stop();
 
     QDir dir(picturesPath);
     foreach (QString file, dir.entryList(QStringList() << "*.jpg")) {
@@ -139,6 +143,7 @@ void TupCameraWindow::error(QCamera::Error error)
         qDebug() << "[TupCameraWindow::error()] - error -> " << error;
     #endif
 
+    /*
     switch (error) {
         case QCamera::NoError:
         {
@@ -165,6 +170,7 @@ void TupCameraWindow::error(QCamera::Error error)
             break;
         }
     };
+    */
 }
 
 void TupCameraWindow::updateVideo()
@@ -176,10 +182,10 @@ void TupCameraWindow::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-    QPainter painter(this);
+    // QPainter painter(this);
 
-    if (videoSurface && videoSurface->isActive())
-        videoSurface->paint(&painter);
+    // if (videoSurface && videoSurface->isActive())
+    //     videoSurface->paint(&painter);
 }
 
 void TupCameraWindow::takePicture(int i)
@@ -196,11 +202,11 @@ void TupCameraWindow::takePicture(int i)
     QString imagePath = picturesPath + "/" + prev + QString::number(i) + ".jpg";
 
     // on half pressed shutter button
-    camera->searchAndLock();
+    // camera->searchAndLock();
     // on shutter button pressed
-    imageCapture->capture(imagePath);
+    // imageCapture->capture(imagePath);
     // on shutter button released
-    camera->unlock();
+    // camera->unlock();
 
     counter = i;
 }

@@ -46,6 +46,7 @@
 #include <QFileDialog>
 #include <QNetworkAccessManager>
 #include <QDesktopServices>
+#include <QRegularExpression>
 
 TupGeneralPreferences::TupGeneralPreferences()
 {
@@ -336,11 +337,15 @@ void TupGeneralPreferences::sendRegisterRequest()
 
     QString email = emailEdit->text().toLower();
     if (!email.isEmpty()) {
+        // QRegExp mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
+        // mailREX.setCaseSensitivity(Qt::CaseInsensitive);
+        // mailREX.setPatternSyntax(QRegExp::RegExp);
+        // if (mailREX.exactMatch(email)) {
+
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        QRegExp mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b");
-        mailREX.setCaseSensitivity(Qt::CaseInsensitive);
-        mailREX.setPatternSyntax(QRegExp::RegExp);
-        if (mailREX.exactMatch(email)) {
+        QRegularExpression mailREX("\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", QRegularExpression::CaseInsensitiveOption);
+        QRegularExpressionMatch match = mailREX.match(email);
+        if (match.hasMatch()) {
             registerButton->setEnabled(false);
             emailEdit->setText(email);
             QString url = TUPITUBE_URL + QString("/api/?a=register&e=" + email);

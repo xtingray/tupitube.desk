@@ -158,9 +158,9 @@ void TSlider::mousePressEvent(QMouseEvent *event)
 
     int pos = -1;
     if (sliderOrientation == Qt::Vertical)
-        pos = event->y();
+        pos = event->position().y();
     else
-        pos = event->x();
+        pos = event->position().x();
 
     calculateNewPosition(pos);
 }
@@ -172,9 +172,9 @@ void TSlider::mouseMoveEvent(QMouseEvent *event)
 
     int pos = -1;
     if (sliderOrientation == Qt::Vertical)
-        pos = event->y();
+        pos = event->position().y();
     else
-        pos = event->x();
+        pos = event->position().x();
 
     calculateNewPosition(pos);
 }

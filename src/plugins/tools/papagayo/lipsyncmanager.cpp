@@ -77,7 +77,7 @@ LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setAlignment(Qt::AlignHCenter);
-    buttonLayout->setMargin(0);
+    // buttonLayout->setMargin(0);
     buttonLayout->addWidget(openButton);
     buttonLayout->addSpacing(5);
     buttonLayout->addWidget(new TSeparator(Qt::Vertical));

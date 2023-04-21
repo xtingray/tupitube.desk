@@ -42,7 +42,8 @@
 #include <QString>
 #include <QPainterPath>
 #include <QPen>
-#include <QXmlAttributes>
+#include <QXmlDefaultHandler>
+// #include <QXmlAttributes>
 #include <QBrush>
 
 class TUPITUBE_EXPORT TupSvg2Qt

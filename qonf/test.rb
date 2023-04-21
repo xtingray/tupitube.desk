@@ -99,7 +99,7 @@ class Test
                       if conf.hasArgument?("with-quazip")
                          quazipDir = conf.argumentValue("with-quazip")
                          quazipLib = quazipDir + "/lib"
-                         extraLib  = "-L#{quazipLib} -lquazip1-qt5"
+                         extraLib  = "-L#{quazipLib} -lquazip1-qt6"
                          if RUBY_PLATFORM =~ /linux/ 
                              extraInclude = quazipDir + "/include"
                          elsif RUBY_PLATFORM =~ /darwin/
@@ -108,7 +108,7 @@ class Test
                          qmakeLine = "'LIBS += #{extraLib}'"
                          qmakeLine += " 'INCLUDEPATH += #{extraInclude}'"
                       else
-                         extraLib = "-lquazip1-qt5"
+                         extraLib = "-lquazip1-qt6"
                          qmakeLine += "'LIBS += #{extraLib}'"
                       end
                    else
@@ -167,12 +167,12 @@ class Test
         }
 
         if conf.hasArgument?("with-quazip")
-           config.addLib("-lquazip1-qt5")
+           config.addLib("-lquazip1-qt6")
         else
-           config.addLib("-lquazip1-qt5")
+           config.addLib("-lquazip1-qt6")
         end
 
-        # config.addLib("-lquazip1-qt5")
+        # config.addLib("-lquazip1-qt6")
         
         parser.defines.each { |define|
             config.addDefine(define)

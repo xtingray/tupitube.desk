@@ -18,6 +18,7 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QRegularExpression>
 
 LipsyncPhoneme::LipsyncPhoneme()
 {
@@ -102,7 +103,8 @@ void LipsyncWord::runBreakdown(const QString &lang, TupLipsyncDictionary *lipsyn
     clearPhonemes();
 
     QString msg = text;
-    msg.remove(QRegExp("[.,!?;-/()¿]"));
+    // msg.remove(QRegExp("[.,!?;-/()¿]"));
+    msg.remove(QRegularExpression("[.,!?;-/()¿]"));
     msg = msg.toUpper();
     if (lang == "en") { // English input
         QStringList	pronunciation;
@@ -354,7 +356,8 @@ void LipsyncPhrase::runBreakdown(QString lang, TupLipsyncDictionary *lipsyncDict
     QStringList strList = text.split(' ', Qt::SkipEmptyParts);
     for (int32 i = 0; i < strList.size(); i++) {
         QString input = strList.at(i);
-        input.remove(QRegExp("[.,!?;-/()¿]"));
+        // input.remove(QRegExp("[.,!?;-/()¿]"));
+        input.remove(QRegularExpression("[.,!?;-/()¿]"));
         if (input.length() == 0)
 			continue;
 
@@ -932,7 +935,7 @@ void TupLipsyncDictionary::loadDictionary(QFile *file)
         line = line.trimmed();
         if (line.isEmpty()) {
             continue;
-        } else if (line.at(0) == "#") {
+        } else if (line.at(0) == QString("#")) {
             continue; // skip comments
         }
 
@@ -956,14 +959,14 @@ void TupLipsyncDictionary::loadPhonemesFromFile(QFile *file, const QString &lang
 
         if (line.isEmpty()) {
             continue; // skip comments
-        } else if (line.at(0) == "#" || line.length() == 0) {
+        } else if (line.at(0) == QString("#") || line.length() == 0) {
             continue; // skip comments
         }
 
         QStringList strList = line.split(' ', Qt::SkipEmptyParts);
         if (strList.size() > 1) {
             if (lang.compare("en") == 0) {
-                if (strList[0] == ".") {
+                if (strList[0] == QString(".")) {
                     phonemesList << strList.at(1);
                 } else {
                     dictionaryToPhonemeMap.insert(strList.at(0), strList.at(1));
@@ -1037,7 +1040,8 @@ void TupLipsyncDoc::releaseAudio()
     while(!audioPlayer.isEmpty()) {
         QMediaPlayer *audio = audioPlayer.takeFirst();
         audio->stop();
-        audio->setMedia(QMediaContent());
+        // audio->setMedia(QMediaContent());
+        audio->setSource(QUrl());
         delete audio;
         audio = nullptr;
     }
@@ -1120,7 +1124,7 @@ void TupLipsyncDoc::openAudioFile(const QString &path)
 
     audioPath = path;
     audioPlayer << new QMediaPlayer;
-    audioPlayer.at(0)->setMedia(QUrl::fromLocalFile(audioPath));
+    audioPlayer.at(0)->setSource(QUrl::fromLocalFile(audioPath));
     if (audioPlayer.at(0)->error()) {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLipsyncDoc::openAudioFile()] - Fatal Error: Can't open audio -> " << path;
@@ -1237,9 +1241,9 @@ bool TupLipsyncDoc::audioPlayerIsSet()
     return false;
 }
 
-QMediaPlayer::State TupLipsyncDoc::getAudioPlayerState()
+QMediaPlayer::PlaybackState TupLipsyncDoc::getAudioPlayerState()
 {
-    return audioPlayer.at(0)->state();
+    return audioPlayer.at(0)->playbackState();
 }
 
 void TupLipsyncDoc::setPlayerPosition(real f)
@@ -1252,10 +1256,12 @@ void TupLipsyncDoc::playVoice()
     audioPlayer.at(0)->play();
 }
 
+/*
 void TupLipsyncDoc::setPlayerNotifyInterval(int value)
 {
     audioPlayer.at(0)->setNotifyInterval(value);
 }
+*/
 
 TupAudioExtractor* TupLipsyncDoc::getAudioExtractor()
 {

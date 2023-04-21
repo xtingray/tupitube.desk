@@ -144,13 +144,15 @@ QSize TCircleButton::sizeHint() const
     if (!empty || !h)
         h = qMax(h, sz.height());
 
-    return (style()->sizeFromContents(QStyle::CT_PushButton, &opt, QSize(w, h), this).expandedTo(QApplication::globalStrut()));
+    // return (style()->sizeFromContents(QStyle::CT_PushButton, &opt, QSize(w, h), this).expandedTo(QApplication::globalStrut()));
+    return (style()->sizeFromContents(QStyle::CT_PushButton, &opt, QSize(w, h), this).expandedTo(QSize(w, h)));
 }
 
 QStyleOptionButton TCircleButton::styleOption() const
 {
     QStyleOptionButton opt;
-    opt.init(this);
+    // opt.init(this);
+    opt.initFrom(this);
 
     if (isEnabled())
         opt.state |= QStyle::State_Enabled;

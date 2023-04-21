@@ -52,7 +52,7 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
     mainLayout->addStretch(1);
 
     mainLayout->setSpacing(10);
-    mainLayout->setMargin(3);
+    // mainLayout->setMargin(3);
 
     rewindButton = new TImageButton(QPixmap(THEME_DIR + "icons/rw.png"), 33, this, true);
     rewindButton->setToolTip(tr("Rewind"));

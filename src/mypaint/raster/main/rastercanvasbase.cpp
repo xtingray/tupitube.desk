@@ -150,7 +150,7 @@ void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier)) {
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
 
@@ -174,7 +174,7 @@ void RasterCanvasBase::keyReleaseEvent(QKeyEvent *event)
     QGraphicsView::keyReleaseEvent(event);
 }
 
-void RasterCanvasBase::enterEvent(QEvent *event)
+void RasterCanvasBase::enterEvent(QEnterEvent *event)
 {
     /*
     #ifdef TUP_DEBUG

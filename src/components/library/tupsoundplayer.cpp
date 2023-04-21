@@ -150,18 +150,19 @@ void TupSoundPlayer::setSoundParams(SoundResource params)
         while(!soundPlayer.isEmpty()) {
             disconnect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
             disconnect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
-            disconnect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+            disconnect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::PlaybackState)),
+                       this, SLOT(stateChanged(QMediaPlayer::PlaybackState)));
 
             QMediaPlayer *player = soundPlayer.takeFirst();
             player->stop();
-            player->setMedia(QMediaContent());
+            player->setSource(QUrl());
             delete player;
             player = nullptr;
         }
     }
 
     soundPlayer << new QMediaPlayer();
-    soundPlayer.at(0)->setMedia(QUrl::fromLocalFile(url));
+    soundPlayer.at(0)->setSource(QUrl::fromLocalFile(url));
 
     connect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
@@ -223,7 +224,7 @@ void TupSoundPlayer::startPlayer()
     initTime = initTime + " / " + totalTime;
     timer->setText(initTime);
 
-    soundPlayer.at(0)->setVolume(60);
+    // soundPlayer.at(0)->setVolume(60);
     soundPlayer.at(0)->play();
 }
 
@@ -289,7 +290,7 @@ void TupSoundPlayer::durationChanged(qint64 value)
     totalTime = soundTotalTime.toString(format);
 }
 
-void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
+void TupSoundPlayer::stateChanged(QMediaPlayer::PlaybackState state)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundPlayer::stateChanged()] - state -> " << state;
@@ -350,7 +351,7 @@ void TupSoundPlayer::resetMediaPlayer()
         while(!soundPlayer.isEmpty()) {
             QMediaPlayer *player = soundPlayer.takeFirst();
             player->stop();
-            player->setMedia(QMediaContent());
+            player->setSource(QUrl());
             delete player;
             player = nullptr;
         }

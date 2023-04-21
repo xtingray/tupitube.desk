@@ -140,7 +140,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 QGraphicsItem *item = nodeGroup->parentItem();
                 int position = frame->indexOf(item);
                 if (position >= 0) {
-                    // if (qgraphicsitem_cast<QGraphicsPathItem *>(item)) {
                         QString path = qgraphicsitem_cast<TupPathItem *>(item)->pathToString();
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
                                                   currentLayer, currentFrame, position,
@@ -148,7 +147,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                                                   TupProjectRequest::EditNodes, path);
                         emit requested(&event);
                         nodeGroup->clearChangedNodes();
-                    // }
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - Fatal Error: Invalid position -> " << position;

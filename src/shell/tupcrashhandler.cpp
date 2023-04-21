@@ -41,6 +41,9 @@
 
 #include <QScreen>
 
+#include <QScreen>
+#include <QRegularExpression>
+
 TupCrashHandler *TupCrashHandler::m_instance = 0;
 
 void crashTrapper(int sig);
@@ -291,7 +294,8 @@ void crashTrapper(int sig)
         bt = runCommand(SUDO, parameters);
 
         // clean up
-        bt.remove(QRegExp("\\(no debugging symbols found\\)"));
+        static QRegularExpression re("\\(no debugging symbols found\\)");
+        bt.remove(re);
         bt = bt.simplified();
 
         QStringList argument;

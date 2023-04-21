@@ -49,7 +49,7 @@ class QMake
     # This method check if the current version of Qt is valid for TupiTube Desk compilation    
     def findQMake(minqtversion, verbose, qtdir)
         command = ""
-        ["qmake", "qmake-qt5"].each do |path|
+        ["qmake", "qmake6"].each do |path|
 
             Info.info << "Testing for #{path}... "
 

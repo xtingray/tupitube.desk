@@ -100,7 +100,7 @@ void TupConfigurationArea::shrink()
     QMainWindow *mainWindow = dynamic_cast<QMainWindow *>(parentWidget());
     if (!mainWindow || !widget()) {
         #ifdef TUP_DEBUG
-            qDebug() << "TupConfigurationArea::shrink() - Fatal Error: QMainWindow is NULL!";
+            qDebug() << "[TupConfigurationArea::shrink()] - Fatal Error: QMainWindow is NULL!";
         #endif
         return;
     }
@@ -126,12 +126,20 @@ void TupConfigurationArea::shrink()
         hOffset = height() / 2;
     }
 
+    /*
     QMouseEvent press(QEvent::MouseButtonPress,
-                      mapToParent( QPoint(this->x(), this->y()))/2 + QPoint(wOffset, hOffset),
+                      mapToParent(QPoint(this->x(), this->y()))/2 + QPoint(wOffset, hOffset),
                       Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    */
 
-    if (! QApplication::sendEvent(mainWindow, &press))
-        qWarning("Fail pressing");
+    QMouseEvent press(QEvent::MouseButtonPress, mapToParent(QPoint(this->x(), this->y()))/2 + QPoint(wOffset, hOffset),
+                      mapToParent(QPoint(this->x(), this->y()))/2 + QPoint(wOffset, hOffset), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+
+    if (! QApplication::sendEvent(mainWindow, &press)) {
+        #ifdef TUP_DEBUG
+            qWarning()  << "[TupConfigurationArea::shrink()] - Warning: Fail while pressing!";
+        #endif
+    }
 
     qApp->processEvents();
 
@@ -145,31 +153,31 @@ void TupConfigurationArea::shrink()
 
     if (position == Qt::BottomDockWidgetArea) {
         df = widget()->height();
-        x1 = press.pos().x();
-        y1 = press.pos().y() + df;
+        x1 = press.position().x();
+        y1 = press.position().y() + df;
 
-        x2 = press.globalPos().x();
-        y2 = press.globalPos().y() + df;
+        x2 = press.globalPosition().x();
+        y2 = press.globalPosition().y() + df;
 
         xRelease = this->x();
         yRelease = 10;
     } else if (position == Qt::LeftDockWidgetArea) {
                df = widget()->width();
-               x1 = press.pos().x() - df;
-               y1 = press.pos().y();
+               x1 = press.position().x() - df;
+               y1 = press.position().y();
 
-               x2 = press.globalPos().x() - df;
-               y2 = press.globalPos().y();
+               x2 = press.globalPosition().x() - df;
+               y2 = press.globalPosition().y();
 
                xRelease = 10;
                yRelease = this->y();
     } else if (position == Qt::RightDockWidgetArea) {
                df = widget()->width();
-               x1 = press.pos().x() + df;
-               y1 = press.pos().y();
+               x1 = press.position().x() + df;
+               y1 = press.position().y();
 
-               x2 = press.globalPos().x() + df;
-               y2 = press.globalPos().y();
+               x2 = press.globalPosition().x() + df;
+               y2 = press.globalPosition().y();
 
                xRelease = mainWindow->width();
                yRelease = this->y();
@@ -188,8 +196,14 @@ void TupConfigurationArea::shrink()
 
     qApp->processEvents();
 
+    /*
     QMouseEvent release(QEvent::MouseButtonRelease,
                         QPoint(xRelease, yRelease),
+                        Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+    */
+
+    QMouseEvent release(QEvent::MouseButtonRelease,
+                        QPointF(xRelease, yRelease), QPointF(xRelease, yRelease),
                         Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 
     if (! QApplication::sendEvent(mainWindow, &release)) {

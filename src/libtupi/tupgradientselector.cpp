@@ -133,9 +133,9 @@ void TupGradientSelector::mousePressEvent(QMouseEvent *event)
     else if (!select) {
              int val;
              if (orientation() == Qt::Vertical)
-                 val = (maximum() - minimum()) * (height() - event->y()) / (height()) + minimum();
+                 val = (maximum() - minimum()) * (height() - event->position().y()) / (height()) + minimum();
              else
-                 val = (maximum() - minimum()) * (width() - event->x()) / width() + minimum();
+                 val = (maximum() - minimum()) * (width() - event->position().x()) / width() + minimum();
 
              if (!m_arrows.isEmpty())
                  addArrow(calcArrowPos(val), m_arrows[m_currentArrowIndex]->color());

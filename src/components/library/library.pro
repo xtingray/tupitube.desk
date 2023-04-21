@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network multimedia
+QT += widgets svgwidgets opengl core gui svg xml network multimedia
 TEMPLATE = lib
 TARGET = tupilibrary
 

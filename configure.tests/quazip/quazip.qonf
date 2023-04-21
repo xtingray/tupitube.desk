@@ -9,7 +9,7 @@
 		</defines>
                 <libs>
                         <lib path="-L/usr/local/lib" />
-                        <lib path="-lquazip1-qt5" />
+                        <lib path="-lquazip1-qt6" />
                 </libs>
 	</provide>
 	<solution>

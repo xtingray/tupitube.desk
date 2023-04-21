@@ -40,6 +40,7 @@
 #include "tactionmanager.h"
 
 #include <QAction>
+#include <QCursor>
 #include <QKeySequence>
 
 class TActionManager;

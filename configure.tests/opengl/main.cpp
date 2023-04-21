@@ -33,15 +33,15 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QApplication>
-#include <QGLFramebufferObject>
+// #include <QGLFramebufferObject>
 
 int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 	
-	QGLWidget w;
+	QOpenGLWidget w;
 	
 	
 	return app.exec();

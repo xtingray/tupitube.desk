@@ -90,7 +90,7 @@ void TupInputDeviceInformation::updateFromTabletEvent(QTabletEvent *event)
     tabletInfo.rotation = event->rotation();
     tabletInfo.tangentialPressure = event->tangentialPressure();
     
-    position = event->pos();
+    position = event->position();
     
     modifiers = event->modifiers();
 }

@@ -43,15 +43,20 @@
 #include <QDialog>
 #include <QCloseEvent>
 #include <QCamera>
-#include <QCameraInfo>
-#include <QCameraImageCapture>
+#include <QCameraDevice>
+// #include <QCameraInfo>
+// #include <QCameraImageCapture>
 
 class TUPITUBE_EXPORT TupReflexInterface : public QDialog
 {
     Q_OBJECT
 
     public:
+        /*
         TupReflexInterface(const QString &cameraDesc, const QString &resolution, QCameraInfo cameraDevice, 
+                           const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = nullptr);
+        */
+        TupReflexInterface(const QString &cameraDesc, const QString &resolution,
                            const QSize cameraSize = QSize(), int counter = 1, QWidget *parent = nullptr);
         ~TupReflexInterface();
 
@@ -80,7 +85,7 @@ class TUPITUBE_EXPORT TupReflexInterface : public QDialog
         void randomPath();
 
         QCamera *camera;
-        QCameraImageCapture *imageCapture;
+        // QCameraImageCapture *imageCapture;
         int counter;
         QString path;
 

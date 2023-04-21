@@ -67,9 +67,9 @@
 #include <QToolBar>
 #include <QPixmap>
 #include <QGridLayout>
-#include <QCameraImageCapture>
-#include <QCamera>
-#include <QCameraInfo>
+// #include <QCameraImageCapture>
+// #include <QCamera>
+// #include <QCameraInfo>
 
 TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringList &users, QWidget *parent):
                                  QMainWindow(parent)
@@ -1627,7 +1627,8 @@ void TupDocumentView::changeRulerOrigin(const QPointF &zero)
 QSize TupDocumentView::sizeHint() const
 {
     QSize size(parentWidget()->size());
-    return size.expandedTo(QApplication::globalStrut());
+    // return size.expandedTo(QApplication::globalStrut());
+    return size;
 }
 
 QSize TupDocumentView::workSpaceSize() const
@@ -2180,6 +2181,7 @@ void TupDocumentView::fullScreenRightClick()
 
 void TupDocumentView::cameraInterface()
 {
+    /*
     if (cameraMode) {
         TOsd::self()->display(TOsd::Warning, tr("Please, close current camera dialog first!"));
         return;
@@ -2206,14 +2208,12 @@ void TupDocumentView::cameraInterface()
         }
 
         // SQA: This lines should be enabled in some point at the future
-        /*
         QCameraInfo cameraDevice = cameraDevices[0];
         QCamera *camera = new QCamera(cameraDevice);
         camera->load();
         qDebug() << "[TupDocumentView::cameraInterface()] - Camera status -> " << camera->status();
         QCameraImageCapture *imageCapture = new QCameraImageCapture(camera);
         QList<QSize> resolutions = imageCapture->supportedResolutions();
-        */
 
         QList<QSize> resolutions;    
         resolutions << QSize(1920, 1080);
@@ -2250,10 +2250,6 @@ void TupDocumentView::cameraInterface()
                     connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                     connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode()));
 
-                    /* SQA: These connections don't work on Windows
-                    connect(dialog, &TupBasicCameraInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
-                    connect(dialog, &TupBasicCameraInterface::closed, this, &TupDocumentView::updateCameraMode);
-                    */
 
                     dialog->show();
                     dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
@@ -2264,11 +2260,6 @@ void TupDocumentView::cameraInterface()
 
                     connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                     connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode()));
-
-                    /* SQA: These connections don't work on Windows
-                    connect(dialog, &TupCameraInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
-                    connect(dialog, &TupCameraInterface::closed, this, &TupDocumentView::updateCameraMode);
-                    */
 
                     dialog->show();
                     dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
@@ -2282,11 +2273,6 @@ void TupDocumentView::cameraInterface()
                 connect(dialog, SIGNAL(pictureHasBeenSelected(int, const QString)), this, SLOT(insertPictureInFrame(int, const QString)));
                 connect(dialog, SIGNAL(closed()), this, SLOT(updateCameraMode()));
 
-                /* SQA: These connections don't work on Windows
-                connect(dialog, &TupReflexInterface::pictureHasBeenSelected, this, &TupDocumentView::insertPictureInFrame);
-                connect(dialog, &TupReflexInterface::closed, this, &TupDocumentView::updateCameraMode);
-                */
-
                 dialog->show();
                 dialog->move(static_cast<int> (screen->geometry().width() - dialog->width()) / 2,
                              static_cast<int> (screen->geometry().height() - dialog->height()) / 2);
@@ -2298,6 +2284,7 @@ void TupDocumentView::cameraInterface()
         // No devices connected!
         TOsd::self()->display(TOsd::Error, tr("No cameras detected"));
     }
+    */
 }
 
 void TupDocumentView::resizeProjectDimension(const QSize &size)

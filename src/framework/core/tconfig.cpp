@@ -200,7 +200,8 @@ void TConfig::setValue(const QString &key, const QVariant &value)
     QDomElement element = find(currentElementsGroup, key);
 
     if (!element.isNull()) {
-        if (value.canConvert(QVariant::StringList)) {
+        // if (value.canConvert(QVariant::StringList)) {
+        if (value.canConvert(QMetaType(QVariant::StringList))) {
             QStringList list = value.toStringList();
             element.setAttribute("value", list.join(";"));
         } else {
@@ -209,7 +210,8 @@ void TConfig::setValue(const QString &key, const QVariant &value)
     } else {
         element = domDocument.createElement(key);
 
-        if (value.canConvert(QVariant::StringList)) {
+        // if (value.canConvert(QVariant::StringList)) {
+        if (value.canConvert(QMetaType(QVariant::StringList))) {
             QStringList list = value.toStringList();
             element.setAttribute("value", list.join(";"));
         } else {

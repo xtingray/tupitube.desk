@@ -89,9 +89,10 @@ QRectF TupButtonItem::boundingRect() const
     
     QFontMetricsF fm(m_font);
     
-    width += fm.width(m_text);
+    // width += fm.width(m_text);
+    width += fm.horizontalAdvance(m_text);
     height += fm.height();
-    
+
     width += m_iconSize.width();
     height += m_iconSize.height();
     

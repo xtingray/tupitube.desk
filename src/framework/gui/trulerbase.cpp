@@ -213,7 +213,8 @@ void TRulerBase::setSeparation(int sep)
 void TRulerBase::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::RightButton)
-        emit displayMenu(this, event->globalPos());
+        emit displayMenu(this, event->globalPosition().toPoint());
+        // emit displayMenu(this, event->globalPos());
 }
 
 Qt::Orientation TRulerBase::orientation()

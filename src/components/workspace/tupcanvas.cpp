@@ -41,7 +41,7 @@
 #include <QColorDialog>
 #include <QIcon>
 #include <QBoxLayout>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QBuffer>

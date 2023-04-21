@@ -42,7 +42,9 @@
 #include <QLineEdit>
 #include <QIntValidator>
 #include <QDoubleValidator>
-#include <QRegExpValidator>
+// #include <QRegExpValidator>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 

@@ -38,7 +38,6 @@
 
 #include "tapplication.h"
 
-#include <QDesktopWidget>
 #include <QRect>
 #include <QEvent>
 #include <QMainWindow>

@@ -344,7 +344,8 @@ void TupCameraWidget::setLoop()
 QSize TupCameraWidget::sizeHint() const
 {
     QSize size = QWidget::sizeHint();
-    return size.expandedTo(QApplication::globalStrut());
+    // return size.expandedTo(QApplication::globalStrut());
+    return size;
 }
 
 void TupCameraWidget::doPlay()

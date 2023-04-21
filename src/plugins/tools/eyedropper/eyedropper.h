@@ -40,8 +40,6 @@
 #include "tuptoolplugin.h"
 #include "eyedroppersettings.h"
 
-#include <QDesktopWidget>
-
 class TUPITUBE_PLUGIN EyeDropper: public TupToolPlugin
 {
     Q_OBJECT
@@ -94,7 +92,6 @@ class TUPITUBE_PLUGIN EyeDropper: public TupToolPlugin
         TupGraphicsScene *scene;
         EyeDropperSettings *settings;
         TColorCell::FillType fillType;
-        const QDesktopWidget *desktop = QApplication::desktop();
 };
 
 #endif

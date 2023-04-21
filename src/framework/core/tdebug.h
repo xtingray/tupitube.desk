@@ -66,7 +66,6 @@
 #include <QMessageBox>
 #include <QSyntaxHighlighter>
 #include <QTransform>
-#include <QDesktopWidget>
 #include <QScrollBar>
 #include <QDebug>
 
@@ -110,7 +109,7 @@ class QPointF;
 class QSize;
 class QRect;
 class QRegion;
-class QStringList;
+// class QStringList;
 class QColor;
 class QPen;
 class QBrush;

@@ -1,6 +1,5 @@
-QT += opengl core gui svg xml network
+QT += widgets svgwidgets opengl core gui svg xml network
 QT += multimedia multimediawidgets printsupport
-QT += widgets
 CONFIG += warn_on
 TEMPLATE = app
 

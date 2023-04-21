@@ -61,7 +61,7 @@ ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    nameLayout->setMargin(0);
+    // nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -79,7 +79,7 @@ ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    buttonsLayout->setMargin(0);
+    // buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(apply);
     buttonsLayout->addWidget(remove);
@@ -141,14 +141,14 @@ void ColorSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    startLayout->setMargin(0);
+    // startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    endLayout->setMargin(0);
+    // endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
     endLayout->addWidget(endFrame);
@@ -157,7 +157,7 @@ void ColorSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    totalLayout->setMargin(0);
+    // totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -176,7 +176,7 @@ void ColorSettings::setInnerForm()
     fillTypeCombo->addItem(tr("Line & Internal Fill"));
     QHBoxLayout *fillLayout = new QHBoxLayout;
     fillLayout->setAlignment(Qt::AlignHCenter);
-    fillLayout->setMargin(0);
+    // fillLayout->setMargin(0);
     fillLayout->setSpacing(0);
     fillLayout->addWidget(typeLabel);
     fillLayout->addWidget(fillTypeCombo);
@@ -185,7 +185,7 @@ void ColorSettings::setInnerForm()
     coloringInitLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *coloringInitLayout = new QHBoxLayout;
     coloringInitLayout->setAlignment(Qt::AlignHCenter);
-    coloringInitLayout->setMargin(0);
+    // coloringInitLayout->setMargin(0);
     coloringInitLayout->setSpacing(0);
     coloringInitLayout->addWidget(coloringInitLabel);
     coloringInitLayout->addWidget(initColorButton);
@@ -201,7 +201,7 @@ void ColorSettings::setInnerForm()
     coloringEndLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *coloringEndLayout = new QHBoxLayout;
     coloringEndLayout->setAlignment(Qt::AlignHCenter);
-    coloringEndLayout->setMargin(0);
+    // coloringEndLayout->setMargin(0);
     coloringEndLayout->setSpacing(0);
     coloringEndLayout->addWidget(coloringEndLabel);
     coloringEndLayout->addWidget(endColorButton);
@@ -215,7 +215,7 @@ void ColorSettings::setInnerForm()
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *iterationsLayout = new QHBoxLayout;
     iterationsLayout->setAlignment(Qt::AlignHCenter);
-    iterationsLayout->setMargin(0);
+    // iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
     iterationsLayout->addWidget(iterationsCombo);
@@ -225,7 +225,7 @@ void ColorSettings::setInnerForm()
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
-    loopLayout->setMargin(0);
+    // loopLayout->setMargin(0);
     loopLayout->setSpacing(0);
     loopLayout->addWidget(loopBox);
 
@@ -234,7 +234,7 @@ void ColorSettings::setInnerForm()
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
-    reverseLayout->setMargin(0);
+    // reverseLayout->setMargin(0);
     reverseLayout->setSpacing(0);
     reverseLayout->addWidget(reverseLoopBox);
 

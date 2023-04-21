@@ -43,7 +43,7 @@ TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(p
     #endif
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setMargin(1);
+    // layout->setMargin(1);
 
     tabber = new QTabWidget;
     connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
@@ -87,7 +87,7 @@ void TupExposureSceneTabWidget::addScene(int index, const QString &name, TupExpo
 
     QFrame *frame = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(frame);
-    layout->setMargin(1);
+    // layout->setMargin(1);
 
     QHBoxLayout *toolsLayout = new QHBoxLayout;
     toolsLayout->setAlignment(Qt::AlignHCenter);
@@ -125,7 +125,7 @@ void TupExposureSceneTabWidget::restoreScene(int index, const QString &name)
 
     QFrame *frame = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(frame);
-    layout->setMargin(1);
+    // layout->setMargin(1);
 
     QHBoxLayout *toolsLayout = new QHBoxLayout;
     toolsLayout->setAlignment(Qt::AlignHCenter);

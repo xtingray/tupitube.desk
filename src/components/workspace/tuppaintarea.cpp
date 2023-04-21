@@ -178,7 +178,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
                 menu->addSeparator();
                 menu->addAction(tr("Add to library..."), this, SLOT(addSelectedItemsToLibrary()));
                 menuOn = true;
-                menu->exec(event->globalPos());
+                menu->exec(event->globalPosition().toPoint());
                 return;
             }
         }
@@ -194,7 +194,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
             if (activeSelection) {
                 menu->addSeparator();
-                menu->addAction(tr("Cut"), this, SLOT(cutItems()), QKeySequence(tr("Ctrl+X")));
+                menu->addAction(tr("Cut"), QKeySequence(tr("Ctrl+X")), this, SLOT(cutItems()));
                 menu->addAction(tr("Copy"), this, SLOT(copyItems()));
             }
 
@@ -265,7 +265,7 @@ void TupPaintArea::mousePressEvent(QMouseEvent *event)
 
             position = viewPosition();
             menuOn = true;
-            menu->exec(event->globalPos());
+            menu->exec(event->globalPosition().toPoint());
         }
     } 
 
@@ -897,7 +897,8 @@ void TupPaintArea::copyItems()
                     opt.state |= QStyle::State_Sunken;
 
                 opt.exposedRect = item->boundingRect();
-                opt.levelOfDetail = 1;
+                opt.levelOfDetailFromTransform(painter.worldTransform());
+                // opt.levelOfDetail = 1;
                 // opt.transform = item->sceneTransform();
                 opt.palette = palette();
 

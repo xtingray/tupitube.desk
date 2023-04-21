@@ -100,9 +100,10 @@ void TupItemPreview::paintEvent(QPaintEvent *)
         if (proxy->isEnabled())
             opt.state |= QStyle::State_Enabled;
         opt.exposedRect = QRectF(QPointF(0,0), proxy->boundingRect().size());
-        opt.levelOfDetail = 1;
+        // opt.levelOfDetail = 1;
+        opt.levelOfDetailFromTransform(painter.worldTransform());
         opt.palette = palette();
-        
+
         QTransform matrix = proxy->sceneTransform();
         painter.setTransform(matrix);
 

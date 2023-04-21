@@ -303,8 +303,8 @@ void TupWaveFormView::positionChanged(qint64 milliseconds)
 
 void TupWaveFormView::mousePressEvent(QMouseEvent *event)
 {
-    int32 mouseY = event->y();
-    real f = (real)event->x() / (real)frameWidth;
+    int32 mouseY = event->position().y();
+    real f = (real) event->position().x() / (real)frameWidth;
     int32 frame = PG_FLOOR(f), frameDist;
 
     scrubFrame = -1;
@@ -462,7 +462,7 @@ void TupWaveFormView::mouseMoveEvent(QMouseEvent *event)
 		return;
 
     bool needUpdate = false;
-    real f = (real)event->x() / (real)frameWidth;
+    real f = (real) event->position().x() / (real) frameWidth;
     int32 frame = PG_FLOOR(f);
 
     /*

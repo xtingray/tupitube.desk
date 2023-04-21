@@ -130,7 +130,7 @@ class TUPITUBE_EXPORT TupExposureTable : public QTableWidget
         // void mouseReleaseEvent(QMouseEvent *event);
         void keyPressEvent(QKeyEvent *event);
         void mouseDoubleClickEvent(QMouseEvent *event);
-        void enterEvent(QEvent *event);
+        void enterEvent(QEnterEvent *event);
         void leaveEvent(QEvent *event);
 
     protected slots:

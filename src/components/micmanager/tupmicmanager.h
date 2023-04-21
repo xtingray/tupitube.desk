@@ -8,9 +8,9 @@
 
 #include <QWidget>
 #include <QMediaRecorder>
-#include <QAudioRecorder>
+// #include <QAudioRecorder>
 #include <QAudioBuffer>
-#include <QAudioProbe>
+// #include <QAudioProbe>
 #include <QComboBox>
 #include <QPushButton>
 #include <QRadioButton>
@@ -43,8 +43,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         void togglePause();
         void toggleRecord();
 
-        void updateStatus(QMediaRecorder::Status status);
-        void onStateChanged(QMediaRecorder::State state);
+        // void updateStatus(QMediaRecorder::Status status);
+        void onStateChanged(QMediaRecorder::RecorderState state);
         void updateProgress(qint64 pos);
         void showErrorMessage();
         void enableRecordButton(bool enabled);
@@ -60,8 +60,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         void clearMicLevels();
         void resetMediaPlayer();
 
-        QAudioRecorder *micRecorder;
-        QAudioProbe *micProbe;
+        QMediaRecorder *micRecorder;
+        // QAudioProbe *micProbe;
         QList<TupMicLevel*> micLevels;
 
         QWidget *centralWidget;
@@ -85,7 +85,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QPushButton *discardButton;
 
         QList<QMediaPlayer *> player;
-        QAudioProbe *playerProbe;
+        // QAudioProbe *playerProbe;
         QTimer *timer;
         qreal secCounter;
         qreal audioDuration;

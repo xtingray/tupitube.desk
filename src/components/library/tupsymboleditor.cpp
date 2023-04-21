@@ -36,6 +36,8 @@
 #include "tupsymboleditor.h"
 #include "taction.h"
 
+#include <QActionGroup>
+
 View::View()
 {
 }

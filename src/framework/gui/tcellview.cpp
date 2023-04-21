@@ -200,7 +200,9 @@ TCellView::~TCellView()
 
 QStyleOptionViewItem TCellView::viewOptions() const
 {
-    QStyleOptionViewItem option = QAbstractItemView::viewOptions();
+    // QStyleOptionViewItem option = QAbstractItemView::viewOptions();
+
+    QStyleOptionViewItem option;
     option.showDecorationSelected = true;
     option.decorationSize = QSize(22, 22);
     option.decorationPosition = QStyleOptionViewItem::Right;

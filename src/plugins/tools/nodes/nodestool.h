@@ -37,7 +37,6 @@
 #define NODESTOOL_H
 
 #include "tglobal.h"
-// #include "tuppathitem.h"
 #include "tcontrolnode.h"
 #include "tnodegroup.h"
 #include "tuptoolplugin.h"
@@ -95,7 +94,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void keyReleaseEvent(QKeyEvent *event);
         virtual void saveConfig();
-        virtual QCursor toolCursor(); // const;
+        virtual QCursor toolCursor();
 
         void resizeNode(qreal scaleFactor);
         void updateZoomFactor(qreal scaleFactor);
@@ -106,7 +105,6 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         void callForPlugin(int menu, int index);
 
     private:
-        // void reset(TupGraphicsScene *scene);
         void setupActions();
         TupFrame* getCurrentFrame();
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);

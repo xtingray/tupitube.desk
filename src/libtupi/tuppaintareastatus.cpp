@@ -91,7 +91,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
         frameContainer->setFixedWidth(70);
         QHBoxLayout *frameLayout = new QHBoxLayout(frameContainer);
         frameLayout->setSpacing(3);
-        frameLayout->setMargin(1);
+        // frameLayout->setMargin(1);
         QLabel *frameLabel = new QLabel("");
         frameLabel->setToolTip(tr("Current Frame"));
         QPixmap framePix(THEME_DIR + "icons/frame_number.png");
@@ -111,7 +111,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     QWidget *zoomContainer = new QWidget;
     QHBoxLayout *zoomLayout = new QHBoxLayout(zoomContainer);
     zoomLayout->setSpacing(3);
-    zoomLayout->setMargin(1);
+    // zoomLayout->setMargin(1);
 
     QLabel *zoomTool = new QLabel("");
     zoomTool->setToolTip(tr("Zoom"));
@@ -138,7 +138,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     QWidget *rotContainer = new QWidget;
     QHBoxLayout *rotLayout = new QHBoxLayout(rotContainer);
     rotLayout->setSpacing(3);
-    rotLayout->setMargin(1);
+    // rotLayout->setMargin(1);
 
     QLabel *rotateLabel = new QLabel("");
     rotateLabel->setToolTip(tr("Rotate Workspace"));

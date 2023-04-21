@@ -177,7 +177,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     QGroupBox *buttons = new QGroupBox;
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttons);
-    buttonLayout->setMargin(0);
+    // buttonLayout->setMargin(0);
     buttonLayout->setSpacing(0);
 
     TImageButton *searchButton = new TImageButton(QPixmap(THEME_DIR + "icons/search.png"), 22, buttons);
@@ -186,7 +186,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     buttonLayout->addWidget(searchButton);
 
     QHBoxLayout *comboLayout = new QHBoxLayout;
-    comboLayout->setMargin(0);
+    // comboLayout->setMargin(0);
     comboLayout->setSpacing(0);
 
     itemType = new QComboBox();

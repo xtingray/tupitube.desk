@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += widgets svgwidgets opengl core gui svg xml network core5compat
 QT += multimedia multimediawidgets printsupport
 TEMPLATE = lib
 CONFIG += dll warn_on

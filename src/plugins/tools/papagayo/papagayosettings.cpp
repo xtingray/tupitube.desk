@@ -62,14 +62,14 @@ void PapagayoSettings::setInnerForm()
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    nameLayout->setMargin(0);
+    // nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(lipSyncName);
 
     QHBoxLayout *fpsLayout = new QHBoxLayout;
     fpsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    fpsLayout->setMargin(0);
+    // fpsLayout->setMargin(0);
     fpsLayout->setSpacing(0);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
@@ -86,14 +86,14 @@ void PapagayoSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    startLayout->setMargin(0);
+    // startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(comboInit);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    endLayout->setMargin(0);
+    // endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
 
@@ -101,7 +101,7 @@ void PapagayoSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    totalLayout->setMargin(0);
+    // totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -130,7 +130,7 @@ void PapagayoSettings::setInnerForm()
     connect(yPosField, SIGNAL(valueChanged(int)), this, SIGNAL(yPosChanged(int)));
 
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    xLayout->setMargin(0);
+    // xLayout->setMargin(0);
     xLayout->setSpacing(0);
     xLayout->addStretch();
     xLayout->addWidget(xLabel);
@@ -138,7 +138,7 @@ void PapagayoSettings::setInnerForm()
     xLayout->addStretch();
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    yLayout->setMargin(0);
+    // yLayout->setMargin(0);
     yLayout->setSpacing(0);
     yLayout->addStretch();
     yLayout->addWidget(yLabel);
@@ -158,7 +158,7 @@ void PapagayoSettings::setInnerForm()
     connect(angleField, SIGNAL(valueChanged(int)), this, SIGNAL(rotationChanged(int)));
 
     QBoxLayout *angleLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    angleLayout->setMargin(0);
+    // angleLayout->setMargin(0);
     angleLayout->setSpacing(0);
     angleLayout->addStretch();
     angleLayout->addWidget(angleLabel);
@@ -181,7 +181,7 @@ void PapagayoSettings::setInnerForm()
     connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
 
     QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    factorXLayout->setMargin(0);
+    // factorXLayout->setMargin(0);
     factorXLayout->setSpacing(0);
     factorXLayout->addStretch();
     factorXLayout->addWidget(factorXLabel);
@@ -199,7 +199,7 @@ void PapagayoSettings::setInnerForm()
     connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
 
     QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    factorYLayout->setMargin(0);
+    // factorYLayout->setMargin(0);
     factorYLayout->setSpacing(0);
     factorYLayout->addStretch();
     factorYLayout->addWidget(factorYLabel);

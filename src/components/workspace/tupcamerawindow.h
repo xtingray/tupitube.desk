@@ -42,15 +42,19 @@
 #include <QtGui>
 #include <QWidget>
 #include <QCamera>
-#include <QCameraImageCapture>
+//  #include <QCameraImageCapture>
 
 class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
 {
     Q_OBJECT
 
     public:
+        /*
         TupCameraWindow(QCamera *input, const QSize &camSize, const QSize &displaySize, 
                         QCameraImageCapture *imageCapture, const QString &path, QWidget *parent = nullptr);
+        */
+        TupCameraWindow(QCamera *input, const QSize &camSize, const QSize &displaySize,
+                        const QString &path, QWidget *parent = nullptr);
         ~TupCameraWindow();
 
         void startCamera();
@@ -81,7 +85,7 @@ class TUPITUBE_EXPORT TupCameraWindow: public QWidget, public VideoIF
 
     private:
         QCamera *camera;
-        QCameraImageCapture *imageCapture;
+        // QCameraImageCapture *imageCapture;
         TupVideoSurface *videoSurface;
         QString picturesPath;
         int counter;

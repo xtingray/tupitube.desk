@@ -48,7 +48,7 @@
 #include <QBitmap>
 #include <QTimer>
 #include <QPainter>
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
 #include <QLinearGradient>
 
 class T_GUI_EXPORT TOsd : public QWidget

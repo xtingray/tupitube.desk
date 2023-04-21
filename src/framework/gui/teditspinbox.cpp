@@ -41,7 +41,7 @@ TEditSpinBox::TEditSpinBox(int value, int minValue, int maxValue, int step, QStr
     setObjectName(name);
 
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->setMargin(2);
+    // layout->setMargin(2);
     layout->setSpacing(0);
 
     setTitle(text);

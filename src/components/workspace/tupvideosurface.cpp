@@ -40,13 +40,13 @@
 #include <QGuiApplication>
 
 TupVideoSurface::TupVideoSurface(QWidget *widget, VideoIF *target, const QSize &size, bool scaleFlag,
-                                 int orientation, QObject *parent) : QAbstractVideoSurface(parent)
+                                 int orientation, QObject *parent) : QVideoSink(parent) // QAbstractVideoSurface(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoSurface()]";
     #endif
 
-    setNativeResolution(size);
+    // setNativeResolution(size);
 
     isScaled = scaleFlag;
     targetWidget = widget;
@@ -123,23 +123,25 @@ void TupVideoSurface::loadROTParameters()
     rotColor.setAlpha(20);
 }
 
-bool TupVideoSurface::start(const QVideoSurfaceFormat &format)
+bool TupVideoSurface::start(/* const QVideoSurfaceFormat &format */)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoSurface::start()]";
     #endif
 
-    const QImage::Format imgFormat = QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat());
-    const QSize size = format.frameSize();
+    // const QImage::Format imgFormat = QVideoFrame::imageFormatFromPixelFormat(format.pixelFormat());
+    // const QSize size = format.frameSize();
 
+    /*
     if (imgFormat != QImage::Format_Invalid && !size.isEmpty()) {
         imageFormat = imgFormat;
-        QAbstractVideoSurface::start(format);
+        // QAbstractVideoSurface::start(format);
 
         return true;
     } else {
         return false;
     }
+    */
 }
 
 bool TupVideoSurface::present(const QVideoFrame &vFrame)
@@ -151,6 +153,7 @@ bool TupVideoSurface::present(const QVideoFrame &vFrame)
     */
 
     frame = vFrame;
+    /*
     if (surfaceFormat().pixelFormat() != frame.pixelFormat() ||
         surfaceFormat().frameSize() != frame.size()) {
         stop();
@@ -161,10 +164,12 @@ bool TupVideoSurface::present(const QVideoFrame &vFrame)
 
         return true;
     }
+    */
 }
 
 void TupVideoSurface::paint(QPainter *painter)
 {
+    /*
     if (frame.map(QAbstractVideoBuffer::ReadOnly)) {
         int width = frame.width();
         int height = frame.height();
@@ -226,15 +231,6 @@ void TupVideoSurface::paint(QPainter *painter)
         int maxY = midY + (height/2);
 
         if (grid) {
-            /*
-            painter->setPen(gridPen);
-            int maxX = static_cast<int> (width + 100);
-            int maxY = static_cast<int> (height + 100);
-            for (int i = -100; i <= maxX; i += gridSeparation)
-                 painter->drawLine(i, -100, i, maxY);
-            for (int i = -100; i <= maxY; i += gridSeparation)
-                 painter->drawLine(-100, i, maxX, i);
-            */
 
             painter->setPen(gridPen);
 
@@ -300,82 +296,33 @@ void TupVideoSurface::paint(QPainter *painter)
             painter->drawLine(horizontalSpace, 0, horizontalSpace, height);
             painter->drawLine(horizontalSpace*2, 0, horizontalSpace*2, height);
 
-            /*
-            painter->setPen(whitePen);
-            int outerBorder = width/19;
-            int innerBorder = width/6;
-
-            int hSpace = width/3;
-            int vSpace = height/3;
-            int hSpace2 = hSpace*2;
-            int vSpace2 = vSpace*2;
-
-            QPoint rectLeft(minX, minY);
-            QPoint rectRight(maxX, maxY);
-
-            QPointF left = rectLeft + QPointF(outerBorder, outerBorder);
-            QPointF right = rectRight - QPointF(outerBorder, outerBorder);
-            QRectF outerRect(left, right);
-
-            painter->setPen(grayPen);
-            painter->drawRect(outerRect);
-
-            int leftY = left.y();
-            int leftX = left.x();
-            int rightY = right.y();
-            int rightX = right.x();
-
-            painter->setPen(greenThickPen);
-            painter->drawLine(QPoint(hSpace, leftY - 8), QPoint(hSpace, leftY + 8));
-            painter->drawLine(QPoint(hSpace - 5, leftY), QPoint(hSpace + 5, leftY));
-            painter->drawLine(QPoint(hSpace2, leftY - 8), QPoint(hSpace2, leftY + 8));
-            painter->drawLine(QPoint(hSpace2 - 5, leftY), QPoint(hSpace2 + 5, leftY));
-
-            painter->drawLine(QPoint(hSpace, rightY - 8), QPoint(hSpace, rightY + 8));
-            painter->drawLine(QPoint(hSpace - 5, rightY), QPoint(hSpace + 5, rightY));
-            painter->drawLine(QPoint(hSpace2, rightY - 8), QPoint(hSpace2, rightY + 8));
-            painter->drawLine(QPoint(hSpace2 - 5, rightY), QPoint(hSpace2 + 5, rightY));
-
-            painter->drawLine(QPoint(leftX - 8, vSpace), QPoint(leftX + 8, vSpace));
-            painter->drawLine(QPoint(leftX, vSpace - 5), QPoint(leftX, vSpace + 5));
-            painter->drawLine(QPoint(leftX - 8, vSpace2), QPoint(leftX + 8, vSpace2));
-            painter->drawLine(QPoint(leftX, vSpace2 - 5), QPoint(leftX, vSpace2 + 5));
-
-            painter->drawLine(QPoint(rightX - 8, vSpace), QPoint(rightX + 8, vSpace));
-            painter->drawLine(QPoint(rightX, vSpace - 5), QPoint(rightX, vSpace + 5));
-            painter->drawLine(QPoint(rightX - 8, vSpace2), QPoint(rightX + 8, vSpace2));
-            painter->drawLine(QPoint(rightX, vSpace2 - 5), QPoint(rightX, vSpace2 + 5));
-
-            painter->setPen(greenThinPen);
-
-            left = rectLeft + QPointF(innerBorder, innerBorder);
-            right = rectRight - QPointF(innerBorder, innerBorder);
-            QRectF innerRect(left, right);
-
-            painter->drawRect(innerRect);
-            */
         }
 
         frame.unmap();
     }
+    */
 }
 
-QList<QVideoFrame::PixelFormat> TupVideoSurface::supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const
+QList<QVideoFrameFormat::PixelFormat> TupVideoSurface::supportedPixelFormats(/* QAbstractVideoBuffer::HandleType handleType */) const
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupVideoSurface::supportedPixelFormats()]";
     #endif
 
+    /*
     if (handleType == QAbstractVideoBuffer::NoHandle) {
-        return QList<QVideoFrame::PixelFormat>()
+        return QList<QVideoFrameFormat::PixelFormat>()
                 << QVideoFrame::Format_RGB32
                 << QVideoFrame::Format_ARGB32
                 << QVideoFrame::Format_ARGB32_Premultiplied
                 << QVideoFrame::Format_RGB565
                 << QVideoFrame::Format_RGB555;
     } else {
-        return QList<QVideoFrame::PixelFormat>();
+        return QList<QVideoFrameFormat::PixelFormat>();
     }
+    */
+
+    return QList<QVideoFrameFormat::PixelFormat>();
 }
 
 void TupVideoSurface::drawGrid(bool flag)

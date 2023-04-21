@@ -50,7 +50,7 @@ class TUPITUBE_EXPORT TupCameraDialog : public QDialog
     Q_OBJECT
 
     public:
-        TupCameraDialog(QComboBox *devices, const QSize dimension, QList<QSize> resList, QWidget *parent=0);
+        TupCameraDialog(QComboBox *devices, const QSize dimension, QList<QSize> resList, QWidget *parent = nullptr);
         ~TupCameraDialog();
 
         int cameraIndex();

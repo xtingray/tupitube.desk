@@ -92,7 +92,7 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
         virtual void keyReleaseEvent(QKeyEvent *event);
 
         // virtual void tabletEvent(QTabletEvent *event);
-        virtual void enterEvent(QEvent *event);
+        virtual void enterEvent(QEnterEvent *event);
         virtual void leaveEvent(QEvent *event);
 
         virtual bool viewportEvent(QEvent *event);

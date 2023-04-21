@@ -127,20 +127,23 @@ void RasterCanvas::tabletEvent(QTabletEvent *event)
 
     switch (event->type()) {
         case QEvent::TabletPress:
-            if (event->pointerType() == QTabletEvent::Pen) {
+            // if (event->pointerType() == QTabletEvent::Pen) {
+            if (event->pointerType() == QPointingDevice::PointerType::Pen) {
                 MPHandler::handler()->startStroke();
                 event->accept();
             }
         break;
         case QEvent::TabletRelease:
-            if (event->pointerType() == QTabletEvent::Pen) {
+            // if (event->pointerType() == QTabletEvent::Pen) {
+            if (event->pointerType() == QPointingDevice::PointerType::Pen) {
                 // Finalize the stroke sequence.
                 event->accept();
             }
         break;
         case QEvent::TabletMove:
-            if (event->pointerType() == QTabletEvent::Pen) {
-                QPointF pt(mapToScene(event->pos()));
+            // if (event->pointerType() == QTabletEvent::Pen) {
+            if (event->pointerType() == QPointingDevice::PointerType::Pen) {
+                QPointF pt(mapToScene(event->position().toPoint()));
                 MPHandler::handler()->strokeTo(static_cast<float>(pt.x()), static_cast<float>(pt.y()),
                                                static_cast<float>(event->pressure()), event->xTilt(), event->yTilt());
                 event->accept();
@@ -164,7 +167,7 @@ void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
 
     if (pressed) {
         if (!tableInUse) {
-            QPointF pt = mapToScene(event->pos());
+            QPointF pt = mapToScene(event->position().toPoint());
             MPHandler::handler()->strokeTo(static_cast<float>(pt.x()), static_cast<float>(pt.y()));
         }
     }
@@ -257,7 +260,8 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
 {
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
-        if (event->pointerType() == QTabletEvent::Eraser) {
+        // if (event->pointerType() == QTabletEvent::Eraser) {
+        if (event->pointerType() == QPointingDevice::PointerType::Eraser) {
             cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-eraser.png"), 3, 28);
         } else {
 #ifdef TUP_32BIT
@@ -265,13 +269,36 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
 #else
             switch (event->deviceType()) {
 #endif
-            case QTabletEvent::Stylus:
+            // case QTabletEvent::Stylus:
+            case QInputDevice::DeviceType::Stylus:
                 cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-pencil.png"), 0, 0);
+                if (event->pointingDevice()->capabilities().testFlag(QPointingDevice::Capability::Rotation)) {
+                    QImage origImg(RASTER_RESOURCES_DIR + "resources/cursor-felt-marker.png");
+                    QImage img(32, 32, QImage::Format_ARGB32);
+                    QColor solid = color;
+                    solid.setAlpha(255);
+                    img.fill(solid);
+
+                    QPainter painter(&img);
+                    QTransform transform = painter.transform();
+                    transform.translate(16, 16);
+                    transform.rotate(-event->rotation());
+                    painter.setTransform(transform);
+                    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+                    painter.drawImage(-24, -24, origImg);
+                    painter.setCompositionMode(QPainter::CompositionMode_HardLight);
+                    painter.drawImage(-24, -24, origImg);
+                    painter.end();
+                    cursor = QCursor(QPixmap::fromImage(img), 16, 16);
+                }
                 break;
-            case QTabletEvent::Airbrush:
+            // case QTabletEvent::Airbrush:
+            case QInputDevice::DeviceType::Airbrush:
                 cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-airbrush.png"), 3, 4);
                 break;
-            case QTabletEvent::RotationStylus: {
+            /*
+            case QTabletEvent::RotationStylus:
+            {
                 QImage origImg(RASTER_RESOURCES_DIR + "resources/cursor-felt-marker.png");
                 QImage img(32, 32, QImage::Format_ARGB32);
                 QColor solid = color;
@@ -289,7 +316,9 @@ void RasterCanvas::updateCursor(const QTabletEvent *event)
                 painter.drawImage(-24, -24, origImg);
                 painter.end();
                 cursor = QCursor(QPixmap::fromImage(img), 16, 16);
-            } break;
+            }
+                break;
+            */
             default:
                 break;
             }

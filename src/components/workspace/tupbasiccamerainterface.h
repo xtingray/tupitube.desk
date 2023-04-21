@@ -44,16 +44,21 @@
 #include <QComboBox>
 #include <QCloseEvent>
 #include <QCamera>
-#include <QCameraInfo>
-#include <QCameraViewfinder>
-#include <QCameraImageCapture>
+// #include <QCameraInfo>
+// #include <QCameraViewfinder>
+// #include <QCameraImageCapture>
 
 class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
 {
     Q_OBJECT
 
     public:
+        /*
         TupBasicCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices,
+                                QComboBox *devicesCombo, int cameraIndex, const QSize cameraSize = QSize(),
+                                int counter = 1, QWidget *parent = nullptr);
+        */
+        TupBasicCameraInterface(const QString &title,
                                 QComboBox *devicesCombo, int cameraIndex, const QSize cameraSize = QSize(),
                                 int counter = 1, QWidget *parent = nullptr);
         ~TupBasicCameraInterface();
@@ -77,8 +82,8 @@ class TUPITUBE_EXPORT TupBasicCameraInterface : public QFrame
         QStackedWidget *widgetStack;
         QList <QCamera *> cameras;
         QCamera *currentCamera;
-        QList <QCameraImageCapture *> imageCaptors;
-        QCameraImageCapture *currentImageCaptor;
+        // QList <QCameraImageCapture *> imageCaptors;
+        // QCameraImageCapture *currentImageCaptor;
 
         QString path;
         int counter;

@@ -54,7 +54,7 @@ MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    nameLayout->setMargin(0);
+    // nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -72,7 +72,7 @@ MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    buttonsLayout->setMargin(0);
+    // buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(applyButton);
     buttonsLayout->addWidget(remove);
@@ -108,7 +108,7 @@ void MotionSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    startLayout->setMargin(0);
+    // startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initSpinBox);
@@ -122,7 +122,7 @@ void MotionSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    totalLayout->setMargin(0);
+    // totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 

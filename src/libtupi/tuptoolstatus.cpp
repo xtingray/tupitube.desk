@@ -38,7 +38,7 @@
 TupToolStatus::TupToolStatus()
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(2);
+    // layout->setMargin(2);
     layout->setSpacing(2);
 
     tool = new QLabel("");

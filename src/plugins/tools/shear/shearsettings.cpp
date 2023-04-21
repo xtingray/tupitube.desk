@@ -53,7 +53,7 @@ ShearSettings::ShearSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    nameLayout->setMargin(0);
+    // nameLayout->setMargin(0);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -71,7 +71,7 @@ ShearSettings::ShearSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    buttonsLayout->setMargin(0);
+    // buttonsLayout->setMargin(0);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(apply);
     buttonsLayout->addWidget(remove);
@@ -118,14 +118,14 @@ void ShearSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    startLayout->setMargin(0);
+    // startLayout->setMargin(0);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initFrameSpin);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    endLayout->setMargin(0);
+    // endLayout->setMargin(0);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
     endLayout->addWidget(endFrameSpin);
@@ -134,7 +134,7 @@ void ShearSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    totalLayout->setMargin(0);
+    // totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -146,7 +146,7 @@ void ShearSettings::setInnerForm()
     axesLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *axesLayout = new QHBoxLayout;
     axesLayout->setAlignment(Qt::AlignHCenter);
-    axesLayout->setMargin(0);
+    // axesLayout->setMargin(0);
     axesLayout->setSpacing(0);
     axesLayout->addWidget(axesLabel);
     axesLayout->addWidget(comboAxes);
@@ -162,7 +162,7 @@ void ShearSettings::setInnerForm()
     speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *speedLayout = new QHBoxLayout;
     speedLayout->setAlignment(Qt::AlignHCenter);
-    speedLayout->setMargin(0);
+    // speedLayout->setMargin(0);
     speedLayout->setSpacing(0);
     speedLayout->addWidget(speedLabel);
     speedLayout->addWidget(comboFactor);
@@ -176,7 +176,7 @@ void ShearSettings::setInnerForm()
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *iterationsLayout = new QHBoxLayout;
     iterationsLayout->setAlignment(Qt::AlignHCenter);
-    iterationsLayout->setMargin(0);
+    // iterationsLayout->setMargin(0);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
     iterationsLayout->addWidget(iterationsField);
@@ -186,7 +186,7 @@ void ShearSettings::setInnerForm()
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
-    loopLayout->setMargin(0);
+    // loopLayout->setMargin(0);
     loopLayout->setSpacing(0);
     loopLayout->addWidget(loopBox);
 
@@ -195,7 +195,7 @@ void ShearSettings::setInnerForm()
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
-    reverseLayout->setMargin(0);
+    // reverseLayout->setMargin(0);
     reverseLayout->setSpacing(0);
     reverseLayout->addWidget(reverseLoopBox);
 

@@ -50,7 +50,7 @@ ButtonsPanel::ButtonsPanel(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *controlLayout = new QHBoxLayout;
     controlLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    controlLayout->setMargin(1);
+    // controlLayout->setMargin(1);
     controlLayout->setSpacing(5);
     controlLayout->addWidget(editButton);
     controlLayout->addWidget(removeButton);

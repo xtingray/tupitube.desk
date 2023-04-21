@@ -47,9 +47,13 @@
 #include <QDoubleSpinBox>
 #include <QColorDialog>
 #include <QCamera>
-#include <QCameraImageCapture>
+// #include <QCameraImageCapture>
 
+/*
 TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo, int cameraIndex, 
+                                       const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
+*/
+TupCameraInterface::TupCameraInterface(const QString &title, QComboBox *devicesCombo, int cameraIndex,
                                        const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
@@ -84,8 +88,9 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
         }
     }
 
-    QString path = randomPath();
+    // QString path = randomPath();
 
+    /*
     if (cameraDevices.count() == 1) { // Only one camera was detected
         QCameraInfo device = cameraDevices.at(0);
         QCamera *camera = new QCamera(device);
@@ -112,7 +117,8 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
 
              widgetStack->addWidget(cameraWindow);
         }
-    } 
+    }
+    */
 
     widgetStack->setCurrentIndex(cameraIndex);
     currentCamera = (TupCameraWindow *) widgetStack->currentWidget();

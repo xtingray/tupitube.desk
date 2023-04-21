@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += widgets opengl core gui svg xml network
 CONFIG += plugin warn_on
 TEMPLATE = lib
 TARGET = tupieyedropper

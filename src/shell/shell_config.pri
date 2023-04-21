@@ -2,6 +2,7 @@ QT += xml opengl svg
 
 INCLUDEPATH += ../plugins/tools/common
 
+STORE_DIR = ../store
 MICMANAGER_DIR = ../components/micmanager
 MYPAINT_DIR = ../mypaint
 LIBCOLOR_DIR = ../libcolor
@@ -19,11 +20,11 @@ LIBRARY_DIR = ../components/library
 # SCENES_DIR = ../components/scenes 
 NEWS_DIR = ../components/news
 LIBUI_DIR = ../libui
-STORE_DIR = ../store 
 LIBTUPI_DIR = ../libtupi
 LIBBASE_DIR = ../libbase
 # NET_DIR = ../net
 
+include($$STORE_DIR/store.pri)
 include($$MICMANAGER_DIR/micmanager.pri)
 include($$MYPAINT_DIR/mypaint.pri)
 include($$LIBCOLOR_DIR/libcolor.pri)
@@ -41,7 +42,6 @@ include($$LIBRARY_DIR/library.pri)
 # include($$SCENES_DIR/scenes.pri)
 include($$NEWS_DIR/news.pri)
 include($$LIBUI_DIR/libui.pri)
-include($$STORE_DIR/store.pri)
 include($$LIBTUPI_DIR/libtupi.pri)
 include($$LIBBASE_DIR/libbase.pri)
 # include($$NET_DIR/net.pri)
