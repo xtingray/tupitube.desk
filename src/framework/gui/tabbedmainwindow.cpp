@@ -50,6 +50,10 @@ TabbedMainWindow::~TabbedMainWindow()
 
 void TabbedMainWindow::addWidget(QWidget *widget, bool persistant, int perspective)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TabbedMainWindow::addWidget()] - perspective ->" << perspective;
+    #endif
+
     if (perspective & currentPerspective())
         currentTab->addTab(widget, widget->windowIcon(), widget->windowTitle());
 
@@ -62,6 +66,10 @@ void TabbedMainWindow::addWidget(QWidget *widget, bool persistant, int perspecti
 
 void TabbedMainWindow::removeWidget(QWidget *widget, bool force)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TabbedMainWindow::removeWidget()]";
+    #endif
+
     if (force) 
         persistentWidgets.removeAll(widget);
 
@@ -78,6 +86,10 @@ void TabbedMainWindow::removeWidget(QWidget *widget, bool force)
 
 void TabbedMainWindow::removeAllWidgets()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TabbedMainWindow::removeAllWidget()]";
+    #endif
+
     persistentWidgets.clear();
     currentTab->clear();
     tabs.clear();
@@ -124,6 +136,7 @@ void TabbedMainWindow::emitWidgetChanged(int index)
                 setCurrentPerspective(News);
            break;
         }
+
         emit tabHasChanged(index);
     }
 }

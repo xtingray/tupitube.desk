@@ -59,18 +59,26 @@ Qt::ToolBarArea TViewButton::area() const
 
 void TViewButton::mousePressEvent(QMouseEvent *event)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TViewButton::mousePressEvent()]";
+    #endif
+    */
+
     m_toolView->setExpandingFlag();
     QToolButton::mousePressEvent(event);
 }
 
 void TViewButton::toggleView()
 {
+    /*
     #ifdef TUP_DEBUG
-       qDebug() << "[ToolView::toggleView()]";
+       qDebug() << "[TViewButton::toggleView()]";
     #endif
+    */
 
     m_toolView->setUpdatesEnabled(false);
-    m_toolView->toggleViewAction()->trigger();
+    m_toolView->trigger();
     m_toolView->setUpdatesEnabled(true);
 }
 

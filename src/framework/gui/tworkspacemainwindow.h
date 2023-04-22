@@ -53,7 +53,6 @@ class T_GUI_EXPORT TWorkspaceMainWindow : public TMainWindow
         void removeWidget(QWidget *widget);
 
     private:
-        // QWorkspace *m_workspace;
         QMdiArea *mdiArea;
 };
 

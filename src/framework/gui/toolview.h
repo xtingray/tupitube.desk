@@ -56,6 +56,7 @@ class T_GUI_EXPORT ToolView: public QDockWidget
         TViewButton *button() const;
         void enableButton(bool flag);
 
+        void trigger();
         void expandDock(bool flag);
         bool isExpanded();
         void setExpandingFlag();

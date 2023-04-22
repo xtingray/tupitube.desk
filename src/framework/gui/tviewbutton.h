@@ -57,7 +57,7 @@ class T_GUI_EXPORT TViewButton : public QToolButton
         ToolView *toolView() const;
 
     protected:
-        virtual void mousePressEvent(QMouseEvent *);
+        virtual void mousePressEvent(QMouseEvent *event);
 		
     public slots:
         void toggleView();

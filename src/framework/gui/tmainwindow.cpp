@@ -263,11 +263,9 @@ void TMainWindow::enableToolViews(bool isEnabled)
 
 void TMainWindow::addToPerspective(QWidget *widget, int workSpace)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TMainWindow::addToPerspective()]";
     #endif
-    */
 
     if (QToolBar *bar = dynamic_cast<QToolBar*>(widget)) {
         if (toolBarArea(bar) == 0)
@@ -284,11 +282,9 @@ void TMainWindow::addToPerspective(QWidget *widget, int workSpace)
 
 void TMainWindow::removeFromPerspective(QWidget *widget)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TMainWindow::removeFromPerspective()]";
     #endif
-    */
 
     m_managedWidgets.remove(widget);
 }
@@ -296,11 +292,9 @@ void TMainWindow::removeFromPerspective(QWidget *widget)
 // Add action list to perspective
 void TMainWindow::addToPerspective(const QList<QAction *> &actions, int workSpace)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TMainWindow::addToPerspective()]";
     #endif
-    */
 
     foreach (QAction *action, actions)
         addToPerspective(action, workSpace);
@@ -309,11 +303,9 @@ void TMainWindow::addToPerspective(const QList<QAction *> &actions, int workSpac
 // Add action to perspective
 void TMainWindow::addToPerspective(QAction *action, int workSpace)
 {
-    /*
     #ifdef TUP_DEBUG
-        qDebug() << "[TMainWindow::addToFromPerspective()]";
+        qDebug() << "[TMainWindow::addToPerspective()]";
     #endif
-    */
 
     if (!m_managedActions.contains(action)) {
         m_managedActions.insert(action, workSpace);
