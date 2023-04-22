@@ -128,12 +128,15 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
          zoomCombo->addItem(QString::number(i), i);
     for (int i = 200; i >= 25; i-=25)
          zoomCombo->addItem(QString::number(i), i);
+    zoomCombo->addItem("20", 20);
+    zoomCombo->addItem("15", 15);
+    zoomCombo->addItem("10", 10);
 
     zoomCombo->setCurrentIndex(10);
     zoomCombo->setValidator(new QIntValidator(10, 200, this));
     zoomLayout->addWidget(zoomCombo);
     zoomLayout->addWidget(new QLabel(tr("%")));
-    connect(zoomCombo, SIGNAL(activated(const QString &)), this, SLOT(applyZoom(const QString &)));
+    connect(zoomCombo, SIGNAL(activated(int)), this, SLOT(applyZoom(int)));
     addPermanentWidget(zoomContainer);
 
     QWidget *rotContainer = new QWidget;
@@ -158,7 +161,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     rotationCombo->setValidator(new QIntValidator(-360, 360, this));
     rotLayout->addWidget(rotationCombo);
     addPermanentWidget(rotContainer);
-    connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
+    // connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
+    connect(rotationCombo, SIGNAL(activated(int)), this, SLOT(applyRotation(int)));
 
     if (type == Vector) {
         contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
@@ -197,10 +201,33 @@ void TupPaintAreaStatus::setBrush(const QBrush &brush)
     fillStatus->setColor(brush);
 }
 
+void TupPaintAreaStatus::applyRotation(int index)
+{
+    Q_UNUSED(index)
+    QString value = rotationCombo->currentText();
+
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaStatus::applyRotation()] - value -> " << value;
+    #endif
+    */
+
+    int angle = value.toInt();
+    if (angle < 0)
+        angle += 360;
+
+    emit angleChanged(angle);
+}
+
 void TupPaintAreaStatus::applyRotation(const QString &text)
 {
-    int angle = text.toInt();
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaStatus::applyRotation()] - text -> " << text;
+    #endif
+    */
 
+    int angle = text.toInt();
     if (angle < 0)
         angle += 360;
 
@@ -209,11 +236,41 @@ void TupPaintAreaStatus::applyRotation(const QString &text)
 
 void TupPaintAreaStatus::applyZoom(const QString &text)
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaStatus::applyZoom()] - text -> " << text;
+    #endif
+    */
+
     bool ok;
     int input = text.toInt(&ok, 10);
-
     if (!ok) { // Conversion has failed
         QStringList list = text.split(".");
+        if (list.size() > 1)
+            input = list.at(0).toInt();
+    }
+
+    qreal factor = static_cast<qreal>(input) / static_cast<qreal>(scaleFactor);
+    scaleFactor = input;
+
+    emit zoomChanged(factor);
+}
+
+void TupPaintAreaStatus::applyZoom(int index)
+{
+    Q_UNUSED(index)
+    QString value = zoomCombo->currentText();
+
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPaintAreaStatus::applyZoom()] - value ->" << value;
+    #endif
+    */
+
+    bool ok;
+    int input = value.toInt(&ok, 10);
+    if (!ok) { // Conversion has failed
+        QStringList list = value.split(".");
         if (list.size() > 1)
             input = list.at(0).toInt();
     }

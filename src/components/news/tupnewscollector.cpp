@@ -98,7 +98,8 @@ void TupNewsCollector::start()
     */
 
     reply = manager->get(request);
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    //  connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 }
 
 TupNewsCollector::~TupNewsCollector()

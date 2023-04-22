@@ -2499,9 +2499,13 @@ void TupDocumentView::updatePerspective()
 
 void TupDocumentView::resetWorkSpaceTransformations()
 {
-    paintArea->resetWorkSpaceCenter(project->getDimension());
+    QSize projectSize = project->getDimension();
+    paintArea->resetWorkSpaceCenter(projectSize);
     status->setRotationAngle("0");
-    status->setZoomPercent("100");
+    if (projectSize.width() == 1920)
+        status->setZoomPercent("50");
+    else
+        status->setZoomPercent("100");
 }
 
 QColor TupDocumentView::currentBGColor() const

@@ -67,9 +67,11 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
     public slots:
         // void selectAntialiasingHint();
         void updateRotationAngle(int angle);
+        void applyZoom(int index);
         void applyZoom(const QString &text);
         void setPen(const QPen &pen);
         void setBrush(const QBrush  &brush);
+        void applyRotation(int index);
         void applyRotation(const QString &text);
         void showPos(const QPointF &point);
         void updateFrameIndex(int index);
