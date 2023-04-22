@@ -51,7 +51,7 @@ TweenManager::TweenManager(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *lineLayout = new QHBoxLayout;
     lineLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // lineLayout->setMargin(0);
+    lineLayout->setContentsMargins(QMargins(0, 0, 0, 0));
     lineLayout->setSpacing(0);
     lineLayout->addWidget(input);
     lineLayout->addWidget(addButton);

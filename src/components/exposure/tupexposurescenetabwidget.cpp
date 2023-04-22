@@ -42,8 +42,10 @@ TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(p
         qDebug() << "[TupExposureSceneTabWidget()]";
     #endif
 
+    margins = QMargins(1, 1, 1, 1);
+
     QVBoxLayout *layout = new QVBoxLayout(this);
-    // layout->setMargin(1);
+    layout->setContentsMargins(margins);
 
     tabber = new QTabWidget;
     connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
@@ -87,7 +89,7 @@ void TupExposureSceneTabWidget::addScene(int index, const QString &name, TupExpo
 
     QFrame *frame = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(frame);
-    // layout->setMargin(1);
+    layout->setContentsMargins(margins);
 
     QHBoxLayout *toolsLayout = new QHBoxLayout;
     toolsLayout->setAlignment(Qt::AlignHCenter);
@@ -125,7 +127,7 @@ void TupExposureSceneTabWidget::restoreScene(int index, const QString &name)
 
     QFrame *frame = new QFrame;
     QVBoxLayout *layout = new QVBoxLayout(frame);
-    // layout->setMargin(1);
+    layout->setContentsMargins(margins);
 
     QHBoxLayout *toolsLayout = new QHBoxLayout;
     toolsLayout->setAlignment(Qt::AlignHCenter);
@@ -196,7 +198,7 @@ TupExposureTable* TupExposureSceneTabWidget::getTable(int index)
         qDebug() << "[TupExposureSceneTabWidget::getTable()] - Fatal Error: Invalid table index -> " << index;
     #endif
 
-    return 0;
+    return nullptr;
 }
 
 void TupExposureSceneTabWidget::setCurrentIndex(int index)

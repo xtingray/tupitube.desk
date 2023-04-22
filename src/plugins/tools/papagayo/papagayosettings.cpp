@@ -40,6 +40,7 @@
 
 PapagayoSettings::PapagayoSettings(QWidget *parent) : QWidget(parent)
 {
+    margins = QMargins(0, 0, 0, 0);
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
@@ -62,14 +63,15 @@ void PapagayoSettings::setInnerForm()
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // nameLayout->setMargin(0);
+    nameLayout->setContentsMargins(margins);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(lipSyncName);
 
     QHBoxLayout *fpsLayout = new QHBoxLayout;
     fpsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // fpsLayout->setMargin(0);
+    fpsLayout->setContentsMargins(margins);
+    fpsLayout->setContentsMargins(margins);
     fpsLayout->setSpacing(0);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
@@ -86,14 +88,14 @@ void PapagayoSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    // startLayout->setMargin(0);
+    startLayout->setContentsMargins(margins);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(comboInit);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    // endLayout->setMargin(0);
+    endLayout->setContentsMargins(margins);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
 
@@ -101,7 +103,7 @@ void PapagayoSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    // totalLayout->setMargin(0);
+    totalLayout->setContentsMargins(margins);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -130,7 +132,7 @@ void PapagayoSettings::setInnerForm()
     connect(yPosField, SIGNAL(valueChanged(int)), this, SIGNAL(yPosChanged(int)));
 
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // xLayout->setMargin(0);
+    xLayout->setContentsMargins(margins);
     xLayout->setSpacing(0);
     xLayout->addStretch();
     xLayout->addWidget(xLabel);
@@ -138,7 +140,7 @@ void PapagayoSettings::setInnerForm()
     xLayout->addStretch();
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // yLayout->setMargin(0);
+    yLayout->setContentsMargins(margins);
     yLayout->setSpacing(0);
     yLayout->addStretch();
     yLayout->addWidget(yLabel);
@@ -158,7 +160,7 @@ void PapagayoSettings::setInnerForm()
     connect(angleField, SIGNAL(valueChanged(int)), this, SIGNAL(rotationChanged(int)));
 
     QBoxLayout *angleLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // angleLayout->setMargin(0);
+    angleLayout->setContentsMargins(margins);
     angleLayout->setSpacing(0);
     angleLayout->addStretch();
     angleLayout->addWidget(angleLabel);
@@ -181,7 +183,7 @@ void PapagayoSettings::setInnerForm()
     connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
 
     QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // factorXLayout->setMargin(0);
+    factorXLayout->setContentsMargins(margins);
     factorXLayout->setSpacing(0);
     factorXLayout->addStretch();
     factorXLayout->addWidget(factorXLabel);
@@ -199,7 +201,7 @@ void PapagayoSettings::setInnerForm()
     connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
 
     QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // factorYLayout->setMargin(0);
+    factorYLayout->setContentsMargins(margins);
     factorYLayout->setSpacing(0);
     factorYLayout->addStretch();
     factorYLayout->addWidget(factorYLabel);
@@ -410,6 +412,7 @@ void PapagayoSettings::notifyRotation(int angle)
         angle = 0;
         angleField->setValue(0);
     }
+
     emit rotationChanged(angle);
 }
 
@@ -456,6 +459,7 @@ void PapagayoSettings::enableProportion(int flag)
         emit scaleChanged(factor, factor);
         enable = true;
     }
+
     emit proportionActivated(enable);
 }
 

@@ -48,7 +48,6 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
-#include <QDir>
 
 class TupItemTweener;
 
@@ -133,6 +132,8 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
 
         TImageButton *apply;
         TImageButton *remove;
+
+        QMargins margins;
 };
 
 #endif

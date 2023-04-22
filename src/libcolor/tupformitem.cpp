@@ -42,7 +42,7 @@ TupFormItem::TupFormItem(const QString &text, QWidget *parent) : QWidget(parent)
 {
     QHBoxLayout *layout = new QHBoxLayout;
     layout->setSpacing(0);
-    // layout->setMargin(0);
+    layout->setContentsMargins(QMargins(0, 0, 0, 0));
 
     QLabel *labelText = new QLabel(text);
     value = new QSpinBox;

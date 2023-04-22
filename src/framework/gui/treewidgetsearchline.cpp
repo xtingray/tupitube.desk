@@ -578,7 +578,7 @@ void TreeWidgetSearchLineWidget::createWidgets()
 
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setSpacing(2);
-    // layout->setMargin(0);
+    layout->setContentsMargins(QMargins(0, 0, 0, 0));
     layout->addWidget(k->clearButton);
     layout->addWidget(k->searchLine);
 }

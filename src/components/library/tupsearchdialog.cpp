@@ -110,7 +110,7 @@ QWidget * TupSearchDialog::searchTab()
 
     QWidget *comboPanel = new QWidget;
     QHBoxLayout *comboLayout = new QHBoxLayout(comboPanel);
-    // comboLayout->setMargin(0);
+    comboLayout->setContentsMargins(0, 0, 0, 0);
     comboLayout->setSpacing(0);
 
     searchLine = new TComboBox;

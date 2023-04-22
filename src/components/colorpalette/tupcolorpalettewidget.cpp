@@ -128,16 +128,16 @@ void TupColorPaletteWidget::setupColorDisplay()
         qDebug() << "[TupColorPaletteWidget::setupColorDisplay()]";
     #endif
 
+    QMargins margins = QMargins(0, 0, 0, 0);
+
     QFrame *topPanel = new QFrame(this);
     QBoxLayout *generalLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    // generalLayout->setMargin(0);
+    generalLayout->setContentsMargins(margins);
     topPanel->setLayout(generalLayout);
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(margins);
     mainLayout->setSpacing(1);
-
-    // mainLayout->addWidget(new QWidget());
     mainLayout->addStretch(1);
 
     TImageButton *changeButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/exchange_colors.png")), 20, this, true);
@@ -196,12 +196,10 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     TImageButton *eyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this, true);
     eyedropperButton->setToolTip(tr("Eye Dropper"));
-    // eyedropperButton->setShortcut(QKeySequence(tr("E")));
     connect(eyedropperButton, SIGNAL(clicked()), this, SLOT(activateEyeDropper()));
     mainLayout->addWidget(eyedropperButton);
 
     mainLayout->addStretch(1);
-    // mainLayout->addWidget(new QWidget());
 
     generalLayout->addLayout(mainLayout);
     generalLayout->addWidget(new QWidget());
@@ -210,10 +208,8 @@ void TupColorPaletteWidget::setupColorDisplay()
     generalLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     QBoxLayout *bgLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // bgLayout->setMargin(0);
+    bgLayout->setContentsMargins(margins);
     bgLayout->setSpacing(1);
-
-    // bgLayout->addWidget(new QWidget());
 
     QBrush bgBrush = QBrush(Qt::white);
     bgColor = new TColorCell(TColorCell::Background, bgBrush, cellSize);
@@ -254,11 +250,8 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     TImageButton *bgEyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this, true);
     bgEyedropperButton->setToolTip(tr("Eye Dropper"));
-    // bgEyedropperButton->setShortcut(QKeySequence(tr("E")));
     connect(bgEyedropperButton, SIGNAL(clicked()), this, SLOT(activateBgEyeDropper()));
     bgLayout->addWidget(bgEyedropperButton);
-
-    // bgLayout->addWidget(new QWidget());
 
     generalLayout->addLayout(bgLayout);
     generalLayout->setAlignment(bgLayout, Qt::AlignHCenter);

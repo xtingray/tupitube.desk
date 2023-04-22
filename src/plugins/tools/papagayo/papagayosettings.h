@@ -46,7 +46,6 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
-#include <QTextEdit>
 
 /**
  * @author Gustav Gonzalez 
@@ -127,6 +126,7 @@ class TUPITUBE_PLUGIN PapagayoSettings : public QWidget
         double currentYFactor;
 
         const TupPhoneme *phoneme;
+        QMargins margins;
 };
 
 #endif

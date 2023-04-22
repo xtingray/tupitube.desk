@@ -44,7 +44,7 @@ TupViewColorCells::TupViewColorCells(QWidget *parent) : QFrame(parent)
     numColorRecent = 0;
     currentCell = nullptr;
     viewLayout = new QVBoxLayout;
-    // viewLayout->setMargin(0);
+    viewLayout->setContentsMargins(QMargins(0, 0, 0, 0));
     viewLayout->setSpacing(0);
 
     setFrameStyle(QFrame::Box | QFrame::Raised);
@@ -353,7 +353,7 @@ void TupViewColorCells::setupButtons()
 {
     QGroupBox *containerButtons = new QGroupBox(this);
     QBoxLayout *bLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // bLayout->setMargin(0);
+    bLayout->setContentsMargins(QMargins(0, 0, 0, 0));
     bLayout->setSpacing(0);
 
     containerButtons->setLayout(bLayout);

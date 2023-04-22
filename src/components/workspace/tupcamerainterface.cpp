@@ -164,11 +164,12 @@ TupCameraInterface::TupCameraInterface(const QString &title, QComboBox *devicesC
     gridLayout->setHorizontalSpacing(2);
 
     // Spacing
+    QMargins margins = QMargins(2, 2, 2, 2);
 
     QLabel *gridLabel = new QLabel;
     gridLabel->setPixmap(QPixmap(THEME_DIR + "icons/grid_spacing.png"));
     gridLabel->setToolTip(tr("Grid spacing"));
-    gridLabel->setMargin(2);
+    gridLabel->setContentsMargins(margins);
 
     TCONFIG->beginGroup("PaintArea");
     QString colorName = TCONFIG->value("GridColor", "#0000b4").toString();
@@ -186,7 +187,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QComboBox *devicesC
     QLabel *gridThicknessLabel = new QLabel;
     gridThicknessLabel->setPixmap(QPixmap(THEME_DIR + "icons/grid_thickness.png"));
     gridThicknessLabel->setToolTip(tr("Grid line thickness"));
-    gridThicknessLabel->setMargin(2);
+    gridThicknessLabel->setContentsMargins(margins);
 
     QSpinBox *gridThicknessBox = new QSpinBox;
     gridThicknessBox->setSingleStep(1);
@@ -199,7 +200,7 @@ TupCameraInterface::TupCameraInterface(const QString &title, QComboBox *devicesC
     QLabel *colorLabel = new QLabel;
     colorLabel->setPixmap(QPixmap(THEME_DIR + "icons/color_palette.png"));
     colorLabel->setToolTip(tr("Grid color"));
-    colorLabel->setMargin(2);
+    colorLabel->setContentsMargins(margins);
 
     colorCell = new TupColorWidget(gridColor);
     connect(colorCell, SIGNAL(clicked()), this, SLOT(updateColour()));

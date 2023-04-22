@@ -51,7 +51,7 @@ TItemSelector::TItemSelector(const QString &topLabel, const QString &bottomLabel
 
     QVBoxLayout *controlBox = new QVBoxLayout;
     controlBox->setSpacing(0);
-    // controlBox->setMargin(2);
+    controlBox->setContentsMargins(QMargins(2, 2, 2, 2));
     controlBox->addStretch();
 
     QToolButton *nextButton = new QToolButton;

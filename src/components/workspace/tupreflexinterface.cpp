@@ -142,7 +142,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     QLabel *gridLabel = new QLabel;
     gridLabel->setPixmap(QPixmap(THEME_DIR + "icons/grid_spacing.png"));
     gridLabel->setToolTip(tr("Grid spacing"));
-    gridLabel->setMargin(2);
+    gridLabel->setContentsMargins(QMargins(2, 2, 2, 2));
 
     QSpinBox *gridSpacing = new QSpinBox;
     gridSpacing->setSingleStep(10);
@@ -153,7 +153,7 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     QLabel *colorLabel = new QLabel;
     colorLabel->setPixmap(QPixmap(THEME_DIR + "icons/color_palette.png"));
     colorLabel->setToolTip(tr("Grid color"));
-    colorLabel->setMargin(2);
+    colorLabel->setContentsMargins(2, 2, 2, 2);
 
     gridColor = QColor(0, 0, 180, 50);
     colorCell = new TupColorWidget(gridColor);

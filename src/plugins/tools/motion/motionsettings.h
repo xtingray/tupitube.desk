@@ -45,10 +45,8 @@
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
-#include <QListWidget>
 #include <QSpinBox>
 #include <QBoxLayout>
-#include <QHeaderView>
 #include <QGraphicsPathItem>
 
 class TupItemTweener;
@@ -129,6 +127,7 @@ class TUPITUBE_PLUGIN MotionSettings : public QWidget
 
         TImageButton *applyButton;
         TImageButton *remove;
+        QMargins margins;
 };
 
 #endif

@@ -135,6 +135,7 @@ class TUPITUBE_PLUGIN ColorSettings : public QWidget
         TImageButton *remove;
 
         TupItemTweener::FillType fillType;
+        QMargins margins;
 };
 
 #endif

@@ -47,6 +47,7 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
     propertiesDone = false;
     rotationType = TupItemTweener::Continuos;
     stepsCounter = 0;
+    margins = QMargins(1, 1, 1, 1);
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -56,7 +57,7 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // nameLayout->setMargin(0);
+    nameLayout->setContentsMargins(margins);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -74,7 +75,7 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    // buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(margins);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(apply);
     buttonsLayout->addWidget(remove);
@@ -121,14 +122,14 @@ void RotationSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    // startLayout->setMargin(0);
+    startLayout->setContentsMargins(margins);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    // endLayout->setMargin(0);
+    endLayout->setContentsMargins(margins);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
     endLayout->addWidget(endFrame);
@@ -137,7 +138,7 @@ void RotationSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    // totalLayout->setMargin(0);
+    totalLayout->setContentsMargins(margins);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -151,7 +152,7 @@ void RotationSettings::setInnerForm()
     typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *typeLayout = new QHBoxLayout;
     typeLayout->setAlignment(Qt::AlignHCenter);
-    // typeLayout->setMargin(0);
+    typeLayout->setContentsMargins(margins);
     typeLayout->setSpacing(0);
     typeLayout->addWidget(typeLabel);
     typeLayout->addWidget(rotationTypeCombo);
@@ -169,13 +170,13 @@ void RotationSettings::setInnerForm()
 
     QVBoxLayout *speedLayout = new QVBoxLayout;
     speedLayout->setAlignment(Qt::AlignHCenter);
-    // speedLayout->setMargin(0);
+    speedLayout->setContentsMargins(margins);
     speedLayout->setSpacing(0);
     speedLayout->addWidget(speedLabel);
 
     QVBoxLayout *speedLayout2 = new QVBoxLayout;
     speedLayout2->setAlignment(Qt::AlignHCenter);
-    // speedLayout2->setMargin(0);
+    speedLayout2->setContentsMargins(margins);
     speedLayout2->setSpacing(0);
     speedLayout2->addWidget(degreesPerFrame);
 
@@ -189,9 +190,9 @@ void RotationSettings::setInnerForm()
 
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
 
-    QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom); // , clockPanel);
+    QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     clockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    // clockLayout->setMargin(0);
+    clockLayout->setContentsMargins(margins);
     clockLayout->setSpacing(0);
 
     QLabel *directionLabel = new QLabel(tr("Direction") + ": ");
@@ -236,7 +237,7 @@ void RotationSettings::setRangeForm()
     rangePanel = new QWidget;
     QBoxLayout *rangeLayout = new QBoxLayout(QBoxLayout::TopToBottom, rangePanel);
     rangeLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    // rangeLayout->setMargin(0);
+    rangeLayout->setContentsMargins(margins);
     rangeLayout->setSpacing(0);
  
     QLabel *rangeLabel = new QLabel(tr("Degrees Range") + ": ");
@@ -253,7 +254,7 @@ void RotationSettings::setRangeForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    // startLayout->setMargin(0);
+    startLayout->setContentsMargins(margins);
     startLayout->setSpacing(0);
     startLayout->addWidget(startLabel);
     startLayout->addWidget(rangeStart);
@@ -269,7 +270,7 @@ void RotationSettings::setRangeForm()
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    // endLayout->setMargin(0);
+    endLayout->setContentsMargins(margins);
     endLayout->setSpacing(0);
     endLayout->addWidget(endLabel);
     endLayout->addWidget(rangeEnd);
@@ -280,7 +281,7 @@ void RotationSettings::setRangeForm()
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
-    // loopLayout->setMargin(0);
+    loopLayout->setContentsMargins(margins);
     loopLayout->setSpacing(0);
     loopLayout->addWidget(rangeLoopBox);
     reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), rangePanel);
@@ -289,7 +290,7 @@ void RotationSettings::setRangeForm()
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
-    // reverseLayout->setMargin(0);
+    reverseLayout->setContentsMargins(margins);
     reverseLayout->setSpacing(0);
     reverseLayout->addWidget(reverseLoopBox);
 
@@ -432,6 +433,7 @@ void RotationSettings::applyTween()
         #ifdef TUP_DEBUG
             qDebug() << "Settings::applyTween() - You must set Tween properties first!";
         #endif
+
         return;
     }
 
@@ -443,6 +445,7 @@ void RotationSettings::applyTween()
             #ifdef TUP_DEBUG
                 qDebug() << "Settings::applyTween() - Angle range must be greater than 0!";
             #endif
+
             return;
         }
 
@@ -452,6 +455,7 @@ void RotationSettings::applyTween()
             #ifdef TUP_DEBUG
                 qDebug() << "Settings::applyTween() - Angle range must be greater than Speed!";
             #endif
+
             return;
         }
     }
@@ -498,7 +502,7 @@ void RotationSettings::emitOptionChanged(int option)
                 options->setCurrentIndex(0);
                 TOsd::self()->display(TOsd::Warning, tr("Select objects for Tweening first!"));
                 #ifdef TUP_DEBUG
-                    qDebug() << "Settings::emitOptionChanged() - You must set Tween properties first!";
+                    qDebug() << "[Settings::emitOptionChanged()] - You must set Tween properties first!";
                 #endif
             }
         }

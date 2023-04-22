@@ -37,8 +37,11 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
+#include <QMargins>
+
 Configurator::Configurator(QWidget *parent) : QFrame(parent)
 {
+    QMargins margins = QMargins(0, 0, 0, 0);
     framesCount = 1;
     currentFrame = 0;
 
@@ -58,7 +61,7 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
 
     settingsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     settingsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // settingsLayout->setMargin(0);
+    settingsLayout->setContentsMargins(margins);
     settingsLayout->setSpacing(0);
 
     setTweenManagerPanel();

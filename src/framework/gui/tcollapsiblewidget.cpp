@@ -40,7 +40,7 @@
 TCollapsibleWidget::TCollapsibleWidget(QWidget *parent): QWidget(parent)
 {
     mainLayout = new QVBoxLayout(this);
-    // mainLayout->setMargin(0);
+    mainLayout->setContentsMargins(QMargins(0, 0, 0, 0));
 
     stack = new QStackedWidget;
     separator = new TSeparator;

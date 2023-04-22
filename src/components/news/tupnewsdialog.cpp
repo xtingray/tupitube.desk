@@ -47,7 +47,7 @@ TupNewsDialog::TupNewsDialog(QWidget *parent) : QDialog(parent)
     setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/updates.png")));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    // layout->setMargin(15);
+    layout->setContentsMargins(15, 15, 15, 15);
 
     releasePage = new QTextBrowser;
     releaseDocument = new QTextDocument(releasePage);

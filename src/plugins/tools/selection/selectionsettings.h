@@ -43,7 +43,6 @@
 #include <QBoxLayout>
 #include <QTextEdit>
 #include <QSpinBox>
-#include <QDir>
 #include <QCheckBox>
 #include <QPushButton>
 
@@ -147,6 +146,8 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         double currentYFactor;
         QTextEdit *textArea;
         bool isVisible;
+
+        QMargins margins;
 };
 
 #endif

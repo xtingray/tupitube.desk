@@ -127,6 +127,8 @@ class TUPITUBE_PLUGIN ShearSettings : public QWidget
 
         TImageButton *apply;
         TImageButton *remove;
+
+        QMargins margins;
 };
 
 #endif

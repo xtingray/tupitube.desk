@@ -38,7 +38,6 @@
 
 #include "colorsettings.h"
 #include "tradiobuttongroup.h"
-// #include "tuptweenerstep.h"
 #include "tupitemtweener.h"
 #include "timagebutton.h"
 #include "tseparator.h"
@@ -46,12 +45,12 @@
 
 #include <QBoxLayout>
 #include <QColorDialog>
-#include <QDir>
 
 ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
     totalStepsCount = 0;
+    margins = QMargins(0, 0, 0, 0);
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -61,7 +60,7 @@ ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // nameLayout->setMargin(0);
+    nameLayout->setContentsMargins(margins);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -79,7 +78,7 @@ ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    // buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(margins);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(apply);
     buttonsLayout->addWidget(remove);
@@ -141,14 +140,14 @@ void ColorSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    // startLayout->setMargin(0);
+    startLayout->setContentsMargins(margins);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    // endLayout->setMargin(0);
+    endLayout->setContentsMargins(margins);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
     endLayout->addWidget(endFrame);
@@ -157,11 +156,11 @@ void ColorSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    // totalLayout->setMargin(0);
+    totalLayout->setContentsMargins(margins);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    initialColor = QColor("#fff");
+    initialColor = QColor(255, 255, 255, 255);
     initColorButton = new QPushButton();
     initColorButton->setText(tr("White"));
     initColorButton->setPalette(QPalette(initialColor));
@@ -176,7 +175,7 @@ void ColorSettings::setInnerForm()
     fillTypeCombo->addItem(tr("Line & Internal Fill"));
     QHBoxLayout *fillLayout = new QHBoxLayout;
     fillLayout->setAlignment(Qt::AlignHCenter);
-    // fillLayout->setMargin(0);
+    fillLayout->setContentsMargins(margins);
     fillLayout->setSpacing(0);
     fillLayout->addWidget(typeLabel);
     fillLayout->addWidget(fillTypeCombo);
@@ -185,12 +184,12 @@ void ColorSettings::setInnerForm()
     coloringInitLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *coloringInitLayout = new QHBoxLayout;
     coloringInitLayout->setAlignment(Qt::AlignHCenter);
-    // coloringInitLayout->setMargin(0);
+    coloringInitLayout->setContentsMargins(margins);
     coloringInitLayout->setSpacing(0);
     coloringInitLayout->addWidget(coloringInitLabel);
     coloringInitLayout->addWidget(initColorButton);
 
-    endingColor = QColor("#fff");
+    endingColor = QColor(255, 255, 255, 255);
     endColorButton = new QPushButton();
     endColorButton->setText(tr("White"));
     endColorButton->setPalette(QPalette(endingColor));
@@ -201,7 +200,7 @@ void ColorSettings::setInnerForm()
     coloringEndLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *coloringEndLayout = new QHBoxLayout;
     coloringEndLayout->setAlignment(Qt::AlignHCenter);
-    // coloringEndLayout->setMargin(0);
+    coloringEndLayout->setContentsMargins(margins);
     coloringEndLayout->setSpacing(0);
     coloringEndLayout->addWidget(coloringEndLabel);
     coloringEndLayout->addWidget(endColorButton);
@@ -215,7 +214,7 @@ void ColorSettings::setInnerForm()
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *iterationsLayout = new QHBoxLayout;
     iterationsLayout->setAlignment(Qt::AlignHCenter);
-    // iterationsLayout->setMargin(0);
+    iterationsLayout->setContentsMargins(margins);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
     iterationsLayout->addWidget(iterationsCombo);
@@ -225,7 +224,7 @@ void ColorSettings::setInnerForm()
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
-    // loopLayout->setMargin(0);
+    loopLayout->setContentsMargins(margins);
     loopLayout->setSpacing(0);
     loopLayout->addWidget(loopBox);
 
@@ -234,7 +233,7 @@ void ColorSettings::setInnerForm()
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
-    // reverseLayout->setMargin(0);
+    reverseLayout->setContentsMargins(margins);
     reverseLayout->setSpacing(0);
     reverseLayout->addWidget(reverseLoopBox);
 
@@ -363,11 +362,13 @@ void ColorSettings::applyTween()
 {
     if (!selectionDone) {
         TOsd::self()->display(TOsd::Warning, tr("You must select at least one object!"));
+
         return;
     }
 
     if (!propertiesDone) {
         TOsd::self()->display(TOsd::Warning, tr("You must set Tween properties first!"));
+
         return;
     }
 
@@ -394,7 +395,7 @@ void ColorSettings::setInitialColor()
 
 void ColorSettings::setInitialColor(QColor color) {
     initialColor = color;
-    endingColor = QColor("#fff");
+    endingColor = QColor(255, 255, 255, 255);
     updateColor(initialColor, initColorButton);
     updateColor(endingColor, endColorButton);
 }
@@ -442,7 +443,7 @@ QString ColorSettings::tweenToXml(int currentScene, int currentLayer, int curren
     root.setAttribute("initScene", currentScene);
 
     QString type = fillTypeCombo->currentText();
-    TupItemTweener::FillType fillType;
+    TupItemTweener::FillType fillType = TupItemTweener::NoFill;
     if (type.compare(tr("Internal Fill")) == 0) 
         fillType = TupItemTweener::Internal;
     if (type.compare(tr("Line Fill")) == 0)
@@ -459,7 +460,7 @@ QString ColorSettings::tweenToXml(int currentScene, int currentLayer, int curren
     int initialBlue = initialColor.blue();
 
     QString colorText = QString::number(initialRed) + "," + QString::number(initialGreen)
-                       + "," + QString::number(initialBlue);
+                        + "," + QString::number(initialBlue);
     root.setAttribute("initialColor", colorText);
 
     int endingRed = endingColor.red();
@@ -467,7 +468,7 @@ QString ColorSettings::tweenToXml(int currentScene, int currentLayer, int curren
     int endingBlue = endingColor.blue();
 
     colorText = QString::number(endingRed) + "," + QString::number(endingGreen)
-                       + "," + QString::number(endingBlue);
+                + "," + QString::number(endingBlue);
     root.setAttribute("endingColor", colorText);
 
     int iterations = iterationsCombo->value();

@@ -47,6 +47,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     angle = 0;
     currentFrame = 1;
     colorContext = TColorCell::Contour;
+    margins = QMargins(1, 1, 1, 1);
 
     QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/clear_frame.png")), "");
     clearAreaButton->setIconSize(QSize(16, 16));
@@ -91,7 +92,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
         frameContainer->setFixedWidth(70);
         QHBoxLayout *frameLayout = new QHBoxLayout(frameContainer);
         frameLayout->setSpacing(3);
-        // frameLayout->setMargin(1);
+        frameLayout->setContentsMargins(margins);
         QLabel *frameLabel = new QLabel("");
         frameLabel->setToolTip(tr("Current Frame"));
         QPixmap framePix(THEME_DIR + "icons/frame_number.png");
@@ -111,7 +112,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     QWidget *zoomContainer = new QWidget;
     QHBoxLayout *zoomLayout = new QHBoxLayout(zoomContainer);
     zoomLayout->setSpacing(3);
-    // zoomLayout->setMargin(1);
+    zoomLayout->setContentsMargins(margins);
 
     QLabel *zoomTool = new QLabel("");
     zoomTool->setToolTip(tr("Zoom"));
@@ -138,7 +139,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     QWidget *rotContainer = new QWidget;
     QHBoxLayout *rotLayout = new QHBoxLayout(rotContainer);
     rotLayout->setSpacing(3);
-    // rotLayout->setMargin(1);
+    rotLayout->setContentsMargins(margins);
 
     QLabel *rotateLabel = new QLabel("");
     rotateLabel->setToolTip(tr("Rotate Workspace"));
@@ -298,7 +299,7 @@ void TupPaintAreaStatus::updateFramePointer()
     bool ok = false;
     int index = text.toInt(&ok);   
     if (ok) {
-        if (index < 1 || index > 999) {
+        if ((index < 1) || (index > 999)) {
             frameField->setText(QString::number(currentFrame));
             return;
         }

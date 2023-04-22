@@ -47,6 +47,7 @@
 
 SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
+    margins = QMargins(0, 0, 0, 0);
     QScreen *screen = QGuiApplication::screens().at(0);
     QRect rect = screen->availableGeometry();
     int screenH = rect.height();
@@ -158,14 +159,12 @@ void SelectionSettings::setLargetInterface()
     formLayout->addWidget(position);
 
     formLayout->addLayout(setPosBlock());
-    // formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     QLabel *rotation = new QLabel("<b>" + tr("Rotation") + "</b>");
     rotation->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(rotation);
 
     formLayout->addLayout(setRotateBlock());
-    // formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     QLabel *scale = new QLabel("<b>" + tr("Scale") + "</b>");
     scale->setAlignment(Qt::AlignHCenter);
@@ -241,7 +240,7 @@ void SelectionSettings::updatePanel(int index)
 QBoxLayout * SelectionSettings::setAlignBlock()
 {
     QBoxLayout *alignLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // alignLayout->setMargin(0);
+    alignLayout->setContentsMargins(margins);
     alignLayout->setSpacing(0);
 
     TImageButton *hAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/h_center.png"), 22);
@@ -264,7 +263,7 @@ QBoxLayout * SelectionSettings::setAlignBlock()
 QBoxLayout * SelectionSettings::setFlipsBlock()
 {
     QBoxLayout *flipLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // flipLayout->setMargin(0);
+    flipLayout->setContentsMargins(margins);
     flipLayout->setSpacing(0);
 
     TImageButton *horizontalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/horizontal_flip.png"), 22);
@@ -287,7 +286,7 @@ QBoxLayout * SelectionSettings::setFlipsBlock()
 QBoxLayout * SelectionSettings::setOrderBlock()
 {
     QBoxLayout *orderLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // orderLayout->setMargin(0);
+    orderLayout->setContentsMargins(margins);
     orderLayout->setSpacing(0);
 
     TImageButton *toBack = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back.png"), 22);
@@ -318,7 +317,7 @@ QBoxLayout * SelectionSettings::setOrderBlock()
 QBoxLayout * SelectionSettings::setGroupBlock()
 {
     QBoxLayout *groupLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // groupLayout->setMargin(0);
+    groupLayout->setContentsMargins(margins);
     groupLayout->setSpacing(0);
 
     TImageButton *groupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/group.png"), 22);
@@ -357,7 +356,7 @@ QBoxLayout * SelectionSettings::setPosBlock()
     connect(yPosField, SIGNAL(valueChanged(int)), this, SLOT(notifyYMovement(int)));
 
     QBoxLayout *xLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // xLayout->setMargin(0);
+    xLayout->setContentsMargins(margins);
     xLayout->setSpacing(0);
     xLayout->addWidget(xLabel);
     xLayout->addWidget(xPosField);
@@ -365,7 +364,7 @@ QBoxLayout * SelectionSettings::setPosBlock()
     layout->addLayout(xLayout);
 
     QBoxLayout *yLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // yLayout->setMargin(0);
+    yLayout->setContentsMargins(margins);
     yLayout->setSpacing(0);
     yLayout->addWidget(yLabel);
     yLayout->addWidget(yPosField);
@@ -384,7 +383,7 @@ QBoxLayout * SelectionSettings::setRotateBlock()
     connect(angleField, SIGNAL(valueChanged(int)), this, SLOT(notifyRotation(int)));
 
     QBoxLayout *angleLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // angleLayout->setMargin(0);
+    angleLayout->setContentsMargins(margins);
     angleLayout->setSpacing(0);
     angleLayout->addWidget(angleLabel);
     angleLayout->addWidget(angleField);
@@ -405,7 +404,7 @@ QBoxLayout * SelectionSettings::setScaleBlock()
     connect(factorXField, SIGNAL(valueChanged(double)), this, SLOT(notifyXScale(double)));
 
     QBoxLayout *factorXLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // factorXLayout->setMargin(0);
+    factorXLayout->setContentsMargins(margins);
     factorXLayout->setSpacing(0);
     factorXLayout->addWidget(factorXLabel);
     factorXLayout->addWidget(factorXField);
@@ -421,7 +420,7 @@ QBoxLayout * SelectionSettings::setScaleBlock()
     connect(factorYField, SIGNAL(valueChanged(double)), this, SLOT(notifyYScale(double)));
 
     QBoxLayout *factorYLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // factorYLayout->setMargin(0);
+    factorYLayout->setContentsMargins(margins);
     factorYLayout->setSpacing(0);
     factorYLayout->addWidget(factorYLabel);
     factorYLayout->addWidget(factorYField);
@@ -454,7 +453,7 @@ QBoxLayout * SelectionSettings::setPasteBlock()
     connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
 
     QBoxLayout *pasteLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    // pasteLayout->setMargin(0);
+    pasteLayout->setContentsMargins(margins);
     pasteLayout->addWidget(pasteCheck, Qt::AlignHCenter);
     pasteLayout->addWidget(pasteLabel, Qt::AlignHCenter);
     pasteLayout->addWidget(new TSeparator(Qt::Vertical));
@@ -601,6 +600,7 @@ void SelectionSettings::notifyRotation(int angle)
         angle = 0;
         angleField->setValue(0);
     }
+
     emit rotationUpdated(angle);
     currentAngle =angleField->value();
 }
@@ -636,6 +636,7 @@ void SelectionSettings::enableProportion(int flag)
         emit scaleUpdated(factor, factor);
         enable = true;
     }
+
     emit activateProportion(enable);
 }
 

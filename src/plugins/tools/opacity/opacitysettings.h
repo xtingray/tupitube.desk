@@ -124,6 +124,8 @@ class TUPITUBE_PLUGIN OpacitySettings : public QWidget
 
         TImageButton *apply;
         TImageButton *remove;
+
+        QMargins margins;
 };
 
 #endif

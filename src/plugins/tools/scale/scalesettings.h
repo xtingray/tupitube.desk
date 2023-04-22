@@ -126,6 +126,7 @@ class TUPITUBE_PLUGIN ScaleSettings : public QWidget
 
         TImageButton *apply;
         TImageButton *remove;
+        QMargins margins;
 };
 
 #endif

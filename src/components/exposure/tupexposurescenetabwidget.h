@@ -90,6 +90,8 @@ class T_GUI_EXPORT TupExposureSceneTabWidget : public QFrame
 
         QList<QDoubleSpinBox *> opacityControl;
         QList<QDoubleSpinBox *> undoOpacities;
+
+        QMargins margins;
 };
 
 #endif

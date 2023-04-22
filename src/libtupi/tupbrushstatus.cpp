@@ -41,7 +41,7 @@
 TupBrushStatus::TupBrushStatus(const QString &label, TColorCell::FillType context, const QPixmap &pix)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    // layout->setMargin(2);
+    layout->setContentsMargins(QMargins(2, 2, 2, 2));
     layout->setSpacing(2);
 
     brushCell = new TColorCell(context, QBrush(Qt::black), QSize(20, 20));

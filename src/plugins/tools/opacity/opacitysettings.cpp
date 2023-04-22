@@ -42,6 +42,7 @@ OpacitySettings::OpacitySettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
     stepsCounter = 0;
+    margins = QMargins(0, 0, 0, 0);
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -51,7 +52,7 @@ OpacitySettings::OpacitySettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // nameLayout->setMargin(0);
+    nameLayout->setContentsMargins(margins);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -69,7 +70,7 @@ OpacitySettings::OpacitySettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    // buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(margins);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(apply);
     buttonsLayout->addWidget(remove);
@@ -116,14 +117,14 @@ void OpacitySettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    // startLayout->setMargin(0);
+    startLayout->setContentsMargins(margins);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initFrame);
 
     QHBoxLayout *endLayout = new QHBoxLayout;
     endLayout->setAlignment(Qt::AlignHCenter);
-    // endLayout->setMargin(0);
+    endLayout->setContentsMargins(margins);
     endLayout->setSpacing(0);
     endLayout->addWidget(endingLabel);
     endLayout->addWidget(endFrame);
@@ -132,7 +133,7 @@ void OpacitySettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    // totalLayout->setMargin(0);
+    totalLayout->setContentsMargins(margins);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -147,7 +148,7 @@ void OpacitySettings::setInnerForm()
     opacityInitLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *opacityInitLayout = new QHBoxLayout;
     opacityInitLayout->setAlignment(Qt::AlignHCenter);
-    // opacityInitLayout->setMargin(0);
+    opacityInitLayout->setContentsMargins(margins);
     opacityInitLayout->setSpacing(0);
     opacityInitLayout->addWidget(opacityInitLabel);
     opacityInitLayout->addWidget(comboInitFactor);
@@ -163,7 +164,7 @@ void OpacitySettings::setInnerForm()
     opacityEndLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *opacityEndLayout = new QHBoxLayout;
     opacityEndLayout->setAlignment(Qt::AlignHCenter);
-    // opacityEndLayout->setMargin(0);
+    opacityEndLayout->setContentsMargins(margins);
     opacityEndLayout->setSpacing(0);
     opacityEndLayout->addWidget(opacityEndLabel);
     opacityEndLayout->addWidget(comboEndFactor);
@@ -177,7 +178,7 @@ void OpacitySettings::setInnerForm()
     iterationsLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *iterationsLayout = new QHBoxLayout;
     iterationsLayout->setAlignment(Qt::AlignHCenter);
-    // iterationsLayout->setMargin(0);
+    iterationsLayout->setContentsMargins(margins);
     iterationsLayout->setSpacing(0);
     iterationsLayout->addWidget(iterationsLabel);
     iterationsLayout->addWidget(iterationsField);
@@ -187,7 +188,7 @@ void OpacitySettings::setInnerForm()
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
     loopLayout->setAlignment(Qt::AlignHCenter);
-    // loopLayout->setMargin(0);
+    loopLayout->setContentsMargins(margins);
     loopLayout->setSpacing(0);
     loopLayout->addWidget(loopBox);
 
@@ -196,7 +197,7 @@ void OpacitySettings::setInnerForm()
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
     reverseLayout->setAlignment(Qt::AlignHCenter);
-    // reverseLayout->setMargin(0);
+    reverseLayout->setContentsMargins(margins);
     reverseLayout->setSpacing(0);
     reverseLayout->addWidget(reverseLoopBox);
 

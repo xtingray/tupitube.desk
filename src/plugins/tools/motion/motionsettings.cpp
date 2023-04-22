@@ -45,6 +45,7 @@
 MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 {
     selectionDone = false;
+    margins = QMargins(0, 0, 0, 0);
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -54,7 +55,7 @@ MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
     nameLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // nameLayout->setMargin(0);
+    nameLayout->setContentsMargins(margins);
     nameLayout->setSpacing(0);
     nameLayout->addWidget(nameLabel);
     nameLayout->addWidget(input);
@@ -72,7 +73,7 @@ MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    // buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(margins);
     buttonsLayout->setSpacing(10);
     buttonsLayout->addWidget(applyButton);
     buttonsLayout->addWidget(remove);
@@ -108,7 +109,7 @@ void MotionSettings::setInnerForm()
 
     QHBoxLayout *startLayout = new QHBoxLayout;
     startLayout->setAlignment(Qt::AlignHCenter);
-    // startLayout->setMargin(0);
+    startLayout->setContentsMargins(margins);
     startLayout->setSpacing(0);
     startLayout->addWidget(startingLabel);
     startLayout->addWidget(initSpinBox);
@@ -122,7 +123,7 @@ void MotionSettings::setInnerForm()
     totalLabel->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     QHBoxLayout *totalLayout = new QHBoxLayout;
     totalLayout->setAlignment(Qt::AlignHCenter);
-    // totalLayout->setMargin(0);
+    totalLayout->setContentsMargins(margins);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
@@ -323,13 +324,6 @@ void MotionSettings::applyTween()
         return;
     }
 
-    /*
-    if (totalSteps() <= 2) {
-        TOsd::self()->display(tr("Information"), tr("You must define a path for this Tween!"), TOsd::Info);
-        return;
-    }
-    */
-
     // SQA: Verify if Tween is already saved before calling setEditMode!
     setEditMode();
 
@@ -361,7 +355,8 @@ void MotionSettings::updateTotalLabel(int total)
 {
     endingLabel->setText(tr("Ending at frame") + ": " + QString::number(startFrame() + stepViewer->totalSteps()));
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
-    emit framesTotalChanged(); 
+
+    emit framesTotalChanged();
 }
 
 void MotionSettings::undoSegment(const QPainterPath path)

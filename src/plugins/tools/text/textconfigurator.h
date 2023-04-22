@@ -124,5 +124,7 @@ class TUPITUBE_PLUGIN TextConfigurator : public QWidget
         int currentY;
         double currentXFactor;
         double currentYFactor;
+
+        QMargins margins;
 };
 #endif

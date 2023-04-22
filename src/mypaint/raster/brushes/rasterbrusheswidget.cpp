@@ -65,7 +65,7 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
 
     QGroupBox *groupBox = new QGroupBox();
     QVBoxLayout *buttonsLayout = new QVBoxLayout(groupBox);
-    // buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(QMargins(0, 0,  0, 0));
     buttonsLayout->setSpacing(0);
 
     stackedWidget = new QStackedWidget(this);

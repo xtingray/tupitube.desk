@@ -107,9 +107,9 @@ class TUPITUBE_EXPORT SpinControl: public QGroupBox
             layout->addWidget(m_angle);
             connect(m_angle, SIGNAL(valueChanged(int)), this, SIGNAL(angleChanged(int)));
             m_angle->setMaximum(360);
-        };
+        }
 
-        ~SpinControl(){};
+        ~SpinControl(){}
         
         void setSpin(QGradient::Type type)
         {
@@ -143,17 +143,17 @@ class TUPITUBE_EXPORT SpinControl: public QGroupBox
                 }
                 default: break;
             }
-        };
+        }
         
         int angle()
         {
             return m_angle->value();
-        };
+        }
 
         int radius()
         {
             return m_radius->value();
-        };
+        }
         
         void setAngle(int angle)
         {

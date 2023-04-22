@@ -64,7 +64,7 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
 
     settingsLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     settingsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // settingsLayout->setMargin(0);
+    settingsLayout->setContentsMargins(QMargins(0, 0, 0, 0));
     settingsLayout->setSpacing(0);
 
     setTweenManagerPanel();

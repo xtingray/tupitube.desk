@@ -105,6 +105,8 @@ class TUPITUBE_EXPORT TupPaintAreaStatus : public QStatusBar
         qreal scaleFactor;
         int angle;
         int currentFrame;
+
+        QMargins margins;
 };
 
 #endif

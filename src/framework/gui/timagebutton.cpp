@@ -35,6 +35,8 @@
 
 #include "timagebutton.h"
 
+#include <QTimer>
+
 class TImageButton::Animation
 {
     public:
