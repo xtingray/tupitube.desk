@@ -402,6 +402,8 @@ QString TupItemTweener::tweenTypeToString()
         case TupItemTweener::Papagayo :
             label = QString(tr("Papagayo Lip-sync"));
             break;
+        default:
+            break;
     }
 
     return label;

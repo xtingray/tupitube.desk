@@ -56,6 +56,9 @@ class T_GUI_EXPORT TViewButton : public QToolButton
         Qt::ToolBarArea area() const;
         ToolView *toolView() const;
 
+    signals:
+        void buttonClicked(Qt::ToolBarArea area, PanelID id);
+
     protected:
         virtual void mousePressEvent(QMouseEvent *event);
 		

@@ -1177,14 +1177,14 @@ void TupMainWindow::updateSoundsPath()
         cameraWidget->loadSoundRecords();
 }
 
-void TupMainWindow::releaseSoundRecord(ModuleSource source, const QString &soundKey)
+void TupMainWindow::releaseSoundRecord(SoundSource source, const QString &soundKey)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupMainWindow::releaseSoundRecord()] - soundKey -> " << soundKey;
     #endif
 
     if (m_libraryWidget) {
-        if (source == Library)
+        if (source == LibrarySound)
             m_libraryWidget->removeSoundItem(soundKey);
         else
             m_libraryWidget->resetSoundPlayer();

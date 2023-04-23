@@ -1048,7 +1048,7 @@ void TupProject::addSoundResource(TupLibraryObject *object)
         qDebug() << "[TupProject::addSoundResource()] - Symbol name -> " << object->getSymbolName();
     #endif
 
-    SoundResource record;
+    SoundResourceParams record;
     record.key = object->getSymbolName();
     record.frame = object->frameToPlay();
     record.path = object->getDataPath();
@@ -1067,7 +1067,7 @@ bool TupProject::removeSoundResource(const QString &id)
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
-        SoundResource item = soundRecords.at(i);
+        SoundResourceParams item = soundRecords.at(i);
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::removeSoundResource()] - record key -> " << item.key;
         #endif
@@ -1102,7 +1102,7 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
     #endif
 
     for(int i=0; i<size; i++) {
-        SoundResource record = soundRecords.at(i);
+        SoundResourceParams record = soundRecords.at(i);
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::updateSoundResourcesItem()] - record path -> "
                      << record.path;
@@ -1146,7 +1146,7 @@ void TupProject::updateSoundPaths(const QString &newPath)
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
-        SoundResource item = soundRecords.at(i);
+        SoundResourceParams item = soundRecords.at(i);
         QString oldPath = item.path;
         int range = oldPath.length() - oldPath.indexOf("audio");
         QString path = newPath + "/" + oldPath.right(range);
@@ -1168,7 +1168,7 @@ bool TupProject::updateSoundType(const QString audioId, SoundType type)
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
-        SoundResource item = soundRecords.at(i);
+        SoundResourceParams item = soundRecords.at(i);
         if (item.key.compare(audioId) == 0) {
             item.type = type;
             soundRecords[i] = item;
@@ -1187,7 +1187,7 @@ bool TupProject::updateSoundFrame(const QString audioId, int frame)
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
-        SoundResource item = soundRecords.at(i);
+        SoundResourceParams item = soundRecords.at(i);
         if (item.key.compare(audioId) == 0) {
             library->updateSoundFrameToPlay(audioId, frame);
             item.frame = frame + 1;
@@ -1200,7 +1200,7 @@ bool TupProject::updateSoundFrame(const QString audioId, int frame)
     return false;
 }
 
-QList<SoundResource> TupProject::soundResourcesList()
+QList<SoundResourceParams> TupProject::soundResourcesList()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::soundResourcesList()] - items size -> "

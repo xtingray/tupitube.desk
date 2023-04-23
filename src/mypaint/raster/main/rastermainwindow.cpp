@@ -55,13 +55,15 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SLOT(processColorEvent(const TupPaintAreaEvent *)));
 
-    colorView = addToolView(colorWidget, Qt::LeftDockWidgetArea, Raster, "Brush Color", QKeySequence(tr("Shift+C")));
+    colorView = addToolView(colorWidget, Qt::LeftDockWidgetArea, Raster, RasterBrushColor, QKeySequence(tr("Shift+C")));
+    connect(colorView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandUIPanel(Qt::ToolBarArea,PanelID)));
 
     brushesWidget = new RasterBrushesWidget(RASTER_RESOURCES_DIR + "brushes");
     connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
-    brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, "Brushes", QKeySequence(tr("Shift+B")));
+    brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, RasterBrush, QKeySequence(tr("Shift+B")));
+    connect(brushesView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandUIPanel(Qt::ToolBarArea,PanelID)));
     brushesView->expandDock(true);
 
     status = new TupPaintAreaStatus(TupPaintAreaStatus::Raster);

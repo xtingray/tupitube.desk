@@ -53,7 +53,7 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
     Q_OBJECT
 
     public:
-        TupAudioMixer(int fps, QList<SoundResource> audioList, const QString &path);
+        TupAudioMixer(int fps, QList<SoundResourceParams> audioList, const QString &path);
         ~TupAudioMixer();
 
         bool mergeAudios();
@@ -77,7 +77,7 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
 
     private:
         int fps;
-        QList<SoundResource> sounds;
+        QList<SoundResourceParams> sounds;
         int soundsTotal;
         QString errorMsg;
         QString outputPath;

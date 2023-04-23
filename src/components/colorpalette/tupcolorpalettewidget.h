@@ -45,6 +45,7 @@
 #include "tslider.h"
 #include "tupgradientcreator.h"
 
+#include <QBoxLayout>
 #include <QSplitter>
 #include <QTabWidget>
 #include <QLineEdit>

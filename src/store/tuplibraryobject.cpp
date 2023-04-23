@@ -135,9 +135,9 @@ void TupLibraryObject::setSoundType(SoundType type)
     soundType = type;
 }
 
-SoundResource TupLibraryObject::getSoundResourceParams()
+SoundResourceParams TupLibraryObject::getSoundResourceParams()
 {
-    SoundResource params;
+    SoundResourceParams params;
     params.key = symbolName;
     params.frame = playAt;
     params.path = dataPath;

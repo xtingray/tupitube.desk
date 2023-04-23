@@ -177,7 +177,7 @@ QGridLayout * TupPaintAreaPreferences::safeAreaPanel()
     colorName = TCONFIG->value("SafeAreaLineColor", "#969696").toString();
     safeAreaLineColor = QColor(colorName);
     int thickness = TCONFIG->value("SafeLineThickness", 1).toInt();
-    int safeLevel = TCONFIG->value("SafeLevel", 0).toInt();
+    int safeGridLevel = TCONFIG->value("SafeGridLevel", 0).toInt();
 
     QGridLayout *safeForm = new QGridLayout;
 
@@ -206,7 +206,7 @@ QGridLayout * TupPaintAreaPreferences::safeAreaPanel()
     safeLevelCombo = new QComboBox(this);
     safeLevelCombo->addItem(tr("Background"));
     safeLevelCombo->addItem(tr("Foreground"));
-    safeLevelCombo->setCurrentIndex(safeLevel);
+    safeLevelCombo->setCurrentIndex(safeGridLevel);
     safeForm->addWidget(safeLevelCombo, 3, 1, Qt::AlignLeft);
 
     return safeForm;
@@ -226,7 +226,7 @@ void TupPaintAreaPreferences::saveValues()
     TCONFIG->setValue("SafeAreaRectColor", safeAreaRectColor.name());
     TCONFIG->setValue("SafeAreaLineColor", safeAreaLineColor.name());
     TCONFIG->setValue("SafeLineThickness", safeThickness->value());
-    TCONFIG->setValue("SafeLevel", safeLevelCombo->currentIndex());
+    TCONFIG->setValue("SafeGridLevel", safeLevelCombo->currentIndex());
 
     TCONFIG->sync();
 }

@@ -118,7 +118,7 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(SoundResource params)
+void TupLibraryDisplay::setSoundParams(SoundResourceParams params)
 {
     soundPlayer->setSoundParams(params);
 }

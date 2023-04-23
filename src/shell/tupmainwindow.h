@@ -145,7 +145,7 @@ class TupMainWindow : public TabbedMainWindow
         void exportProject();
         void postProject();
         void postFrame(const QString &imagePath);
-        void releaseSoundRecord(ModuleSource source, const QString &soundKey);
+        void releaseSoundRecord(SoundSource source, const QString &soundKey);
         void releaseAudioResources();
 
     private slots:

@@ -46,7 +46,6 @@
 #include <QPen>
 #include <QListWidgetItem>
 #include <QComboBox>
-#include <QLabel>
 #include <QListWidget>
 #include <QPushButton>
 
@@ -79,7 +78,6 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
     private slots:
         void setStyle(int style);
         void setBorderBrushStyle(QListWidgetItem *item);
-        // void setFillBrushStyle(QListWidgetItem *item);
 
         void enableRoundCapStyle();
         void enableSquareCapStyle();

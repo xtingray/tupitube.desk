@@ -64,7 +64,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         ~TupSoundPlayer();
 
         QSize sizeHint() const;
-        void setSoundParams(SoundResource params);
+        void setSoundParams(SoundResourceParams params);
         void stopFile();
         bool isPlaying();
         void reset();

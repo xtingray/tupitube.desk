@@ -35,8 +35,9 @@
 
 #include "tbuttonbar.h"
 
-TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent), m_shouldBeVisible(true)
+TButtonBar::TButtonBar(Qt::ToolBarArea section, QWidget *parent) : QToolBar(parent), m_shouldBeVisible(true)
 {
+    area = section;
     setMovable(false);
     setIconSize(QSize(16, 16));
     m_buttons.setExclusive(true);
@@ -65,16 +66,10 @@ TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent)
         default: break;
     }
 
-    setObjectName("TButtonBar-"+windowTitle());
-
-    /*
-    m_separator = addAction("");
-    m_separator->setEnabled(false); // Separator
-    m_separator->setVisible(false);
-    */
+    setObjectName("TButtonBar-" + windowTitle());
 
     connect(&m_hider, SIGNAL(timeout()), this, SLOT(hide()));
-    connect(&m_buttons, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(closeOtherPanels(QAbstractButton *)));
+    connect(&m_buttons, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(closeOtherPanels(QAbstractButton*)));
 }
 
 TButtonBar::~TButtonBar()
@@ -95,10 +90,6 @@ void TButtonBar::addButton(TViewButton *viewButton)
 
     QAction *action = addWidget(viewButton);
     m_buttons.addButton(viewButton);
-
-    // if (viewButton->toolView()->isVisible())
-    //     viewButton->toggleView();
-    //     closeOtherPanels(viewButton);
 
     m_actionForWidget[viewButton] = action;
     action->setVisible(true);
@@ -164,15 +155,6 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
         qInfo() << "[TButtonBar::closeOtherPanels()]";
     #endif
 
-    /*
-    if (!m_buttons.exclusive()) {
-        static_cast<TViewButton *>(source)->toggleView();
-        return;
-    }
-    */
-
-    // setUpdatesEnabled(false);
-
     foreach (QAbstractButton *item, m_buttons.buttons()) {
         TViewButton *button = static_cast<TViewButton *>(item);
         if (source != button) {
@@ -186,26 +168,14 @@ void TButtonBar::closeOtherPanels(QAbstractButton *source)
     }
 
     static_cast<TViewButton *>(source)->toggleView();
-
-    // setUpdatesEnabled(true);
 }
-
-/*
-void TButtonBar::showSeparator(bool event)
-{
-    #ifdef TUP_DEBUG
-        #ifdef Q_OS_WIN
-            qDebug() << "[TButtonBar::showSeparator()]";
-        #else
-            T_FUNCINFO << event;
-        #endif
-    #endif
-
-    m_separator->setVisible(event);
-}
-*/
 
 int TButtonBar::count() const
 {
     return m_buttons.buttons().count();
+}
+
+Qt::ToolBarArea TButtonBar::uiArea()
+{
+    return area;
 }

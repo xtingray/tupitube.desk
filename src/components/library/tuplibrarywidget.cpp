@@ -494,7 +494,7 @@ void TupLibraryWidget::removeCurrentItem()
 
     if (type == TupLibraryObject::Audio) {
         resetSoundPlayer();
-        emit soundRemoved(Library, objectKey);
+        emit soundRemoved(LibrarySound, objectKey);
     } else  {
         if (type == TupLibraryObject::Folder) {
             if (library->folderHasAudioObjects(objectKey)) {
@@ -1373,7 +1373,7 @@ bool TupLibraryWidget::fileIsImage(const QString &extension)
     return false;
 }
 
-void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QString &path, bool resizeFlag)
+void TupLibraryWidget::loadSequenceFromDirectory(LibraryImportAction action, const QString &path, bool resizeFlag)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - path -> " << path;

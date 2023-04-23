@@ -44,26 +44,17 @@
 #include <QButtonGroup>
 #include <QMap>
 #include <QTimer>
-#include <QToolButton>
-#include <QBoxLayout>
 #include <QAction>
-#include <QCheckBox>
-#include <QMenu>
-#include <QMouseEvent>
-
-class TViewButton;
-class ToolView;
-class QAction;
-class QMenu;
 
 class T_GUI_EXPORT TButtonBar : public QToolBar
 {
     Q_OBJECT
 
     public:
-        TButtonBar(Qt::ToolBarArea area, QWidget *parent = nullptr);
+        TButtonBar(Qt::ToolBarArea section, QWidget *parent = nullptr);
         ~TButtonBar();
 
+        Qt::ToolBarArea uiArea();
         void addButton(TViewButton *viewButton);
         void removeButton(TViewButton *viewButton);
         bool isEmpty() const;
@@ -71,7 +62,6 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
         void enable(TViewButton *viewButton);
 
         bool shouldBeVisible() const;
-        // void showSeparator(bool flag);
 
         int count() const;
 
@@ -79,9 +69,10 @@ class T_GUI_EXPORT TButtonBar : public QToolBar
         void closeOtherPanels(QAbstractButton *source);
 
     private:
+        Qt::ToolBarArea area;
         QButtonGroup m_buttons;
         QMap<QWidget *, QAction *> m_actionForWidget;
-        // QAction *m_separator;
+
         QTimer m_hider;
         bool m_blockHider;
         bool m_shouldBeVisible;

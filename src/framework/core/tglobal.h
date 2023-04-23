@@ -82,9 +82,9 @@
 #define DEFAULT_FONT_SIZE 36
 
 enum PlayMode { Forward = 0, Backward };
-enum MediaType {Video = 0, Audio};
-enum SoundType {NoSound = 0, Lipsync = 1, Effect = 2};
-struct SoundResource {
+enum MediaType { Video = 0, Audio  };
+enum SoundType { NoSound = 0, Lipsync = 1, Effect = 2  };
+struct SoundResourceParams {
     QString key;
     int frame;
     QString path;
@@ -96,7 +96,7 @@ enum PapagayoAppMode { Insert = 0, Update, VoiceRecorded, AudioFromLibrary };
 enum PapagayoAppLanguage { English = 0, Spanish, OtherLang };
 enum PapagayoAppViewType { Predefined = 0, Customized };
 
-enum ModuleSource { Library = 0, PapagayoApp };
+enum SoundSource { LibrarySound = 0, PapagayoApp };
 
 enum ProjectDimension {
     FREE = 0,
@@ -123,7 +123,9 @@ enum ProjectDimension {
   #include <inttypes.h>
 #endif
 
-enum SafeLevel { Background = 0, Foreground };
-enum ImportAction {VideoAction=0, FolderAction};
+enum SafeGridLevel { Background = 0, Foreground };
+enum LibraryImportAction { VideoAction = 0, FolderAction };
+
+enum PanelID { ColorPalette = 0, Brush, Library, TimeLine, ExposureSheet, RasterBrush, RasterBrushColor };
 
 #endif

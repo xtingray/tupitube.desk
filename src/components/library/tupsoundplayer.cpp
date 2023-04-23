@@ -132,7 +132,7 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundParams(SoundResource params)
+void TupSoundPlayer::setSoundParams(SoundResourceParams params)
 {
     soundID = params.key;
     url = params.path;

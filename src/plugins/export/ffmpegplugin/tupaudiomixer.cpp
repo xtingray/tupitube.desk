@@ -41,7 +41,7 @@
 // The audio sample output format
 #define OUTPUT_SAMPLE_FORMAT AV_SAMPLE_FMT_S16
 
-TupAudioMixer::TupAudioMixer(int frames, QList<SoundResource> audioList, const QString &path)
+TupAudioMixer::TupAudioMixer(int frames, QList<SoundResourceParams> audioList, const QString &path)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupAudioMixer::TupAudioMixer()] - output path -> " << path;

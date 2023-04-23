@@ -158,7 +158,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void importLocalSoundFile(const QString &filePath);
         void importSoundFileFromFolder(const QString &filePath, const QString &folder = QString());
         void importVideoFileFromFolder(const QString &filePath);
-        void loadSequenceFromDirectory(ImportAction action, const QString &path, bool resizeFlag = false);
+        void loadSequenceFromDirectory(LibraryImportAction action, const QString &path, bool resizeFlag = false);
 
     public slots:
         void updateSoundPlayer();
@@ -167,7 +167,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         void requestCurrentGraphic();
         void soundUpdated();
         void lipsyncModuleCalled(PapagayoAppMode mode, const QString &filePath);
-        void soundRemoved(ModuleSource source, const QString &objectKey);
+        void soundRemoved(SoundSource source, const QString &objectKey);
         void folderWithAudiosRemoved();
         void imagesImportationDone();
         void projectSizeHasChanged(const QSize dimension);

@@ -812,7 +812,7 @@ void TupScreen::loadSoundRecords()
     releaseAudioResources();
 
     // Loading effect sounds
-    QList<SoundResource> effectsList = project->soundResourcesList();
+    QList<SoundResourceParams> effectsList = project->soundResourcesList();
     int total = effectsList.count();
 
     #ifdef TUP_DEBUG
@@ -820,7 +820,7 @@ void TupScreen::loadSoundRecords()
     #endif
 
     for (int i=0; i<total; i++)  {
-        SoundResource sound = effectsList.at(i);
+        SoundResourceParams sound = effectsList.at(i);
         soundRecords << sound;
         #ifdef TUP_DEBUG
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio loaded! -> " << sound.path;
@@ -845,7 +845,7 @@ void TupScreen::playSoundAt(int frame)
 
     int size = soundRecords.count();
     for (int i=0; i<size; i++) {
-        SoundResource soundRecord = soundRecords.at(i);
+        SoundResourceParams soundRecord = soundRecords.at(i);
         if (!soundRecord.muted) {
             if (frame == (soundRecord.frame - 1)) {
                 if (i < soundPlayer.count()) {
@@ -910,7 +910,7 @@ bool TupScreen::removeSoundTrack(const QString &soundKey)
     #endif
 
     for (int i=0; i<size; i++) {
-        SoundResource soundRecord = soundRecords.at(i);
+        SoundResourceParams soundRecord = soundRecords.at(i);
         if (soundKey.compare(soundRecord.key) == 0) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupScreen::removeSoundTrack()] - "

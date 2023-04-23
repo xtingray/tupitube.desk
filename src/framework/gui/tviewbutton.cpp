@@ -77,9 +77,7 @@ void TViewButton::toggleView()
     #endif
     */
 
-    m_toolView->setUpdatesEnabled(false);
-    m_toolView->trigger();
-    m_toolView->setUpdatesEnabled(true);
+    emit buttonClicked(m_area, m_toolView->getID());
 }
 
 ToolView *TViewButton::toolView() const

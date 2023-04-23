@@ -67,7 +67,7 @@ TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary 
     grid = nullptr;
 
     TCONFIG->beginGroup("PaintArea");
-    safeLevel = SafeLevel(TCONFIG->value("SafeLevel", Foreground).toInt());
+    safeGridLevel = SafeGridLevel(TCONFIG->value("SafeGridLevel", Foreground).toInt());
 
     updateGridParameters();
     updateRotParameters();
@@ -351,7 +351,7 @@ void TupPaintAreaBase::drawBackground(QPainter *painter, const QRectF &rect)
 
     // if enabled action safe area
     if (safeAreaEnabled) {
-        if (safeLevel == Background) {
+        if (safeGridLevel == Background) {
             int width = drawingRect.width();
             int height = drawingRect.height();
             drawSafeArea(painter, width, height);
@@ -392,7 +392,7 @@ void TupPaintAreaBase::drawForeground(QPainter *painter, const QRectF &rect)
                             }
 
                             // if enabled action safe area
-                            if (safeLevel == Foreground) {
+                            if (safeGridLevel == Foreground) {
                                 if (safeAreaEnabled)
                                     drawSafeArea(painter, width, height);
                             }
@@ -573,7 +573,7 @@ void TupPaintAreaBase::updateSafeParameters()
     QString rectColorName = TCONFIG->value("SafeAreaRectColor", "#008700").toString();
     QString lineColorName = TCONFIG->value("SafeAreaLineColor", "#969696").toString();
     int thickness = TCONFIG->value("SafeLineThickness", 1).toInt();
-    safeLevel = SafeLevel(TCONFIG->value("SafeLevel", Background).toInt());
+    safeGridLevel = SafeGridLevel(TCONFIG->value("SafeGridLevel", Background).toInt());
 
     QColor safeRectColor = QColor(rectColorName);
     safeRectPen = QPen(safeRectColor, thickness);

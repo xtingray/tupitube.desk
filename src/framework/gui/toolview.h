@@ -48,9 +48,10 @@ class T_GUI_EXPORT ToolView: public QDockWidget
     Q_OBJECT
 
     public:
-        ToolView(const QString &title, const QIcon &icon = QIcon(), const QString &code = QString(), QWidget *parent = nullptr);
+        ToolView(const QString &title, const QIcon &icon, PanelID viewID, QWidget *parent = nullptr);
         virtual ~ToolView();
 
+        PanelID getID();
         void setShortcut(QKeySequence shortcut);
 
         TViewButton *button() const;
@@ -64,8 +65,12 @@ class T_GUI_EXPORT ToolView: public QDockWidget
         void setPerspective(int wsp);
         int perspective() const;
 
+    signals:
+        void buttonClicked(Qt::ToolBarArea area, PanelID id);
+
     private:
         TViewButton *currentButton;
+        PanelID id;
         int currentPerspective;
         bool expanded;
 };

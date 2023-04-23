@@ -39,7 +39,6 @@
 #include "tcommandhistory.h"
 #include "toolview.h"
 #include "tviewbutton.h"
-// #include "taudioplayer.h"
 
 void TupMainWindow::createGUI()
 {
@@ -56,8 +55,9 @@ void TupMainWindow::createGUI()
     m_colorPalette = new TupColorPaletteWidget;
     connect(m_colorPalette, SIGNAL(colorSpaceChanged(TColorCell::FillType)), this, SLOT(updateFillTool(TColorCell::FillType)));
 
-    colorView = addToolView(m_colorPalette, Qt::LeftDockWidgetArea, Animation, "Color Palette", QKeySequence(tr("Shift+P")));
+    colorView = addToolView(m_colorPalette, Qt::LeftDockWidgetArea, Animation, ColorPalette, QKeySequence(tr("Shift+P")));
     connect(colorView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateColorPanelStatus(bool)));
+    connect(colorView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandPanel(Qt::ToolBarArea,PanelID)));
 
     m_actionManager->insert(colorView->toggleViewAction(), "show_palette");
     addToPerspective(colorView->toggleViewAction(), Animation);
@@ -66,8 +66,9 @@ void TupMainWindow::createGUI()
 
     // Adding the pen parameters widget to the left side of the interface
     m_brushWidget = new TupBrushWidget;
-    penView = addToolView(m_brushWidget, Qt::LeftDockWidgetArea, Animation, "Pen", QKeySequence(tr("Shift+B")));
+    penView = addToolView(m_brushWidget, Qt::LeftDockWidgetArea, Animation, Brush, QKeySequence(tr("Shift+B")));
     connect(penView, SIGNAL(visibilityChanged(bool)), this, SLOT(updatePenPanelStatus(bool)));
+    connect(penView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandPanel(Qt::ToolBarArea,PanelID)));
 
     m_actionManager->insert(penView->toggleViewAction(), "show_pen");
     addToPerspective(penView->toggleViewAction(), Animation);
@@ -81,8 +82,9 @@ void TupMainWindow::createGUI()
     connect(m_libraryWidget, SIGNAL(folderWithAudiosRemoved()), this, SLOT(releaseAudioResources()));
     connect(m_libraryWidget, SIGNAL(projectSizeHasChanged(const QSize)), this, SLOT(resizeCanvasDimension(const QSize)));
 
-    libraryView = addToolView(m_libraryWidget, Qt::LeftDockWidgetArea, Animation, "Library", QKeySequence(tr("Shift+L")));
+    libraryView = addToolView(m_libraryWidget, Qt::LeftDockWidgetArea, Animation, Library, QKeySequence(tr("Shift+L")));
     connect(libraryView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateLibraryPanelStatus(bool)));
+    connect(libraryView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandPanel(Qt::ToolBarArea,PanelID)));
 
     m_actionManager->insert(libraryView->toggleViewAction(), "show_library");
     addToPerspective(libraryView->toggleViewAction(), Animation);
@@ -133,7 +135,8 @@ void TupMainWindow::createGUI()
     connect(m_exposureSheet, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
     connect(m_exposureSheet, SIGNAL(sceneChanged(int)), this, SLOT(updateBgColorInPalette(int)));
 
-    exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, "Exposure Sheet", QKeySequence(tr("Shift+E")));
+    exposureView = addToolView(m_exposureSheet, Qt::RightDockWidgetArea, Animation, ExposureSheet, QKeySequence(tr("Shift+E")));
+    connect(exposureView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandPanel(Qt::ToolBarArea,PanelID)));
 
     m_actionManager->insert(exposureView->toggleViewAction(), "show_exposure");
     addToPerspective(exposureView->toggleViewAction(), Animation);
@@ -146,7 +149,8 @@ void TupMainWindow::createGUI()
     connect(m_timeLine, SIGNAL(newPerspective(int)), this, SLOT(changePerspective(int)));
     connect(m_timeLine, SIGNAL(sceneChanged(int)), this, SLOT(updateBgColorInPalette(int)));
 
-    timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, "Time Line", QKeySequence(tr("Shift+T")));
+    timeView = addToolView(m_timeLine, Qt::BottomDockWidgetArea, Animation, TimeLine, QKeySequence(tr("Shift+T")));
+    connect(timeView, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), this, SLOT(expandPanel(Qt::ToolBarArea,PanelID)));
 
     m_actionManager->insert(timeView->toggleViewAction(), "show_timeline");
     addToPerspective(timeView->toggleViewAction(), Animation);

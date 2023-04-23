@@ -60,7 +60,7 @@ class TUPITUBE_EXPORT TupVideoImporterDialog : public QDialog
         int getPhotogramsTotal();
 
     signals:
-        void extractionDone(ImportAction action, const QString &imagesPath, bool sizeFlag);
+        void extractionDone(LibraryImportAction action, const QString &imagesPath, bool sizeFlag);
         void projectSizeHasChanged(const QSize dimension);
 
     public slots:

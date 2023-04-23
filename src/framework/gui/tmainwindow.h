@@ -44,15 +44,7 @@
 #include "taction.h"
 
 #include <QMainWindow>
-#include <QApplication>
-#include <QMap>
 #include <QKeySequence>
-#include <QSettings>
-#include <QCloseEvent>
-
-class TButtonBar;
-class ToolView;
-class TMainWindowAbstractSettings;
 
 class T_GUI_EXPORT TMainWindow : public QMainWindow
 {
@@ -67,8 +59,8 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
         TMainWindow(const QString &key, QWidget *parent = nullptr);
         ~TMainWindow();
 
-        ToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective = DefaultPerspective,
-                              const QString &code = QString(), QKeySequence shortcut = QKeySequence(""));
+        ToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, PanelID id,
+                              QKeySequence shortcut = QKeySequence(""));
 
         void removeToolView(ToolView *view);
 
@@ -95,6 +87,9 @@ class T_GUI_EXPORT TMainWindow : public QMainWindow
 
         void enableSpecialBar(bool flag);
         void addSpecialButton(TAction *action);
+
+    public slots:
+        void expandUIPanel(Qt::ToolBarArea area, PanelID id);
 
     private:
         Qt::DockWidgetArea toDockWidgetArea(Qt::ToolBarArea area);

@@ -36,9 +36,12 @@
 #include "tupbrushwidget.h"
 #include "tseparator.h"
 
+#include <QLabel>
+
 TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
     setWindowTitle(tr("Brush Properties"));
+    setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
 
     QWidget *borderWidget = new QWidget;
     QVBoxLayout *borderLayout = new QVBoxLayout(borderWidget);
@@ -166,24 +169,7 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 
     addChild(borderWidget);
 
-    /*
-    addChild(new TSeparator(Qt::Horizontal));
-
-    QWidget *fillWidget = new QWidget;
-    QVBoxLayout *fillLayout = new QVBoxLayout(fillWidget);
-
-    label = new QLabel(tr("Fill Brush") + ":", this);
-    fillLayout->addWidget(label);
-    fillBrushesList = new QListWidget(this);
-
-    fillLayout->addWidget(addBrushesList(Fill, fillBrushesList));
-    fillLayout->addStretch();
-    addChild(fillWidget);
-    */
-
     boxLayout()->addStretch();
-
-    setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
 }
 
 TupBrushWidget::~TupBrushWidget()
@@ -447,7 +433,7 @@ QListWidget * TupBrushWidget::addBrushesList(BrushType type, QListWidget *brushe
     brushesList->setFixedWidth(265);
 
     brushesList->setFixedHeight(63);
-    connect(brushesList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(setBorderBrushStyle(QListWidgetItem *)));
+    connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(setBorderBrushStyle(QListWidgetItem*)));
 
     /*
     if (type == Border) {

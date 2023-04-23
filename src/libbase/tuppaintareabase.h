@@ -126,7 +126,7 @@ class TUPITUBE_EXPORT TupPaintAreaBase : public QGraphicsView
 
         bool gridEnabled;
         bool safeAreaEnabled;
-        SafeLevel safeLevel;
+        SafeGridLevel safeGridLevel;
         double angle;
 
         QStringList copiesXml;

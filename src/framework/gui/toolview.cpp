@@ -35,21 +35,26 @@
 
 #include "toolview.h"
 
-ToolView::ToolView(const QString &title, const QIcon &icon, const QString &code, QWidget *parent):
+ToolView::ToolView(const QString &title, const QIcon &icon, PanelID viewID, QWidget *parent):
                    QDockWidget(title, parent), currentPerspective(0)
 {
     setFeatures(QDockWidget::NoDockWidgetFeatures);
     setWindowIcon(icon);
+    id = viewID;
 
     currentButton = new TViewButton(this);
+    connect(currentButton, SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)), SIGNAL(buttonClicked(Qt::ToolBarArea,PanelID)));
     currentButton->setToolTip(title);
-
-    setObjectName("ToolView-" + code);
     expanded = false;
 }
 
 ToolView::~ToolView()
 {
+}
+
+PanelID ToolView::getID()
+{
+    return id;
 }
 
 TViewButton *ToolView::button() const

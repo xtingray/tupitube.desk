@@ -139,7 +139,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QSize screenDimension;
 
         TupLibrary *library;
-        QList<SoundResource> soundRecords;
+        QList<SoundResourceParams> soundRecords;
         QList<QMediaPlayer *> soundPlayer;
 
         bool playerIsActive;

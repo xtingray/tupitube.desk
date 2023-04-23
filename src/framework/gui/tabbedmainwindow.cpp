@@ -144,9 +144,18 @@ void TabbedMainWindow::emitWidgetChanged(int index)
 void TabbedMainWindow::setCurrentTab(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TabbedMainWindow::setCurrentTab()] - index: " << index;
+        qDebug() << "[TabbedMainWindow::setCurrentTab()] - index ->" << index;
     #endif
 
     if (index != -1)
         currentTab->setCurrentIndex(index);
+}
+
+void TabbedMainWindow::expandPanel(Qt::ToolBarArea area, PanelID id)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TabbedMainWindow::expandPanel()]";
+    #endif
+
+    expandUIPanel(area, id);
 }

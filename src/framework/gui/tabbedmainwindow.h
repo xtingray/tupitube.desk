@@ -71,6 +71,9 @@ class T_GUI_EXPORT TabbedMainWindow : public TMainWindow
         void widgetChanged(QWidget *widget);
         void tabHasChanged(int);
 
+    public slots:
+        void expandPanel(Qt::ToolBarArea area, PanelID id);
+
     private slots:
         void emitWidgetChanged(int index);
 

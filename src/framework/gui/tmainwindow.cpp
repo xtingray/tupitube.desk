@@ -35,6 +35,9 @@
 
 #include "tmainwindow.h"
 
+#include <QSettings>
+#include <QCloseEvent>
+
 class T_GUI_EXPORT DefaultSettings : public TMainWindowAbstractSettings
 {
     public:
@@ -184,15 +187,15 @@ void TMainWindow::addSpecialButton(TAction *action)
     specialToolBar->addAction(action);
 }
 
-ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, const QString &code, QKeySequence shortcut)
+ToolView *TMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective, PanelID id, QKeySequence shortcut)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "[TMainWindow::addToolView()] - code: " << code;
+        qDebug() << "[TMainWindow::addToolView()]";
     #endif
     */
 
-    ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), code);
+    ToolView *toolView = new ToolView(widget->windowTitle(), widget->windowIcon(), id);
     toolView->setShortcut(shortcut);
     toolView->setWidget(widget);
     toolView->setPerspective(perspective);
@@ -527,4 +530,31 @@ QHash<Qt::ToolBarArea, TButtonBar *> TMainWindow::buttonBars() const
 QHash<TButtonBar *, QList<ToolView*> > TMainWindow::toolViews() const
 {
     return m_toolViews;
+}
+
+void TMainWindow::expandUIPanel(Qt::ToolBarArea area, PanelID id)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TMainWindow::expandUIPanel()] - area ->" << area;
+    #endif
+
+    TButtonBar *bar = m_buttonBars[area];
+    QList<ToolView*> viewsList = m_toolViews[bar];
+    if (area == Qt::LeftToolBarArea) {
+        ToolView *current = nullptr;
+        foreach (ToolView *view, viewsList) {
+            if (view->getID() != id) {
+                if (view->isExpanded()) {
+                    view->close();
+                    view->setExpandingFlag();
+                }
+            } else {
+                current = view;
+            }
+        }
+        if (current)
+            current->trigger();
+    } else {
+        viewsList.at(0)->trigger();
+    }
 }

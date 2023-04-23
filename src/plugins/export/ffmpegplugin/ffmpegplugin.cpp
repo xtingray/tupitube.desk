@@ -122,14 +122,14 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
     if (format == TFFmpegMovieGenerator::NONE)
         return false;
 
-    QList<SoundResource> sounds;
+    QList<SoundResourceParams> sounds;
     if (project) {
-        QList<SoundResource> soundItems = project->soundResourcesList();
+        QList<SoundResourceParams> soundItems = project->soundResourcesList();
         #ifdef TUP_DEBUG
             qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total -> " << soundItems.size();
         #endif
         if (!soundItems.isEmpty()) {
-            foreach(SoundResource item, soundItems) {
+            foreach(SoundResourceParams item, soundItems) {
                 if (!item.muted)
                     sounds << item;
             }

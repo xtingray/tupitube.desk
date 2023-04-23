@@ -130,10 +130,10 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     QMargins margins = QMargins(0, 0, 0, 0);
 
-    QFrame *topPanel = new QFrame(this);
+    QFrame *topFrame = new QFrame(this);
     QBoxLayout *generalLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     generalLayout->setContentsMargins(margins);
-    topPanel->setLayout(generalLayout);
+    topFrame->setLayout(generalLayout);
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     mainLayout->setContentsMargins(margins);
@@ -183,12 +183,12 @@ void TupColorPaletteWidget::setupColorDisplay()
     space->setFixedWidth(10);
     mainLayout->addWidget(space);
 
-    QLabel *htmlLabel = new QLabel(tr("HTML"), topPanel);
+    QLabel *htmlLabel = new QLabel(tr("HTML"), topFrame);
     htmlLabel->setMaximumWidth(50);
     htmlLabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     mainLayout->addWidget(htmlLabel);
 
-    htmlField = new QLineEdit(topPanel);
+    htmlField = new QLineEdit(topFrame);
     htmlField->setMaximumWidth(70);
     htmlField->setText("#000000");
     connect(htmlField, SIGNAL(editingFinished()), this, SLOT(updateColorFromHTML()));
@@ -218,7 +218,7 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     bgLayout->setSpacing(5);
 
-    QLabel *bgLabel = new QLabel(tr("Background"), topPanel);
+    QLabel *bgLabel = new QLabel(tr("Background"), topFrame);
     bgLabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     bgLayout->addWidget(bgLabel);
 
@@ -235,7 +235,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     space2->setFixedWidth(10);
     bgLayout->addWidget(space2);
 
-    QLabel *bgHtmlLabel = new QLabel(tr("HTML"), topPanel);
+    QLabel *bgHtmlLabel = new QLabel(tr("HTML"), topFrame);
     bgHtmlLabel->setMaximumWidth(50);
     bgHtmlLabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     bgLayout->addWidget(bgHtmlLabel);
@@ -258,7 +258,7 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     generalLayout->addWidget(new QWidget());
 
-    addChild(topPanel);
+    addChild(topFrame);
 }
 
 void TupColorPaletteWidget::updateColorMode(TColorCell::FillType type)
@@ -451,7 +451,7 @@ void TupColorPaletteWidget::setColorOnAppFromHTML(const QBrush& brush)
 void TupColorPaletteWidget::setGlobalColors(const QBrush &brush)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupColorPaletteWidget::setGlobalColors()] - brush -> " << brush;
+        qDebug() << "[TupColorPaletteWidget::setGlobalColors()] - brush ->" << brush;
     #endif
 
     if (currentSpace == TColorCell::Background) {
@@ -514,7 +514,7 @@ void TupColorPaletteWidget::updateColorFromPalette(const QBrush &brush)
 void TupColorPaletteWidget::updateColorFromDisplay(const QBrush &brush)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupColorPaletteWidget::updateColorFromDisplay()] - brush -> " << brush;
+        qDebug() << "[TupColorPaletteWidget::updateColorFromDisplay()] - brush ->" << brush;
     #endif
 
     setGlobalColors(brush);
@@ -531,7 +531,7 @@ void TupColorPaletteWidget::updateGradientColor(const QBrush &brush)
 void TupColorPaletteWidget::syncColor(const QColor &color)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupColorPaletteWidget::syncColor()] - color -> " << color;
+        qDebug() << "[TupColorPaletteWidget::syncColor()] - color ->" << color;
     #endif
 
     setGlobalColors(QBrush(color));
@@ -672,7 +672,7 @@ void TupColorPaletteWidget::init()
 void TupColorPaletteWidget::setBgColor(const QColor &color)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupColorPaletteWidget::setBgColor()] - color -> " << color;
+        qDebug() << "[TupColorPaletteWidget::setBgColor()] - color ->" << color;
     #endif
 
     QBrush brush(color);
