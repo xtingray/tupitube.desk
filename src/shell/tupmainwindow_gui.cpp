@@ -77,8 +77,8 @@ void TupMainWindow::createGUI()
     // Adding the objects library widget to the left side of the interface
     m_libraryWidget = new TupLibraryWidget(this);
     m_libraryWidget->setLibrary(m_projectManager->getProject()->getLibrary());
-    connect(m_libraryWidget, SIGNAL(soundRemoved(ModuleSource, const QString &)),
-            this, SLOT(releaseSoundRecord(ModuleSource, const QString &)));
+    connect(m_libraryWidget, SIGNAL(soundRemoved(SoundSource, const QString &)),
+            this, SLOT(releaseSoundRecord(SoundSource, const QString &)));
     connect(m_libraryWidget, SIGNAL(folderWithAudiosRemoved()), this, SLOT(releaseAudioResources()));
     connect(m_libraryWidget, SIGNAL(projectSizeHasChanged(const QSize)), this, SLOT(resizeCanvasDimension(const QSize)));
 

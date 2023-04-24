@@ -2402,8 +2402,8 @@ void TupDocumentView::openLipSyncCreator()
     TupPapagayoApp *papagayoApp = new TupPapagayoApp(Insert, project, "", getContextIndexes(), this);
     connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
             this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-    connect(papagayoApp, SIGNAL(soundRemoved(ModuleSource, const QString &)),
-            this, SIGNAL(soundRemoved(ModuleSource, const QString &)));
+    connect(papagayoApp, SIGNAL(soundRemoved(SoundSource, const QString &)),
+            this, SIGNAL(soundRemoved(SoundSource, const QString &)));
 
     /* SQA: This connection doesn't work on Windows
     connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
@@ -2447,8 +2447,8 @@ void TupDocumentView::openLipSyncCreator(const QString &lipsyncName)
             TupPapagayoApp *papagayoApp = new TupPapagayoApp(Update, project, lipsync, indexes, this);
             connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
                     this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-            connect(papagayoApp, SIGNAL(soundRemoved(ModuleSource, const QString &)),
-                    this, SIGNAL(soundRemoved(ModuleSource, const QString &)));
+            connect(papagayoApp, SIGNAL(soundRemoved(SoundSource, const QString &)),
+                    this, SIGNAL(soundRemoved(SoundSource, const QString &)));
 
             /* SQA: This connection doesn't work on Windows
             connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);
@@ -2707,8 +2707,8 @@ void TupDocumentView::launchLipsyncModule(PapagayoAppMode mode, const QString &s
         TupPapagayoApp *papagayoApp = new TupPapagayoApp(mode, project, soundFile, getContextIndexes(), this);
         connect(papagayoApp, SIGNAL(requestTriggered(const TupProjectRequest *)),
                 this, SIGNAL(requestTriggered(const TupProjectRequest *)));
-        connect(papagayoApp, SIGNAL(soundRemoved(ModuleSource, const QString &)),
-                this, SIGNAL(soundRemoved(ModuleSource, const QString &)));
+        connect(papagayoApp, SIGNAL(soundRemoved(SoundSource, const QString &)),
+                this, SIGNAL(soundRemoved(SoundSource, const QString &)));
 
         /* SQA: This connection doesn't work on Windows
         connect(papagayoApp, &TupPapagayoApp::requestTriggered, this, &TupDocumentView::requestTriggered);

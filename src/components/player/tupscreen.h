@@ -48,6 +48,7 @@
 #include <QFrame>
 #include <QTimer>
 #include <QMediaPlayer>
+#include <QAudioOutput>
 
 class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectResponseHandler
 {
@@ -141,6 +142,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         TupLibrary *library;
         QList<SoundResourceParams> soundRecords;
         QList<QMediaPlayer *> soundPlayer;
+        QList<QAudioOutput *> audioOutput;
 
         bool playerIsActive;
         PlayMode playMode;

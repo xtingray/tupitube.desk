@@ -334,8 +334,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(penWidthChanged(int)), this, SLOT(updatePenThickness(int)));
         connect(animationTab, SIGNAL(projectHasChanged()), this, SLOT(requestSaveAction()));
         connect(animationTab, SIGNAL(imagePostRequested(const QString &)), this, SLOT(postFrame(const QString &)));        
-        connect(animationTab, SIGNAL(soundRemoved(ModuleSource, const QString &)),
-                this, SLOT(releaseSoundRecord(ModuleSource, const QString &)));
+        connect(animationTab, SIGNAL(soundRemoved(SoundSource, const QString &)),
+                this, SLOT(releaseSoundRecord(SoundSource, const QString &)));
 
         connect(this, SIGNAL(activeDockChanged(TupDocumentView::DockType)), animationTab,
                 SLOT(updateActiveDock(TupDocumentView::DockType)));

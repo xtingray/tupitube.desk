@@ -47,6 +47,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QUrl>
 #include <QTime>
 #include <QCheckBox>
@@ -89,6 +90,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
 
     private:
         QList<QMediaPlayer *> soundPlayer;
+        QList<QAudioOutput *> audioOutput;
 
         QLabel *frameLabel;
         QSlider *slider;

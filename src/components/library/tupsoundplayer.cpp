@@ -150,9 +150,10 @@ void TupSoundPlayer::setSoundParams(SoundResourceParams params)
         while(!soundPlayer.isEmpty()) {
             disconnect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
             disconnect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
-            disconnect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::PlaybackState)),
+            disconnect(soundPlayer.at(0), SIGNAL(playbackStateChanged(QMediaPlayer::PlaybackState)),
                        this, SLOT(stateChanged(QMediaPlayer::PlaybackState)));
 
+            audioOutput.takeFirst();
             QMediaPlayer *player = soundPlayer.takeFirst();
             player->stop();
             player->setSource(QUrl());
@@ -161,12 +162,16 @@ void TupSoundPlayer::setSoundParams(SoundResourceParams params)
         }
     }
 
-    soundPlayer << new QMediaPlayer();
+    soundPlayer << new QMediaPlayer;
+    audioOutput << new QAudioOutput;
+    soundPlayer.at(0)->setAudioOutput(audioOutput.at(0));
     soundPlayer.at(0)->setSource(QUrl::fromLocalFile(url));
+    audioOutput.at(0)->setVolume(100);
 
     connect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
-    connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
+    connect(soundPlayer.at(0), SIGNAL(playbackStateChanged(QMediaPlayer::PlaybackState)),
+            this, SLOT(stateChanged(QMediaPlayer::PlaybackState)));
 
     enableLipSyncInterface(params.type, params.frame);
 
@@ -349,6 +354,7 @@ void TupSoundPlayer::resetMediaPlayer()
 
     if (!soundPlayer.isEmpty()) {
         while(!soundPlayer.isEmpty()) {
+            audioOutput.takeFirst();
             QMediaPlayer *player = soundPlayer.takeFirst();
             player->stop();
             player->setSource(QUrl());

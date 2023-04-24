@@ -68,7 +68,6 @@
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
-// #include <QDesktopWidget>
 #include <QBuffer>
 #include <QGraphicsSvgItem>
 #include <QSvgRenderer>

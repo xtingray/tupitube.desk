@@ -826,7 +826,9 @@ void TupScreen::loadSoundRecords()
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio loaded! -> " << sound.path;
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio frame -> " << sound.frame;
         #endif
-        soundPlayer << new QMediaPlayer();
+        soundPlayer << new QMediaPlayer;
+        audioOutput << new QAudioOutput;
+        soundPlayer.at(i)->setAudioOutput(audioOutput.at(i));
     }
 
     #ifdef TUP_DEBUG
@@ -837,11 +839,9 @@ void TupScreen::loadSoundRecords()
 
 void TupScreen::playSoundAt(int frame)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::playSoundAt()] - frame -> " << frame;
     #endif
-    */
 
     int size = soundRecords.count();
     for (int i=0; i<size; i++) {
@@ -855,6 +855,7 @@ void TupScreen::playSoundAt(int frame)
                             qWarning() << "[TupScreen::playSoundAt()] - frame -> " << frame;
                         #endif
                         soundPlayer.at(i)->setSource(QUrl::fromLocalFile(soundRecord.path));
+                        audioOutput.at(i)->setVolume(100);
                         soundPlayer.at(i)->play();
                     }
                 } else {
@@ -918,6 +919,7 @@ bool TupScreen::removeSoundTrack(const QString &soundKey)
             #endif
 
             soundRecords.takeAt(i);
+            audioOutput.takeAt(i);
             QMediaPlayer *player = soundPlayer.takeAt(i);
             player->stop();
             player->setSource(QUrl());
