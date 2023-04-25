@@ -1759,8 +1759,8 @@ void TupLibraryWidget::importVideoFileFromFolder(const QString &videoPath)
         QString imagesPath = CACHE_DIR + tempFolder + "/";
         if (videoCutter->loadFile(videoPath, imagesPath)) {
             TupVideoImporterDialog *dialog = new TupVideoImporterDialog(videoPath, imagesPath, project->getDimension(), videoCutter);
-            connect(dialog, SIGNAL(extractionDone(ImportAction, const QString &, bool)),
-                    SLOT(loadSequenceFromDirectory(ImportAction, const QString &, bool)));
+            connect(dialog, SIGNAL(extractionDone(LibraryImportAction, const QString &, bool)),
+                    SLOT(loadSequenceFromDirectory(LibraryImportAction, const QString &, bool)));
             connect(dialog, SIGNAL(projectSizeHasChanged(const QSize)), this, SIGNAL(projectSizeHasChanged(const QSize)));
             connect(this, SIGNAL(imagesImportationDone()), dialog, SLOT(endProcedure()));
             connect(this, SIGNAL(msgSent(const QString &)), dialog, SLOT(updateStatus(const QString &)));

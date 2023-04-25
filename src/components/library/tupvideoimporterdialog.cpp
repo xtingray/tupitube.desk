@@ -37,7 +37,6 @@
 #include "tconfig.h"
 #include "tseparator.h"
 #include "tapptheme.h"
-// #include "talgorithm.h"
 #include "tosd.h"
 #include "tupprojectrequest.h"
 #include "tseparator.h"
@@ -64,7 +63,6 @@ TupVideoImporterDialog::TupVideoImporterDialog(const QString &filename, const QS
     setStyleSheet(TAppTheme::themeSettings());
 
     videoCutter = cutter;
-    // connect(videoCutter, SIGNAL(msgSent(const QString &)), this, SLOT(updateStatus(const QString &)));
     connect(videoCutter, SIGNAL(imageExtracted(int)), this, SLOT(updateUI(int)));
     connect(videoCutter, SIGNAL(extractionDone()), this, SLOT(startImageImportation()));
 
