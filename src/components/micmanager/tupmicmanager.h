@@ -7,18 +7,20 @@
 #include "tinputfield.h"
 
 #include <QWidget>
-#include <QMediaRecorder>
-// #include <QAudioRecorder>
-#include <QAudioBuffer>
-// #include <QAudioProbe>
 #include <QComboBox>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QLabel>
-#include <QMediaPlayer>
 #include <QTimer>
+
+#include <QMediaCaptureSession>
+#include <QAudioInput>
+#include <QMediaRecorder>
+#include <QAudioBuffer>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 class TUPITUBE_EXPORT TupMicManager : public QWidget
 {
@@ -43,7 +45,6 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         void togglePause();
         void toggleRecord();
 
-        // void updateStatus(QMediaRecorder::Status status);
         void onStateChanged(QMediaRecorder::RecorderState state);
         void updateProgress(qint64 pos);
         void showErrorMessage();
@@ -53,6 +54,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         void trackPlayerStatus();
         void enablePlayButton();
 
+        // void updateStatus(QMediaRecorder::Status status);
+
     private:
         void initRecorder();
         void setupUI();
@@ -60,8 +63,8 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         void clearMicLevels();
         void resetMediaPlayer();
 
+        QMediaCaptureSession captureSession;
         QMediaRecorder *micRecorder;
-        // QAudioProbe *micProbe;
         QList<TupMicLevel*> micLevels;
 
         QWidget *centralWidget;
@@ -75,7 +78,7 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
 
         TInputField *nameInput;
         TInputField *durationInput;
-        QComboBox *audioDevDropList;
+        QComboBox *audioDevCombo;
         QLabel *statusLabel;
 
         QPushButton *recordButton;
@@ -85,11 +88,12 @@ class TUPITUBE_EXPORT TupMicManager : public QWidget
         QPushButton *discardButton;
 
         QList<QMediaPlayer *> player;
-        // QAudioProbe *playerProbe;
+        QAudioOutput *audioOutput;
         QTimer *timer;
         qreal secCounter;
         qreal audioDuration;
         bool recording;
+        QString audioname;
         QString extension;
         QString recordTime;
 };

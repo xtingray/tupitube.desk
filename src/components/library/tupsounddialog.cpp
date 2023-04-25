@@ -144,10 +144,6 @@ QWidget* TupSoundDialog::soundRecordTab()
     micManager = new TupMicManager;
     connect(micManager, SIGNAL(soundReady(bool)), this, SLOT(enableDialogButtons(bool)));
 
-    /* SQA: This connect doesn't work on Windows
-    connect(micManager, &TupMicManager::soundReady, this, &TupSoundDialog::enableDialogButtons);
-    */
-
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     importRecordButton = new QPushButton("");
     importRecordButton->setIcon(QIcon(THEME_DIR + "icons/apply.png"));
@@ -190,15 +186,7 @@ void TupSoundDialog::loadSoundFile()
     TCONFIG->beginGroup("General");
     soundFilePath = TCONFIG->value("DefaultPath", QDir::homePath()).toString();
 
-    QFileDialog dialog(this, tr("Import audio file..."), soundFilePath);    
-    /*
-    #ifdef Q_OS_WIN
-        QString filter = tr("Audio file") + " (*.wav)";
-    #else
-        QString filter = tr("Audio file") + " (*.ogg *.wav *.mp3)";
-    #endif
-    */
-
+    QFileDialog dialog(this, tr("Import audio file..."), soundFilePath);
     QString filter = tr("Audio file") + " (*.ogg *.wav *.mp3)";
     dialog.setNameFilter(filter);
     dialog.setFileMode(QFileDialog::ExistingFile);

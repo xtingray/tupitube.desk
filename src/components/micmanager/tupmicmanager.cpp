@@ -35,18 +35,18 @@
 
 #include "tupmicmanager.h"
 #include "tosd.h"
+#include "talgorithm.h"
 
 #include <QDir>
 #include <QGridLayout>
-#include <QMediaRecorder>
 #include <QGroupBox>
 #include <QTimer>
 #include <QMessageBox>
 #include <QMediaDevices>
-#include <QAudioDevice>
 #include <QMediaFormat>
+#include <QAudioDevice>
 
-static qreal getMaxValue(const QAudioFormat &format);
+// static qreal getMaxValue(const QAudioFormat &format);
 // static QVector<qreal> getBufferLevels(const QAudioBuffer &buffer);
 // template <class T> static QVector<qreal> getBufferLevels(const T *buffer, int frames, int channels);
 
@@ -69,33 +69,26 @@ TupMicManager::~TupMicManager()
 
     resetMediaPlayer();
 
+    delete audioOutput;
     delete micRecorder;
-    // delete micProbe;
-    // delete playerProbe;
     delete audioLevel1;
     delete audioLevel2;
 }
 
 void TupMicManager::initRecorder()
 {
+    audioname = TAlgorithm::randomString(8);
     micRecorder = new QMediaRecorder(this);
-    // micProbe = new QAudioProbe(this);
-    // connect(micProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::handleBuffer);
-    // micProbe->setSource(micRecorder);
+    captureSession.setRecorder(micRecorder);
+    captureSession.setAudioInput(new QAudioInput(this));
 
     recording = false;
     secCounter = 0;
     player << new QMediaPlayer;
-
-    // playerProbe = new QAudioProbe(this);
-    //  connect(playerProbe, &QAudioProbe::audioBufferProbed, this, &TupMicManager::handleBuffer);
-    // playerProbe->setSource(player.at(0));
-
-    #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-        extension = ".wav";
-    #else
-        extension = ".mp3";
-    #endif
+    audioOutput = new QAudioOutput;
+    player.at(0)->setAudioOutput(audioOutput);
+    audioOutput->setVolume(100);
+    extension = ".m4a";
 }
 
 void TupMicManager::setupUI()
@@ -103,7 +96,7 @@ void TupMicManager::setupUI()
     centralWidget = new QWidget(this);
     QGridLayout *mainLayout = new QGridLayout(centralWidget);
 
-    QGridLayout *formLayout = new QGridLayout();
+    QGridLayout *formLayout = new QGridLayout;
 
     QLabel *nameLabel = new QLabel(centralWidget);
     nameLabel->setText(tr("Record Name:"));
@@ -130,21 +123,16 @@ void TupMicManager::setupUI()
 
     formLayout->addWidget(durationInput, 2, 1, 1, 1);
 
-    audioDevDropList = new QComboBox(centralWidget);
-    audioDevDropList->addItem(tr("Default"), QVariant(QString()));
+    audioDevCombo = new QComboBox(centralWidget);
+    audioDevCombo->addItem(tr("Default"), QVariant(QString()));
+    foreach(QAudioDevice device, QMediaDevices::audioInputs())
+        audioDevCombo->addItem(device.description(), QVariant::fromValue(device));
 
-    QList<QAudioDevice> audioInputs = QMediaDevices::audioInputs();
-    // for (auto &device: micRecorder->audioInputs()) {
-    for (auto &device: audioInputs) {
-        audioDevDropList->addItem(device.description(), QVariant(device.id()));
-    }
-
-    formLayout->addWidget(audioDevDropList, 1, 1, 1, 1);
+    formLayout->addWidget(audioDevCombo, 1, 1, 1, 1);
     mainLayout->addLayout(formLayout, 0, 0, 1, 3);
 
     controlsWidget = new QWidget;
     QHBoxLayout *controlsLayout = new QHBoxLayout;
-
     controlsLayout->addStretch();
 
     recordButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/record.png")), "", controlsWidget);
@@ -220,19 +208,9 @@ void TupMicManager::setupUI()
 
 void TupMicManager::setConnections()
 {
-    connect(micRecorder, SIGNAL(durationChanged(qint64)), this, SLOT(updateProgress(qint64)));
-    // connect(micRecorder, SIGNAL(statusChanged(QMediaRecorder::Status)), this, SLOT(updateStatus(QMediaRecorder::Status)));
-    connect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)), this, SLOT(onStateChanged(QMediaRecorder::State)));
-    // connect(micRecorder, QOverload<QMediaRecorder::Error>::of(&QMediaRecorder::error),
-    //         this, &TupMicManager::showErrorMessage);
-
-    /* SQA: These connections don't work on Windows
-    connect(micRecorder, &QAudioRecorder::durationChanged, this, &TupMicManager::updateProgress);
-    connect(micRecorder, &QAudioRecorder::statusChanged, this, &TupMicManager::updateStatus);
-    connect(micRecorder, &QAudioRecorder::stateChanged, this, &TupMicManager::onStateChanged);
-    connect(micRecorder, QOverload<QMediaRecorder::Error>::of(&QAudioRecorder::error),
-            this, &TupMicManager::showErrorMessage);
-    */
+    connect(micRecorder, &QMediaRecorder::durationChanged, this, &TupMicManager::updateProgress);
+    connect(micRecorder, &QMediaRecorder::recorderStateChanged, this, &TupMicManager::onStateChanged);
+    connect(micRecorder, &QMediaRecorder::errorChanged, this, &TupMicManager::showErrorMessage);
 }
 
 void TupMicManager::updateProgress(qint64 duration)
@@ -244,46 +222,19 @@ void TupMicManager::updateProgress(qint64 duration)
     statusLabel->setText(tr("Recording...") + " " + recordTime + " " + tr("sec"));
 }
 
-/*
-void TupMicManager::updateStatus(QMediaRecorder::Status status)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::updateStatus()] - status -> " << status;
-    #endif
-
-    QString statusMessage;
-
-    switch (status) {
-        case QMediaRecorder::RecordingStatus:
-            statusMessage = tr("Recording...");
-            durationInput->setText("...");
-            break;
-        case QMediaRecorder::PausedStatus:
-            clearMicLevels();
-            statusMessage = tr("Paused");
-            break;
-        case QMediaRecorder::UnloadedStatus:
-        case QMediaRecorder::LoadedStatus:
-            clearMicLevels();
-            statusMessage = tr("Stopped");
-        default:
-            break;
-    }
-
-    if (micRecorder->error() == QMediaRecorder::NoError)
-        statusLabel->setText(statusMessage);
-}
-*/
-
 void TupMicManager::onStateChanged(QMediaRecorder::RecorderState state)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupMicManager::onStateChanged()] - state -> " << state;
     #endif
 
+    QString statusMessage = "";
+
     switch (state) {
         case QMediaRecorder::RecordingState:
             recording = true;
+            statusMessage = tr("Recording...");
+            durationInput->setText("...");
             recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
             recordButton->setToolTip(tr("Stop"));
             pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
@@ -291,6 +242,7 @@ void TupMicManager::onStateChanged(QMediaRecorder::RecorderState state)
             break;
         case QMediaRecorder::PausedState:
             recording = false;
+            statusMessage = tr("Paused");
             recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
             recordButton->setToolTip(tr("Stop"));
             pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/resume.png")));
@@ -298,7 +250,7 @@ void TupMicManager::onStateChanged(QMediaRecorder::RecorderState state)
             break;
         case QMediaRecorder::StoppedState:
             recording = false;
-
+            statusMessage = tr("Stopped");
             recordButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/record.png")));
             recordButton->setToolTip(tr("Record"));
             pauseButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
@@ -311,61 +263,35 @@ void TupMicManager::onStateChanged(QMediaRecorder::RecorderState state)
     }
 
     pauseButton->setEnabled(micRecorder->recorderState() != QMediaRecorder::StoppedState);
-}
-
-static QVariant boxValue(const QComboBox *box)
-{
-    int idx = box->currentIndex();
-    if (idx == -1)
-        return QVariant();
-
-    return box->itemData(idx);
+    if (micRecorder->error() == QMediaRecorder::NoError)
+        statusLabel->setText(statusMessage);
 }
 
 void TupMicManager::toggleRecord()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::toggleRecord()] - state -> " << micRecorder->recorderState();
+        qDebug() << "[TupMicManager::toggleRecord()] - state ->" << micRecorder->recorderState();
     #endif
 
-    QString filename = CACHE_DIR + nameInput->text() + extension;
+    QString filename = CACHE_DIR + audioname + extension;
     if (micRecorder->recorderState() == QMediaRecorder::StoppedState) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupMicManager::toggleRecord()] - Recording...";
+            qDebug() << "[TupMicManager::toggleRecord()] - Recording audio to file ->" << filename;
         #endif
+
         nameInput->setReadOnly(true);
-        // micRecorder->setAudioInput(boxValue(audioDevDropList).toString());
+        captureSession.audioInput()->setDevice(audioDevCombo->currentData().value<QAudioDevice>());
 
-        /*
-        QAudioEncoderSettings settings;
-
-        #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
-            QString codec = "audio/pcm";
-            QString container = "audio/x-wav";
-        #else
-            QString codec = "audio/mpeg, mpegversion=(int)1, layer=(int)3";
-            QString container = "audio/mpeg, mpegversion=(int)1";
-        #endif
-
-        settings.setCodec(codec);
-        settings.setSampleRate(44100); // Standard 44.1kHz
-        settings.setBitRate(128000);
-        settings.setChannelCount(2);
-        settings.setQuality(QMultimedia::VeryHighQuality);
-        settings.setEncodingMode(QMultimedia::ConstantQualityEncoding);
-        */
-
-        // micRecorder->setEncodingSettings(settings, QVideoEncoderSettings(), container);
-
-        QMediaFormat format(QMediaFormat::MP3);
+        QMediaFormat format;
+        format.setFileFormat(QMediaFormat::MP3);
         format.setAudioCodec(QMediaFormat::AudioCodec::AAC);
         micRecorder->setMediaFormat(format);
 
+        micRecorder->setAudioSampleRate(44100); // Standard 44.1kHz
         micRecorder->setAudioBitRate(128000);
         micRecorder->setAudioChannelCount(2);
         micRecorder->setQuality(QMediaRecorder::VeryHighQuality);
         micRecorder->setEncodingMode(QMediaRecorder::ConstantQualityEncoding);
-
         micRecorder->setOutputLocation(QUrl::fromLocalFile(filename));
         micRecorder->record();
     } else {
@@ -436,7 +362,7 @@ void TupMicManager::discardRecording()
 
     player.at(0)->setSource(QUrl());
 
-    QString filename = CACHE_DIR + nameInput->text() + extension;
+    QString filename = CACHE_DIR + audioname + extension;
     if (QFile::exists(filename)) {
         if (!QFile::remove(filename)) {
             #ifdef TUP_DEBUG
@@ -465,15 +391,243 @@ void TupMicManager::clearMicLevels()
         micLevels.at(i)->setLevel(0);
 }
 
+void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
+{
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::handleBuffer()]";
+    #endif
+    */
+
+    if (audioLevelsIncluded) {
+        levelsScreenLayout->removeWidget(audioLevel1);
+        levelsScreenLayout->removeWidget(audioLevel2);
+        audioLevelsIncluded = false;
+    }
+
+    if (micLevels.count() != buffer.format().channelCount()) {
+        qDeleteAll(micLevels);
+        micLevels.clear();
+        for (int i = 0; i < buffer.format().channelCount(); ++i) {
+            TupMicLevel *level = new TupMicLevel(centralWidget);
+            micLevels.append(level);
+            levelsScreenLayout->addWidget(level);
+        }
+    }
+
+    /*
+    QVector<qreal> levels = getBufferLevels(buffer);
+    for (int i = 0; i < levels.count(); ++i)
+        micLevels.at(i)->setLevel(levels.at(i));
+    */
+}
+
+void TupMicManager::enableRecordButton(bool enabled)
+{
+    recordButton->setEnabled(enabled);
+}
+
+void TupMicManager::playRecording()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::playRecording()] - player->state() -> " << player.at(0)->playbackState();
+    #endif
+
+    if (player.at(0)->playbackState() == QMediaPlayer::StoppedState) {
+        QString filename = CACHE_DIR + audioname + extension;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::playRecording()] - Setting audio path for player -> " << filename;
+        #endif
+        if (QFile::exists(filename)) {
+            timer = new QTimer(this);
+            connect(timer, &QTimer::timeout, this, QOverload<>::of(&TupMicManager::trackPlayerStatus));
+            timer->start(500);
+
+            playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
+            discardButton->setEnabled(false);
+
+            player.at(0)->setSource(QUrl::fromLocalFile(filename));
+            audioOutput->setVolume(100);
+            player.at(0)->play();
+            statusLabel->setText(tr("Playing..."));
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupMicManager::playRecording()] - "
+                              "Fatal Error: Audio file doesn't exist -> " << filename;
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
+        }
+    } else if (player.at(0)->playbackState() == QMediaPlayer::PlayingState) {
+        player.at(0)->stop();
+
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
+        discardButton->setEnabled(true);
+    }
+}
+
+void TupMicManager::trackPlayerStatus()
+{
+    secCounter += 500.0;
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::checkPlayerStatus()] - status -> " << player.at(0)->playbackState();
+        qDebug() << "milsec counter -> " << secCounter;
+    #endif
+
+    qreal duration = player.at(0)->duration();
+
+    if (secCounter >= duration) {
+        secCounter = 0;
+        timer->stop();
+        player.at(0)->stop();
+        statusLabel->setText("");
+        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
+        discardButton->setEnabled(true);
+        clearMicLevels();
+    } else {
+        QString prefix = "";
+        int timer = secCounter/1000;
+        if (timer < 10)
+            prefix = "0";
+        QString time = QString::number(timer);
+        statusLabel->setText(tr("Playing...") + " " + prefix + time + " " + tr("sec"));
+    }
+}
+
+QString TupMicManager::getRecordPath()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::getRecordPath()]";
+    #endif
+
+    resetMediaPlayer();
+    if (!audioname.isEmpty()) {
+        QString filename = CACHE_DIR + audioname + extension;
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::getRecordPath()] - filename -> " << filename;
+        #endif
+        if (QFile::exists(filename)) {
+            return filename;
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record path doesn't exist!";
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record name is empty!";
+        #endif
+    }
+
+    return "";
+}
+
+bool TupMicManager::isRecording()
+{
+    return recording;
+}
+
+void TupMicManager::cancelRecording()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::cancelRecording()]";
+    #endif
+
+    if (micRecorder->recorderState() == QMediaRecorder::RecordingState) {
+        disconnect(micRecorder, SIGNAL(durationChanged(qint64)), this, SLOT(updateProgress(qint64)));
+        disconnect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)),
+                   this, SLOT(onStateChanged(QMediaRecorder::State)));
+        disconnect(micRecorder, &QMediaRecorder::errorChanged, this, &TupMicManager::showErrorMessage);
+        micRecorder->stop();
+    } else if (player.at(0)->playbackState() == QMediaPlayer::PlayingState) {
+        player.at(0)->stop();
+    }
+
+    player.at(0)->setSource(QUrl());
+
+    QString filename = CACHE_DIR + audioname + extension;
+    if (QFile::exists(filename)) {
+        if (QFile::remove(filename)) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupMicManager::cancelRecording()] - "
+                              "Temporary file was removed succesfully! -> " << filename;
+            #endif
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupMicManager::playRecording()] - Fatal Error: Can't remove audio file -> " << filename;
+            #endif
+            TOsd::self()->display(TOsd::Error, tr("Can't remove audio file!"));
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupMicManager::playRecording()] - Fatal Error: Audio file doesn't exist -> " << filename;
+        #endif
+        TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
+    }
+}
+
+void TupMicManager::resetMediaPlayer()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::resetMediaPlayer()]";
+    #endif
+
+    while(!player.isEmpty()) {
+        QMediaPlayer *audio = player.takeFirst();
+        audio->stop();
+        audio->setSource(QUrl());
+        delete audio;
+        audio = nullptr;
+    }
+}
+
+/*
+void TupMicManager::updateStatus(QMediaRecorder::Status status)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMicManager::updateStatus()] - status -> " << status;
+    #endif
+
+    QString statusMessage;
+
+    switch (status) {
+        case QMediaRecorder::RecordingStatus:
+            statusMessage = tr("Recording...");
+            durationInput->setText("...");
+            break;
+        case QMediaRecorder::PausedStatus:
+            clearMicLevels();
+            statusMessage = tr("Paused");
+            break;
+        case QMediaRecorder::UnloadedStatus:
+        case QMediaRecorder::LoadedStatus:
+            clearMicLevels();
+            statusMessage = tr("Stopped");
+        default:
+            break;
+    }
+
+    if (micRecorder->error() == QMediaRecorder::NoError)
+        statusLabel->setText(statusMessage);
+}
+
+static QVariant boxValue(const QComboBox *box)
+{
+    int idx = box->currentIndex();
+    if (idx == -1)
+        return QVariant();
+
+    return box->itemData(idx);
+}
+
 qreal getMaxValue(const QAudioFormat &format)
 {
     if (!format.isValid())
         return qreal(0);
 
-    /*
     if (format.codec() != "audio/pcm")
         return qreal(0);
-    */
 
     switch (format.sampleFormat()) {
         case QAudioFormat::Unknown:
@@ -506,7 +660,6 @@ qreal getMaxValue(const QAudioFormat &format)
     return qreal(0);
 }
 
-/*
 QVector<qreal> getBufferLevels(const QAudioBuffer& buffer)
 {
     QVector<qreal> levels;
@@ -574,203 +727,3 @@ template <class T> QVector<qreal> getBufferLevels(const T *buffer, int frames, i
     return max_values;
 }
 */
-
-void TupMicManager::handleBuffer(const QAudioBuffer& buffer)
-{
-    /*
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::handleBuffer()]";
-    #endif
-    */
-
-    if (audioLevelsIncluded) {
-        levelsScreenLayout->removeWidget(audioLevel1);
-        levelsScreenLayout->removeWidget(audioLevel2);
-        audioLevelsIncluded = false;
-    }
-
-    if (micLevels.count() != buffer.format().channelCount()) {
-        qDeleteAll(micLevels);
-        micLevels.clear();
-        for (int i = 0; i < buffer.format().channelCount(); ++i) {
-            TupMicLevel *level = new TupMicLevel(centralWidget);
-            micLevels.append(level);
-            levelsScreenLayout->addWidget(level);
-        }
-    }
-
-    /*
-    QVector<qreal> levels = getBufferLevels(buffer);
-    for (int i = 0; i < levels.count(); ++i)
-        micLevels.at(i)->setLevel(levels.at(i));
-    */
-}
-
-void TupMicManager::enableRecordButton(bool enabled)
-{
-    recordButton->setEnabled(enabled);
-}
-
-void TupMicManager::playRecording()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::playRecording()] - player->state() -> " << player.at(0)->playbackState();
-    #endif
-
-    if (player.at(0)->playbackState() == QMediaPlayer::StoppedState) {
-        QString filename = CACHE_DIR + nameInput->text() + extension;
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupMicManager::playRecording()] - Setting audio path for player -> " << filename;
-        #endif
-        if (QFile::exists(filename)) {
-            player.at(0)->setSource(QUrl::fromLocalFile(filename));
-
-            timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, this, QOverload<>::of(&TupMicManager::trackPlayerStatus));
-            timer->start(500);
-
-            playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/stop.png")));
-            discardButton->setEnabled(false);
-            player.at(0)->play();
-            statusLabel->setText(tr("Playing..."));
-        } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupMicManager::playRecording()] - "
-                              "Fatal Error: Audio file doesn't exist -> " << filename;
-            #endif
-            TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
-        }
-    } else if (player.at(0)->playbackState() == QMediaPlayer::PlayingState) {
-        player.at(0)->stop();
-
-        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
-        discardButton->setEnabled(true);
-    }
-}
-
-void TupMicManager::trackPlayerStatus()
-{
-    secCounter += 500.0;
-
-    /*
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::checkPlayerStatus()] - status -> " << player.at(0)->state();
-        qDebug() << "milsec counter -> " << secCounter;
-    #endif
-    */
-
-    qreal duration = player.at(0)->duration();
-
-    if (secCounter >= duration) {
-        secCounter = 0;
-        timer->stop();
-        player.at(0)->stop();
-        statusLabel->setText("");
-        playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play.png")));
-        discardButton->setEnabled(true);
-        clearMicLevels();
-    } else {
-        QString prefix = "";
-        int timer = secCounter/1000;
-        if (timer < 10)
-            prefix = "0";
-        QString time = QString::number(timer);
-        statusLabel->setText(tr("Playing...") + " " + prefix + time + " " + tr("sec"));
-    }
-}
-
-QString TupMicManager::getRecordPath()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::getRecordPath()]";
-    #endif
-
-    resetMediaPlayer();
-    QString file = nameInput->text();
-    if (!file.isEmpty()) {
-        QString filename = CACHE_DIR + file + extension;
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupMicManager::getRecordPath()] - filename -> " << filename;
-        #endif
-        if (QFile::exists(filename)) {
-            return filename;
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record path doesn't exist!";
-            #endif
-            TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
-        }
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupMicManager::getRecordPath()] - Fatal Error: Record name is empty!";
-        #endif
-    }
-
-    return "";
-}
-
-bool TupMicManager::isRecording()
-{
-    return recording;
-}
-
-void TupMicManager::cancelRecording()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::cancelRecording()]";
-    #endif
-
-    if (micRecorder->recorderState() == QMediaRecorder::RecordingState) {
-        disconnect(micRecorder, SIGNAL(durationChanged(qint64)), this, SLOT(updateProgress(qint64)));
-        // disconnect(micRecorder, SIGNAL(statusChanged(QMediaRecorder::Status)),
-        //            this, SLOT(updateStatus(QMediaRecorder::Status)));
-        disconnect(micRecorder, SIGNAL(stateChanged(QMediaRecorder::State)),
-                   this, SLOT(onStateChanged(QMediaRecorder::State)));
-
-        /* SQA: These methods are not working on Windows
-        disconnect(micRecorder, &QAudioRecorder::durationChanged, this, &TupMicManager::updateProgress);
-        disconnect(micRecorder, &QAudioRecorder::statusChanged, this, &TupMicManager::updateStatus);
-        disconnect(micRecorder, &QAudioRecorder::stateChanged, this, &TupMicManager::onStateChanged);
-        */
-        micRecorder->stop();
-    } else if (player.at(0)->playbackState() == QMediaPlayer::PlayingState) {
-        player.at(0)->stop();
-    }
-
-    player.at(0)->setSource(QUrl());
-
-    QString filename = CACHE_DIR + nameInput->text() + extension;
-    if (QFile::exists(filename)) {
-        if (QFile::remove(filename)) {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupMicManager::cancelRecording()] - "
-                              "Temporary file was removed succesfully! -> " << filename;
-            #endif
-        } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupMicManager::playRecording()] - Fatal Error: Can't remove audio file -> " << filename;
-            #endif
-            TOsd::self()->display(TOsd::Error, tr("Can't remove audio file!"));
-        }
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupMicManager::playRecording()] - Fatal Error: Audio file doesn't exist -> " << filename;
-        #endif
-        TOsd::self()->display(TOsd::Error, tr("Audio file doesn't exist!"));
-    }
-}
-
-void TupMicManager::resetMediaPlayer()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMicManager::resetMediaPlayer()]";
-    #endif
-
-    while(!player.isEmpty()) {
-        QMediaPlayer *audio = player.takeFirst();
-        audio->stop();
-        audio->setSource(QUrl());
-        delete audio;
-        audio = nullptr;
-    }
-}
