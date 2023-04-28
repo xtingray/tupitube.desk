@@ -61,6 +61,9 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         void setPathFromString(const QString &route);
         void undoPath();
         void redoPath();
+
+        QString refactoringPath(NodePosition policy, int nodesTotal);
+        QString pathRestored(int nodesTotal) const;
  
     protected:
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
@@ -71,6 +74,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         bool dragOver;
         QList<QString> undoList;
         QList<QString> doList;
+        QHash<int, QString> pathCollection;
 };
 
 #endif

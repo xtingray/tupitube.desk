@@ -16,9 +16,11 @@ win32 {
 INSTALLS += target 
 target.path = /plugins/
 
-HEADERS += nodestool.h
+HEADERS += nodestool.h \
+           nodesettings.h
 
-SOURCES += nodestool.cpp
+SOURCES += nodestool.cpp \
+           nodesettings.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

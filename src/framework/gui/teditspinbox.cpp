@@ -50,7 +50,7 @@ TEditSpinBox::TEditSpinBox(int value, int minValue, int maxValue, int step, QStr
     m_spin = new QSpinBox(this);
     m_spin->setMinimum(minValue);
     m_spin->setMaximum(maxValue);
-    m_spin->setSingleStep ( step );
+    m_spin->setSingleStep(step);
     m_spin->setValue(value);
     layout->addWidget(m_spin);
 

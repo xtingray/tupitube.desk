@@ -105,7 +105,6 @@ void TNodeGroup::syncNodesFromParent()
     if (nodeParentItem) {
         if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem))
             syncNodes(nodeParentItem->sceneTransform().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
-            // syncNodes(nodeParentItem->sceneMatrix().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
     }
 }
 
@@ -196,58 +195,84 @@ int TNodeGroup::removeSelectedNodes()
 
 void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TNodeGroup::createNodes()]";
     #endif
+    */
 
     if (pathItem) {
         qDeleteAll(nodes);
         nodes.clear();
-        
-        // QPainterPath path = pathItem->sceneMatrix().map(pathItem->path());
+
         QPainterPath path = pathItem->sceneTransform().map(pathItem->path());
         saveParentProperties();
         int index = 0;
- 
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TNodeGroup::createNodes()] - element count ->" << path.elementCount();
+        #endif
+
         while (index < path.elementCount()) {
             QPainterPath::Element e = path.elementAt(index);
-            
-            if (e.type == QPainterPath::CurveToDataElement) {
-                if (index - 2 < 0)
-                    continue;
-                if (path.elementAt(index - 2).type == QPainterPath::CurveToElement) {
+            if (e.type == QPainterPath::CurveToDataElement) { // Extra data required to describe a curve
+                if ((index - 2) < 0) // Ignore the first two elements
+                    continue; 
+
+                if (path.elementAt(index - 2).type == QPainterPath::CurveToElement) { // Element is a curve
                     TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                    #ifdef TUP_DEBUG
+                        qDebug() << "* Adding center node - CURVE";
+                    #endif
+                    nodes << node; // Adding central node
                     QPainterPath::Element e1 = path.elementAt(index - 1);
-                    node->setLeft(new TControlNode(index - 1, this, e1, pathItem, nodeScene, nodeLevel));
-                    
-                    if (index + 1 < path.elementCount()) {
-                        QPainterPath::Element e2 = path.elementAt(index+1);
+                    node->setLeft(new TControlNode(index - 1, this, e1, pathItem, nodeScene, nodeLevel)); // Setting left wing
+                    #ifdef TUP_DEBUG
+                        qDebug() << "   - Adding left wing node";
+                    #endif
+                    nodes << node->left(); // Adding left wing node
+
+                    if ((index + 1) < path.elementCount()) { // If the current element is not the last one, add a right wing
+                        QPainterPath::Element e2 = path.elementAt(index + 1);
                         if (e2.type == QPainterPath::CurveToElement) {
-                            node->setRight(new TControlNode(index + 1, this, e2, pathItem, nodeScene, nodeLevel));
-                            nodes << node->right();
+                            node->setRight(new TControlNode(index + 1, this, e2, pathItem, nodeScene, nodeLevel)); // Setting right wing
+                            #ifdef TUP_DEBUG
+                                qDebug() << "   - Adding right wing node";
+                            #endif
+                            nodes << node->right(); // Adding right wing node
                             index++;
                         }
                     }
-                    nodes << node;
-                    nodes << node->left();
                 }
-            } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) {
+            } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) { // Element is a rect segment
+                /*
+                if (e.type == QPainterPath::LineToElement)
+                    qDebug() << "Type -> QPainterPath::LineToElement";
+                if (e.type == QPainterPath::MoveToElement)
+                    qDebug() << "Type -> QPainterPath::MoveToElement";
+                */
                 TControlNode *node;
                 if (index+1 < path.elementCount()) {
                     if (path.elementAt(index + 1).type == QPainterPath::CurveToElement) {
                         node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                        #ifdef TUP_DEBUG
+                            qDebug() << "* Adding center node - LINE";
+                        #endif
+                        nodes << node; // Adding central node
                         node->setRight(new TControlNode(index + 1, this, path.elementAt(index + 1), pathItem, nodeScene));
-                        
+                        #ifdef TUP_DEBUG
+                            qDebug() << "   - Adding right wing node";
+                        #endif
+                        nodes << node->right(); // Adding central node
+
                         index++;
-                        nodes << node;
-                        nodes << node->right();
                     } else {
                         node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                        nodes << node;
+                        nodes << node; // Adding node without wings (smoothness == 0)
                     }
                 } else {
                     node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
-                    nodes << node;
+                    nodes << node; // Adding node without wings (smoothness == 0)
                 }
             }
             index++;

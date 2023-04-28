@@ -101,12 +101,14 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 
         if (qgraphicsitem_cast<TupSvgItem *>(selectedItem)) {
             TOsd::self()->display(TOsd::Error, tr("SVG objects cannot be edited!"));
+
             return;
         }
 
         if (TupGraphicLibraryItem *libraryItem = qgraphicsitem_cast<TupGraphicLibraryItem *>(selectedItem)) {
             if (libraryItem->getItemType() == TupLibraryObject::Image) {
                 TOsd::self()->display(TOsd::Error, tr("Images have no nodes!"));
+
                 return;
             }
         }
@@ -125,12 +127,14 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                                           TupProjectRequest::Ungroup);
                 emit requested(&event);
             }
+
             return;
         }
 
         if (!qgraphicsitem_cast<TControlNode*>(selectedItem)) {
             if (!qgraphicsitem_cast<TupPathItem *>(selectedItem)) {
                 TOsd::self()->display(TOsd::Error, tr("Only pencil/ink lines can be edited!"));
+
                 return;
             }
         }
@@ -140,15 +144,16 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 QGraphicsItem *item = nodeGroup->parentItem();
                 int position = frame->indexOf(item);
                 if (position >= 0) {
-                    // if (qgraphicsitem_cast<QGraphicsPathItem *>(item)) {
-                        QString path = qgraphicsitem_cast<TupPathItem *>(item)->pathToString();
-                        TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
-                                                  currentLayer, currentFrame, position,
-                                                  QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
-                                                  TupProjectRequest::EditNodes, path);
-                        emit requested(&event);
-                        nodeGroup->clearChangedNodes();
-                    // }
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[NodesTool::release()] - Requesting EditNodes action...";
+                    #endif
+                    QString path = qgraphicsitem_cast<TupPathItem *>(item)->pathToString();
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
+                                              currentLayer, currentFrame, position,
+                                              QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
+                                              TupProjectRequest::EditNodes, path);
+                    emit requested(&event);
+                    nodeGroup->clearChangedNodes();
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - Fatal Error: Invalid position -> " << position;
@@ -200,6 +205,10 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 }
             }
         } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[NodesTool::release()] - Adding nodes to the selected path for the first time...";
+            #endif
+
             nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::LineSelection, nodeZValue);
             nodeGroup->show();
             activeSelection = true;
@@ -209,6 +218,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 if (path->isNotEdited())
                     path->saveOriginalPath();
             }
+
+            configPanel->setNodesTotal(nodeGroup->mainNodesCount());
         }
     } else {
         if (activeSelection) {
@@ -314,9 +325,15 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      activeSelection = true;
                      nodeGroup->resizeNodes(realFactor);
                  }
+
+                 if (response->getMode() == TupProjectResponse::Redo) {
+                     configPanel->redo();
+                 } else if (response->getMode() == TupProjectResponse::Undo) {
+                     configPanel->undo();
+                 }
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found";
+                     qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found!";
                  #endif
              }
         }
@@ -415,6 +432,7 @@ void NodesTool::keyReleaseEvent(QKeyEvent *event)
 
 void NodesTool::setupActions()
 {
+    configPanel = nullptr;
     activeSelection = false;
 
     TAction *nodes = new TAction(QPixmap(kAppProp->themeDir() + "icons/nodes.png"), tr("Nodes Selection"), this);
@@ -442,7 +460,12 @@ int NodesTool::toolType() const
 
 QWidget *NodesTool::configurator()
 {
-    return nullptr;
+    if (!configPanel) {
+        configPanel = new NodeSettings;
+        connect(configPanel, SIGNAL(nodesChanged(int)), this, SLOT(updateCurrentPath(int)));
+    }
+
+    return configPanel;
 }
 
 void NodesTool::aboutToChangeScene(TupGraphicsScene *scene)
@@ -530,7 +553,48 @@ void NodesTool::requestTransformation(QGraphicsItem *item, TupFrame *frame)
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "NodesTool::requestTransformation() - Fatal Error: Invalid item position !!! [ "
-                        + QString::number(position) + " ]";
+                     << position << " ]";
         #endif
+    }
+}
+
+void NodesTool::updateCurrentPath(int newTotal)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodesTool::updateCurrentPath()] - Update nodes total to newTotal ->" << newTotal;
+    #endif
+
+    if (activeSelection) {
+        int nodesTotal = nodeGroup->mainNodesCount();
+        qDebug() << "Path nodesTotal ->" << nodesTotal;
+        qDebug() << "";
+
+        TupFrame *frame = getCurrentFrame();
+        int position = frame->indexOf(nodeGroup->parentItem());
+        QString path = "";
+
+        if (nodesTotal > newTotal) { // Removing nodes
+            if (nodesTotal > 2) {
+                if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                    qDebug() << "Removing nodes to the path...";
+                    qDebug() << "Nodes to remove ->" << (nodesTotal - newTotal);
+                    path = pathItem->refactoringPath(configPanel->policyParam(), nodesTotal);
+                    qDebug() << "path ->" << path;
+                }
+            }
+        } else { // Restoring nodes
+            if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                qDebug() << "Adding nodes to the path...";
+                qDebug() << "Nodes to add ->" << (newTotal - nodesTotal);
+                path = pathItem->pathRestored(newTotal);
+                qDebug() << "path ->" << path;
+            }
+        }
+
+        TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
+                                                                       currentLayer, currentFrame, position,
+                                                                       QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
+                                                                       TupProjectRequest::EditNodes, path);
+        emit requested(&event);
     }
 }

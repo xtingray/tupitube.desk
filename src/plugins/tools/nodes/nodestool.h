@@ -55,6 +55,7 @@
 #include "tosd.h"
 #include "tupgraphiclibraryitem.h"
 #include "tuppixmapitem.h"
+#include  "nodesettings.h"
 
 #include <QObject>
 #include <QSpinBox>
@@ -105,12 +106,16 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         void closeHugeCanvas();
         void callForPlugin(int menu, int index);
 
+    private slots:
+        void updateCurrentPath(int total);
+
     private:
         // void reset(TupGraphicsScene *scene);
         void setupActions();
         TupFrame* getCurrentFrame();
         void requestTransformation(QGraphicsItem *item, TupFrame *frame);
 
+        NodeSettings *configPanel;
         QMap<TAction::ActionId, TAction *> nodesActions;
         TNodeGroup *nodeGroup;
         TupGraphicsScene *scene;

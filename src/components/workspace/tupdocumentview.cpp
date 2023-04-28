@@ -958,6 +958,7 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupDocumentView::loadPlugin()] - Error: Invalid Menu Index / No plugin loaded";
                 #endif
+
                 return;
             }
     }
@@ -979,6 +980,7 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
         #ifdef TUP_DEBUG
             qDebug() << "[TupDocumentView::loadPlugin()] - Error: Action pointer is NULL!";
         #endif
+
         return;
     }
 }
@@ -1098,6 +1100,9 @@ void TupDocumentView::selectTool()
                         minWidth = 130;
                         connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
                                 tool, SLOT(initItems(TupGraphicsScene*)));
+                    } else if (toolId == TAction::NodesEditor) {
+                        qDebug() << "[TupDocumentView::selectTool()] - Nodes editor panel activated!";
+                        minWidth = 200;
                     }
                 }
                 break;

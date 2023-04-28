@@ -104,11 +104,9 @@ void TupPathItem::dropEvent(QGraphicsSceneDragDropEvent *event)
     dragOver = false;
 
     if (event->mimeData()->hasColor()) {
-        // setBrush(QBrush(qVariantValue<QColor>(event->mimeData()->colorData())));
         QVariant color = event->mimeData()->colorData();
         setBrush(QBrush(color.value<QColor>()));
     } else if (event->mimeData()->hasImage()) {
-        // setBrush(QBrush(qVariantValue<QPixmap>(event->mimeData()->imageData())));
         QVariant pixmap = event->mimeData()->imageData();
         setBrush(QBrush(pixmap.value<QPixmap>()));
     }
@@ -209,4 +207,154 @@ void TupPathItem::redoPath()
         TupSvg2Qt::svgpath2qtpath(route, qPath);
         setPath(qPath);
     }
+}
+
+QString TupPathItem::refactoringPath(NodePosition policy, int nodesTotal)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPathItem::refactoringPath()] - policy ->" << policy;
+        qDebug() << "[TupPathItem::refactoringPath()] - nodesTotal ->" << nodesTotal;
+    #endif
+
+    if (!pathCollection.contains(nodesTotal)) {
+        qDebug() << "STORING path for nodesTotal ->" << nodesTotal;
+        qDebug() << "path ->" << pathToString();
+        pathCollection[nodesTotal] = pathToString();
+    }
+
+    if (pathCollection.contains(nodesTotal-1)) {
+        qDebug() << "";
+        return pathCollection[nodesTotal-1];
+    }
+
+    QChar t;
+    QPainterPath route = path();
+    int elementsTotal = route.elementCount();
+    QString pathStr = "";
+    QList<int> curveIndexes;
+
+    bool lookingData = false;
+    int dataCounter = 0;
+
+    qDebug() << "[TupPathItem::refactoringPath()] - remove policy ->" << policy;
+    int curvesCounter = 0;
+    for(int i=0; i<elementsTotal; i++) {
+        QPainterPath::Element e = route.elementAt(i);
+        if (e.type == QPainterPath::CurveToElement || e.type == QPainterPath::MoveToElement) {
+            curveIndexes << curvesCounter;
+            curvesCounter++;
+        }
+    }
+
+    qDebug() << "*** Nodes Indexes ->" << curveIndexes;
+
+    // Remove the middle node
+    int mark = curveIndexes.at(0); // FirstNode
+    if (policy == MiddleNode) {
+        if (curvesCounter % 2 == 0) {
+            mark = curveIndexes.at(curvesCounter/2);
+        } else {
+            if (curvesCounter == 3)
+                mark = curveIndexes.at(1);
+            else
+                mark = curveIndexes.at((curvesCounter/2) + 1);
+        }
+    } else if (policy == LastNode) {
+        mark = curveIndexes.at(curvesCounter - 1);
+    }
+
+    qDebug() << "*** mark ->" << mark;
+
+    curvesCounter = 0;
+    for(int i=0; i<elementsTotal; i++) {
+        QPainterPath::Element e = route.elementAt(i);
+        qDebug() << "[TupPathItem::refactoringPath()] - i ->" << i;
+        qDebug() << "[TupPathItem::refactoringPath()] - e.x ->"  << e.x;
+        qDebug() << "[TupPathItem::refactoringPath()] - e.y ->"  << e.y;
+
+        switch (e.type) {
+            case QPainterPath::MoveToElement:
+            {
+                qDebug() << "[TupPathItem::refactoringPath()] - MoveToElement";
+
+                if (t != 'M') {
+                    t = 'M';
+                    pathStr += "M " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                } else {
+                    pathStr += QString::number(e.x) + " " + QString::number(e.y) + " ";
+                }
+                curvesCounter++;
+            }
+            break;
+            case QPainterPath::LineToElement:
+            {
+                qDebug() << "[TupPathItem::refactoringPath()] - LineToElement";
+
+                if (t != 'L') {
+                    t = 'L';
+                    pathStr += " L " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                } else {
+                    pathStr += QString::number(e.x) + " " + QString::number(e.y) + " ";
+                }
+            }
+            break;
+            case QPainterPath::CurveToElement:
+            {
+                qDebug() << "[TupPathItem::refactoringPath()] - CurveToElement";
+                qDebug() << "[TupPathItem::refactoringPath()] - curvesCounter ->" << curvesCounter;
+                qDebug() << "[TupPathItem::refactoringPath()] - mark ->" << mark;
+
+                if (curvesCounter != mark) {
+                    if (t != 'C') {
+                        t = 'C';
+                        pathStr += " C " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                    } else {
+                        pathStr += "  " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                    }
+                } else {
+                    qDebug() << "*** Removing curve node at index ->" << curvesCounter;
+                    lookingData = true;
+                }
+                curvesCounter++;
+            }
+            break;
+            case QPainterPath::CurveToDataElement:
+            {
+                qDebug() << "[TupPathItem::refactoringPath()] - CurveToDataElement";
+                if (!lookingData) {
+                    if (t == 'C')
+                        pathStr +=  " " + QString::number(e.x) + "  " + QString::number(e.y) + " ";
+                } else {
+                    qDebug() << "*** Removing curve data node at index ->" << curvesCounter;
+                    dataCounter++;
+                    if (dataCounter == 2) {
+                        lookingData = false;
+                        dataCounter = 0;
+                    }
+                }
+            }
+            break;
+        }
+
+        qDebug() << "---";
+    }
+
+    qDebug() << "STORING path for (nodesTotal - 1) ->" << (nodesTotal - 1);
+    pathCollection[nodesTotal-1] = pathStr;
+
+    return pathStr;
+}
+
+QString TupPathItem::pathRestored(int nodesTotal) const
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPathItem::pathRestored()] - nodesTotal ->" << nodesTotal;
+    #endif
+
+    if (pathCollection.contains(nodesTotal)) {
+        qDebug() << "RETURNING path for nodesTotal ->" << nodesTotal;
+        return pathCollection[nodesTotal];
+    }
+
+    return "";
 }

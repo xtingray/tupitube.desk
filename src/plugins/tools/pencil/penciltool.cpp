@@ -214,10 +214,10 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
                                                                                  0, QPointF(0, 0), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                                  doc.toString());
                 emit requested(&request);
+
                 return;
             } else {
-                if (smoothness > 0)
-                    smoothPath(path, smoothness);
+                smoothPath(path, smoothness);
             }
 
             item->setPen(brushManager->pen());
