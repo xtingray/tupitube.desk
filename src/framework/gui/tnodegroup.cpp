@@ -67,6 +67,10 @@ TNodeGroup::~TNodeGroup()
 
 void TNodeGroup::clear()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TNodeGroup::clear()]";
+    #endif
+
     if (nodes.isEmpty())
         return;
 
@@ -85,13 +89,33 @@ void TNodeGroup::syncNodes(const QPainterPath &path)
         qDebug() << "[TNodeGroup::syncNodes()]";
     #endif
 
-    if (nodes.isEmpty())
+    if (path.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TNodeGroup::syncNodes()] - Warning: QPainterPath is empty!";
+        #endif
+
         return;
+    }
+
+    if (nodes.isEmpty()) {
+        #ifdef TUP_DEBUG
+                qDebug() << "[TNodeGroup::syncNodes()] - Warning: Nodes list is empty!";
+        #endif
+
+        return;
+    }
 
     foreach (TControlNode *node, nodes) {
         if (node) {
             node->hasChanged(true);
-            node->setPos(path.elementAt(node->index()));
+            int index = node->index();
+            if (index < path.elementCount()) {
+                node->setPos(path.elementAt(index));
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TNodeGroup::syncNodes()] - Warning: Invalid element index ->" << index;
+                #endif
+            }
         }
     }
 }
@@ -103,8 +127,12 @@ void TNodeGroup::syncNodesFromParent()
     #endif
 
     if (nodeParentItem) {
-        if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem))
-            syncNodes(nodeParentItem->sceneTransform().map(qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path()));
+        if (QGraphicsPathItem *item = qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem))
+            syncNodes(nodeParentItem->sceneTransform().map(item->path()));
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TNodeGroup::syncNodesFromParent()] - Warning: Parent item is NULL!";
+        #endif
     }
 }
 
@@ -245,12 +273,6 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                     }
                 }
             } else if ((e.type == QPainterPath::LineToElement || e.type == QPainterPath::MoveToElement)) { // Element is a rect segment
-                /*
-                if (e.type == QPainterPath::LineToElement)
-                    qDebug() << "Type -> QPainterPath::LineToElement";
-                if (e.type == QPainterPath::MoveToElement)
-                    qDebug() << "Type -> QPainterPath::MoveToElement";
-                */
                 TControlNode *node;
                 if (index+1 < path.elementCount()) {
                     if (path.elementAt(index + 1).type == QPainterPath::CurveToElement) {

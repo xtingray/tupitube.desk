@@ -57,9 +57,11 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         void redo();
 
         NodePosition policyParam();
+        void showClearPanel(bool show);
 
     signals:
         void nodesChanged(int total);
+        void policyChanged();
 
     private slots:
         void updateNodesFromBox(int value);
@@ -67,6 +69,7 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         void updatePolicyParam(int index);
 
     private:
+        QWidget *clearWidget;
         QSpinBox *clearSpinBox;
         QSlider *clearSlider;
         QComboBox *policyCombo;

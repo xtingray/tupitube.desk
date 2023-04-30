@@ -38,7 +38,6 @@
 #include "tseparator.h"
 
 #include <QBoxLayout>
-// #include <QPushButton>
 
 NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
 {
@@ -47,17 +46,16 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     #endif
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
-    layout->setAlignment(Qt::AlignHCenter);
+
+    clearWidget = new QWidget;
+    QBoxLayout *clearLayout = new QBoxLayout(QBoxLayout::TopToBottom, clearWidget);
+    clearLayout->setAlignment(Qt::AlignHCenter);
 
     QLabel *nodesTitle = new QLabel;
     nodesTitle->setAlignment(Qt::AlignHCenter);
     QPixmap nodesPic(THEME_DIR + "icons/nodes.png");
     nodesTitle->setPixmap(nodesPic.scaledToWidth(16, Qt::SmoothTransformation));
     nodesTitle->setToolTip(tr("Nodes Properties"));
-
-    layout->addWidget(nodesTitle);
-    layout->addWidget(new TSeparator(Qt::Horizontal));
 
     QLabel *clearLabel = new QLabel(tr("Nodes Cleaner"));
     clearLabel->setAlignment(Qt::AlignHCenter);
@@ -91,12 +89,15 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     policy = MiddleNode;
     connect(policyCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(updatePolicyParam(int)));
 
-    layout->addWidget(clearLabel);
-    layout->addLayout(controlLayout);
-    layout->addWidget(policyLabel);
-    layout->addWidget(policyCombo);
+    clearLayout->addWidget(clearLabel);
+    clearLayout->addLayout(controlLayout);
+    clearLayout->addWidget(policyLabel);
+    clearLayout->addWidget(policyCombo);
+    clearWidget->setVisible(false);
 
-    mainLayout->addLayout(layout);
+    mainLayout->addWidget(nodesTitle);
+    mainLayout->addWidget(new TSeparator(Qt::Horizontal));
+    mainLayout->addWidget(clearWidget);
     mainLayout->addStretch(2);
 }
 
@@ -105,6 +106,27 @@ NodeSettings::~NodeSettings()
     #ifdef TUP_DEBUG
         qDebug() << "[~NodeSettings()]";
     #endif
+}
+
+void NodeSettings::showClearPanel(bool show)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeSettings::showClearPanel()]";
+    #endif
+
+    if (!show) {
+        clearSlider->blockSignals(true);
+        clearSpinBox->blockSignals(true);
+
+        clearSlider->setMaximum(0);
+        clearSlider->setValue(0);
+        clearSpinBox->setValue(0);
+
+        clearSlider->blockSignals(false);
+        clearSpinBox->blockSignals(false);
+    }
+
+    clearWidget->setVisible(show);
 }
 
 void NodeSettings::updateNodesFromBox(int value)
@@ -137,13 +159,28 @@ void NodeSettings::setNodesTotal(int value)
         qDebug() << "[NodeSettings::setNodesTotal()] - value ->" << value;
     #endif
 
+    if (!clearWidget->isVisible())
+        clearWidget->setVisible(true);
+
+    clearSpinBox->blockSignals(true);
+    clearSpinBox->setMinimum(2);
+    clearSpinBox->setMaximum(value);
+    clearSpinBox->setValue(value);
+    clearSpinBox->blockSignals(false);
+
+    clearSlider->blockSignals(true);
+    clearSlider->setMinimum(2);
     clearSlider->setMaximum(value);
-    updateNodesFromBox(value);
-    updateNodesFromSlider(value);
+    clearSlider->setValue(value);
+    clearSlider->blockSignals(false);
 }
 
 void NodeSettings::undo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeSettings::undo()]";
+    #endif
+
     if (!undoValues.isEmpty()) {
         int value = undoValues.takeLast();
         redoValues << clearSpinBox->value();
@@ -160,6 +197,10 @@ void NodeSettings::undo()
 
 void NodeSettings::redo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeSettings::redo()]";
+    #endif
+
     if (!redoValues.isEmpty()) {
         int value = redoValues.takeLast();
         undoValues << clearSpinBox->value();
@@ -176,7 +217,22 @@ void NodeSettings::redo()
 
 void NodeSettings::updatePolicyParam(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodeSettings::updatePolicyParam()] - index ->" << index;
+    #endif
+
     policy = NodePosition(index);
+    int value = clearSpinBox->value();
+    clearSpinBox->setMinimum(2);
+    clearSpinBox->setMaximum(value);
+
+    clearSlider->blockSignals(true);
+    clearSlider->setMinimum(2);
+    clearSlider->setMaximum(value);
+    clearSlider->setValue(value);
+    clearSlider->blockSignals(false);
+
+    emit policyChanged();
 }
 
 NodePosition NodeSettings::policyParam()

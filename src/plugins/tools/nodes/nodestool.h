@@ -108,6 +108,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
 
     private slots:
         void updateCurrentPath(int total);
+        void resetPathHistory();
 
     private:
         // void reset(TupGraphicsScene *scene);
