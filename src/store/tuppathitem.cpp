@@ -213,7 +213,7 @@ QString TupPathItem::refactoringPath(NodePosition policy, int nodesTotal)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPathItem::refactoringPath()] - policy ->" << policy;
-        qDebug() << "[TupPathItem::refactoringPath()] - nodesTotal ->" << nodesTotal;
+        qDebug() << "[TupPathItem::refactoringPath()] - Tracking nodesTotal ->" << nodesTotal;
     #endif
 
     if (!pathCollection.contains(nodesTotal)) {
@@ -223,7 +223,7 @@ QString TupPathItem::refactoringPath(NodePosition policy, int nodesTotal)
     }
 
     if (pathCollection.contains(nodesTotal-1)) {
-        qDebug() << "";
+        qDebug() << "Returning saved path at ->" << (nodesTotal-1);
         return pathCollection[nodesTotal-1];
     }
 

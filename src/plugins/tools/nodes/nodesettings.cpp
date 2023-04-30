@@ -57,7 +57,7 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     nodesTitle->setPixmap(nodesPic.scaledToWidth(16, Qt::SmoothTransformation));
     nodesTitle->setToolTip(tr("Nodes Properties"));
 
-    QLabel *clearLabel = new QLabel(tr("Nodes Cleaner"));
+    QLabel *clearLabel = new QLabel("<b>" + tr("Nodes Cleaner") + "</b>");
     clearLabel->setAlignment(Qt::AlignHCenter);
 
     QHBoxLayout *controlLayout = new QHBoxLayout;

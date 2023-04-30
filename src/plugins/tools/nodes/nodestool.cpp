@@ -380,6 +380,8 @@ void NodesTool::itemResponse(const TupItemResponse *response)
              #ifdef TUP_DEBUG
                  qDebug() << "[NodesTool::itemResponse()] - Remove case";
              #endif
+             configPanel->showClearPanel(false);
+
              return;
         }
         case TupProjectRequest::Ungroup:
@@ -614,26 +616,42 @@ void NodesTool::updateCurrentPath(int newTotal)
         if (nodesTotal > newTotal) { // Removing nodes
             if (nodesTotal > 2) {
                 if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                    int iterations = nodesTotal - newTotal;
                     qDebug() << "Removing nodes to the path...";
-                    qDebug() << "Nodes to remove ->" << (nodesTotal - newTotal);
-                    path = pathItem->refactoringPath(configPanel->policyParam(), nodesTotal);
-                    qDebug() << "path ->" << path;
+                    qDebug() << "Nodes to remove ->" << iterations;
+                    int nodesCounter = nodesTotal;
+                    for(int i=0; i < iterations; i++) {
+                        path = pathItem->refactoringPath(configPanel->policyParam(), nodesCounter);
+                        nodesCounter--;
+                        qDebug() << "path ->" << path;
+
+                        TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
+                                                                                       currentLayer, currentFrame, position,
+                                                                                       QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                       TupProjectRequest::EditNodes, path);
+                        emit requested(&event);
+                    }
                 }
             }
         } else { // Restoring nodes
             if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                int iterations = newTotal - nodesTotal;
                 qDebug() << "Adding nodes to the path...";
-                qDebug() << "Nodes to add ->" << (newTotal - nodesTotal);
-                path = pathItem->pathRestored(newTotal);
-                qDebug() << "path ->" << path;
+                qDebug() << "Nodes to add ->" << iterations;
+                int nodesCounter = nodesTotal;
+                for(int i=0; i < iterations; i++) {
+                    path = pathItem->pathRestored(newTotal);
+                    nodesCounter--;
+                    qDebug() << "path ->" << path;
+
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
+                                                                                   currentLayer, currentFrame, position,
+                                                                                   QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                   TupProjectRequest::EditNodes, path);
+                    emit requested(&event);
+                }
             }
         }
-
-        TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
-                                                                       currentLayer, currentFrame, position,
-                                                                       QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
-                                                                       TupProjectRequest::EditNodes, path);
-        emit requested(&event);
     }
 }
 
