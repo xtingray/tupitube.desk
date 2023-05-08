@@ -51,6 +51,8 @@ NodesTool::~NodesTool()
 void NodesTool::init(TupGraphicsScene *gScene)
 {
     activeSelection = false;
+    shiftEnabled = false;
+    ctrlEnabled = false;
     scene = gScene;
 
     if (scene->selectedItems().count() > 0) {
@@ -91,9 +93,212 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
         qDebug() << "[NodesTool::release()]";
     #endif
 
-    Q_UNUSED(brushManager)
-
     QList<QGraphicsItem *> currentSelection = gScene->selectedItems();
+
+    if ((shiftEnabled || ctrlEnabled) && activeSelection) {
+        qDebug() << "CTRL/SHIFT ENABLED!";
+        qDebug() << "";
+        QPointF coord = input->pos();
+        QString pathStr = "";
+        if (!currentSelection.isEmpty()) {
+            qDebug() << "ITEM WAS SELECTED!";
+            // QGraphicsItem *selectedItem;
+            TupPathItem *pathItem = nullptr;
+
+            foreach(QGraphicsItem *item, currentSelection) {
+                if (pathItem = qgraphicsitem_cast<TupPathItem *>(item))
+                    break;
+            }
+
+            if (pathItem) {
+                qDebug() << "COORD ->" << coord;
+                // if (pathItem->contains(coord)) {
+                    qDebug() << "IN: The path rect was clicked!";
+                    QPainterPath path = pathItem->path();
+                    if (pathItem->containsOnPath(coord, brushManager->penWidth())) { // Point is part of the path
+                        qDebug() << "IN - Adding node on the path!";
+
+                        /*
+                        pathItem->setZValue(0);
+                        QPainterPath route = pathItem->path();
+                        QPolygonF points = route.toFillPolygon();
+                        qDebug() << "POINTS";
+                        qDebug() << points;
+                        QPainterPath linePath(points.at(0));
+                        int total = points.size();
+                        qDebug() << "IN - Points total -> " << total;
+                        for(int i=1; i<total-1; i++) {
+                            linePath.lineTo(points.at(i));
+                        }
+
+                        QGraphicsPathItem *line = new QGraphicsPathItem;
+                        QPen pen;
+                        pen.setBrush(QBrush(Qt::red));
+                        pen.setWidth(5);
+                        line->setPen(pen);
+                        line->setPath(linePath);
+                        line->setZValue(20000);
+                        gScene->addItem(line);
+
+                        QList<QPointF> nodes = pathItem->keyNodes();
+                        QList<QColor> colors = pathItem->nodeColors();
+                        QList<QString> tips = pathItem->nodeTips();
+                        total = nodes.size();
+                        QPen pen1;
+                        pen1.setBrush(QBrush(Qt::blue));
+                        pen1.setWidth(1);
+                        for(int i=0; i<total; i++) {
+                            QPointF point = nodes.at(i);
+                            QGraphicsEllipseItem *dot = new QGraphicsEllipseItem(point.x() - 5, point.y() - 5, 10, 10);
+                            dot->setToolTip(tips.at(i));
+                            dot->setPen(pen1);
+                            dot->setBrush(colors.at(i));
+                            dot->setZValue(20000);
+                            gScene->addItem(dot);
+                        }
+
+                        QGraphicsEllipseItem *target = new QGraphicsEllipseItem(coord.x() - 8, coord.y() - 8, 16, 16);
+                        target->setToolTip("Target");
+                        target->setPen(pen);
+                        target->setBrush(QColor(255, 100, 0));
+                        target->setZValue(20000);
+                        gScene->addItem(target);
+                        */
+
+                        pathStr = pathItem->addNewNode(brushManager->penWidth());
+
+                        nodeGroup->clear();
+                        nodeGroup->createNodes(pathItem);
+                        nodeGroup->resizeNodes(realFactor);
+
+                        TupFrame *frame = getCurrentFrame();
+                        int position = frame->indexOf(pathItem);
+                        if (position >= 0) {
+                            qDebug() << "Calling EditNodes action...";
+                            TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
+                                                                                           currentLayer, currentFrame, position,
+                                                                                           QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                           TupProjectRequest::EditNodes, pathStr);
+                            emit requested(&event);
+                        }
+                    } else { // Point is out the path but inside the item rect
+                        if (ctrlEnabled) {
+                            qDebug() << "OUT - Adding straight line around the path!";
+                            path.lineTo(coord);
+                        } else if (shiftEnabled) {
+                            qDebug() << "OUT - Adding curve line around the path!";
+                            QPointF lastPoint = path.pointAtPercent(1);
+                            qDebug() << "lastPoint ->" << lastPoint;
+                            qDebug() << "coord ->" << coord;
+                            // path.cubicTo(c1, c2, coord);
+                            path.lineTo(coord);
+                        }
+
+                        pathItem->setPath(path);
+                        nodeGroup->clear();
+                        nodeGroup->createNodes(pathItem);
+                        nodeGroup->resizeNodes(realFactor);
+                        pathStr = pathItem->pathToString();
+
+                        TupFrame *frame = getCurrentFrame();
+                        int position = frame->indexOf(pathItem);
+                        if (position >= 0) {
+                            qDebug() << "Calling EditNodes action...";
+                            TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
+                                                                                           currentLayer, currentFrame, position,
+                                                                                           QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                           TupProjectRequest::EditNodes, pathStr);
+                            emit requested(&event);
+                        }
+                    }
+                /*
+                } else {
+                    qDebug() << "OUT: Point out of the path and out of the item rect!";
+                    QPainterPath path = pathItem->path();
+                    // qDebug() << "SHIFT ->" << shiftEnabled;
+                    if (ctrlEnabled) {
+                        qDebug() << "OUT - Adding straight line out of the item rect!";
+                        path.lineTo(coord);
+                    } else if (shiftEnabled) {
+                        qDebug() << "OUT - Adding curve line out of the item rect!";
+                        QPointF lastPoint = path.pointAtPercent(1);
+                        qDebug() << "lastPoint ->" << lastPoint;
+                        qDebug() << "coord ->" << coord;
+                        // path.cubicTo(c1, c2, coord);
+                        path.lineTo(coord);
+                    }
+
+                    qDebug() << "Updating nodes...";
+
+                    pathItem->setPath(path);
+                    nodeGroup->clear();
+                    nodeGroup->createNodes(pathItem);
+                    nodeGroup->resizeNodes(realFactor);
+                    QString pathStr = pathItem->pathToString();
+
+                    TupFrame *frame = getCurrentFrame();
+                    int position = frame->indexOf(pathItem);
+                    if (position >= 0) {
+                        qDebug() << "Calling EditNodes action...";
+                        TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
+                                                                                       currentLayer, currentFrame, position,
+                                                                                       QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                       TupProjectRequest::EditNodes, pathStr);
+                        emit requested(&event);
+                    }
+                }
+                */
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[NodesTool::release()] - Fatal Error: Path item is NULL!!!";
+                #endif
+            }
+        } else {
+            qDebug() << "NO PATH SELECTED!";
+            if (TupPathItem *item = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                if (item->containsOnPath(coord, brushManager->penWidth())) {
+                    pathStr = item->addNewNode(brushManager->penWidth());
+                } else {
+                    qDebug() << "Click outside of the path!";
+                    QPainterPath path = item->path();
+                    if (ctrlEnabled) {
+                        qDebug() << "OUT - Adding straight line!";
+                        path.lineTo(coord);
+                    } else if (shiftEnabled) {
+                        qDebug() << "OUT - Adding curve line!";
+                        QPointF lastPoint = path.pointAtPercent(1);
+                        qDebug() << "lastPoint ->" << lastPoint;
+                        qDebug() << "coord ->" << coord;
+                        // path.cubicTo(c1, c2, coord);
+                        path.lineTo(coord);
+                    }
+
+                    item->setPath(path);
+                    pathStr = item->pathToString();
+                }
+
+                qDebug() << "Updating nodes...";
+
+                nodeGroup->clear();
+                nodeGroup->createNodes(item);
+                nodeGroup->resizeNodes(realFactor);
+
+                TupFrame *frame = getCurrentFrame();
+                int position = frame->indexOf(item);
+                if (position >= 0) {
+                    qDebug() << "Calling EditNodes action...";
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
+                                                                                   currentLayer, currentFrame, position,
+                                                                                   QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                   TupProjectRequest::EditNodes, pathStr);
+                    emit requested(&event);
+                }
+            }
+        }
+
+        return;
+    }
+
     if (!currentSelection.isEmpty()) {
         QGraphicsItem *selectedItem = currentSelection.at(0);
         TupFrame *frame = getCurrentFrame();
@@ -188,6 +393,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 nodeGroup->clear();
 
                 nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::PathSelection, nodeZValue);
+                connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
                 nodeGroup->show();
                 nodeGroup->resizeNodes(realFactor);
 
@@ -238,6 +444,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
             #endif
 
             nodeGroup = new TNodeGroup(selectedItem, gScene, TNodeGroup::PathSelection, nodeZValue);
+            connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
             nodeGroup->show();
             activeSelection = true;
 
@@ -258,6 +465,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 
             if (nodeGroup) {
                 nodeGroup->clear();
+                disconnect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
                 nodeGroup = nullptr;
             }
             activeSelection = false;
@@ -349,15 +557,20 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
              if (item) {
                  if (activeSelection) {
-                     if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {
+                     QGraphicsPathItem *path = qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem());
+                     if (path == item) {
                          qDebug() << "   Showing nodes from selected item! (Existing nodeGroup)";
                          nodeGroup->show();
                          nodeGroup->syncNodesFromParent();
                          nodeGroup->saveParentProperties();
+
+                         if (!path->isSelected())
+                             path->setSelected(true);
                      }
                  } else {
                      qDebug() << "   Showing nodes from selected item! (Creating new nodeGroup)";
                      nodeGroup = new TNodeGroup(item, scene, TNodeGroup::PathSelection, nodeZValue);
+                     connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
                      nodeGroup->show();
                      activeSelection = true;
                      nodeGroup->resizeNodes(realFactor);
@@ -392,6 +605,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
              if (item) {
                  nodeGroup = new TNodeGroup(item, scene, TNodeGroup::PathSelection, nodeZValue);
+                 connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
                  nodeGroup->show();
                  activeSelection = true;
                  nodeGroup->resizeNodes(realFactor);
@@ -422,15 +636,30 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
 void NodesTool::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
+    int key = event->key();
+
+    if (event->modifiers() == Qt::ShiftModifier)
+        shiftEnabled = true;
+
+    if (event->modifiers() == Qt::ControlModifier)
+        ctrlEnabled = true;
+
+    if (key == Qt::Key_F11 || key == Qt::Key_Escape) {
         emit closeHugeCanvas();
     } else {
         if (!activeSelection) {
-            QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
+            QPair<int, int> flags = TAction::setKeyAction(key, event->modifiers());
             if (flags.first != -1 && flags.second != -1)
                 emit callForPlugin(flags.first, flags.second);
-        } else if ((event->key() == Qt::Key_Left) || (event->key() == Qt::Key_Up)
-                   || (event->key() == Qt::Key_Right) || (event->key() == Qt::Key_Down)) {
+        } else if (key == Qt::Key_X) {
+            if (nodeGroup) {
+                qDebug() << "   DELETING ELEMENT!";
+                qDebug() << "";
+
+                nodeGroup->removeSelectedNode();
+            }
+        } else if ((key == Qt::Key_Left) || (key == Qt::Key_Up)
+                   || (key == Qt::Key_Right) || (key == Qt::Key_Down)) {
             int delta = 5;
 
             if (event->modifiers() == Qt::ShiftModifier)
@@ -442,22 +671,22 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
             TupFrame *frame = getCurrentFrame();
             QGraphicsItem *item = nodeGroup->parentItem();
 
-            if (event->key() == Qt::Key_Left)
+            if (key == Qt::Key_Left)
                 item->moveBy(-delta, 0);
 
-            if (event->key() == Qt::Key_Up)
+            if (key == Qt::Key_Up)
                 item->moveBy(0, -delta);
 
-            if (event->key() == Qt::Key_Right)
+            if (key == Qt::Key_Right)
                 item->moveBy(delta, 0);
 
-            if (event->key() == Qt::Key_Down)
+            if (key == Qt::Key_Down)
                 item->moveBy(0, delta);
 
             QTimer::singleShot(0, this, SLOT(syncNodes()));
             requestTransformation(item, frame);
         } else {
-            QPair<int, int> flags = TAction::setKeyAction(event->key(), event->modifiers());
+            QPair<int, int> flags = TAction::setKeyAction(key, event->modifiers());
             if (flags.first != -1 && flags.second != -1)
                 emit callForPlugin(flags.first, flags.second);
         }
@@ -467,6 +696,9 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
 void NodesTool::keyReleaseEvent(QKeyEvent *event)
 {
     Q_UNUSED(event)
+
+    shiftEnabled = false;
+    ctrlEnabled = false;
 }
 
 void NodesTool::setupActions()
@@ -663,6 +895,35 @@ void NodesTool::resetPathHistory()
                 qDebug() << "[NodesTool::resetPathHistory()] - Resetting path history...";
             #endif
             pathItem->resetPathHistory();
+        }
+    }
+}
+
+void NodesTool::removeNodeFromPath(QPointF pos)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[NodesTool::removeNodeFromPath()] - pos ->" << pos;
+    #endif
+
+    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+        TupFrame *frame = getCurrentFrame();
+        int position = frame->indexOf(nodeGroup->parentItem());
+
+        int nodesTotal = nodeGroup->mainNodesCount();
+        if (nodesTotal == 2) {
+            TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
+                                      currentLayer, currentFrame, position, QPointF(), scene->getSpaceContext(),
+                                      TupLibraryObject::Item, TupProjectRequest::Remove);
+            emit requested(&event);
+        } else {
+            QString path = pathItem->removeNodeFromPath(pos);
+            qDebug() << "PATH ->" << path;
+
+            TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
+                                                                           currentLayer, currentFrame, position,
+                                                                           QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
+                                                                           TupProjectRequest::EditNodes, path);
+            emit requested(&event);
         }
     }
 }

@@ -65,6 +65,15 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         QString refactoringPath(NodePosition policy, int nodesTotal);
         QString pathRestored(int nodesTotal) const;
         void resetPathHistory();
+
+        QString removeNodeFromPath(QPointF pos);
+        bool containsOnPath(QPointF pos, float tolerance);
+        QString addNewNode(int tolerance);
+        bool pointIsContained(const QPointF &point1, const QPointF &point2, const QPointF &newPoint, int tolerance);
+
+        QList<QPointF> keyNodes();
+        QList<QColor> nodeColors();
+        QList<QString> nodeTips();
  
     protected:
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
@@ -72,10 +81,19 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         virtual void dropEvent(QGraphicsSceneDragDropEvent *event);
         
     private:
+        QPair<QPointF, QPointF> getCurveElements(QPointF initPos, QPointF endPos);
+
         bool dragOver;
         QList<QString> undoList;
         QList<QString> doList;
         QHash<int, QString> pathCollection;
+
+        QPointF newNode;
+        QPointF c1;
+        QPointF c2;
+
+        QList<QColor> colors;
+        QList<QString> tips;
 };
 
 #endif

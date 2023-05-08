@@ -44,6 +44,7 @@
 #include <QHash>
 #include <QGraphicsPathItem>
 #include <QAbstractGraphicsShapeItem>
+#include <QKeyEvent>
 
 class T_GUI_EXPORT TNodeGroup : public QObject
 {
@@ -72,7 +73,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
 
         void saveParentProperties();
         
-        int removeSelectedNodes();
+        int removeSelectedNode();
         
         void addControlNode(TControlNode* node);
         
@@ -89,6 +90,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         void itemChanged(QGraphicsItem *item);
         void nodePressed();
         void nodeReleased();
+        void nodeRemoved(QPointF pos);
 
     private:
         QList<TControlNode*> nodes;

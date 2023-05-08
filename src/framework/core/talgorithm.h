@@ -54,6 +54,13 @@ class T_CORE_EXPORT TAlgorithm
         static bool isKeyRandomic(const QString &id);
         static bool copyFolder(const QString &src, const QString &dst);
         static QStringList naturalSort(QStringList elements);
+
+        static float distance(const QPointF &p1, const QPointF &p2);
+        static float slope(const QPointF &p1, const QPointF &p2);
+        static float inverseSlope(const QPointF &p1, const QPointF &p2);
+        static float calculateBFromLine(const QPointF &point, float slope);
+        static float calculateYFromLine(float x, float m, float b);
+        static float distanceFromLine(QPointF linePoint1, QPointF linePoint2, QPointF point);
 };
 
 #endif

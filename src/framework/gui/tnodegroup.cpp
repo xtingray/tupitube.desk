@@ -207,14 +207,15 @@ void TNodeGroup::saveParentProperties()
     }
 }
 
-int TNodeGroup::removeSelectedNodes()
+int TNodeGroup::removeSelectedNode()
 {
     int count = 0;
     foreach (TControlNode *node, nodes) {
         if (node->isSelected()) {
             count++;
             nodes.removeAll(node);
-            // SQA: recreate the path
+
+            emit nodeRemoved(node->pos());
         }
     }
     
@@ -237,9 +238,11 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
         saveParentProperties();
         int index = 0;
 
+        /*
         #ifdef TUP_DEBUG
             qDebug() << "[TNodeGroup::createNodes()] - element count ->" << path.elementCount();
         #endif
+        */
 
         while (index < path.elementCount()) {
             QPainterPath::Element e = path.elementAt(index);
@@ -249,24 +252,30 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
 
                 if (path.elementAt(index - 2).type == QPainterPath::CurveToElement) { // Element is a curve
                     TControlNode *node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                    /*
                     #ifdef TUP_DEBUG
                         qDebug() << "* Adding center node - CURVE";
                     #endif
+                    */
                     nodes << node; // Adding central node
                     QPainterPath::Element e1 = path.elementAt(index - 1);
                     node->setLeft(new TControlNode(index - 1, this, e1, pathItem, nodeScene, nodeLevel)); // Setting left wing
+                    /*
                     #ifdef TUP_DEBUG
                         qDebug() << "   - Adding left wing node";
                     #endif
+                    */
                     nodes << node->left(); // Adding left wing node
 
                     if ((index + 1) < path.elementCount()) { // If the current element is not the last one, add a right wing
                         QPainterPath::Element e2 = path.elementAt(index + 1);
                         if (e2.type == QPainterPath::CurveToElement) {
                             node->setRight(new TControlNode(index + 1, this, e2, pathItem, nodeScene, nodeLevel)); // Setting right wing
+                            /*
                             #ifdef TUP_DEBUG
                                 qDebug() << "   - Adding right wing node";
                             #endif
+                            */
                             nodes << node->right(); // Adding right wing node
                             index++;
                         }
@@ -277,14 +286,18 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                 if (index+1 < path.elementCount()) {
                     if (path.elementAt(index + 1).type == QPainterPath::CurveToElement) {
                         node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
+                        /*
                         #ifdef TUP_DEBUG
                             qDebug() << "* Adding center node - LINE";
                         #endif
+                        */
                         nodes << node; // Adding central node
                         node->setRight(new TControlNode(index + 1, this, path.elementAt(index + 1), pathItem, nodeScene));
+                        /*
                         #ifdef TUP_DEBUG
                             qDebug() << "   - Adding right wing node";
                         #endif
+                        */
                         nodes << node->right(); // Adding central node
 
                         index++;

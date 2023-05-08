@@ -254,3 +254,44 @@ QStringList TAlgorithm::naturalSort(QStringList elements)
 
     return elements;
 }
+
+float TAlgorithm::distance(const QPointF &p1, const QPointF &p2)
+{
+    float vx, vy;
+
+    vx = p2.x() - p1.x();
+    vy = p2.y() - p1.y();
+
+    return sqrt((vx * vx) + (vy * vy));
+}
+
+float TAlgorithm::slope(const QPointF &p1, const QPointF &p2)
+{
+    return (p2.y() - p1.y())/(p2.x() - p1.x());
+}
+
+float TAlgorithm::inverseSlope(const QPointF &p1, const QPointF &p2)
+{
+    float m = (p2.y() - p1.y())/(p2.x() - p1.x());
+
+    return -(1/m);
+}
+
+float TAlgorithm::calculateBFromLine(const QPointF &point, float slope)
+{
+    return (point.y() - (slope*point.x()));
+}
+
+float TAlgorithm::calculateYFromLine(float x, float m, float b)
+{
+    return (m*x + b);
+}
+
+float TAlgorithm::distanceFromLine(QPointF linePoint1, QPointF linePoint2, QPointF point)
+{
+    qreal top = fabs(((linePoint2.x() - linePoint1.x())*(linePoint1.y() - point.y()))
+                     - ((linePoint1.x() - point.x())*(linePoint2.y() - linePoint1.y())));
+    qreal bottom = sqrt(pow(linePoint2.x() - linePoint1.x(), 2) + pow(linePoint2.y() - linePoint1.y(), 2));
+
+    return (top / bottom);
+}

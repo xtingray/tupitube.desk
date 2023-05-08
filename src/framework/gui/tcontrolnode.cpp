@@ -41,7 +41,7 @@
 TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos, 
                            QGraphicsItem *graphicParent, QGraphicsScene *gScene, int level): QGraphicsItem()
 {
-    nodeIndex  = index;
+    nodeIndex = index;
     unchanged = true;
 
     itemParent = nullptr;
@@ -220,7 +220,7 @@ void TControlNode::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     // event->accept();
 }
 
-void TControlNode::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+void TControlNode::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     /* SQA: Check if this code is required for other features than Position tween
     foreach (QGraphicsItem *item, scene()->selectedItems()) {
@@ -252,13 +252,13 @@ void TControlNode::setLeft(TControlNode *left)
 void TControlNode::setRight(TControlNode *right)
 {
     // SQA: check if this condition is required
-    if (right)
+    if (rightNode)
         delete rightNode;
 
     rightNode = right;
     rightNode->setVisible(false);
     rightNode->setCentralNode(this);
-    rightNode->setZValue(zValue()+2);
+    rightNode->setZValue(zValue() + 2);
 }
 
 void TControlNode::setCentralNode(TControlNode *node)
