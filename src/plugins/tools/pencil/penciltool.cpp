@@ -216,9 +216,9 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
                 emit requested(&request);
 
                 return;
-            } else {
-                smoothPath(path, smoothness);
             }
+
+            TupGraphicalAlgorithm::smoothPath(path, smoothness);
 
             item->setPen(brushManager->pen());
             item->setBrush(brushManager->brush());
@@ -234,6 +234,7 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
         }
 }
 
+/*
 void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int to)
 {
     QPolygonF polygon;
@@ -258,6 +259,7 @@ void PencilTool::smoothPath(QPainterPath &path, double smoothness, int from, int
         path.addPolygon(polygon);
     }
 }
+*/
 
 QMap<TAction::ActionId, TAction *> PencilTool::actions() const
 {

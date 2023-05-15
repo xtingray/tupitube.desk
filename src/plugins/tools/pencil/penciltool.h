@@ -90,7 +90,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
     private:
         void setupActions();
         void setZValueReferences();
-        void smoothPath(QPainterPath &path, double smoothness, int from = 0, int to = -1);
+        // void smoothPath(QPainterPath &path, double smoothness, int from = 0, int to = -1);
         // void reset(TupGraphicsScene *scene);
 
     signals:

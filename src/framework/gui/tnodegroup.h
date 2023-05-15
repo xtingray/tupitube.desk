@@ -75,7 +75,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         
         int removeSelectedNode();
         
-        void addControlNode(TControlNode* node);
+        // void addControlNode(TControlNode* node);
         
         void createNodes(QGraphicsPathItem *nodes);
         void emitNodeClicked(TControlNode::State state);
@@ -83,7 +83,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         void expandAllNodes();
         bool isSelected();
         int nodesTotalCount();
-        int mainNodesCount(); 
+        int mainNodesCount();
         void resizeNodes(qreal scaleFactor);
 
     signals:
@@ -101,6 +101,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         QGraphicsScene *nodeScene;
         GroupType nodeType;
         int nodeLevel;
+        int mainNodesCounter;
 };
 
 #endif

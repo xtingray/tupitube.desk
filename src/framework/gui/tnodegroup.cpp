@@ -224,27 +224,25 @@ int TNodeGroup::removeSelectedNode()
 
 void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TNodeGroup::createNodes()]";
     #endif
-    */
 
     if (pathItem) {
         qDeleteAll(nodes);
         nodes.clear();
+        mainNodesCounter = 0;
 
         QPainterPath path = pathItem->sceneTransform().map(pathItem->path());
-        saveParentProperties();
+        saveParentProperties();        
         int index = 0;
+        int total = path.elementCount();
 
-        /*
         #ifdef TUP_DEBUG
-            qDebug() << "[TNodeGroup::createNodes()] - element count ->" << path.elementCount();
+            qDebug() << "[TNodeGroup::createNodes()] - element count ->" << total;
         #endif
-        */
 
-        while (index < path.elementCount()) {
+        while (index < total) {
             QPainterPath::Element e = path.elementAt(index);
             if (e.type == QPainterPath::CurveToDataElement) { // Extra data required to describe a curve
                 if ((index - 2) < 0) // Ignore the first two elements
@@ -258,6 +256,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                     #endif
                     */
                     nodes << node; // Adding central node
+                    mainNodesCounter++;
                     QPainterPath::Element e1 = path.elementAt(index - 1);
                     node->setLeft(new TControlNode(index - 1, this, e1, pathItem, nodeScene, nodeLevel)); // Setting left wing
                     /*
@@ -292,6 +291,7 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
                         #endif
                         */
                         nodes << node; // Adding central node
+                        mainNodesCounter++;
                         node->setRight(new TControlNode(index + 1, this, path.elementAt(index + 1), pathItem, nodeScene));
                         /*
                         #ifdef TUP_DEBUG
@@ -302,12 +302,30 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
 
                         index++;
                     } else {
+                        /*
+                        #ifdef TUP_DEBUG
+                            if (e.type == QPainterPath::LineToElement)
+                                qDebug() << "* Adding center node - LineToElement ->" << index;
+                            else
+                                qDebug() << "* Adding center node - MoveToElement ->" << index;
+                        #endif
+                        */
                         node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
                         nodes << node; // Adding node without wings (smoothness == 0)
+                        mainNodesCounter++;
                     }
                 } else {
+                    /*
+                    #ifdef TUP_DEBUG
+                        if (e.type == QPainterPath::LineToElement)
+                            qDebug() << "* Adding center node - LineToElement ->" << index;
+                        else
+                            qDebug() << "* Adding center node - MoveToElement ->" << index;
+                    #endif
+                    */
                     node = new TControlNode(index, this, path.elementAt(index), pathItem, nodeScene, nodeLevel);
                     nodes << node; // Adding node without wings (smoothness == 0)
+                    mainNodesCounter++;
                 }
             }
             index++;
@@ -319,9 +337,11 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
     }
 }
 
+/*
 void TNodeGroup::addControlNode(TControlNode*)
 {
 }
+*/
 
 void TNodeGroup::emitNodeClicked(TControlNode::State state)
 {
@@ -363,7 +383,8 @@ int TNodeGroup::nodesTotalCount()
 
 int TNodeGroup::mainNodesCount()
 {
-    return (nodes.count()/3) + 1;
+    // return (nodes.count()/3) + 1;
+    return mainNodesCounter;
 }
 
 void TNodeGroup::resizeNodes(qreal scaleFactor)

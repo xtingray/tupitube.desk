@@ -38,6 +38,7 @@
 #include "tseparator.h"
 
 #include <QBoxLayout>
+#include <QLabel>
 
 NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
 {
@@ -95,9 +96,31 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     clearLayout->addWidget(policyCombo);
     clearWidget->setVisible(false);
 
+    tips = new QPushButton(tr("Show Tips"));
+    tips->setToolTip(tr("A little help for the Selection tool"));
+
+    QBoxLayout *smallLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    smallLayout->addWidget(tips);
+    connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
+
+    help = new QWidget(this);
+    help->hide();
+    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
+    textArea = new QTextEdit;
+
+    textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> "
+                     + tr("Append straight line to the last node of the path") + "</p>");
+    textArea->append("<p><b>" + tr("Shift + Left Mouse Button") + ":</b> "
+                     + tr("Append curve to the last node of the path or add new node between two nodes") + "</p>");
+    textArea->append("<p><b>" + tr("X Key") + ":</b> " +  tr("Remove selected node") + "</p>");
+
+    helpLayout->addWidget(textArea);
+
     mainLayout->addWidget(nodesTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
     mainLayout->addWidget(clearWidget);
+    mainLayout->addLayout(smallLayout);
+    mainLayout->addWidget(help);
     mainLayout->addStretch(2);
 }
 
@@ -238,4 +261,12 @@ void NodeSettings::updatePolicyParam(int index)
 NodePosition NodeSettings::policyParam()
 {
     return policy;
+}
+
+void NodeSettings::openTipPanel()
+{
+    if (help->isVisible())
+        help->hide();
+    else
+        help->show();
 }

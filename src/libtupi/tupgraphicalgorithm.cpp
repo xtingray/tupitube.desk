@@ -748,3 +748,28 @@ double TupGraphicalAlgorithm::angleForPos(const QPointF &pos, const QPointF &anc
 
     return angle;
 }
+
+void TupGraphicalAlgorithm::smoothPath(QPainterPath &path, double smoothness, int from, int to)
+{
+    QPolygonF polygon;
+    QList<QPolygonF> polygons = path.toSubpathPolygons();
+    QList<QPolygonF>::iterator it = polygons.begin();
+    QPolygonF::iterator pointIt;
+
+    while (it != polygons.end()) {
+        pointIt = (*it).begin();
+
+        while (pointIt <= (*it).end()-2) {
+            polygon << (*pointIt);
+            pointIt += 2;
+        }
+        ++it;
+    }
+
+    if (smoothness > 0) {
+        path = TupGraphicalAlgorithm::bezierFit(polygon, static_cast<float>(smoothness), from, to);
+    } else {
+        path = QPainterPath();
+        path.addPolygon(polygon);
+    }
+}

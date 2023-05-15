@@ -761,7 +761,6 @@ void Tweener::applyTween()
     }
 
     int framesNumber = framesCount();
-    // int total = initFrame + configurator->totalSteps() - 1;
     int total = initFrame + configPanel->totalSteps();
     TupProjectRequest request;
 

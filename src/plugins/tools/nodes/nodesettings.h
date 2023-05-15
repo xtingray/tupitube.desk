@@ -42,7 +42,8 @@
 #include <QSpinBox>
 #include <QSlider>
 #include <QComboBox>
-#include <QLabel>
+#include <QTextEdit>
+#include <QPushButton>
 
 class TUPITUBE_PLUGIN NodeSettings : public QWidget
 {
@@ -67,6 +68,7 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         void updateNodesFromBox(int value);
         void updateNodesFromSlider(int value);
         void updatePolicyParam(int index);
+        void openTipPanel();
 
     private:
         QWidget *clearWidget;
@@ -78,6 +80,10 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         QList<int> redoValues;
 
         NodePosition policy;
+
+        QPushButton *tips;
+        QWidget *help;
+        QTextEdit *textArea;
 };
 
 #endif

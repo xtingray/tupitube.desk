@@ -55,7 +55,8 @@ class TUPITUBE_EXPORT TupGraphicalAlgorithm
         static char calculateCode(const QPointF &point, const QRectF &window);
         static double distanceToPoint(const QPointF &pos);
         static double angleForPos(const QPointF &pos, const QPointF &anchor = QPointF(0,0));
-        
+        static void smoothPath(QPainterPath &path, double smoothness, int from = 0, int to = -1);
+
     private:
         enum CohenSutherlandCode
         {

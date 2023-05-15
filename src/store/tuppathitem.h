@@ -39,11 +39,8 @@
 #include "tupabstractserializable.h"
 
 #include <QGraphicsPathItem>
-#include <QMimeData>
-#include <QBrush>
 #include <QGraphicsSceneDragDropEvent>
 #include <QPainter>
-#include <QPainterPath>
 
 class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGraphicsPathItem
 {
@@ -68,12 +65,19 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
 
         QString removeNodeFromPath(QPointF pos);
         bool containsOnPath(QPointF pos, float tolerance);
-        QString addNewNode(int tolerance);
-        bool pointIsContained(const QPointF &point1, const QPointF &point2, const QPointF &newPoint, int tolerance);
+        QString addInnerNode(int tolerance);
+        bool pointIsContainedBetweenRange(const QPointF &point1, const QPointF &point2, const QPointF &newPoint, float tolerance);
+        QString appendNode(const QPointF &pos);
+        QPair<QPointF,QPointF> calculateEndPathCPoints(const QPointF &pos);
 
         QList<QPointF> keyNodes();
         QList<QColor> nodeColors();
         QList<QString> nodeTips();
+        QList<QPair<QPointF,QPointF>> getCPoints();
+
+        QPainterPath clearPath(int tolerance);
+        static QPainterPath brushPath(const QPainterPath &route, int tolerance);
+        int nodesCount();
  
     protected:
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
@@ -82,6 +86,9 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         
     private:
         QPair<QPointF, QPointF> getCurveElements(QPointF initPos, QPointF endPos);
+        bool pointIsContainedBetweenNodes(const QPointF &node1, const QPointF &node2, const QPointF &point, float tolerance);
+        QPair<QPointF,QPointF> calculateCPoints(const QPointF &pos1, const QPointF &pos2);
+        QPair<QPointF,QPointF> calculatePlainCPoints(const QPointF &pos1, const QPointF &pos2);
 
         bool dragOver;
         QList<QString> undoList;
@@ -94,6 +101,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
 
         QList<QColor> colors;
         QList<QString> tips;
+        QList<QPair<QPointF,QPointF>> curvePoints;
 };
 
 #endif
