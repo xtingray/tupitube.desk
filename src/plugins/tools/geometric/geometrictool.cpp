@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "geometrictool.h"
+#include "tconfig.h"
 #include "tuprectitem.h"
 #include "tupellipseitem.h"
 #include "tuplineitem.h"
@@ -73,6 +74,15 @@ void GeometricTool::init(TupGraphicsScene *gScene)
     linePath = nullptr;
     proportion = false;
     side = false;
+
+    straightMode = false;
+    TCONFIG->beginGroup("GeometricTool");
+    int type = TCONFIG->value("LineType", 0).toInt();
+    if (type)
+        straightMode = true;
+
+    if (configPanel)
+        configPanel->updateLineType(type);
 
     foreach (QGraphicsView *view, scene->views())
         view->setDragMode(QGraphicsView::NoDrag);
@@ -155,7 +165,11 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
 
             if (linePath) {
                 QPainterPath painterPath = linePath->path();
-                painterPath.cubicTo(lastPoint, lastPoint, lastPoint);
+                if (straightMode)
+                    painterPath.lineTo(lastPoint);
+                else
+                    painterPath.cubicTo(lastPoint, lastPoint, lastPoint);
+
                 linePath->setPath(painterPath);
             } else {
                 linePath = new TupPathItem;
@@ -335,8 +349,6 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
     } else if (toolId() == TAction::Ellipse) {
         ellipse->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(ellipse)->toXml(doc));
-        // QRectF rect = ellipse->rect();
-        // point = rect.topLeft();
         point = QPoint(0, 0);
     } else if (toolId() == TAction::Line) {
         return;
@@ -373,6 +385,9 @@ QWidget *GeometricTool::configurator()
         toolType = GeometricSettings::Ellipse;
 
     configPanel = new GeometricSettings(toolType);
+    connect(configPanel, SIGNAL(lineTypeChanged(GeometricSettings::LineType)),
+            this, SLOT(updateLineMode(GeometricSettings::LineType)));
+
     return configPanel;
 }
 
@@ -385,11 +400,21 @@ void GeometricTool::aboutToChangeScene(TupGraphicsScene *scene)
 
 void GeometricTool::aboutToChangeTool() 
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricTool::aboutToChangeTool()]";
+    #endif
+
     endItem();
+    saveLineSettings();
 }
 
 void GeometricTool::saveConfig()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricTool::saveConfig()]";
+    #endif
+
+    saveLineSettings();
 }
 
 void GeometricTool::keyPressEvent(QKeyEvent *event)
@@ -419,7 +444,7 @@ void GeometricTool::keyReleaseEvent(QKeyEvent *event)
         proportion = false;
 }
 
-QCursor GeometricTool::toolCursor() // const
+QCursor GeometricTool::toolCursor()
 {
     if (toolId() == TAction::Rectangle) {
         return squareCursor;
@@ -455,9 +480,11 @@ void GeometricTool::endItem()
 
 void GeometricTool::updatePos(QPointF pos)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[GeometricTool::updatePos()] - pos -> " << pos;
     #endif
+    */
 
     if (linePath) {
         QLineF lineVar;
@@ -515,4 +542,25 @@ void GeometricTool::frameResponse(const TupFrameResponse *event)
 
     if (toolId() == TAction::Line)
         init(scene);
+}
+
+void GeometricTool::updateLineMode(GeometricSettings::LineType type)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricTool::updateLineMode()] - type -> " << type;
+    #endif
+
+    if (type == GeometricSettings::Bendable)
+        straightMode = false;
+    else
+        straightMode = true;
+}
+
+void GeometricTool::saveLineSettings()
+{
+    TCONFIG->beginGroup("GeometricTool");
+    if (straightMode)
+        TCONFIG->setValue("LineType", 1);
+    else
+        TCONFIG->setValue("LineType", 0);
 }

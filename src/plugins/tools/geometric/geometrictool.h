@@ -90,6 +90,9 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
     public slots:
         void endItem();
 
+    private slots:
+        void updateLineMode(GeometricSettings::LineType type);
+
     signals:
         void closeHugeCanvas();
         void callForPlugin(int, int);
@@ -98,7 +101,8 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         void setupActions();
 
     private:
-        QBrush setLiteBrush(QColor c, Qt::BrushStyle style);
+        QBrush setLiteBrush(QColor color, Qt::BrushStyle style);
+        void saveLineSettings();
 
         QBrush fillBrush;
         TupRectItem *rect;
@@ -121,6 +125,8 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         QCursor squareCursor;
         QCursor circleCursor;
         QCursor lineCursor;
+
+        bool straightMode;
 };
 
 #endif

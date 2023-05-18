@@ -89,15 +89,16 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         bool pointIsContainedBetweenNodes(const QPointF &node1, const QPointF &node2, const QPointF &point, float tolerance);
         QPair<QPointF,QPointF> calculateCPoints(const QPointF &pos1, const QPointF &pos2);
         QPair<QPointF,QPointF> calculatePlainCPoints(const QPointF &pos1, const QPointF &pos2);
+        bool pointIsPartOfLine(const QPainterPath &route, const QPointF &point, int tolerance);
+        bool findPointAtLine(const QPointF &point1, const QPointF &point2, const QPointF &target, int tolerance);
 
         bool dragOver;
         QList<QString> undoList;
         QList<QString> doList;
         QHash<int, QString> pathCollection;
 
+        bool straightLineFlag;
         QPointF newNode;
-        QPointF c1;
-        QPointF c2;
 
         QList<QColor> colors;
         QList<QString> tips;

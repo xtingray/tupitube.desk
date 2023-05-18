@@ -35,10 +35,18 @@
 
 #include "geometricsettings.h"
 #include "tapplicationproperties.h"
+#include "tconfig.h"
 #include "tseparator.h"
+
+#include <QVBoxLayout>
+#include <QGroupBox>
 
 GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricSettings()]";
+    #endif
+
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
 
@@ -60,6 +68,27 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
+
+    if (type == GeometricSettings::Line) {
+        QGroupBox *groupBox = new QGroupBox(tr("Line Options"));
+        QVBoxLayout *lineLayout = new QVBoxLayout(groupBox);
+        option1 = new QRadioButton(tr("Bendable"));
+        option2 = new QRadioButton(tr("Straight"));
+
+        TCONFIG->beginGroup("GeometricTool");
+        int type = TCONFIG->value("LineType", 0).toInt();
+        if (type)
+            option2->setChecked(true);
+        else
+            option1->setChecked(true);
+
+        connect(option1, SIGNAL(toggled(bool)), this, SLOT(sendLineState(bool)));
+        connect(option2, SIGNAL(toggled(bool)), this, SLOT(sendLineState(bool)));
+
+        lineLayout->addWidget(option1);
+        lineLayout->addWidget(option2);
+        layout->addWidget(groupBox);
+    }
 
     QLabel *label = new QLabel(tr("Tips"));
     label->setAlignment(Qt::AlignHCenter); 
@@ -94,3 +123,26 @@ GeometricSettings::~GeometricSettings()
 {
 }
 
+void GeometricSettings::sendLineState(bool state)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricSettings::sendLineState()] - state -> " << state;
+    #endif
+
+    if (option1->isChecked())
+        emit lineTypeChanged(GeometricSettings::Bendable);
+    else
+        emit lineTypeChanged(GeometricSettings::Straight);
+}
+
+void GeometricSettings::updateLineType(int type)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[GeometricSettings::updateLineType()] - type -> " << type;
+    #endif
+
+    if (type)
+        option2->setChecked(true);
+    else
+        option1->setChecked(true);
+}

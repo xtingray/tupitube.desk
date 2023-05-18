@@ -41,6 +41,7 @@
 #include <QLabel>
 #include <QBoxLayout>
 #include <QTextEdit>
+#include <QRadioButton>
 
 /**
  * @author Gustav Gonzalez 
@@ -52,8 +53,22 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
 
     public:
         enum ToolType { Rectangle = 1, Ellipse, Line };
+        enum LineType { Bendable = 0, Straight };
+
         GeometricSettings(GeometricSettings::ToolType type, QWidget *parent = nullptr);
         ~GeometricSettings();
+
+        void updateLineType(int type);
+
+    signals:
+        void lineTypeChanged(GeometricSettings::LineType type);
+
+    private slots:
+        void sendLineState(bool state);
+
+    private:
+        QRadioButton *option1;
+        QRadioButton *option2;
 };
 
 #endif
