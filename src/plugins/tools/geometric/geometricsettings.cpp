@@ -141,8 +141,13 @@ void GeometricSettings::updateLineType(int type)
         qDebug() << "[GeometricSettings::updateLineType()] - type -> " << type;
     #endif
 
-    if (type)
+    if (type) {
+        option2->blockSignals(true);
         option2->setChecked(true);
-    else
+        option2->blockSignals(false);
+    } else {
+        option1->blockSignals(true);
         option1->setChecked(true);
+        option1->blockSignals(false);
+    }
 }
