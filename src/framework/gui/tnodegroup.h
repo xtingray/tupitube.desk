@@ -73,9 +73,8 @@ class T_GUI_EXPORT TNodeGroup : public QObject
 
         void saveParentProperties();
         
-        int removeSelectedNode();
-        
-        // void addControlNode(TControlNode* node);
+        void removeSelectedNode();
+        void changeSelectedNode();
         
         void createNodes(QGraphicsPathItem *nodes);
         void emitNodeClicked(TControlNode::State state);
@@ -91,6 +90,7 @@ class T_GUI_EXPORT TNodeGroup : public QObject
         void nodePressed();
         void nodeReleased();
         void nodeRemoved(QPointF pos);
+        void nodeTypeChanged(QPointF pos);
 
     private:
         QList<TControlNode*> nodes;

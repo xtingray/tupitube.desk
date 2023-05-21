@@ -189,7 +189,7 @@ void SelectionTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 #endif
 
                 item->setFlag(QGraphicsItem::ItemIsMovable, false); // To avoid initial awkward movement
-                NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
+                NodeManager *manager = new NodeManager(SelectionNode, item, gScene, nodeZValue);
                 connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
                 connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
 
@@ -276,7 +276,7 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
                     #ifdef TUP_DEBUG
                         qDebug() << "[SelectionTool::release()] - Adding nodes manager to item!";
                     #endif
-                    NodeManager *manager = new NodeManager(Node::Selection, item, gScene, nodeZValue);
+                    NodeManager *manager = new NodeManager(SelectionNode, item, gScene, nodeZValue);
                     connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
                     connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
 
@@ -556,7 +556,7 @@ void SelectionTool::itemResponse(const TupItemResponse *response)
 
             if (specialSelection.size() == 1) {
                 QGraphicsItem *item = selectedObjects.first();
-                NodeManager *manager = new NodeManager(Node::Selection, item, scene, nodeZValue);
+                NodeManager *manager = new NodeManager(SelectionNode, item, scene, nodeZValue);
                 connect(manager, SIGNAL(rotationUpdated(int)), settingsPanel, SLOT(updateRotationAngle(int)));
                 connect(manager, SIGNAL(scaleUpdated(double,double)), settingsPanel, SLOT(updateScaleFactor(double,double)));
                 manager->show();

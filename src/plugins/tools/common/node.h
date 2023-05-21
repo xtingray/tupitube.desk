@@ -53,11 +53,7 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
     Q_INTERFACES(QGraphicsItem)
     
     public:
-        enum Context { Selection = 0, Papagayo, Text };
-        enum NodeType { TopLeft  = 0, TopRight, BottomLeft, BottomRight, Center };
-        enum NodeAction { NoAction = 0, Scale, Rotate };
-        
-        Node(Context tool, NodeType node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=nullptr,
+        Node(NodeContext tool, NodePosition node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=nullptr,
              QGraphicsItem *parent=nullptr, int zValue=0);
         ~Node();
         
@@ -83,8 +79,8 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
         void transformationUpdated();
 
     private:
-        Context context;
-        NodeType node;
+        NodeContext context;
+        NodePosition node;
         NodeAction action;
         NodeAction generalState;
         QGraphicsItem *parent;

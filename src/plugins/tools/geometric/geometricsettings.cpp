@@ -145,6 +145,7 @@ void GeometricSettings::updateLineType(int type)
         option2->blockSignals(true);
         option2->setChecked(true);
         option2->blockSignals(false);
+
     } else {
         option1->blockSignals(true);
         option1->setChecked(true);

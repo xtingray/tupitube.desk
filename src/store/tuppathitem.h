@@ -59,13 +59,14 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         void undoPath();
         void redoPath();
 
-        QString refactoringPath(NodePosition policy, int nodesTotal);
+        QString refactoringPath(NodeLocation policy, int nodesTotal);
         QString pathRestored(int nodesTotal) const;
         void resetPathHistory();
 
         QString removeNodeFromPath(QPointF pos);
+        QString changeNodeTypeFromPath(QPointF pos);
         bool containsOnPath(QPointF pos, float tolerance);
-        QString addInnerNode(int tolerance);
+        QString addInnerNode(int tolerance, NodeType node);
         bool pointIsContainedBetweenRange(const QPointF &point1, const QPointF &point2, const QPointF &newPoint, float tolerance);
         QString appendNode(const QPointF &pos);
         QPair<QPointF,QPointF> calculateEndPathCPoints(const QPointF &pos);
@@ -87,6 +88,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
     private:
         QPair<QPointF, QPointF> getCurveElements(QPointF initPos, QPointF endPos);
         bool pointIsContainedBetweenNodes(const QPointF &node1, const QPointF &node2, const QPointF &point, float tolerance);
+        bool pointIsContainedBetweenNodes(const QPointF &node1, const QPointF &node2, const QPointF &point);
         QPair<QPointF,QPointF> calculateCPoints(const QPointF &pos1, const QPointF &pos2);
         QPair<QPointF,QPointF> calculatePlainCPoints(const QPointF &pos1, const QPointF &pos2);
         bool pointIsPartOfLine(const QPainterPath &route, const QPointF &point, int tolerance);
@@ -98,6 +100,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         QHash<int, QString> pathCollection;
 
         bool straightLineFlag;
+        bool flatCurveFlag;
         QPointF newNode;
 
         QList<QColor> colors;

@@ -173,7 +173,7 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                 item->setFlag(QGraphicsItem::ItemIsMovable, false); // To avoid undesired small movements
                 if (!item->isSelected())
                     item->setSelected(true);
-                nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
+                nodesManager = new NodeManager(TextNode, item, scene, nodeZValue);
                 connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
                 connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
                 connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
@@ -193,7 +193,7 @@ void TextTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                         parent->setSelected(false);
                         nodesManager->clear();
                         nodesManager = nullptr;
-                        nodesManager = new NodeManager(Node::Text, item, scene, nodeZValue);
+                        nodesManager = new NodeManager(TextNode, item, scene, nodeZValue);
                         connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
                         connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
                         connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));
@@ -289,7 +289,7 @@ void TextTool::release(const TupInputDeviceInformation *input, TupBrushManager *
                 if (!textItem->isSelected())
                     textItem->setSelected(true);
 
-                nodesManager = new NodeManager(Node::Text, textItem, scene, nodeZValue);
+                nodesManager = new NodeManager(TextNode, textItem, scene, nodeZValue);
                 connect(nodesManager, SIGNAL(positionUpdated(const QPointF &)), this, SLOT(updatePositionRecord(const QPointF&)));
                 connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
                 connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));

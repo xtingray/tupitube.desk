@@ -81,7 +81,7 @@ void GeometricTool::init(TupGraphicsScene *gScene)
     if (type)
         straightMode = true;
 
-    if (configPanel)
+    if (configPanel && toolId() == TAction::Line)
         configPanel->updateLineType(type);
 
     foreach (QGraphicsView *view, scene->views())

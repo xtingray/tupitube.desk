@@ -103,15 +103,17 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     smallLayout->addWidget(tips);
     connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
 
+    int h = height();
     help = new QWidget(this);
     help->hide();
     QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
     textArea = new QTextEdit;
+    textArea->setFixedHeight(h);
 
     textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> "
-                     + tr("Append straight line to the last node of the path") + "</p>");
+                     + tr("Append a line segment to the last node of the path or add a new line node between two nodes") + "</p>");
     textArea->append("<p><b>" + tr("Shift + Left Mouse Button") + ":</b> "
-                     + tr("Append curve to the last node of the path or add new node between two nodes") + "</p>");
+                     + tr("Append a curve to the last node of the path or add a new node between two nodes") + "</p>");
     textArea->append("<p><b>" + tr("X Key") + ":</b> " +  tr("Remove selected node") + "</p>");
 
     helpLayout->addWidget(textArea);
@@ -244,7 +246,7 @@ void NodeSettings::updatePolicyParam(int index)
         qDebug() << "[NodeSettings::updatePolicyParam()] - index ->" << index;
     #endif
 
-    policy = NodePosition(index);
+    policy = NodeLocation(index);
     int value = clearSpinBox->value();
     clearSpinBox->setMinimum(2);
     clearSpinBox->setMaximum(value);
@@ -258,7 +260,7 @@ void NodeSettings::updatePolicyParam(int index)
     emit policyChanged();
 }
 
-NodePosition NodeSettings::policyParam()
+NodeLocation NodeSettings::policyParam()
 {
     return policy;
 }

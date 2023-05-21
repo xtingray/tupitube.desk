@@ -405,7 +405,7 @@ void PapagayoTool::setNodesManagerEnvironment()
     }
 
     if (found) {
-        nodesManager = new NodeManager(Node::Papagayo, mouth, scene, nodeZValue);
+        nodesManager = new NodeManager(PapagayoNode, mouth, scene, nodeZValue);
         connect(nodesManager, SIGNAL(positionUpdated(const QPointF&)), this, SLOT(updatePositionRecord(const QPointF&)));
         connect(nodesManager, SIGNAL(rotationUpdated(int)), this, SLOT(updateRotationAngleRecord(int)));
         connect(nodesManager, SIGNAL(scaleUpdated(double,double)), this, SLOT(updateScaleFactorRecord(double,double)));

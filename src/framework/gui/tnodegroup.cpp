@@ -207,19 +207,27 @@ void TNodeGroup::saveParentProperties()
     }
 }
 
-int TNodeGroup::removeSelectedNode()
+void TNodeGroup::removeSelectedNode()
 {
-    int count = 0;
     foreach (TControlNode *node, nodes) {
         if (node->isSelected()) {
-            count++;
             nodes.removeAll(node);
-
             emit nodeRemoved(node->pos());
+
+            return;
         }
     }
-    
-    return count;
+}
+
+void TNodeGroup::changeSelectedNode()
+{
+    foreach (TControlNode *node, nodes) {
+        if (node->isSelected()) {
+            emit nodeTypeChanged(node->pos());
+
+            return;
+        }
+    }
 }
 
 void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
@@ -336,12 +344,6 @@ void TNodeGroup::createNodes(QGraphicsPathItem *pathItem)
         #endif
     }
 }
-
-/*
-void TNodeGroup::addControlNode(TControlNode*)
-{
-}
-*/
 
 void TNodeGroup::emitNodeClicked(TControlNode::State state)
 {

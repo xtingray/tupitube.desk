@@ -110,6 +110,7 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         void updateCurrentPath(int total);
         void resetPathHistory();
         void removeNodeFromPath(QPointF pos);
+        void modifyNodeFromPath(QPointF pos);
 
     private:
         // void reset(TupGraphicsScene *scene);
@@ -129,6 +130,8 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
 
         bool shiftEnabled;
         bool ctrlEnabled;
+
+        QCursor targetCursor;
 };
 
 #endif

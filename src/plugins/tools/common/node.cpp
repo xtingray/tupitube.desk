@@ -40,7 +40,7 @@
 
 #include <cmath> // fabs
 
-Node::Node(Context tool, NodeType nType, NodeAction actionValue, const QPointF &pos, NodeManager *mngr,
+Node::Node(NodeContext tool, NodePosition nType, NodeAction actionValue, const QPointF &pos, NodeManager *mngr,
            QGraphicsItem *parentItem, int zValue) : QGraphicsItem(0)
 {
     QGraphicsItem::setCursor(QCursor(Qt::PointingHandCursor));
@@ -55,7 +55,7 @@ Node::Node(Context tool, NodeType nType, NodeAction actionValue, const QPointF &
     manager = mngr;
     parent = parentItem;
     size = QSizeF(10, 10);
-    generalState = Scale;
+    generalState = NodeScale;
 
     setZValue(zValue);
 }
@@ -71,8 +71,8 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     
     QColor color;
    
-    if (node != Center) {
-        if (action == Rotate) {
+    if (node != CenterNode) {
+        if (action == NodeRotate) {
             color = QColor(255, 102, 0);
             color.setAlpha(180);
         } else {
@@ -80,7 +80,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             color.setAlpha(200);
         }
     } else {
-        if (generalState == Scale) {
+        if (generalState == NodeScale) {
             color = QColor(150, 150, 150);
         } else {
            color = QColor(255, 0, 0);
@@ -99,7 +99,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     #endif
     */
 
-    if (node == Center) {
+    if (node == CenterNode) {
         painter->save();
         color = QColor("white");
         color.setAlpha(220);
@@ -158,13 +158,13 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF newPos(event->scenePos());
 
-    if (node == Center) {
-        if (context == Selection || context == Text) {
+    if (node == CenterNode) {
+        if (context == SelectionNode || context == TextNode) {
             int x = newPos.x() - scenePos().x();
             int y = newPos.y() - scenePos().y();
             parent->moveBy(x, y);
 
-            if (context == Text)
+            if (context == TextNode)
                 emit positionUpdated(newPos);
         } else { // Papagayo context
             QPointF center = newPos - QPointF(parent->boundingRect().width()/2, parent->boundingRect().height()/2);
@@ -175,7 +175,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         return;
     } else {
-        if (action == Scale) {
+        if (action == NodeScale) {
             QPointF center = parent->boundingRect().center();
             QPointF distance = parent->mapToScene(center) - newPos;
 
@@ -188,7 +188,7 @@ void Node::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             if (manager->proportionalScale())
                 sy = sx;
             manager->scale(sx, sy);
-        } else if (action == Rotate) {
+        } else if (action == NodeRotate) {
             QPointF p1 = newPos;
             QPointF p2 = parent->sceneBoundingRect().center();
 
@@ -254,15 +254,15 @@ int Node::nodeType() const
 
 void Node::setAction(NodeAction nAction)
 {
-    if (node != Center)
+    if (node != CenterNode)
         action = nAction;
     else
-        action = Scale;
+        action = NodeScale;
 
-    if (generalState == Scale)
-        generalState = Rotate;
+    if (generalState == NodeScale)
+        generalState = NodeRotate;
     else
-        generalState = Scale;
+        generalState = NodeScale;
 
     update();
 }

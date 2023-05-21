@@ -48,7 +48,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
     Q_OBJECT
 
     public:
-        NodeManager(Node::Context context, QGraphicsItem *parent, QGraphicsScene *scene, int zValue);
+        NodeManager(NodeContext context, QGraphicsItem *parent, QGraphicsScene *scene, int zValue);
         ~NodeManager();
 
         void syncNodes(const QRectF &rect);
@@ -72,7 +72,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         
         void toggleAction();
         
-        void setActionNode(Node::NodeAction action);
+        void setActionNode(NodeAction action);
         
         void setVisible(bool visible);
         
@@ -91,7 +91,7 @@ class TUPITUBE_PLUGIN NodeManager : public QObject
         void transformationUpdated();
 
     private:
-        QHash<Node::NodeType, Node *> nodes;
+        QHash<NodePosition, Node *> nodes;
         QGraphicsItem *parent;
         QGraphicsScene *scene;
 

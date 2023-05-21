@@ -57,7 +57,7 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         void undo();
         void redo();
 
-        NodePosition policyParam();
+        NodeLocation policyParam();
         void showClearPanel(bool show);
 
     signals:
@@ -79,7 +79,7 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         QList<int> undoValues;
         QList<int> redoValues;
 
-        NodePosition policy;
+        NodeLocation policy;
 
         QPushButton *tips;
         QWidget *help;

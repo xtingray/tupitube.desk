@@ -36,7 +36,7 @@
 #include "nodemanager.h"
 #include "tupgraphicobject.h"
 
-NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGraphicsScene *gScene, int zValue)
+NodeManager::NodeManager(NodeContext context, QGraphicsItem *parentItem, QGraphicsScene *gScene, int zValue)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[NodeManager::NodeManager()]";
@@ -67,20 +67,20 @@ NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGrap
     } 
 
     QRectF rect = parentItem->sceneBoundingRect();
-    Node *topLeft = new Node(context, Node::TopLeft, Node::Scale, rect.topLeft(), this, parentItem, zValue);
-    Node *topRight = new Node(context, Node::TopRight, Node::Scale, rect.topRight(), this, parentItem, zValue);
-    Node *bottomLeft = new Node(context, Node::BottomLeft, Node::Scale, rect.bottomLeft(), this, parentItem, zValue);
-    Node *bottomRight = new Node(context, Node::BottomRight, Node::Scale, rect.bottomRight(), this, parentItem, zValue);
+    Node *topLeft = new Node(context, TopLeftNode, NodeScale, rect.topLeft(), this, parentItem, zValue);
+    Node *topRight = new Node(context, TopRightNode, NodeScale, rect.topRight(), this, parentItem, zValue);
+    Node *bottomLeft = new Node(context, BottomLeftNode, NodeScale, rect.bottomLeft(), this, parentItem, zValue);
+    Node *bottomRight = new Node(context, BottomRightNode, NodeScale, rect.bottomRight(), this, parentItem, zValue);
 
-    Node *center = new Node(context, Node::Center, Node::Scale, rect.center(), this, parentItem, zValue);
-    if (context == Node::Text || context == Node::Papagayo) {
+    Node *center = new Node(context, CenterNode, NodeScale, rect.center(), this, parentItem, zValue);
+    if (context == TextNode || context == PapagayoNode) {
         connect(center, SIGNAL(positionUpdated(const QPointF&)), this, SIGNAL(positionUpdated(const QPointF&)));
         /* SQA: This connection doesn't work on Windows
         connect(center, &Node::positionUpdated, this, &NodeManager::positionUpdated);
         */
     }
 
-    if (context == Node::Papagayo) {
+    if (context == PapagayoNode) {
         connect(topLeft, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
         connect(topRight, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
         connect(bottomLeft, SIGNAL(transformationUpdated()), this, SIGNAL(transformationUpdated()));
@@ -96,11 +96,11 @@ NodeManager::NodeManager(Node::Context context, QGraphicsItem *parentItem, QGrap
         */
     }
 
-    nodes.insert(Node::TopLeft, topLeft);
-    nodes.insert(Node::TopRight, topRight);
-    nodes.insert(Node::BottomLeft, bottomLeft);
-    nodes.insert(Node::BottomRight, bottomRight);
-    nodes.insert(Node::Center, center);
+    nodes.insert(TopLeftNode, topLeft);
+    nodes.insert(TopRightNode, topRight);
+    nodes.insert(BottomLeftNode, bottomLeft);
+    nodes.insert(BottomRightNode, bottomRight);
+    nodes.insert(CenterNode, center);
 
     proportional = false;
     
@@ -142,35 +142,35 @@ void NodeManager::syncNodes(const QRectF &rect)
         return;
     }
 
-    QHash<Node::NodeType, Node *>::iterator it = nodes.begin();
+    QHash<NodePosition, Node *>::iterator it = nodes.begin();
     while (it != nodes.end()) {
         if ((*it)) {
             switch (it.key()) {
-                case Node::TopLeft:
+                case TopLeftNode:
                 {
                     if ((*it)->scenePos() != rect.topLeft())
                         (*it)->setPos(rect.topLeft());
                     break;
                 }
-                case Node::TopRight:
+                case TopRightNode:
                 {
                     if ((*it)->scenePos() != rect.topRight())
                         (*it)->setPos(rect.topRight());
                     break;
                 }
-                case Node::BottomRight:
+                case BottomRightNode:
                 {
                     if ((*it)->scenePos() != rect.bottomRight())
                         (*it)->setPos(rect.bottomRight());
                     break;
                 }
-                case Node::BottomLeft:
+                case BottomLeftNode:
                 {
                     if ((*it)->scenePos() != rect.bottomLeft())
                         (*it)->setPos(rect.bottomLeft());
                     break;
                 }
-                case Node::Center:
+                case CenterNode:
                 {
                     if ((*it)->scenePos() != rect.center())
                         (*it)->setPos(rect.center());
@@ -233,8 +233,8 @@ void NodeManager::restoreItem()
 void NodeManager::scale(qreal sx, qreal sy)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodeManager::scale()] - Scale X -> " << sx;
-        qDebug() << "[NodeManager::scale()] - Scale Y -> " << sy;
+        qDebug() << "[NodeManager::scale()] - Scale X ->" << sx;
+        qDebug() << "[NodeManager::scale()] - Scale Y ->" << sy;
     #endif
 
     QTransform transform;
@@ -328,15 +328,15 @@ bool NodeManager::isPressed()
 void NodeManager::toggleAction()
 {
     foreach (Node *node, nodes) {
-        if (node->nodeAction() == Node::Scale) {
-            node->setAction(Node::Rotate);
-        } else if (node->nodeAction() == Node::Rotate) {
-            node->setAction(Node::Scale);
+        if (node->nodeAction() == NodeScale) {
+            node->setAction(NodeRotate);
+        } else if (node->nodeAction() == NodeRotate) {
+            node->setAction(NodeScale);
         }
     }
 }
 
-void NodeManager::setActionNode(Node::NodeAction action)
+void NodeManager::setActionNode(NodeAction action)
 {
     foreach (Node *node, nodes)
         node->setAction(action);
