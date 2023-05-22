@@ -481,93 +481,92 @@ QString TupPathItem::changeNodeTypeFromPath(QPointF pos)
     QChar t;
     QPainterPath route = path();
     int elementsTotal = route.elementCount();
-    QString pathStr = "";
-
-    bool lookingData = false;
-    int dataCounter = 0;
 
     QStringList parts;
     bool replace = false;
-    int curvesCounter = 0;
+    int dataCounter = 0;
     for(int i=0; i<elementsTotal; i++) {
         QPainterPath::Element e = route.elementAt(i);
 
         switch (e.type) {
             case QPainterPath::MoveToElement:
             {
-                    if (pos != QPointF(e.x, e.y)) {
-                        if (t != 'M') {
-                            t = 'M';
-                            parts << "M " + QString::number(e.x) + " " + QString::number(e.y) + " ";
-                        } else {
-                            parts << QString::number(e.x) + " " + QString::number(e.y) + " ";
-                        }
-                    } else {
-                        replace = true;
-                    }
+                if (pos == QPointF(e.x, e.y))
+                    replace = true;
+
+                if (t != 'M') {
+                    t = 'M';
+                    parts << "M " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                } else {
+                    parts << QString::number(e.x) + " " + QString::number(e.y) + " ";
+                }
             }
             break;
             case QPainterPath::LineToElement:
             {
-                    if (pos != QPointF(e.x, e.y)) {
-                        if (t != 'L') {
-                            t = 'L';
-                            parts << " L " + QString::number(e.x) + " " + QString::number(e.y) + " ";
-                        } else {
-                            parts << QString::number(e.x) + " " + QString::number(e.y) + " ";
-                        }
+                if (pos == QPointF(e.x, e.y) || replace) {
+                    // Replacing a line node for a curve node
+                    if (t != 'C') {
+                        t = 'C';
+                        parts << " C " + QString::number(e.x) + " " + QString::number(e.y) + " ";
                     } else {
-                        // Add a curve node here
+                        parts << "  " + QString::number(e.x) + " " + QString::number(e.y) + " ";
                     }
+                    parts <<  " " + QString::number(e.x) + "  " + QString::number(e.y) + " ";
+                    parts <<  " " + QString::number(e.x) + "  " + QString::number(e.y) + " ";
+
+                    if (replace)
+                        replace = false;
+                } else {
+                    if (t != 'L') {
+                        t = 'L';
+                        parts << " L " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                    } else {
+                        parts << QString::number(e.x) + " " + QString::number(e.y) + " ";
+                    }
+                }
             }
             break;
             case QPainterPath::CurveToElement:
             {
-                    if (replace) {
-                        parts << "M " + QString::number(e.x) + " " + QString::number(e.y) + " ";
-                        replace = false;
-                        lookingData = true;
-                    } else {
-                        if (pos != QPointF(e.x, e.y)) {
-                            if (t != 'C') {
-                                t = 'C';
-                                parts << " C " + QString::number(e.x) + " " + QString::number(e.y) + " ";
-                            } else {
-                                parts << "  " + QString::number(e.x) + " " + QString::number(e.y) + " ";
-                            }
-                            curvesCounter++;
-                        } else {
-                            lookingData = true;
-                        }
-                    }
+                if (t != 'C') {
+                    t = 'C';
+                    parts << " C " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                } else {
+                    parts << "  " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+                }
+
+                dataCounter = 0;
             }
             break;
             case QPainterPath::CurveToDataElement:
             {
-                    if (pos == QPointF(e.x, e.y)) {
-                        parts.removeLast();
-                        parts.removeLast();
+                dataCounter++;
+                if (pos == QPointF(e.x, e.y) || replace) {
+                    if (dataCounter == 2) {
+                        parts.removeLast(); // Removing first CurveToDataElement item
+                        parts.removeLast(); // Removing CurveToElement item
 
-                        parts << "C";
-                        lookingData = false;
+                        // Replacing a curve node for a line node
+                        t = 'L';
+                        parts << " L " + QString::number(e.x) + " " + QString::number(e.y) + " ";
+
+                        if (replace)
+                            replace = false;
                     } else {
-                        if (!lookingData) {
-                            if (t == 'C')
-                                parts <<  " " + QString::number(e.x) + "  " + QString::number(e.y) + " ";
-                        } else {
-                            dataCounter++;
-
-                            if (dataCounter == 2) {
-                                lookingData = false;
-                                dataCounter = 0;
-                            }
-                        }
+                        if (t == 'C')
+                            parts <<  " " + QString::number(e.x) + "  " + QString::number(e.y) + " ";
                     }
+                } else {
+                    if (t == 'C')
+                        parts <<  " " + QString::number(e.x) + "  " + QString::number(e.y) + " ";
+                }
             }
             break;
         }
     }
 
+    QString pathStr = "";
     foreach(QString line, parts)
         pathStr += line;
 
