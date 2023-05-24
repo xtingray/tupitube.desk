@@ -46,6 +46,7 @@ class T_CORE_EXPORT TAlgorithm
         static int random();
         static QString randomString(int length);
         static QColor randomColor(bool withAlpha = false);
+        static int randomNumber(int limit);
         static void storeData(const QString &data);
         static bool cacheIDChanged(const QString &data);
         static void resetCacheID();

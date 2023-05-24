@@ -38,10 +38,11 @@
 #include "tcontrolnode.h"
 #include "tnodegroup.h"
 
-TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF & pos, 
+TControlNode::TControlNode(int index, TNodeGroup *group, const QPointF &pos,
                            QGraphicsItem *graphicParent, QGraphicsScene *gScene, int level): QGraphicsItem()
 {
     nodeIndex = index;
+    nodePos = pos;
     unchanged = true;
 
     itemParent = nullptr;
@@ -65,6 +66,11 @@ TControlNode::~TControlNode()
 {
 }
 
+QPointF TControlNode::position()
+{
+    return nodePos;
+}
+
 void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)
 {
     Q_UNUSED(option)
@@ -79,8 +85,13 @@ void TControlNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     if (cNode) {
         color = QColor("white");
     } else {
-        color = QColor(55, 155, 55);
-        color.setAlpha(200);
+        if (isSelected()) {
+            color = QColor(255, 130, 0);
+            color.setAlpha(200);
+        } else {
+            color = QColor(55, 155, 55);
+            color.setAlpha(200);
+        }
     }
 
     painter->setBrush(color);
@@ -297,6 +308,14 @@ TControlNode *TControlNode::right()
 TControlNode *TControlNode::centralNode()
 {
     return cNode;
+}
+
+bool TControlNode::isCentralNode()
+{
+    if (!cNode)
+        return true;
+
+    return false;
 }
 
 int TControlNode::index() const

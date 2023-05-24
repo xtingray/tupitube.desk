@@ -47,8 +47,9 @@ Node::Node(NodeContext tool, NodePosition nType, NodeAction actionValue, const Q
     setFlag(ItemIsSelectable, false);
     setFlag(ItemIsMovable, true);
     setFlag(ItemIsFocusable, true);
-    setPos(pos);
 
+    setPos(pos);
+    nodePos = pos;
     context = tool;
     node = nType;
     action = actionValue;
@@ -62,6 +63,11 @@ Node::Node(NodeContext tool, NodePosition nType, NodeAction actionValue, const Q
 
 Node::~Node()
 {
+}
+
+QPointF Node::position()
+{
+    return nodePos;
 }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *w)

@@ -271,8 +271,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         nodeGroup->clear();
 
                         nodeGroup = new TNodeGroup(pathItem, gScene, TNodeGroup::PathSelection, nodeZValue);
-                        connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
-                        connect(nodeGroup, SIGNAL(nodeTypeChanged(QPointF)), this, SLOT(modifyNodeFromPath(QPointF)));
+                        connect(nodeGroup, SIGNAL(nodeRemoved(int)), this, SLOT(removeNodeFromPath(int)));
+                        connect(nodeGroup, SIGNAL(nodeTypeChanged(int)), this, SLOT(modifyNodeFromPath(int)));
                         nodeGroup->show();
                         nodeGroup->resizeNodes(realFactor);
 
@@ -344,8 +344,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     }
 
                     nodeGroup = new TNodeGroup(pathItem, gScene, TNodeGroup::PathSelection, nodeZValue);
-                    connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
-                    connect(nodeGroup, SIGNAL(nodeTypeChanged(QPointF)), this, SLOT(modifyNodeFromPath(QPointF)));
+                    connect(nodeGroup, SIGNAL(nodeRemoved(int)), this, SLOT(removeNodeFromPath(int)));
+                    connect(nodeGroup, SIGNAL(nodeTypeChanged(int)), this, SLOT(modifyNodeFromPath(int)));
                     nodeGroup->show();
                     activeSelection = true;
 
@@ -435,8 +435,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 #endif
                 if (nodeGroup) {
                     nodeGroup->clear();
-                    disconnect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
-                    disconnect(nodeGroup, SIGNAL(nodeTypeChanged(QPointF)), this, SLOT(modifyNodeFromPath(QPointF)));
+                    disconnect(nodeGroup, SIGNAL(nodeRemoved(int)), this, SLOT(removeNodeFromPath(int)));
+                    disconnect(nodeGroup, SIGNAL(nodeTypeChanged(int)), this, SLOT(modifyNodeFromPath(int)));
                     nodeGroup = nullptr;
                 }
                 activeSelection = false;
@@ -540,20 +540,34 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
                          if (!path->isSelected())
                              path->setSelected(true);
+
+                         qDebug() << "1 expandNode ->" << expandNode;
+                         if (expandNode) {
+                             qDebug() << "FLAG 1";
+                             nodeGroup->expandNode(nodeIndex);
+                             expandNode = false;
+                         }
                      }
                  } else {
                      #ifdef TUP_DEBUG
                          qDebug() << "[NodesTool::itemResponse()] - Showing nodes from selected item! (Creating new nodeGroup)";
                      #endif
                      nodeGroup = new TNodeGroup(item, scene, TNodeGroup::PathSelection, nodeZValue);
-                     connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
-                     connect(nodeGroup, SIGNAL(nodeTypeChanged(QPointF)), this, SLOT(modifyNodeFromPath(QPointF)));
+                     connect(nodeGroup, SIGNAL(nodeRemoved(int)), this, SLOT(removeNodeFromPath(int)));
+                     connect(nodeGroup, SIGNAL(nodeTypeChanged(int)), this, SLOT(modifyNodeFromPath(int)));
                      nodeGroup->show();
                      activeSelection = true;
                      nodeGroup->resizeNodes(realFactor);
 
                      if (!item->isSelected())
                          item->setSelected(true);
+
+                     qDebug() << "2 expandNode ->" << expandNode;
+                     if (expandNode) {
+                         qDebug() << "FLAG 1";
+                         nodeGroup->expandNode(nodeIndex);
+                         expandNode = false;
+                     }
                  }
 
                  if (response->getMode() == TupProjectResponse::Redo) {
@@ -585,8 +599,8 @@ void NodesTool::itemResponse(const TupItemResponse *response)
 
              if (item) {
                  nodeGroup = new TNodeGroup(item, scene, TNodeGroup::PathSelection, nodeZValue);
-                 connect(nodeGroup, SIGNAL(nodeRemoved(QPointF)), this, SLOT(removeNodeFromPath(QPointF)));
-                 connect(nodeGroup, SIGNAL(nodeTypeChanged(QPointF)), this, SLOT(modifyNodeFromPath(QPointF)));
+                 connect(nodeGroup, SIGNAL(nodeRemoved(int)), this, SLOT(removeNodeFromPath(int)));
+                 connect(nodeGroup, SIGNAL(nodeTypeChanged(int)), this, SLOT(modifyNodeFromPath(int)));
                  nodeGroup->show();
                  activeSelection = true;
                  nodeGroup->resizeNodes(realFactor);
@@ -641,6 +655,7 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
                 qDebug() << "   DELETING ELEMENT!";
                 qDebug() << "";
 
+                nodeGroup->syncNodesFromParent();
                 nodeGroup->removeSelectedNode();
             }
         } else if (key == Qt::Key_M) {
@@ -749,7 +764,7 @@ void NodesTool::saveConfig()
 {
 }
 
-QCursor NodesTool::toolCursor() // const
+QCursor NodesTool::toolCursor()
 {
     return QCursor(Qt::ArrowCursor);
 }
@@ -834,8 +849,6 @@ void NodesTool::updateCurrentPath(int newTotal)
 
     if (activeSelection) {
         if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
-            // int nodesTotal = nodeGroup->mainNodesCount();
-            // int nodesTotal = nodeGroup->nodesTotalCount();
             int nodesTotal = pathItem->nodesCount();
             qDebug() << "Path nodesTotal ->" << nodesTotal;
             qDebug() << "---";
@@ -848,32 +861,12 @@ void NodesTool::updateCurrentPath(int newTotal)
 
             if (nodesTotal > newTotal) { // Removing nodes
                 if (nodesTotal > 2) {
-                    // if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
-                        int iterations = nodesTotal - newTotal;
-                        qDebug() << "Removing nodes to the path...";
-                        qDebug() << "Nodes to remove ->" << iterations;
-                        int nodesCounter = nodesTotal;
-                        for(int i=0; i < iterations; i++) {
-                            path = pathItem->refactoringPath(configPanel->policyParam(), nodesCounter);
-                            nodesCounter--;
-                            qDebug() << "path ->" << path;
-
-                            TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
-                                                                                           currentLayer, currentFrame, position,
-                                                                                           QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
-                                                                                           TupProjectRequest::EditNodes, path);
-                            emit requested(&event);
-                        }
-                    // }
-                }
-            } else { // Restoring nodes
-                // if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
-                    int iterations = newTotal - nodesTotal;
-                    qDebug() << "Adding nodes to the path...";
-                    qDebug() << "Nodes to add ->" << iterations;
+                    int iterations = nodesTotal - newTotal;
+                    qDebug() << "Removing nodes to the path...";
+                    qDebug() << "Nodes to remove ->" << iterations;
                     int nodesCounter = nodesTotal;
                     for(int i=0; i < iterations; i++) {
-                        path = pathItem->pathRestored(newTotal);
+                        path = pathItem->refactoringPath(configPanel->policyParam(), nodesCounter);
                         nodesCounter--;
                         qDebug() << "path ->" << path;
 
@@ -883,7 +876,23 @@ void NodesTool::updateCurrentPath(int newTotal)
                                                                                        TupProjectRequest::EditNodes, path);
                         emit requested(&event);
                     }
-                // }
+                }
+            } else { // Restoring nodes
+                int iterations = newTotal - nodesTotal;
+                qDebug() << "Adding nodes to the path...";
+                qDebug() << "Nodes to add ->" << iterations;
+                int nodesCounter = nodesTotal;
+                for(int i=0; i < iterations; i++) {
+                    path = pathItem->pathRestored(newTotal);
+                    nodesCounter--;
+                    qDebug() << "path ->" << path;
+
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
+                                                                                   currentLayer, currentFrame, position,
+                                                                                   QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
+                                                                                   TupProjectRequest::EditNodes, path);
+                    emit requested(&event);
+                }
             }
 
             QApplication::restoreOverrideCursor();
@@ -903,24 +912,27 @@ void NodesTool::resetPathHistory()
     }
 }
 
-void NodesTool::removeNodeFromPath(QPointF pos)
+void NodesTool::removeNodeFromPath(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodesTool::removeNodeFromPath()] - pos ->" << pos;
+        qDebug() << "[NodesTool::removeNodeFromPath()] - index ->" << index;
     #endif
 
     if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
         TupFrame *frame = getCurrentFrame();
         int position = frame->indexOf(nodeGroup->parentItem());
 
-        int nodesTotal = nodeGroup->nodesTotalCount();
+        int nodesTotal = nodeGroup->mainNodesCount();
+        #ifdef TUP_DEBUG
+            qDebug() << "[NodesTool::removeNodeFromPath()] - nodesTotal ->" << nodesTotal;
+        #endif
         if (nodesTotal == 2) {
             TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                       currentLayer, currentFrame, position, QPointF(), scene->getSpaceContext(),
                                       TupLibraryObject::Item, TupProjectRequest::Remove);
             emit requested(&event);
         } else {
-            QString path = pathItem->removeNodeFromPath(pos);
+            QString path = pathItem->removeNodeFromPath(index);
             qDebug() << "PATH ->" << path;
 
             TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
@@ -932,18 +944,21 @@ void NodesTool::removeNodeFromPath(QPointF pos)
     }
 }
 
-void NodesTool::modifyNodeFromPath(QPointF pos)
+void NodesTool::modifyNodeFromPath(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodesTool::modifyNodeFromPath()] - pos ->" << pos;
+        qDebug() << "[NodesTool::modifyNodeFromPath()] - index ->" << index;
     #endif
 
     if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
         TupFrame *frame = getCurrentFrame();
         int position = frame->indexOf(nodeGroup->parentItem());
 
-        QString path = pathItem->changeNodeTypeFromPath(pos);
+        QString path = pathItem->changeNodeTypeFromPath(index);
         qDebug() << "PATH ->" << path;
+
+        expandNode = true;
+        nodeIndex = index;
 
         TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                                        currentLayer, currentFrame, position,

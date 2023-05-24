@@ -85,6 +85,7 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     policyCombo = new QComboBox(this);
     policyCombo->addItem(tr("First Node"));
     policyCombo->addItem(tr("Middle Node"));
+    policyCombo->addItem(tr("Random Node"));
     policyCombo->addItem(tr("Last Node"));
     policyCombo->setCurrentIndex(1);
     policy = MiddleNode;

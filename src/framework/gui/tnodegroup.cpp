@@ -209,23 +209,30 @@ void TNodeGroup::saveParentProperties()
 
 void TNodeGroup::removeSelectedNode()
 {
+    int index = 1;
     foreach (TControlNode *node, nodes) {
-        if (node->isSelected()) {
-            nodes.removeAll(node);
-            emit nodeRemoved(node->pos());
+        if (node->isCentralNode()) {
+            if (node->isSelected()) {
+                emit nodeRemoved(index);
 
-            return;
+                return;
+            }
+            index++;
         }
     }
 }
 
 void TNodeGroup::changeSelectedNode()
 {
+    int index = 1;
     foreach (TControlNode *node, nodes) {
-        if (node->isSelected()) {
-            emit nodeTypeChanged(node->pos());
+        if (node->isCentralNode()) {
+            if (node->isSelected()) {
+                emit nodeTypeChanged(index);
 
-            return;
+                return;
+            }
+            index++;
         }
     }
 }
@@ -362,6 +369,25 @@ void TNodeGroup::emitNodeClicked(TControlNode::State state)
         emit nodeReleased();
 }
 
+void TNodeGroup::expandNode(int index)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TNodeGroup::expandNode()] - index ->" << index;
+    #endif
+
+    int nodesCounter = 1;
+    foreach (TControlNode *node, nodes) {
+        if (node->isCentralNode()) {
+            if (nodesCounter == index) {
+                node->showChildNodes(true);
+                return;
+            }
+
+            nodesCounter++;
+        }
+    }
+}
+
 void TNodeGroup::expandAllNodes()
 {
     foreach (TControlNode *node, nodes)
@@ -378,14 +404,31 @@ bool TNodeGroup::isSelected()
     return false;
 }
 
+void TNodeGroup::unselectNodes()
+{
+    foreach (TControlNode *node, nodes) {
+        if (node->isSelected())
+            node->setSelected(false);
+    }
+}
+
 int TNodeGroup::nodesTotalCount()
 {
+    /*
+    int total = 0;
+    foreach (TControlNode *node, nodes) {
+        if (node->isCentralNode())
+            total++;
+    }
+
+    return total;
+    */
+
     return nodes.count();
 }
 
 int TNodeGroup::mainNodesCount()
 {
-    // return (nodes.count()/3) + 1;
     return mainNodesCounter;
 }
 

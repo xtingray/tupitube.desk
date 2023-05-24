@@ -109,8 +109,8 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
     private slots:
         void updateCurrentPath(int total);
         void resetPathHistory();
-        void removeNodeFromPath(QPointF pos);
-        void modifyNodeFromPath(QPointF pos);
+        void removeNodeFromPath(int index);
+        void modifyNodeFromPath(int index);
 
     private:
         // void reset(TupGraphicsScene *scene);
@@ -132,6 +132,9 @@ class TUPITUBE_PLUGIN NodesTool : public TupToolPlugin
         bool ctrlEnabled;
 
         QCursor targetCursor;
+
+        int nodeIndex;
+        bool expandNode;
 };
 
 #endif

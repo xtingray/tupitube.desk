@@ -115,6 +115,11 @@ QColor TAlgorithm::randomColor(bool withAlpha)
     return c;
 }
 
+int TAlgorithm::randomNumber(int limit)
+{
+    return abs(random() % limit);
+}
+
 void TAlgorithm::storeData(const QString &data)
 {
     TCONFIG->beginGroup("General");

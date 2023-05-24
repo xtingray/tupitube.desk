@@ -56,15 +56,16 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
         Node(NodeContext tool, NodePosition node, NodeAction action, const QPointF &pos=QPoint(0,0), NodeManager *manager=nullptr,
              QGraphicsItem *parent=nullptr, int zValue=0);
         ~Node();
-        
+
+        QPointF position();
+        int nodeType() const;
+
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *);
         QRectF boundingRect() const;
         void resize(qreal factor);
         
         void setAction(NodeAction action);
         int nodeAction();
-
-        int nodeType() const;
 
     protected:
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -79,14 +80,16 @@ class TUPITUBE_PLUGIN Node : public QObject, public QGraphicsItem
         void transformationUpdated();
 
     private:
-        NodeContext context;
-        NodePosition node;
-        NodeAction action;
-        NodeAction generalState;
         QGraphicsItem *parent;
         NodeManager *manager;
         QSizeF size;
         QPointF oldPoint;
+        QPointF nodePos;
+
+        NodeContext context;
+        NodePosition node;
+        NodeAction action;
+        NodeAction generalState;
 };
 
 #endif

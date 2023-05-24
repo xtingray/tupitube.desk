@@ -67,6 +67,7 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         QRectF boundingRect() const;
         enum { Type = UserType + 100 };
         
+        QPointF position();
         int type() const { return Type; }
         
         void setLeft(TControlNode *left);
@@ -80,6 +81,7 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         TControlNode *left();
         TControlNode *right();
         TControlNode *centralNode();
+        bool isCentralNode();
         
         void hasChanged(bool notChange);
         void resize(qreal factor);
@@ -101,6 +103,7 @@ class T_GUI_EXPORT TControlNode : public QGraphicsItem
         void showBrothers(bool show);
         
     private:
+        QPointF nodePos;
         int nodeIndex;
         bool unchanged;
         QGraphicsItem *itemParent;
