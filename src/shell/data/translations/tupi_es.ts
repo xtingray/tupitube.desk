@@ -240,52 +240,67 @@
 <context>
     <name>GeometricSettings</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="51"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="59"/>
         <source>Rectangle Properties</source>
         <translation>Propiedades de Rectángulo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="54"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="62"/>
         <source>Ellipse Properties</source>
         <translation>Propiedades de Ellipse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="57"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="65"/>
         <source>Line Properties</source>
         <translation>Propiedades de Línea</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="64"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="73"/>
+        <source>Line Options</source>
+        <translation>Opciones de Línea</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="75"/>
+        <source>Bendable</source>
+        <translation>Curva</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="76"/>
+        <source>Straight</source>
+        <translation>Recta</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
         <source>Tips</source>
         <translation>Atajos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="79"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
         <source>Mouse Right Click or X Key</source>
         <translation>Clic con botón derecho o tecla X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="79"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
         <source>Close the line path</source>
         <translation>Terminar trazo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="80"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
         <source>Shift</source>
         <translation>Desplazamiento</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="80"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
         <source>Align line to horizontal/vertical axis</source>
         <translation>Alinear trayecto a eje horizontal/vertical</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="82"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + Botón Izquierdo del Ratón</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="82"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
         <source>Set width/height proportional dimensions</source>
         <translation>Aplicar dimensiones de ancho/altura proporcionales</translation>
     </message>
@@ -293,38 +308,38 @@
 <context>
     <name>GeometricTool</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="83"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="85"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="95"/>
         <source>Rectangle</source>
         <translation>Rectángulo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="92"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="104"/>
         <source>Ellipse</source>
         <translation>Elipse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="101"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="103"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="113"/>
         <source>Line</source>
         <translation>Línea</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="84"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="85"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="95"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="93"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="103"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="104"/>
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="103"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="112"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="113"/>
         <source>L</source>
         <translation>L</translation>
     </message>
@@ -566,31 +581,129 @@
     </message>
 </context>
 <context>
+    <name>NodeSettings</name>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="59"/>
+        <source>Nodes Properties</source>
+        <translation>Propiedades de Nodos</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="86"/>
+        <source>First Node</source>
+        <translation>Primer Nodo</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="87"/>
+        <source>Middle Node</source>
+        <translation>Nodo Intermedio</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="88"/>
+        <source>Random Node</source>
+        <translation>Nodo Aleatorio</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="89"/>
+        <source>Last Node</source>
+        <translation>Último Nodo</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="100"/>
+        <source>Show Tips</source>
+        <translation>Ver Ayuda</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="101"/>
+        <source>A little help for the Nodes tool</source>
+        <translation>Pequeña ayuda de la herramienta de Nodos</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="114"/>
+        <source>Ctrl Key + Left Mouse Button</source>
+        <translation>Tecla Ctrl + Botón Izquierdo del Ratón</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="116"/>
+        <source>Shift Key + Left Mouse Button</source>
+        <translation>Tecla Shift + Botón Izquierdo del Ratón</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="117"/>
+        <source>Append a curve to the last node of the path or add a new curve between two nodes</source>
+        <translation>Adiciona una curva al último nodo del trazo o adiciona una nueva curva entre dos nodos</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="115"/>
+        <source>Append a line segment to the last node of the path or add a new line node between two nodes</source>
+        <translation>Adiciona un segmento de línea al último nodo del trazo o adiciona un nuevo nodo de línea entre dos nodos</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="61"/>
+        <source>Nodes Editor</source>
+        <translation>Editor de Nodos</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="118"/>
+        <source>X Key</source>
+        <translation>Tecla X</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="118"/>
+        <source>Remove selected node</source>
+        <translation>Elimina el nodo seleccionado</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="119"/>
+        <source>M Key</source>
+        <translation>Letra M</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="119"/>
+        <source>Switch selected node to line/curve</source>
+        <translation>Cambia el nodo seleccionado a línea/curva</translation>
+    </message>
+</context>
+<context>
     <name>NodesTool</name>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="420"/>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="422"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="766"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="768"/>
         <source>Nodes Selection</source>
         <translation>Selección de Contorno</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="103"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="120"/>
         <source>SVG objects cannot be edited!</source>
         <translation>Objetos de tipo SVG no pueden ser editados!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="109"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="128"/>
         <source>Images have no nodes!</source>
         <translation>Las imágenes no tienen nodos!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="133"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="156"/>
         <source>Only pencil/ink lines can be edited!</source>
         <translation>Sólo lineas de lápiz/tinta pueden ser editadas!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="421"/>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="422"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="354"/>
+        <source>Too many nodes!</source>
+        <translation>Hay demasiados nodos!</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="356"/>
+        <source>The selected path contains too many nodes.</source>
+        <translation>El trazo seleccionado contiene demasiados nodos.</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="357"/>
+        <source>It will be simplified, so you can edit it.</source>
+        <translation>Será simplificado, para que lo puedas editar.</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="767"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="768"/>
         <source>N</source>
         <translation>N</translation>
     </message>
@@ -2940,7 +3053,7 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="430"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1352"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1357"/>
         <source>Onion Skin Factor</source>
         <translation>Factor de Trasparencia</translation>
     </message>
@@ -3006,43 +3119,43 @@
         <translation>Sequencia de Imágenes</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1286"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1291"/>
         <source>Vector Static BG Properties</source>
         <translation>Propiedades de Fondo Estático Vectorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1287"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1292"/>
         <source>Vector Dynamic BG Properties</source>
         <translation>Propiedades de Fondo Dinámico Vectorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1293"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1298"/>
         <source>Vector Static BG Mode</source>
         <translation>Fondo Estático Vectorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1294"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1299"/>
         <source>Vector Dynamic BG Mode</source>
         <translation>Fondo Dinámico Vectorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1295"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1300"/>
         <source>Raster Static BG Mode</source>
         <translation>Fondo Estático Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1296"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1301"/>
         <source>Raster Dynamic BG Mode</source>
         <translation>Fondo Dinámico Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2367"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2372"/>
         <source>Frame</source>
         <translation>Marco</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="995"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2634"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="997"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2639"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -3072,113 +3185,113 @@
         <translation>Formatos de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1283"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1288"/>
         <source>Paint area actions</source>
         <translation>Acciones del área de dibujo</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1292"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
         <source>Frames Mode</source>
         <translation>Edición de Marcos</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1302"/>
         <source>Vector Foreground Mode</source>
         <translation>Modo Primer Plano Vectorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1325"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1330"/>
         <source>Previous Frames</source>
         <translation>Marcos previos</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1337"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1342"/>
         <source>Next Frames</source>
         <translation>Marcos siguientes</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1369"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1376"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1374"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1381"/>
         <source>Static BG Opacity</source>
         <translation>Opacidad de Fondo Estático</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1388"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1392"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1393"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1397"/>
         <source>Movement Orientation</source>
         <translation>Orientación del Movimiento</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1393"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1398"/>
         <source>Right</source>
         <translation>Derecha</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1394"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1399"/>
         <source>Left</source>
         <translation>Izquierda</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1395"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1400"/>
         <source>Up</source>
         <translation>Arriba</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1396"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1401"/>
         <source>Down</source>
         <translation>Abajo</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1418"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1424"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1423"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1429"/>
         <source>Shift Length</source>
         <translation>Longitud de Desplazamiento</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1429"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1436"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1434"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1441"/>
         <source>Dynamic BG Opacity</source>
         <translation>Opacidad de Fondo Dinámico</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1536"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1537"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1544"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1541"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1542"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1549"/>
         <source>Raster Objects</source>
         <translation>Objetos Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1548"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1553"/>
         <source>Image imported successfully</source>
         <translation>Imagen importada satisfactoriamente</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2004"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2009"/>
         <source>Export Frame As</source>
         <translation>Exportar Marco como</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2005"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2010"/>
         <source>Images</source>
         <translation>Imágenes</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2011"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2016"/>
         <source>Frame has been exported successfully</source>
         <translation>El marco ha sido exportado satisfactoriamente</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2013"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2018"/>
         <source>Can&apos;t export frame as image</source>
         <translation>No se puede exportar el marco como imagen</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2184"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2189"/>
         <source>Please, close current camera dialog first!</source>
         <translation>Por favor, cierra el diálogo actual de la cámara!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2299"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2304"/>
         <source>No cameras detected</source>
         <translation>No se detectaron camaras conectadas</translation>
     </message>
@@ -7668,7 +7781,7 @@ Storyboard</translation>
         <translation>El nombre del Tween no ha sido asignado!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="772"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="771"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="573"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="525"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="531"/>
@@ -7678,7 +7791,7 @@ Storyboard</translation>
         <translation>Marco</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="786"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="785"/>
         <location filename="../../../plugins/tools/rotation/tweener.cpp" line="587"/>
         <location filename="../../../plugins/tools/scale/tweener.cpp" line="539"/>
         <location filename="../../../plugins/tools/shear/tweener.cpp" line="545"/>
@@ -7708,10 +7821,10 @@ Storyboard</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="262"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="932"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="931"/>
+        <location filename="../../../plugins/tools/motion/tweener.cpp" line="934"/>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="935"/>
         <location filename="../../../plugins/tools/motion/tweener.cpp" line="936"/>
-        <location filename="../../../plugins/tools/motion/tweener.cpp" line="937"/>
         <source>Motion</source>
         <translation>Movimiento</translation>
     </message>

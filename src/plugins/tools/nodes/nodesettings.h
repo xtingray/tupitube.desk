@@ -60,6 +60,8 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         NodeLocation policyParam();
         void showClearPanel(bool show);
 
+        void resetHistory();
+
     signals:
         void nodesChanged(int total);
         void policyChanged();

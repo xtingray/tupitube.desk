@@ -58,7 +58,7 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     nodesTitle->setPixmap(nodesPic.scaledToWidth(16, Qt::SmoothTransformation));
     nodesTitle->setToolTip(tr("Nodes Properties"));
 
-    QLabel *clearLabel = new QLabel("<b>" + tr("Nodes Cleaner") + "</b>");
+    QLabel *clearLabel = new QLabel("<b>" + tr("Nodes Editor") + "</b>");
     clearLabel->setAlignment(Qt::AlignHCenter);
 
     QHBoxLayout *controlLayout = new QHBoxLayout;
@@ -98,7 +98,7 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     clearWidget->setVisible(false);
 
     tips = new QPushButton(tr("Show Tips"));
-    tips->setToolTip(tr("A little help for the Selection tool"));
+    tips->setToolTip(tr("A little help for the Nodes tool"));
 
     QBoxLayout *smallLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     smallLayout->addWidget(tips);
@@ -111,11 +111,12 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     textArea = new QTextEdit;
     textArea->setFixedHeight(h);
 
-    textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> "
+    textArea->append("<p><b>" + tr("Ctrl Key + Left Mouse Button") + ":</b> "
                      + tr("Append a line segment to the last node of the path or add a new line node between two nodes") + "</p>");
-    textArea->append("<p><b>" + tr("Shift + Left Mouse Button") + ":</b> "
-                     + tr("Append a curve to the last node of the path or add a new node between two nodes") + "</p>");
+    textArea->append("<p><b>" + tr("Shift Key + Left Mouse Button") + ":</b> "
+                     + tr("Append a curve to the last node of the path or add a new curve between two nodes") + "</p>");
     textArea->append("<p><b>" + tr("X Key") + ":</b> " +  tr("Remove selected node") + "</p>");
+    textArea->append("<p><b>" + tr("M Key") + ":</b> " +  tr("Switch selected node to line/curve") + "</p>");
 
     helpLayout->addWidget(textArea);
 
@@ -137,7 +138,7 @@ NodeSettings::~NodeSettings()
 void NodeSettings::showClearPanel(bool show)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[NodeSettings::showClearPanel()]";
+        qDebug() << "[NodeSettings::showClearPanel()] - show ->" << show;
     #endif
 
     if (!show) {
@@ -199,6 +200,8 @@ void NodeSettings::setNodesTotal(int value)
     clearSlider->setMaximum(value);
     clearSlider->setValue(value);
     clearSlider->blockSignals(false);
+
+    undoValues << value;
 }
 
 void NodeSettings::undo()
@@ -218,6 +221,10 @@ void NodeSettings::undo()
         clearSlider->blockSignals(true);
         clearSlider->setValue(value);
         clearSlider->blockSignals(false);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[NodeSettings::undo()] - Undo list is empty!";
+        #endif
     }
 }
 
@@ -238,6 +245,10 @@ void NodeSettings::redo()
         clearSlider->blockSignals(true);
         clearSlider->setValue(value);
         clearSlider->blockSignals(false);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[NodeSettings::redo()] - Redo list is empty!";
+        #endif
     }
 }
 
@@ -272,4 +283,10 @@ void NodeSettings::openTipPanel()
         help->hide();
     else
         help->show();
+}
+
+void NodeSettings::resetHistory()
+{
+    undoValues.clear();
+    redoValues.clear();
 }

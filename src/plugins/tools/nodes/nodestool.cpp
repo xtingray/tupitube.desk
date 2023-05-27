@@ -66,6 +66,9 @@ void NodesTool::init(TupGraphicsScene *gScene)
         }
     }
 
+    if (configPanel)
+        configPanel->resetHistory();
+
     nodeZValue = ((BG_LAYERS + 1) * ZLAYER_LIMIT) + (scene->currentScene()->layersCount() * ZLAYER_LIMIT);
     if (scene->getSpaceContext() == TupProject::VECTOR_FG_MODE)
         nodeZValue += ZLAYER_LIMIT;
@@ -162,11 +165,19 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
         }
 
         if (pathItem) {
+            QPointF itemPos = pathItem->boundingRect().topLeft();
+            QPointF shift = itemPos - pathItem->mapToScene(itemPos);
+            coord += shift;
+
+            qDebug() << "";
+            qDebug() << "*** itemPos ->" << itemPos;
+            qDebug() << "*** shift ->" << shift;
+            qDebug() << "*** coord ->" << coord;
+
             if ((shiftEnabled || ctrlEnabled) && activeSelection) { // Adding a new node
                 qDebug() << "CTRL/SHIFT ENABLED!";
                 qDebug() << "";
                 qDebug() << "IN: The path rect was clicked!";
-                // QPainterPath qPath = pathItem->path();
                 if (pathItem->containsOnPath(coord, brushManager->penWidth())) { // Point is part of the path
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - Inserting a node in the path...";
@@ -182,6 +193,13 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     nodeGroup->clear();
                     nodeGroup->createNodes(pathItem);
                     nodeGroup->resizeNodes(realFactor);
+
+                    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                        qDebug() << "CODE 29";
+                        configPanel->setNodesTotal(pathItem->nodesCount());
+                    } else {
+                        qDebug() << "CODE 30";
+                    }
 
                     if (itemIndex >= 0) {
                         qDebug() << "Calling EditNodes action...";
@@ -212,6 +230,13 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     nodeGroup->clear();
                     nodeGroup->createNodes(pathItem);
                     nodeGroup->resizeNodes(realFactor);
+
+                    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                        qDebug() << "CODE 29";
+                        configPanel->setNodesTotal(pathItem->nodesCount());
+                    } else {
+                        qDebug() << "CODE 30";
+                    }
 
                     if (itemIndex >= 0) {
                         qDebug() << "Calling EditNodes action...";
@@ -280,7 +305,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         if (pathItem->isNotEdited())
                             pathItem->saveOriginalPath();
 
-                        configPanel->setNodesTotal(pathItem->nodesCount());
+                        // configPanel->setNodesTotal(pathItem->nodesCount());
 
                         #ifdef TUP_DEBUG
                             qDebug() << "---";
@@ -320,7 +345,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     int nodesTotal = pathItem->nodesCount();
                     qDebug() << "";
                     qDebug() << "PATH NODES TOTAL ->" << nodesTotal;
-                    if (nodesTotal > 50) {
+                    if (nodesTotal > 100) {
                         qDebug() << "Cleaning nodes path...";
 
                         QScreen *screen = QGuiApplication::screens().at(0);
@@ -372,6 +397,23 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 int itemIndex = frame->indexOf(item);
                 pathItem = qgraphicsitem_cast<TupPathItem *>(item);
 
+                /*
+                qDebug() << "---";
+                qDebug() << "2 pathItem->mapToScene(coords) ->" << pathItem->mapToScene(coord);
+                qDebug() << "2 pathItem->mapToItem(coords) ->" << pathItem->mapToItem(pathItem, coord);
+                qDebug() << "2 pathItem->mapToParent(coords) ->" << pathItem->mapToParent(coord);
+                coord = pathItem->mapToItem(pathItem, coord);
+                */
+
+                QPointF itemPos = pathItem->boundingRect().topLeft();
+                QPointF shift = itemPos - pathItem->mapToScene(itemPos);
+                coord += shift;
+
+                qDebug() << "";
+                qDebug() << "*** itemPos ->" << itemPos;
+                qDebug() << "*** shift ->" << shift;
+                qDebug() << "*** coord ->" << coord;
+
                 if (pathItem->containsOnPath(coord, brushManager->penWidth())) { // Point is part of the path
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - 2. Inserting a node in the path...";
@@ -387,6 +429,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     nodeGroup->clear();
                     nodeGroup->createNodes(pathItem);
                     nodeGroup->resizeNodes(realFactor);
+
+                    configPanel->setNodesTotal(pathItem->nodesCount());
 
                     if (itemIndex >= 0) {
                         qDebug() << "2. Calling EditNodes action...";
@@ -418,6 +462,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         nodeGroup->clear();
                         nodeGroup->createNodes(pathItem);
                         nodeGroup->resizeNodes(realFactor);
+
+                        configPanel->setNodesTotal(pathItem->nodesCount());
 
                         if (itemIndex >= 0) {
                             qDebug() << "Calling EditNodes action...";
@@ -570,16 +616,11 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      }
                  }
 
-                 if (response->getMode() == TupProjectResponse::Redo) {
-                     configPanel->redo();
-                 } else if (response->getMode() == TupProjectResponse::Undo) {
-                     configPanel->undo();
+                 if (response->getMode() == TupProjectResponse::Redo || response->getMode() == TupProjectResponse::Undo) {
+                     if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(item))
+                         configPanel->setNodesTotal(pathItem->nodesCount());
                  }
-             } else {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "[NodesTool::itemResponse()] - Fatal Error: No item was found!";
-                 #endif
-             }
+            }
         }
         break;
         case TupProjectRequest::Remove:
@@ -657,6 +698,13 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
 
                 nodeGroup->syncNodesFromParent();
                 nodeGroup->removeSelectedNode();
+
+                if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
+                    qDebug() << "CODE 27";
+                    configPanel->setNodesTotal(pathItem->nodesCount());
+                } else {
+                    qDebug() << "CODE 28";
+                }
             }
         } else if (key == Qt::Key_M) {
             if (nodeGroup) {

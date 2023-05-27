@@ -228,6 +228,18 @@
         <source>Set width/height proportional dimensions</source>
         <translation>設定寬度/高度比例尺寸</translation>
     </message>
+    <message>
+        <source>Line Options</source>
+        <translation>線路選項</translation>
+    </message>
+    <message>
+        <source>Bendable</source>
+        <translation>可彎曲</translation>
+    </message>
+    <message>
+        <source>Straight</source>
+        <translation>直的</translation>
+    </message>
 </context>
 <context>
     <name>GeometricTool</name>
@@ -443,6 +455,73 @@
     </message>
 </context>
 <context>
+    <name>NodeSettings</name>
+    <message>
+        <source>Nodes Properties</source>
+        <translation>節點屬性</translation>
+    </message>
+    <message>
+        <source>First Node</source>
+        <translation>第一個節點</translation>
+    </message>
+    <message>
+        <source>Middle Node</source>
+        <translation>中間節點</translation>
+    </message>
+    <message>
+        <source>Random Node</source>
+        <translation>隨機節點</translation>
+    </message>
+    <message>
+        <source>Last Node</source>
+        <translation>最後節點</translation>
+    </message>
+    <message>
+        <source>Show Tips</source>
+        <translation>顯示提示</translation>
+    </message>
+    <message>
+        <source>Append a line segment to the last node of the path or add a new line node between two nodes</source>
+        <translation>將線段附加到路徑的最後一個節點或在兩個節點之間添加一個新的線節點</translation>
+    </message>
+    <message>
+        <source>X Key</source>
+        <translation>X鍵</translation>
+    </message>
+    <message>
+        <source>Remove selected node</source>
+        <translation>刪除選定的節點</translation>
+    </message>
+    <message>
+        <source>M Key</source>
+        <translation>M鍵</translation>
+    </message>
+    <message>
+        <source>Switch selected node to line/curve</source>
+        <translation>將選中的節點切換為直線/曲線</translation>
+    </message>
+    <message>
+        <source>A little help for the Nodes tool</source>
+        <translation>對節點工具的一點幫助</translation>
+    </message>
+    <message>
+        <source>Ctrl Key + Left Mouse Button</source>
+        <translation>Ctrl 鍵 + 鼠標左鍵</translation>
+    </message>
+    <message>
+        <source>Shift Key + Left Mouse Button</source>
+        <translation>Shift 鍵 + 鼠標左鍵</translation>
+    </message>
+    <message>
+        <source>Append a curve to the last node of the path or add a new curve between two nodes</source>
+        <translation>將曲線附加到路徑的最後一個節點或在兩個節點之間添加一條新曲線</translation>
+    </message>
+    <message>
+        <source>Nodes Editor</source>
+        <translation>節點編輯器</translation>
+    </message>
+</context>
+<context>
     <name>NodesTool</name>
     <message>
         <source>N</source>
@@ -463,6 +542,18 @@
     <message>
         <source>SVG objects cannot be edited!</source>
         <translation>無法編輯SVG對象</translation>
+    </message>
+    <message>
+        <source>Too many nodes!</source>
+        <translation>節點太多！</translation>
+    </message>
+    <message>
+        <source>The selected path contains too many nodes.</source>
+        <translation>所選路徑包含太多節點。</translation>
+    </message>
+    <message>
+        <source>It will be simplified, so you can edit it.</source>
+        <translation>它將被簡化，因此您可以對其進行編輯。</translation>
     </message>
 </context>
 <context>

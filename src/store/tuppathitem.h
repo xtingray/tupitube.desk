@@ -102,6 +102,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         bool straightLineFlag;
         bool flatCurveFlag;
         QPointF newNode;
+        // QPointF shift;
 
         QList<QColor> colors;
         QList<QString> tips;
