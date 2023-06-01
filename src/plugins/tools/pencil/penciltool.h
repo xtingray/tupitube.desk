@@ -91,7 +91,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         void setupActions();
         void setZValueReferences();
         // void smoothPath(QPainterPath &path, double smoothness, int from = 0, int to = -1);
-        // void reset(TupGraphicsScene *scene);
+        void reset(TupGraphicsScene *scene);
 
     signals:
         void closeHugeCanvas();
@@ -99,9 +99,9 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         void penWidthChanged(int width);
 
     private slots:
-        // void updatePenTool(PenSettings::PenTool tool);
+        void updatePenTool(PenTool tool);
         void updateSmoothness(double value);
-        // void updateEraserSize(int value);
+        void updateEraserSize(int value);
 
     private:
         QPointF firstPoint;
@@ -122,11 +122,14 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         int circleZValue;
         QPointF penCirclePos;
         int penWidth;
-        // int eraserSize;
+        int eraserSize;
         double smoothness;
-        // PenSettings::PenTool currentTool;
+        PenTool currentTool;
 
         QList<TupPathItem *> lineItems;
+
+        // QCursor pencilCursor;
+        QCursor eraserCursor;
 };
 
 #endif

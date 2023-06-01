@@ -126,6 +126,8 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
         QSize getSceneDimension();
         bool tweenExists(const QString &name, TupItemTweener::Type type);
 
+        int layersCount();
+
     // private slots:
     //     void updateObjectInformation(const QString &value);
     //     void showInfoWidget();

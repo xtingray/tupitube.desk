@@ -1935,3 +1935,8 @@ bool TupGraphicsScene::tweenExists(const QString &name, TupItemTweener::Type typ
 
     return false;
 }
+
+int TupGraphicsScene::layersCount()
+{
+    return tupScene->layersCount();
+}

@@ -126,6 +126,8 @@ enum ProjectDimension {
 enum SafeLevel { Background = 0, Foreground };
 enum ImportAction {VideoAction=0, FolderAction};
 
+enum PenTool { PencilMode = 0, EraserMode };
+
 enum NodeLocation { FirstNode = 0, MiddleNode, RandomNode, LastNode };
 enum NodeContext { SelectionNode = 0, PapagayoNode, TextNode };
 enum NodePosition { TopLeftNode  = 0, TopRightNode, BottomLeftNode, BottomRightNode, CenterNode };

@@ -56,41 +56,43 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     pencilTitle->setPixmap(pencilPic.scaledToWidth(16, Qt::SmoothTransformation));
     pencilTitle->setToolTip(tr("Pencil Properties"));
 
-    /*
-    pencilButton = new QPushButton(pencilPic, "");
-    pencilButton->setCheckable(true);
-    pencilButton->setToolTip(tr("Pencil Mode"));
-    layout->addWidget(pencilButton);
-    */
-    // connect(pencilButton, SIGNAL(clicked()), this, SLOT(enablePencilMode()));
-
     layout->addWidget(pencilTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
+
+    QPixmap pencilTarget(THEME_DIR + "icons/target.png");
+    pencilButton = new QPushButton(pencilTarget, "");
+    pencilButton->setCheckable(true);
+    pencilButton->setToolTip(tr("Pencil Mode"));
+    pencilButton->setFixedWidth(120);
+    layout->addWidget(pencilButton, Qt::AlignHCenter);
+    connect(pencilButton, SIGNAL(clicked()), this, SLOT(enablePencilMode()));
 
     smoothLabel = new QCheckBox;
     smoothLabel->setIcon(QIcon(QPixmap(THEME_DIR + "icons/smoothness.png")));
     smoothLabel->setToolTip(tr("Smoothness"));
     smoothLabel->setChecked(true);
     connect(smoothLabel, SIGNAL(toggled(bool)), this, SLOT(updateSmoothBox(bool)));
-    layout->addWidget(smoothLabel);
 
     smoothBox = new QDoubleSpinBox();
     smoothBox->setDecimals(2);
     smoothBox->setSingleStep(0.1);
     smoothBox->setMinimum(0);
     smoothBox->setMaximum(20);
+    smoothBox->setAlignment(Qt::AlignCenter);
     connect(smoothBox, SIGNAL(valueChanged(double)), this, SIGNAL(smoothnessUpdated(double)));
-    layout->addWidget(smoothBox);
 
-    /*
-    layout->addSpacing(10);
-    layout->addWidget(new TSeparator(Qt::Horizontal));
-    layout->addSpacing(10);
+    pencilWidget = new QWidget;
+    QVBoxLayout *pencilLayout = new QVBoxLayout(pencilWidget);
+    pencilLayout->addWidget(smoothLabel, Qt::AlignHCenter);
+    pencilLayout->addWidget(smoothBox, Qt::AlignHCenter);
+
+    layout->addWidget(pencilWidget, Qt::AlignHCenter);
 
     QPixmap eraserPic(THEME_DIR + "icons/eraser.png");
     eraserButton = new QPushButton(eraserPic, "");
     eraserButton->setCheckable(true);
     eraserButton->setToolTip(tr("Eraser Mode"));
+    eraserButton->setFixedWidth(120);
     layout->addWidget(eraserButton);
 
     connect(eraserButton, SIGNAL(clicked()), this, SLOT(enableEraserMode()));
@@ -101,7 +103,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
         eraserValue = 10;
 
     eraserLabel = new QLabel;
-    eraserLabel->setAlignment(Qt::AlignCenter);
+    eraserLabel->setAlignment(Qt::AlignHCenter);
 
     eraserPreview = new TupPenThicknessWidget(this);
     eraserPreview->setColor(Qt::white);
@@ -116,10 +118,13 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     eraserSize->setValue(eraserValue);
     updateEraserSize(eraserValue);
 
-    layout->addWidget(eraserPreview);
-    layout->addWidget(eraserSize);
-    layout->addWidget(eraserLabel);
-    */
+    eraserWidget = new QWidget;
+    QVBoxLayout *eraserLayout = new QVBoxLayout(eraserWidget);
+    eraserLayout->addWidget(eraserPreview, Qt::AlignHCenter);
+    eraserLayout->addWidget(eraserSize, Qt::AlignHCenter);
+    eraserLayout->addWidget(eraserLabel, Qt::AlignHCenter);
+
+    layout->addWidget(eraserWidget, Qt::AlignHCenter);
 
     mainLayout->addLayout(layout);
     mainLayout->addStretch(2);
@@ -132,14 +137,16 @@ PenSettings::~PenSettings()
     #endif
 }
 
-/*
 void PenSettings::enablePencilMode()
 {
     pencilButton->setChecked(true);
     if (eraserButton->isChecked())
         eraserButton->setChecked(false);
 
-    emit toolEnabled(PenSettings::Pencil);
+    eraserWidget->setVisible(false);
+    pencilWidget->setVisible(true);
+
+    emit toolEnabled(PencilMode);
 }
 
 void PenSettings::enableEraserMode()
@@ -148,9 +155,11 @@ void PenSettings::enableEraserMode()
     if (pencilButton->isChecked())
         pencilButton->setChecked(false);
 
-    emit toolEnabled(PenSettings::Eraser);
+    pencilWidget->setVisible(false);
+    eraserWidget->setVisible(true);
+
+    emit toolEnabled(EraserMode);
 }
-*/
 
 void PenSettings::updateSmoothBox(bool enabled)
 {
@@ -168,7 +177,6 @@ void PenSettings::updateSmoothness(double value)
     smoothBox->blockSignals(false);
 }
 
-/*
 void PenSettings::updateEraserSize(int value)
 {
     emit eraserSizeChanged(value);
@@ -178,5 +186,5 @@ void PenSettings::updateEraserSize(int value)
 void PenSettings::enablePencilTool()
 {
     pencilButton->setChecked(true);
+    eraserWidget->setVisible(false);
 }
-*/

@@ -40,6 +40,7 @@
 #include "tapplicationproperties.h"
 #include "tuppenthicknesswidget.h"
 
+#include <QVBoxLayout>
 #include <QPushButton>
 #include <QDoubleSpinBox>
 #include <QCheckBox>
@@ -51,34 +52,36 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
     Q_OBJECT
 
     public:
-        enum PenTool { Pencil, Eraser };
         PenSettings(QWidget *parent = nullptr);
         ~PenSettings();
 
-        // void enablePencilTool();
+        void enablePencilTool();
         void updateSmoothness(double value);
 
     signals:
         void smoothnessUpdated(double value);
-        // void toolEnabled(PenSettings::PenTool tool);
-        // void eraserSizeChanged(int value);
+        void toolEnabled(PenTool tool);
+        void eraserSizeChanged(int value);
 
     private slots:
-        // void enablePencilMode();
-        // void enableEraserMode();
+        void enablePencilMode();
+        void enableEraserMode();
         void updateSmoothBox(bool enabled);
-        // void updateEraserSize(int value);
+        void updateEraserSize(int value);
 
     private:
+        QWidget *pencilWidget;
+        QWidget *eraserWidget;
+
         QPushButton *pencilButton;
-        // QPushButton *eraserButton;
+        QPushButton *eraserButton;
 
         TupPenThicknessWidget *eraserPreview;
         QSlider *eraserSize;
 
         QCheckBox *smoothLabel;
         QDoubleSpinBox *smoothBox;
-        // QLabel *eraserLabel;
+        QLabel *eraserLabel;
         double smoothness;
 };
 
