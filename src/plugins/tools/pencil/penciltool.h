@@ -40,18 +40,13 @@
 #include "tuptoolplugin.h"
 #include "pensettings.h"
 #include "tuppathitem.h"
-#include "tupprojectresponse.h"
 
 #include "tupinputdeviceinformation.h"
 #include "tupbrushmanager.h"
-#include "tupgraphicalgorithm.h"
 #include "tupgraphicsscene.h"
-#include "tuprequestbuilder.h"
-#include "tupprojectrequest.h"
 #include "tuplibraryobject.h"
 #include "tupellipseitem.h"
 #include "taction.h"
-#include "talgorithm.h"
 #include "tconfig.h"
 
 #include <QPointF>
@@ -79,7 +74,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         virtual QWidget *configurator();
         virtual void aboutToChangeTool();
         virtual void saveConfig();
-        virtual QCursor toolCursor(); //  const;
+        virtual QCursor toolCursor();
         virtual void frameResponse(const TupFrameResponse *event);
         virtual void sceneResponse(const TupSceneResponse *event);
 
@@ -90,7 +85,6 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
     private:
         void setupActions();
         void setZValueReferences();
-        // void smoothPath(QPainterPath &path, double smoothness, int from = 0, int to = -1);
         void reset(TupGraphicsScene *scene);
 
     signals:
@@ -104,6 +98,10 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         void updateEraserSize(int value);
 
     private:
+        void storePathItems();
+        void activeEraser(const QPointF &point);
+        TupFrame* getCurrentFrame();
+
         QPointF firstPoint;
         QPointF previousPos;
         QPainterPath path;
@@ -127,9 +125,14 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         PenTool currentTool;
 
         QList<TupPathItem *> lineItems;
+        QList<QGraphicsItem *> graphicItems;
 
-        // QCursor pencilCursor;
-        QCursor eraserCursor;
+        int currentLayer;
+        int currentFrame;
+
+        QPen eraserPen;
+        QGraphicsEllipseItem *eraserCircle;
+        QPointF eraserDistance;
 };
 
 #endif

@@ -259,6 +259,7 @@ void SelectionTool::release(const TupInputDeviceInformation *input, TupBrushMana
             if (item && (dynamic_cast<TupAbstractSerializable* > (item))) {
                 #ifdef TUP_DEBUG
                     qDebug() << "[SelectionTool::release()] - Item is serializable!";
+                    qDebug() << "[SelectionTool::release()] - item->zValue() ->" << item->zValue();
                 #endif
                 if (item->group())
                     item = qgraphicsitem_cast<QGraphicsItem *>(item->group());

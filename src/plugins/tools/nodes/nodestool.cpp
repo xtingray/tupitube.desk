@@ -182,7 +182,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 qDebug() << "";
                 qDebug() << "IN: The path rect was clicked!";
                 */
-                if (pathItem->containsOnPath(coord, brushManager->penWidth())) { // Point is part of the path
+                if (pathItem->pointMatchesPath(coord, brushManager->penWidth(), PencilMode)) { // Point is part of the path
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - Inserting a node in the path...";
                     #endif
@@ -420,7 +420,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 qDebug() << "*** coord ->" << coord;
                 */
 
-                if (pathItem->containsOnPath(coord, brushManager->penWidth())) { // Point is part of the path
+                if (pathItem->pointMatchesPath(coord, brushManager->penWidth(), PencilMode)) { // Point is part of the path
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - 2. Inserting a node in the path...";
                     #endif

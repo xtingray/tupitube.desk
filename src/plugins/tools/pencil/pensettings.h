@@ -45,7 +45,6 @@
 #include <QDoubleSpinBox>
 #include <QCheckBox>
 #include <QSlider>
-#include <QLabel>
 
 class TUPITUBE_PLUGIN PenSettings : public QWidget
 {
@@ -55,7 +54,6 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         PenSettings(QWidget *parent = nullptr);
         ~PenSettings();
 
-        void enablePencilTool();
         void updateSmoothness(double value);
 
     signals:
@@ -63,11 +61,14 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         void toolEnabled(PenTool tool);
         void eraserSizeChanged(int value);
 
-    private slots:
+    public slots:
         void enablePencilMode();
         void enableEraserMode();
+
+    private slots:
         void updateSmoothBox(bool enabled);
-        void updateEraserSize(int value);
+        void updateEraserSizeFromSlider(int value);
+        void updateEraserSizeFromBox(int value);
 
     private:
         QWidget *pencilWidget;
@@ -77,11 +78,11 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         QPushButton *eraserButton;
 
         TupPenThicknessWidget *eraserPreview;
-        QSlider *eraserSize;
+        QSlider *eraserSlider;
 
         QCheckBox *smoothLabel;
         QDoubleSpinBox *smoothBox;
-        QLabel *eraserLabel;
+        QSpinBox *eraserSizeBox;
         double smoothness;
 };
 

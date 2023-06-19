@@ -95,7 +95,8 @@ QString TupItemFactory::itemID(const QString &xml)
     return "item";
 }
 
+// SQA: Check if this method has sense
 TupFactoryHandler::Type TupItemFactory::getType()
 {
-    return handler.getType();
+    return handler.getType(); 
 }

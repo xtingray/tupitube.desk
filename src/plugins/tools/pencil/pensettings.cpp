@@ -39,6 +39,7 @@
 
 #include <QBoxLayout>
 #include <QPushButton>
+#include <QLabel>
 
 PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 {
@@ -63,9 +64,19 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     pencilButton = new QPushButton(pencilTarget, "");
     pencilButton->setCheckable(true);
     pencilButton->setToolTip(tr("Pencil Mode"));
-    pencilButton->setFixedWidth(120);
-    layout->addWidget(pencilButton, Qt::AlignHCenter);
     connect(pencilButton, SIGNAL(clicked()), this, SLOT(enablePencilMode()));
+
+    QPixmap eraserPic(THEME_DIR + "icons/eraser.png");
+    eraserButton = new QPushButton(eraserPic, "");
+    eraserButton->setCheckable(true);
+    eraserButton->setToolTip(tr("Eraser Mode"));
+    connect(eraserButton, SIGNAL(clicked()), this, SLOT(enableEraserMode()));
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addWidget(pencilButton);
+    buttonsLayout->addWidget(eraserButton);
+
+    layout->addLayout(buttonsLayout);
 
     smoothLabel = new QCheckBox;
     smoothLabel->setIcon(QIcon(QPixmap(THEME_DIR + "icons/smoothness.png")));
@@ -82,47 +93,44 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     connect(smoothBox, SIGNAL(valueChanged(double)), this, SIGNAL(smoothnessUpdated(double)));
 
     pencilWidget = new QWidget;
+    pencilWidget->setFixedWidth(120);
     QVBoxLayout *pencilLayout = new QVBoxLayout(pencilWidget);
     pencilLayout->addWidget(smoothLabel, Qt::AlignHCenter);
     pencilLayout->addWidget(smoothBox, Qt::AlignHCenter);
 
-    layout->addWidget(pencilWidget, Qt::AlignHCenter);
-
-    QPixmap eraserPic(THEME_DIR + "icons/eraser.png");
-    eraserButton = new QPushButton(eraserPic, "");
-    eraserButton->setCheckable(true);
-    eraserButton->setToolTip(tr("Eraser Mode"));
-    eraserButton->setFixedWidth(120);
-    layout->addWidget(eraserButton);
-
-    connect(eraserButton, SIGNAL(clicked()), this, SLOT(enableEraserMode()));
+    layout->addWidget(pencilWidget);
 
     TCONFIG->beginGroup("BrushParameters");
-    int eraserValue = TCONFIG->value("EraserValue", 10).toInt();
+    int eraserValue = TCONFIG->value("EraserSize", 10).toInt();
     if (eraserValue > 40)
         eraserValue = 10;
-
-    eraserLabel = new QLabel;
-    eraserLabel->setAlignment(Qt::AlignHCenter);
 
     eraserPreview = new TupPenThicknessWidget(this);
     eraserPreview->setColor(Qt::white);
     eraserPreview->setBrush(Qt::SolidPattern);
     eraserPreview->render(eraserValue);
 
-    eraserSize = new QSlider(Qt::Horizontal, this);
-    eraserSize->setRange(10, 40);
-    connect(eraserSize, SIGNAL(valueChanged(int)), this, SLOT(updateEraserSize(int)));
-    connect(eraserSize, SIGNAL(valueChanged(int)), eraserPreview, SLOT(render(int)));
+    eraserSlider = new QSlider(Qt::Horizontal, this);
+    eraserSlider->setRange(10, 40);
+    connect(eraserSlider, SIGNAL(valueChanged(int)), this, SLOT(updateEraserSizeFromSlider(int)));
+    connect(eraserSlider, SIGNAL(valueChanged(int)), eraserPreview, SLOT(render(int)));
 
-    eraserSize->setValue(eraserValue);
-    updateEraserSize(eraserValue);
+    eraserSizeBox = new QSpinBox;
+    eraserSizeBox->setAlignment(Qt::AlignHCenter);
+    eraserSizeBox->setMinimum(10);
+    eraserSizeBox->setMaximum(40);
+    connect(eraserSizeBox, SIGNAL(valueChanged(int)), this, SLOT(updateEraserSizeFromBox(int)));
+    connect(eraserSizeBox, SIGNAL(valueChanged(int)), eraserPreview, SLOT(render(int)));
+
+    eraserSlider->setValue(eraserValue);
+    updateEraserSizeFromSlider(eraserValue);
 
     eraserWidget = new QWidget;
+    eraserWidget->setFixedWidth(120);
     QVBoxLayout *eraserLayout = new QVBoxLayout(eraserWidget);
     eraserLayout->addWidget(eraserPreview, Qt::AlignHCenter);
-    eraserLayout->addWidget(eraserSize, Qt::AlignHCenter);
-    eraserLayout->addWidget(eraserLabel, Qt::AlignHCenter);
+    eraserLayout->addWidget(eraserSlider, Qt::AlignHCenter);
+    eraserLayout->addWidget(eraserSizeBox, Qt::AlignHCenter);
 
     layout->addWidget(eraserWidget, Qt::AlignHCenter);
 
@@ -139,6 +147,10 @@ PenSettings::~PenSettings()
 
 void PenSettings::enablePencilMode()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PenSettings::enablePencilMode()]";
+    #endif
+
     pencilButton->setChecked(true);
     if (eraserButton->isChecked())
         eraserButton->setChecked(false);
@@ -151,6 +163,10 @@ void PenSettings::enablePencilMode()
 
 void PenSettings::enableEraserMode()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PenSettings::enableEraserMode()]";
+    #endif
+
     eraserButton->setChecked(true);
     if (pencilButton->isChecked())
         pencilButton->setChecked(false);
@@ -177,14 +193,20 @@ void PenSettings::updateSmoothness(double value)
     smoothBox->blockSignals(false);
 }
 
-void PenSettings::updateEraserSize(int value)
+void PenSettings::updateEraserSizeFromSlider(int value)
 {
     emit eraserSizeChanged(value);
-    eraserLabel->setText(QString::number(value));
+
+    eraserSizeBox->blockSignals(true);
+    eraserSizeBox->setValue(value);
+    eraserSizeBox->blockSignals(false);
 }
 
-void PenSettings::enablePencilTool()
+void PenSettings::updateEraserSizeFromBox(int value)
 {
-    pencilButton->setChecked(true);
-    eraserWidget->setVisible(false);
+    emit eraserSizeChanged(value);
+
+    eraserSlider->blockSignals(true);
+    eraserSlider->setValue(value);
+    eraserSlider->blockSignals(false);
 }

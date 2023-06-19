@@ -65,7 +65,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
 
         QString removeNodeFromPath(int index);
         QString changeNodeTypeFromPath(int index);
-        bool containsOnPath(QPointF pos, float tolerance);
+        bool pointMatchesPath(QPointF pos, float tolerance, PenTool tool);
         QString addInnerNode(int tolerance, NodeType node);
         bool pointIsContainedBetweenRange(const QPointF &point1, const QPointF &point2, const QPointF &newPoint, float tolerance);
         QString appendNode(const QPointF &pos);
@@ -79,7 +79,9 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         QPainterPath clearPath(int tolerance);
         static QPainterPath brushPath(const QPainterPath &route, int tolerance);
         int nodesCount();
- 
+
+        QPair<QString, QString> extractPathSegments(const QPointF &limitPoint, int tolerance);
+
     protected:
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
         virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
@@ -91,8 +93,8 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         bool pointIsContainedBetweenFlatNodes(const QPointF &node1, const QPointF &node2, const QPointF &point, int tolerance);
         QPair<QPointF,QPointF> calculateCPoints(const QPointF &pos1, const QPointF &pos2);
         QPair<QPointF,QPointF> calculatePlainCPoints(const QPointF &pos1, const QPointF &pos2);
-        bool pointIsPartOfLine(const QPainterPath &route, const QPointF &point, int tolerance);
-        bool findPointAtLine(const QPointF &point1, const QPointF &point2, const QPointF &target, int tolerance);
+        bool pointIsPartOfLine(const QPainterPath &route, const QPointF &point, int tolerance, PenTool tool);
+        bool findPointAtLine(const QPointF &point1, const QPointF &point2, const QPointF &target, int tolerance, PenTool tool);
 
         bool dragOver;
         QList<QString> undoList;
@@ -102,11 +104,13 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         bool straightLineFlag;
         bool flatCurveFlag;
         QPointF newNode;
-        // QPointF shift;
 
         QList<QColor> colors;
         QList<QString> tips;
         QList<QPair<QPointF,QPointF>> curvePoints;
+        QPair<QString, QString> pathSegments;
+
+        QPolygonF pathPoints;
 };
 
 #endif
