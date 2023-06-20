@@ -485,7 +485,6 @@ void PencilTool::activeEraser(const QPointF &point)
                     qDebug() << "PencilTool::activeEraser() - Adding TWO segments!";
                 } else if (segment1.isEmpty() && !segment2.isEmpty()) {
                     qDebug() << "PencilTool::activeEraser() - Adding segment2";
-                    // item->setPathFromString(segment2);
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                                                    currentLayer, currentFrame, itemIndex,
                                                                                    QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
@@ -493,7 +492,6 @@ void PencilTool::activeEraser(const QPointF &point)
                     emit requested(&event);
                 } else if (segment2.isEmpty() && !segment1.isEmpty()) {
                     qDebug() << "PencilTool::activeEraser() - Adding segment1";
-                    // item->setPathFromString(segment1);
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                                                    currentLayer, currentFrame, itemIndex,
                                                                                    QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
@@ -512,7 +510,6 @@ void PencilTool::activeEraser(const QPointF &point)
                                                                                    currentLayer, currentFrame, itemIndex, QPointF(), scene->getSpaceContext(),
                                                                                    TupLibraryObject::Item, TupProjectRequest::Remove);
                     emit requested(&event);
-
                 }
             } else {
                 qDebug() << "PencilTool::activeEraser() - Warning: Eraser action failed!";

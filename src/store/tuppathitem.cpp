@@ -895,11 +895,12 @@ bool TupPathItem::findPointAtLine(const QPointF &point1, const QPointF &point2, 
         qDebug() << "[TupPathItem::findPointAtLine()] - point1 ->" << point1;
         qDebug() << "[TupPathItem::findPointAtLine()] - point2 ->" << point2;
         qDebug() << "[TupPathItem::findPointAtLine()] - target ->" << target;
+        qDebug() << "[TupPathItem::findPointAtLine()] - tolerance ->" << tolerance;
     #endif
 
     QPointF bestPoint;
     float distance = TAlgorithm::distance(point1, point2);
-    if (distance > tolerance) {
+    if (distance > tolerance) { // Line is bigger than tolerance
         float min = distance;
         int times = distance / tolerance;
         float deltaX = (point2.x() - point1.x()) / times;
@@ -916,11 +917,21 @@ bool TupPathItem::findPointAtLine(const QPointF &point1, const QPointF &point2, 
                 bestPoint = point;
             }
         }
+
         if (min < tolerance) {
             newNode = bestPoint;
-            qDebug() << "[TupPathItem::findPointAtLine()] - 1 Good! Point was found!";
+            qDebug() << "[TupPathItem::findPointAtLine()] - 1 Good! Point was found! - Segment is long";
 
             return true;
+        }
+
+        if (tool == EraserMode) {
+            if (TAlgorithm::distance(point2, target) <= tolerance) {
+                qDebug() << "[TupPathItem::findPointAtLine()] - Found! Taking last point as the final option!";
+                newNode = point2;
+
+                return true;
+            }
         }
     } else { // Segment is too short
         float deltaX = (point2.x() - point1.x()) / 2;
@@ -934,7 +945,7 @@ bool TupPathItem::findPointAtLine(const QPointF &point1, const QPointF &point2, 
         distance = TAlgorithm::distance(point, target);
         if (distance < tolerance) {
             newNode = bestPoint;
-            qDebug() << "[TupPathItem::findPointAtLine()] - 2 Good! Point was found!";
+            qDebug() << "[TupPathItem::findPointAtLine()] - 2 Good! Point was found! - Segment is too short!";
 
             return true;
         }
@@ -1815,19 +1826,34 @@ bool TupPathItem::pointIsContainedBetweenNodes(const QPointF &node1, const QPoin
     return false;
 }
 
-bool TupPathItem::pointIsContainedBetweenFlatNodes(const QPointF &node1, const QPointF &node2,
-                                                   const QPointF &point, int tolerance)
+bool TupPathItem::pointIsContainedBetweenFlatNodes(const QPointF &point1, const QPointF &point2,
+                                                   const QPointF &point, int tolerance, bool eraserMode)
 {
+    QPointF node1 = point1;
+    QPointF node2 = point2;
+
+    if (eraserMode) {
+        node1 = point1 - QPointF(tolerance, tolerance);
+        node2 = point2 + QPointF(tolerance, tolerance);
+    }
+
     if (node1.x() <= point.x() && point.x() <= node2.x()) {
         if (node1.y() <= point.y() && point.y() <= node2.y()) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupPathItem::pointIsContainedBetweenFlatNodes()] - Point is contained!";
             #endif
 
-            // Measuring distance between point and line (node1-node2)
-            qreal distance = TAlgorithm::distanceFromLine(node1, node2, point);
+            // Measuring distance between point and line (point1-point2)
+            qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
+            qDebug() << "distance from line ->" << distance;
+            qDebug() << "tolerance ->" << tolerance;
             if (distance <= tolerance)
                 return true;
+        }
+
+        if (eraserMode) {
+            node1 = point1 + QPointF(tolerance, tolerance);
+            node2 = point2 - QPointF(tolerance, tolerance);
         }
 
         if (node2.y() <= point.y() && point.y() <= node1.y()) {
@@ -1835,38 +1861,52 @@ bool TupPathItem::pointIsContainedBetweenFlatNodes(const QPointF &node1, const Q
                 qDebug() << "[TupPathItem::pointIsContainedBetweenFlatNodes()] - Point is contained!";
             #endif
 
-            // Measuring distance between point and line (node1-node2)
-            qreal distance = TAlgorithm::distanceFromLine(node1, node2, point);
+            // Measuring distance between point and line (point1-point2)
+            qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
+            qDebug() << "distance from line ->" << distance;
+            qDebug() << "tolerance ->" << tolerance;
             if (distance <= tolerance)
                 return true;
         }
     }
 
+    if (eraserMode) {
+        node1 = point1 + QPointF(tolerance, tolerance);
+        node2 = point2 - QPointF(tolerance, tolerance);
+    }
+
     if (node2.x() <= point.x() && point.x() <= node1.x()) {
+        if (node2.y() <= point.y() && point.y() <= node1.y()) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupPathItem::pointIsContainedBetweenFlatNodes()] - Point is contained!";
+            #endif
+
+            // Measuring distance between point and line (point1-point2)
+            qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
+            if (distance <= tolerance)
+                return true;
+        }
+
+        if (eraserMode) {
+            node1 = point1 - QPointF(tolerance, tolerance);
+            node2 = point2 + QPointF(tolerance, tolerance);
+        }
+
         if (node1.y() <= point.y() && point.y() <= node2.y()) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupPathItem::pointIsContainedBetweenFlatNodes()] - Point is contained!";
             #endif
 
-            // Measuring distance between point and line (node1-node2)
-            qreal distance = TAlgorithm::distanceFromLine(node1, node2, point);
-            if (distance <= tolerance)
-                return true;
-        }
-
-        if (node2.y() <= point.y() && point.y() <= node1.y()) {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupPathItem::pointIsContainedBetweenFlatNodes()] - Point is contained!";
-            #endif
-
-            // Measuring distance between point and line (node1-node2)
-            qreal distance = TAlgorithm::distanceFromLine(node1, node2, point);
+            // Measuring distance between point and line (point1-point2)
+            qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
+            qDebug() << "distance from line ->" << distance;
+            qDebug() << "tolerance ->" << tolerance;
             if (distance <= tolerance)
                 return true;
         }
     }
 
-    #ifdef TUP_DEBUG
+    #ifdef TUP_DEBUG´
         qDebug() << "[TupPathItem::pointIsContainedBetweenFlatNodes()] - Warning: Point is NOT contained!";
     #endif
 
@@ -2259,6 +2299,9 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
     if (!pathPoints.isEmpty())
         qDebug() << "[TupPathItem::extractPathSegments()] - pathPoints.last() ->" << pathPoints.last();
 
+    qDebug() << "[TupPathItem::extractPathSegments()] - pathPoints.size() ->" << pathPoints.size();
+    qDebug() << "[TupPathItem::extractPathSegments()] - pathPoints ->" << pathPoints;
+
     QPainterPath route = path();
     int elementsTotal = route.elementCount();
     QPointF previewPoint;
@@ -2270,7 +2313,10 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
     bool erasingBorder = false;
     bool found = false;
     int foundInLine = false;
+    int lastPoint = false;
     bool isEarlyCurveNode = false;
+
+    qDebug() << "[TupPathItem::extractPathSegments()] - elementsTotal ->" << elementsTotal;
 
     // Getting the key points for the limit point (initPoint - endPoint)
     for(int i=0; i<elementsTotal; i++) {
@@ -2292,7 +2338,7 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
                         qDebug() << "distance ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
                         if (TAlgorithm::distance(pathPoints.first(), pathPoints.last()) <= tolerance) {
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupPathItem::extractPathSegments()] - Path was completely erased!";
+                                qDebug() << "[TupPathItem::extractPathSegments()] - 1 Path was completely erased!";
                             #endif
 
                             return QPair<QString, QString>("", "");
@@ -2309,11 +2355,28 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
             {
                 nodeIndex++;
                 // Check if limit point is contained in this straight segment
-                if (pointIsContainedBetweenFlatNodes(previewPoint, pathPoint, limitPoint, tolerance)) {
+                if (pointIsContainedBetweenFlatNodes(previewPoint, pathPoint, limitPoint, tolerance, true)) {
+                    if (pathPoints.size() == 2) {
+                        qDebug() << "LineToElement - distance ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
+                        if (TAlgorithm::distance(pathPoints.first(), pathPoints.last()) <= tolerance) {
+                            qDebug() << "[TupPathItem::extractPathSegments()] - LineToElement - 2 Path was completely erased!";
+
+                            return QPair<QString, QString>("", "");
+                        }
+                    }
+
                     found = true;
                     foundInLine = true;
                     initPoint = previewPoint;
                     endPoint = pathPoint;
+
+                    if (nodeIndex == elementsTotal) {
+                        qDebug() << "nodeIndex ->" << nodeIndex;
+                        qDebug() << "elementsTotal ->" << elementsTotal;
+                        qDebug() << "lastPoint DETECTED!";
+                        lastPoint = true;
+                    }
+
                     goto next;
                 }
 
@@ -2411,8 +2474,8 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
                     // Recalculate first point here                    
                     for (int i=0; i<pathPoints.size(); i++) {
                         QPointF point = pathPoints.at(i);
-                        qDebug() << "POINT ->" << point;
-                        qDebug() << "distance ->" << TAlgorithm::distance(point, limitPoint);
+                        qDebug() << "MoveToElement - POINT ->" << point;
+                        qDebug() << "MoveToElement - distance ->" << TAlgorithm::distance(point, limitPoint);
                         if (TAlgorithm::distance(point, limitPoint) > tolerance) {
                             if (t != 'M') {
                                 t = 'M';
@@ -2425,7 +2488,6 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
                     }
                 } else {
                     qDebug() << "[TupPathItem::extractPathSegments()] - QPainterPath::MoveToElement";
-                    /*
                     // Store element
                     if (t != 'M') {
                         t = 'M';
@@ -2433,7 +2495,6 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
                     } else {
                         parts1 << QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                     }
-                    */
                 }
             }
             break;
@@ -2450,7 +2511,32 @@ QPair<QString, QString> TupPathItem::extractPathSegments(const QPointF &limitPoi
                     }
                 } else {
                     if (foundInLine) {
+                        if (lastPoint) {
+                            int total = pathPoints.size()-1;
+                            qDebug() << "LineToElement - pathPoints.size() ->" << pathPoints.size();
+                            for (int i=total; i>=0; i--) {
+                                QPointF point = pathPoints.at(i);
+                                qDebug() << "LineToElement - POINT ->" << point;
+                                qDebug() << "LineToElement - distance ->" << TAlgorithm::distance(point, limitPoint);
+                                qDebug() << "LineToElement - tolerance ->" << tolerance;
+                                if (TAlgorithm::distance(point, limitPoint) > tolerance) {
+                                    if (i == 0) { // The distance of the path is zero
+                                        qDebug() << "LineToElement - Path length is ZERO! ->" << point;
+                                        return QPair<QString, QString>("", "");
+                                    }
 
+                                    if (t != 'L') {
+                                        t = 'L';
+                                        parts1 << " L " + QString::number(point.x()) + " " + QString::number(point.y()) + " ";
+                                    } else {
+                                        parts1 << QString::number(point.x()) + " " + QString::number(point.y()) + " ";
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            // Line segment is inside the path
+                        }
                     }
                 }
             }

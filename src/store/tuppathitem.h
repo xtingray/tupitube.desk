@@ -90,7 +90,8 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
     private:
         QPair<QPointF, QPointF> getCurveElements(QPointF initPos, QPointF endPos);
         bool pointIsContainedBetweenNodes(const QPointF &node1, const QPointF &node2, const QPointF &point, float tolerance);
-        bool pointIsContainedBetweenFlatNodes(const QPointF &node1, const QPointF &node2, const QPointF &point, int tolerance);
+        bool pointIsContainedBetweenFlatNodes(const QPointF &node1, const QPointF &node2, const QPointF &point,
+                                              int tolerance, bool eraserMode = false);
         QPair<QPointF,QPointF> calculateCPoints(const QPointF &pos1, const QPointF &pos2);
         QPair<QPointF,QPointF> calculatePlainCPoints(const QPointF &pos1, const QPointF &pos2);
         bool pointIsPartOfLine(const QPainterPath &route, const QPointF &point, int tolerance, PenTool tool);
