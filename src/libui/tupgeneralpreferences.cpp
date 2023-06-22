@@ -158,6 +158,7 @@ QWidget * TupGeneralPreferences::generalTab()
     langCombo->addItem("Português");
     langCombo->addItem("Español");
     langCombo->addItem("русский");
+    langCombo->addItem("українська");
 
     langCombo->setCurrentIndex(getLangIndex());
     connect(langCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAppLang(int)));
