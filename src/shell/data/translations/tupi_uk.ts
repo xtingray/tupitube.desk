@@ -257,17 +257,17 @@
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="73"/>
         <source>Line Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Параметри лінії</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="75"/>
         <source>Bendable</source>
-        <translation type="unfinished"></translation>
+        <translation>Гнучка</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="76"/>
         <source>Straight</source>
-        <translation type="unfinished"></translation>
+        <translation>Пряма</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
@@ -277,7 +277,7 @@
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
         <source>Mouse Right Click or X Key</source>
-        <translation type="unfinished">Клацніть правою кнопкою або натисніть клавішу «X»</translation>
+        <translation>Клацніть правою кнопкою або натисніть клавішу «X»</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
@@ -297,7 +297,7 @@
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
         <source>Ctrl + Left Mouse Button</source>
-        <translation>Ctrl + клацнути лівою кнопкою</translation>
+        <translation>Ctrl + ліва кнопка</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
@@ -585,82 +585,82 @@
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="59"/>
         <source>Nodes Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>Властивості вузлів</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="61"/>
         <source>Nodes Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Редактор вузлів</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="86"/>
         <source>First Node</source>
-        <translation type="unfinished"></translation>
+        <translation>Перший вузол</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="87"/>
         <source>Middle Node</source>
-        <translation type="unfinished"></translation>
+        <translation>Середній вузол</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="88"/>
         <source>Random Node</source>
-        <translation type="unfinished"></translation>
+        <translation>Випадковий вузол</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="89"/>
         <source>Last Node</source>
-        <translation type="unfinished"></translation>
+        <translation>Останній вузол</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="100"/>
         <source>Show Tips</source>
-        <translation type="unfinished">Показ підказок</translation>
+        <translation>Показ підказок</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="101"/>
         <source>A little help for the Nodes tool</source>
-        <translation type="unfinished"></translation>
+        <translation>Коротка довідка для засобу Вузли</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="114"/>
         <source>Ctrl Key + Left Mouse Button</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl + ліва кнопка</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="115"/>
         <source>Append a line segment to the last node of the path or add a new line node between two nodes</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати відрізок лінії до останньої вершини шляху або додати новий вузол лінії між двома ввузлами</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="116"/>
         <source>Shift Key + Left Mouse Button</source>
-        <translation type="unfinished"></translation>
+        <translation>Shift + ліва кнопка</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="117"/>
         <source>Append a curve to the last node of the path or add a new curve between two nodes</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати криву до останнього вузла шляху або додати нову криву між двома вузлами</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="118"/>
         <source>X Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавіша X</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="118"/>
         <source>Remove selected node</source>
-        <translation type="unfinished"></translation>
+        <translation>Вилучити вибраний вузол</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="119"/>
         <source>M Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавіша M</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="119"/>
         <source>Switch selected node to line/curve</source>
-        <translation type="unfinished"></translation>
+        <translation>Перемкнути вибраний вузол на пряму/криву</translation>
     </message>
 </context>
 <context>
@@ -689,17 +689,17 @@
     <message>
         <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="358"/>
         <source>Too many nodes!</source>
-        <translation type="unfinished"></translation>
+        <translation>Забагато вузлів!</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="360"/>
         <source>The selected path contains too many nodes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибраний шлях містить надто багато вузлів.</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="361"/>
         <source>It will be simplified, so you can edit it.</source>
-        <translation type="unfinished"></translation>
+        <translation>Його буде спрощено, тож ви зможете його редагувати.</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="773"/>
@@ -936,12 +936,12 @@
     <message>
         <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="66"/>
         <source>Pencil Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Режим олівця</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="72"/>
         <source>Eraser Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Режим гумки</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="83"/>
@@ -1675,7 +1675,7 @@
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="106"/>
         <source>Ctrl + Left Mouse Button</source>
-        <translation>Ctrl + Ліва кнопка</translation>
+        <translation>Ctrl + ліва кнопка</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="106"/>
@@ -4237,7 +4237,7 @@
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="202"/>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="2091"/>
         <source>Video File</source>
-        <translation type="unfinished">Відеофайл</translation>
+        <translation>Відеофайл</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="209"/>
@@ -4443,12 +4443,12 @@
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1472"/>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <translation>Відео</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1481"/>
         <source>Importing image %1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Імпортується зображення %1 з %2</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1536"/>
@@ -4468,12 +4468,12 @@
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1665"/>
         <source>Choose a video file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Виберіть відеофайл...</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1698"/>
         <source>Couldn&apos;t create temporary directory!</source>
-        <translation type="unfinished"></translation>
+        <translation>Не вдалося створити тимчасовий каталог!</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1744"/>
@@ -4483,12 +4483,12 @@
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1770"/>
         <source>Can&apos;t load video file!</source>
-        <translation type="unfinished"></translation>
+        <translation>Не вдалося завантажити відеофайл!</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1773"/>
         <source>Video file is larger than 2 MB. Too big!</source>
-        <translation type="unfinished"></translation>
+        <translation>Розмір відеофайлу перевищує 2 МБ. Завеликий!</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1919"/>
@@ -4795,12 +4795,12 @@
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="105"/>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <translation>Відео</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="105"/>
         <source>Alt+V</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+V</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="108"/>
@@ -7393,82 +7393,82 @@ Cover</source>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="62"/>
         <source>Photograms Extractor</source>
-        <translation type="unfinished"></translation>
+        <translation>Витягач фотограм</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="86"/>
         <source>Select the number of photograms to import:</source>
-        <translation type="unfinished"></translation>
+        <translation>Виберіть кількість фотограм для імпорту:</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="107"/>
         <source>Project size and video size are different:</source>
-        <translation type="unfinished"></translation>
+        <translation>Розміри проєкту та відео відрізняються:</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="110"/>
         <source>Project Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Розмір проєкту:</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="113"/>
         <source>Video Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Розмір відео:</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="117"/>
         <source>What do you want to do?</source>
-        <translation type="unfinished"></translation>
+        <translation>Що ви хочете зробити?</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="118"/>
         <source>Keep original project and video sizes</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти оригінальні розміри проєкту та відео</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="119"/>
         <source>Adjust video size to project size</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити розмір відео відповідно до розміру проєкту</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="120"/>
         <source>Adjust project size to video size</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити розмір проєкту відповідно до розміру відео</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="159"/>
         <source>Close</source>
-        <translation type="unfinished">Закрити</translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="201"/>
         <source>Starting procedure...</source>
-        <translation type="unfinished"></translation>
+        <translation>Початок роботи...</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="210"/>
         <source>Couldn&apos;t create temporary directory!</source>
-        <translation type="unfinished"></translation>
+        <translation>Не вдалося створити тимчасовий каталог!</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="218"/>
         <source>Can&apos;t extract photograms!</source>
-        <translation type="unfinished"></translation>
+        <translation>Не вдалося витягти фотограми!</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="233"/>
         <source>Extracting photogram %1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Витягання фотограми %1 з %2</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="246"/>
         <source>Importing images...</source>
-        <translation type="unfinished"></translation>
+        <translation>Імпортуються зображення...</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupvideoimporterdialog.cpp" line="274"/>
         <source>Video imported successfully!</source>
-        <translation type="unfinished"></translation>
+        <translation>Відео імпортовано успішно!</translation>
     </message>
 </context>
 <context>
