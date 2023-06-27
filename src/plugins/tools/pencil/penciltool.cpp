@@ -467,7 +467,7 @@ void PencilTool::activeEraser(const QPointF &point)
         TupPathItem *item = lineItems.at(i);
         if (item->pointMatchesPath(point, eraserSize/2, EraserMode)) {
             // Process item here
-            qDebug() << "";
+            qDebug() << "---";
             qDebug() << "PencilTool::activeEraser() - MATCH!!!";
             qDebug() << "PencilTool::activeEraser() - eraser size ->" << eraserSize;
             QPair<QString, QString> segments = item->extractPathSegments(point, eraserSize/2);
@@ -518,6 +518,7 @@ void PencilTool::activeEraser(const QPointF &point)
             qDebug() << "---";
             qDebug() << "";
         } else {
+            qDebug() << "---";
             qDebug() << "PencilTool::activeEraser() - NO match!!!";
         }
     }
