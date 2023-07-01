@@ -128,8 +128,6 @@ void PolyLineTool::press(const TupInputDeviceInformation *input, TupBrushManager
     if (cutterOn)
         return;
 
-    // scene->clearSelection();
-
     if (begin) { // This condition happens only in the beginning of the polyline
         path = QPainterPath();
         path.moveTo(input->pos());
@@ -206,6 +204,7 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
         return;
 
     if (begin && pathItem) {
+        // Adding path item within the scene
         QDomDocument doc;
         doc.appendChild(pathItem->toXml(doc));
         TupProjectRequest request = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
@@ -217,6 +216,7 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
  
         begin = false;
     } else {
+        // Extending current path item
         if (pathItem) {
             if (!nodeGroup) {
                 nodeGroup = new TNodeGroup(pathItem, gScene, TNodeGroup::Polyline,
@@ -228,6 +228,19 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
 
             nodeGroup->show();
             nodeGroup->resizeNodes(realFactor);
+
+            int position = getItemPosition();
+            if (position >= 0) {
+                QString pathStr = pathItem->pathToString();
+                TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(), gScene->currentLayerIndex(),
+                                                                               gScene->currentFrameIndex(), position, QPointF(), gScene->getSpaceContext(),
+                                                                               TupLibraryObject::Item, TupProjectRequest::EditNodes, pathStr);
+                emit requested(&event);
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[PolyLineTool::release()] - Fatal Error: Path index is invalid! (-1)";
+                #endif
+            }
         }
     }
 }
@@ -235,7 +248,7 @@ void PolyLineTool::release(const TupInputDeviceInformation *input, TupBrushManag
 void PolyLineTool::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PolyLineTool::itemResponse()]";
+        qDebug() << "[PolyLineTool::itemResponse()] - Action ->" << response->getAction();
     #endif
 
     QGraphicsItem *item = nullptr;
@@ -321,11 +334,13 @@ void PolyLineTool::itemResponse(const TupItemResponse *response)
         case TupProjectRequest::EditNodes:
         {
             if (item && nodeGroup) {
-                if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {
+                if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeGroup->parentItem()) == item) {                    
+                    nodeGroup->createNodes(pathItem);
+                    nodeGroup->resizeNodes(realFactor);
+
                     nodeGroup->show();
                     nodeGroup->syncNodesFromParent();
                     nodeGroup->saveParentProperties();
-
                     path = pathItem->path();
                 }
             } else {
@@ -390,6 +405,47 @@ void PolyLineTool::initEnv()
     }
 }
 
+int PolyLineTool::getItemPosition()
+{
+    int position = -1;
+    if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
+        position = scene->currentFrame()->indexOf(nodeGroup->parentItem());
+    } else {
+        TupBackground *bg = scene->currentScene()->sceneBackground();
+        if (bg) {
+            if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
+                TupFrame *frame = bg->vectorStaticFrame();
+                if (frame) {
+                    position = frame->indexOf(nodeGroup->parentItem());
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[PolyLineTool::getItemPosition()] - Fatal Error: Static bg frame is NULL!";
+                    #endif
+                }
+            } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
+                TupFrame *frame = bg->vectorDynamicFrame();
+                if (frame) {
+                    position = frame->indexOf(nodeGroup->parentItem());
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[PolyLineTool::getItemPosition()] - Fatal Error: Dynamic bg frame is NULL!";
+                    #endif
+                }
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[PolyLineTool::getItemPosition()] - Fatal Error: Invalid spaceContext!";
+                #endif
+            }
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[PolyLineTool::getItemPosition()] - Fatal Error: Scene background variable is NULL!";
+            #endif
+        }
+    }
+
+    return position;
+}
+
 void PolyLineTool::nodeChanged()
 {
     #ifdef TUP_DEBUG
@@ -398,50 +454,14 @@ void PolyLineTool::nodeChanged()
 
     if (nodeGroup) {
         if (!nodeGroup->changedNodes().isEmpty()) {
-            int position = -1;
-            if (scene->getSpaceContext() == TupProject::FRAMES_MODE) {
-                position = scene->currentFrame()->indexOf(nodeGroup->parentItem());
-            } else {
-                TupBackground *bg = scene->currentScene()->sceneBackground();
-                if (bg) {
-                    if (scene->getSpaceContext() == TupProject::VECTOR_STATIC_BG_MODE) {
-                        TupFrame *frame = bg->vectorStaticFrame();
-                        if (frame) {
-                            position = frame->indexOf(nodeGroup->parentItem());
-                        } else {
-                            #ifdef TUP_DEBUG
-                                qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Static bg frame is NULL!";
-                            #endif
-                            return;
-                        }
-                    } else if (scene->getSpaceContext() == TupProject::VECTOR_DYNAMIC_BG_MODE) {
-                               TupFrame *frame = bg->vectorDynamicFrame();
-                               if (frame) {
-                                   position = frame->indexOf(nodeGroup->parentItem());
-                               } else {
-                                   #ifdef TUP_DEBUG
-                                       qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Dynamic bg frame is NULL!";
-                                   #endif
-                                   return;
-                               }
-                    } else {
-                        #ifdef TUP_DEBUG
-                            qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Invalid spaceContext!";
-                        #endif
-                    }
-                } else {
-                    #ifdef TUP_DEBUG
-                        qDebug() << "[PolyLineTool::nodeChanged()] - Fatal Error: Scene background variable is NULL!";
-                    #endif
-                }
-            }
-
+            int position = getItemPosition();
             if (position >= 0) {
-                TupPathItem *pItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem());
-                if (pItem) {
-                    QString pathStr = pItem->pathToString();
-                    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(), scene->currentFrameIndex(),
-                                              position, QPointF(), scene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::EditNodes, pathStr);
+                TupPathItem *item = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem());
+                if (item) {
+                    QString pathStr = item->pathToString();
+                    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(), scene->currentLayerIndex(),
+                                                                                   scene->currentFrameIndex(), position, QPointF(), scene->getSpaceContext(),
+                                                                                   TupLibraryObject::Item, TupProjectRequest::EditNodes, pathStr);
                     emit requested(&event);
                 }
             } else {
@@ -479,6 +499,13 @@ QWidget *PolyLineTool::configurator()
 
 void PolyLineTool::aboutToChangeScene(TupGraphicsScene *)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[PolyLineTool::aboutToChangeScene()]";
+    #endif
+
+    cutterOn = true;
+    initEnv();
+    cutterOn = false;
 }
 
 void PolyLineTool::aboutToChangeTool()

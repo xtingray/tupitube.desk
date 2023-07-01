@@ -106,8 +106,10 @@ void PencilTool::init(TupGraphicsScene *gScene)
 
 void PencilTool::setZValueReferences()
 {
-    baseZValue = ((BG_LAYERS + scene->currentLayerIndex()) * ZLAYER_LIMIT);
-    topZValue = ((BG_LAYERS + scene->currentLayerIndex()) * ZLAYER_LIMIT) + 100;
+    // baseZValue = TupFrame::getFrameZLevel(scene->currentLayerIndex());
+
+    baseZValue = scene->getFrameZLevel(scene->currentLayerIndex(), scene->currentFrameIndex());
+    topZValue = baseZValue + ITEMS_PER_FRAME;
 }
 
 QList<TAction::ActionId> PencilTool::keys() const
@@ -306,8 +308,7 @@ void PencilTool::storePathItems()
         if (TupPathItem *line = qgraphicsitem_cast<TupPathItem *> (item)) {
             qDebug() << "";
             qDebug() << "BASE Z Value -> " << baseZValue;
-            qDebug() << "line Z Value -> " << line->zValue();
-            qDebug() << "item Z Value -> " << item->zValue();
+            qDebug() << "  line Z Value -> " << line->zValue();
             qDebug() << "TOP Z Value -> " << topZValue;
 
             int zVal = line->zValue();
@@ -467,9 +468,9 @@ void PencilTool::activeEraser(const QPointF &point)
         TupPathItem *item = lineItems.at(i);
         if (item->pointMatchesPath(point, eraserSize/2, EraserMode)) {
             // Process item here
-            qDebug() << "---";
-            qDebug() << "PencilTool::activeEraser() - MATCH!!!";
-            qDebug() << "PencilTool::activeEraser() - eraser size ->" << eraserSize;
+            qDebug() << "-------------------------------------------------------";
+            qDebug() << "PencilTool::activeEraser() - MATCH!!! MATCH!!! MATCH!!!";
+            // qDebug() << "PencilTool::activeEraser() - eraser size ->" << eraserSize;
             QPair<QString, QString> segments = item->extractPathSegments(point, eraserSize/2);
             QString segment1 = segments.first;
             QString segment2 = segments.second;
@@ -481,15 +482,18 @@ void PencilTool::activeEraser(const QPointF &point)
                 TupFrame *frame = getCurrentFrame();
                 int itemIndex = frame->indexOf(item);
 
+                qDebug() << "  *** itemIndex ->" << itemIndex;
+
+                if (itemIndex == -1) {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[PencilTool::activeEraser()] - Fatal Error: Invalid item index -> -1";
+                    #endif
+
+                    return;
+                }
+
                 if (!segment1.isEmpty() && !segment2.isEmpty()) {
                     qDebug() << "PencilTool::activeEraser() - Adding TWO segments!";
-                } else if (segment1.isEmpty() && !segment2.isEmpty()) {
-                    qDebug() << "PencilTool::activeEraser() - Adding segment2";
-                    TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
-                                                                                   currentLayer, currentFrame, itemIndex,
-                                                                                   QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
-                                                                                   TupProjectRequest::EditNodes, segment2);
-                    emit requested(&event);
                 } else if (segment2.isEmpty() && !segment1.isEmpty()) {
                     qDebug() << "PencilTool::activeEraser() - Adding segment1";
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
@@ -512,7 +516,7 @@ void PencilTool::activeEraser(const QPointF &point)
                     emit requested(&event);
                 }
             } else {
-                qDebug() << "PencilTool::activeEraser() - Warning: Eraser action failed!";
+                qDebug() << "PencilTool::activeEraser() - Warning: Eraser action FAILED!";
             }
 
             qDebug() << "---";

@@ -195,7 +195,11 @@ void TupGraphicsScene::drawPhotogram(int photogram, bool drawContext)
              layerOnProcess = layerIndex;
              layerOnProcessOpacity = layer->getOpacity();
              int framesCount = layer->framesCount();
-             zLevel = (BG_LAYERS + layerIndex) * ZLAYER_LIMIT;
+
+             // zLevel = ((BG_LAYERS + layerIndex) * ZLAYER_LIMIT) + ((photogram + 1) * ITEMS_PER_FRAME);
+             // zLevel = TupFrame::getFrameZLevel(layerIndex);
+
+             zLevel = getFrameZLevel(layerIndex, photogram);
 
              if (photogram < framesCount) {
                  mainFrame = layer->frameAt(photogram);
@@ -359,6 +363,7 @@ void TupGraphicsScene::drawVectorStaticBg(int index)
         }
         frame = nullptr;
         delete frame;
+
         return;
     } else {
         #ifdef TUP_DEBUG
@@ -639,6 +644,8 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
             item->setOpacity(opacityFactor);
 
         if (!object->hasTweens() || !tweenInAdvance) {
+            qDebug() << "";
+            qDebug() << "[TupGraphicsScene::addGraphicObject()] - ZLEVEL ->" << zLevel;
             item->setZValue(zLevel);
             zLevel++;
         }
@@ -1797,6 +1804,7 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
         #ifdef TUP_DEBUG
             qDebug() << "[TupGraphicsScene::includeObject()] - Fatal Error: Graphic item is nullptr!";
         #endif
+
         return;
     }
 
@@ -1806,7 +1814,8 @@ void TupGraphicsScene::includeObject(QGraphicsItem *object, bool isPolyLine) // 
             TupFrame *frame = layer->frameAt(framePosition.frame);
             if (frame) {
                 // SQA: The constant 100 assumes than 100 items have been created per frame
-                int zValue = (tupScene->framesCount()*100) + frame->getTopZLevel();
+                // int zValue = (tupScene->framesCount()*100) + frame->getTopZLevel();
+                int zValue = ((tupScene->framesCount() - 1)*100) + frame->getTopZLevel();
                 if (isPolyLine) // SQA: Polyline hack
                     zValue--;
 
@@ -1939,4 +1948,11 @@ bool TupGraphicsScene::tweenExists(const QString &name, TupItemTweener::Type typ
 int TupGraphicsScene::layersCount()
 {
     return tupScene->layersCount();
+}
+
+int TupGraphicsScene::getFrameZLevel(int layerIndex, int frameIndex)
+{
+    // return ((BG_LAYERS + layerIndex) * ZLAYER_LIMIT) + ((frameIndex + 1) * ITEMS_PER_FRAME);
+
+    return ((BG_LAYERS + layerIndex) * ZLAYER_LIMIT) + (frameIndex * ITEMS_PER_FRAME);
 }

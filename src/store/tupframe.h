@@ -142,6 +142,7 @@ class TUPITUBE_EXPORT TupFrame : public QObject, public TupAbstractSerializable
         int svgItemsCount();
         int itemsTotalCount();
 
+        // static int getFrameZLevel(int layerIndex);
         int getTopZLevel();
 
         bool isEmpty();

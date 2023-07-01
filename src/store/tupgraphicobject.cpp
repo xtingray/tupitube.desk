@@ -41,11 +41,9 @@
 
 TupGraphicObject::TupGraphicObject(QGraphicsItem *graphic, TupFrame *parent) : QObject(parent)
 {
-    /*
     #ifdef TUP_DEBUG
-        qDebug() << "[TupGraphicObject()]";
+        qDebug() << "[TupGraphicObject()] - zLevel ->" << graphic->zValue();
     #endif
-    */
 
     graphicItem = graphic;
     tupFrame = parent;

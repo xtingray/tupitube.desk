@@ -128,6 +128,8 @@ class TUPITUBE_EXPORT TupGraphicsScene : public QGraphicsScene
 
         int layersCount();
 
+        int getFrameZLevel(int layerIndex, int frameIndex);
+
     // private slots:
     //     void updateObjectInformation(const QString &value);
     //     void showInfoWidget();

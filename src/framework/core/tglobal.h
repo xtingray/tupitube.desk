@@ -76,8 +76,8 @@
 
 #define ZLAYER_LIMIT 10000
 #define BG_LAYERS 4
-// #define BG_LAYERS_TOTAL 10
 #define ZLAYER_BASE 100000 // Initial zValue for Frames Mode layers
+#define ITEMS_PER_FRAME 100 // Maximum items per frame
 
 #define DEFAULT_FONT_SIZE 36
 

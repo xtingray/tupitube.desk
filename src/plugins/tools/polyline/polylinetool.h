@@ -96,6 +96,7 @@ class TUPITUBE_PLUGIN PolyLineTool : public TupToolPlugin
         
     private:
         void setupActions();
+        int getItemPosition();
 
         bool begin;
         QPointF center;

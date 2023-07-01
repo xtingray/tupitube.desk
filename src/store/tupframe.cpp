@@ -80,7 +80,16 @@ TupFrame::TupFrame(TupLayer *parent) : QObject(parent)
     shift = "5";
 
     zLevelIndex = (layer->layerIndex() + BG_LAYERS) * ZLAYER_LIMIT; // Layers levels starts from 4
+
+    // zLevelIndex = TupFrame::getFrameZLevel(layer->layerIndex());
 }
+
+/*
+int TupFrame::getFrameZLevel(int layerIndex)
+{
+    return (layerIndex + BG_LAYERS) * ZLAYER_LIMIT;
+}
+*/
 
 TupFrame::TupFrame(TupBackground *bg, const QString &label, int zLevel) : QObject(bg)
 {
@@ -1399,10 +1408,18 @@ int TupFrame::indexOf(TupSvgItem *object) const
 
 int TupFrame::indexOf(QGraphicsItem *item) const
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupFrame::indexOf(QGraphicsItem *)]";
+    #endif
+
     if (item) {
         for (int i = 0; i < graphics.size(); i++) {
              TupGraphicObject *object = graphics.at(i);
-             if (static_cast<int>(object->item()->zValue()) == static_cast<int>(item->zValue()))
+             qDebug() << "*** object->item()->zValue() ->" << object->item()->zValue();
+             qDebug() << "*** item->zValue() ->" << item->zValue();
+
+             // if (static_cast<int>(object->item()->zValue()) == static_cast<int>(item->zValue()))
+             if (static_cast<int>(object->itemZValue()) == static_cast<int>(item->zValue()))
                  return graphics.indexOf(object);
         }
     }
