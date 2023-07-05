@@ -78,6 +78,8 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         virtual void frameResponse(const TupFrameResponse *event);
         virtual void sceneResponse(const TupSceneResponse *event);
 
+        void addKeyPoints(TupPathItem *item);
+
     protected:
         virtual void keyPressEvent(QKeyEvent *event);
         virtual void keyReleaseEvent(QKeyEvent *event);
@@ -133,6 +135,9 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         QPen eraserPen;
         QGraphicsEllipseItem *eraserCircle;
         QPointF eraserDistance;
+
+        QList<TupEllipseItem *> route;
+        TupPathItem *lineItem;
 };
 
 #endif

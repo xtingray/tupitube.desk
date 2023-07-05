@@ -239,6 +239,8 @@ void PencilTool::release(const TupInputDeviceInformation *input, TupBrushManager
                                                                              0, QPoint(), gScene->getSpaceContext(), TupLibraryObject::Item, TupProjectRequest::Add,
                                                                              doc.toString());
             emit requested(&request);
+
+            // addKeyPoints(item);
         }
     } else { // Eraser Mode
         gScene->removeItem(eraserCircle);
@@ -515,6 +517,12 @@ void PencilTool::activeEraser(const QPointF &point)
                                                                                    TupLibraryObject::Item, TupProjectRequest::Remove);
                     emit requested(&event);
                 }
+
+                {
+                    TupPathItem *test = new TupPathItem;
+                    test->setPathFromString(segment1);
+                    addKeyPoints(test);
+                }
             } else {
                 qDebug() << "PencilTool::activeEraser() - Warning: Eraser action FAILED!";
             }
@@ -526,4 +534,45 @@ void PencilTool::activeEraser(const QPointF &point)
             qDebug() << "PencilTool::activeEraser() - NO match!!!";
         }
     }
+}
+
+void PencilTool::addKeyPoints(TupPathItem *item)
+{
+    QList<QPointF> points = item->keyNodes();
+    QList<QColor> colors = item->nodeColors();
+    QList<QString> tips = item->nodeTips();
+    int i = 0;
+
+    foreach (TupEllipseItem *item, route)
+        scene->removeItem(item);
+    route.clear();
+
+    if (lineItem)
+        scene->removeItem(lineItem);
+
+    QPainterPath path;
+    path.moveTo(points.at(0));
+
+    foreach (QPointF point, points) {
+        qreal radius = penWidth;
+        QPointF distance((radius + 2)/2, (radius + 2)/2);
+        QPen pointPen(colors.at(i), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        TupEllipseItem *ellipse = new TupEllipseItem(QRectF(point - distance,
+                                                                 QSize(static_cast<int>(radius + 2), static_cast<int>(radius + 2))));
+        ellipse->setPen(pointPen);
+        ellipse->setBrush(pointPen.brush());
+        ellipse->setToolTip(tips.at(i));
+        scene->includeObject(ellipse);
+        route << ellipse;
+
+        if (i > 0) {
+           path.lineTo(point);
+        }
+
+        i++;
+    }
+
+    lineItem = new TupPathItem;
+    lineItem->setPath(path);
+    scene->includeObject(lineItem);
 }
