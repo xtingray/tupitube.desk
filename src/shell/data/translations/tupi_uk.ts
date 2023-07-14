@@ -218,7 +218,7 @@
         <location filename="../../../plugins/tools/fill/filltool.cpp" line="98"/>
         <location filename="../../../plugins/tools/fill/filltool.cpp" line="100"/>
         <source>Fill Tool</source>
-        <translation>Засіб заповнення</translation>
+        <translation>Заповнення</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/fill/filltool.cpp" line="99"/>
@@ -1655,7 +1655,7 @@
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="104"/>
         <source>Shift + Arrows</source>
-        <translation>Shift + Стрелки</translation>
+        <translation>Shift + стрілки</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="104"/>
@@ -1665,7 +1665,7 @@
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="105"/>
         <source>Ctrl + Arrows</source>
-        <translation>Ctrl + Стрелки</translation>
+        <translation>Ctrl + стрілки</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="105"/>
