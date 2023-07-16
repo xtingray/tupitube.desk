@@ -60,7 +60,10 @@ GeometricTool::~GeometricTool()
 
 QList<TAction::ActionId> GeometricTool::keys() const
 {    
-    return QList<TAction::ActionId>() << TAction::Rectangle << TAction::Ellipse << TAction::Line;
+    return QList<TAction::ActionId>() << TAction::Rectangle
+                                      << TAction::Ellipse
+                                      << TAction::Line
+                                      << TAction::Triangle;
 }
 
 void GeometricTool::init(TupGraphicsScene *gScene)
@@ -116,6 +119,15 @@ void GeometricTool::setupActions()
     action3->setActionId(TAction::Line);
 
     geoActions.insert(TAction::Line, action3);
+
+    TAction *action4 = new TAction(QIcon(kAppProp->themeDir() + "icons/triangle.png"), tr("Triangle"), this);
+    action4->setShortcut(QKeySequence(tr("Ctrl+T")));
+    action4->setToolTip(tr("Triangle") + " - " + tr("Ctrl+T"));
+    triangleCursor = QCursor(kAppProp->themeDir() + "cursors/triangle.png", 2, 2);
+    action4->setCursor(triangleCursor);
+    action4->setActionId(TAction::Triangle);
+
+    geoActions.insert(TAction::Triangle, action4);
 }
 
 QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
@@ -197,6 +209,16 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 guideLine->setLine(QLineF(input->pos().x(), input->pos().y(), input->pos().x(), input->pos().y()));
                 gScene->includeObject(guideLine);
             }
+        } else if (toolId() == TAction::Triangle) {
+            added = false;
+            triangle = new TupPathItem();
+            triangle->setPen(brushManager->pen());
+            if (brushManager->brush().color().alpha() > 0)
+                triangle->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+            else
+                triangle->setBrush(brushManager->brush());
+
+            currentPoint = input->pos();
         }
     }
 }
@@ -212,12 +234,15 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
     Q_UNUSED(brushManager)
     Q_UNUSED(gScene)
     
-    if (toolId() == TAction::Rectangle || toolId() == TAction::Ellipse) {
+    if (toolId() == TAction::Rectangle || toolId() == TAction::Ellipse ||
+        toolId() == TAction::Triangle) {
         if (!added) {
             if (toolId() == TAction::Rectangle)
                 gScene->includeObject(rect);
-            else
+            else if (toolId() == TAction::Ellipse)
                 gScene->includeObject(ellipse);
+            else if (toolId() == TAction::Triangle)
+                gScene->includeObject(triangle);
             added = true;
         }
 
@@ -227,10 +252,14 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         int yInit = static_cast<int> (currentPoint.y());
 
         QRectF rectVar;
-        if (toolId() == TAction::Rectangle)
+        if (toolId() == TAction::Rectangle) {
             rectVar = rect->rect();
-        else
+        } else if (toolId() == TAction::Ellipse) {
             rectVar = ellipse->rect();
+        } else if (toolId() == TAction::Triangle) {
+            rectVar = QRectF(currentPoint, QSize(5, 5));
+            // rectVar.setBottomLeft(input->pos());
+        }
 
         int width = abs(xMouse - xInit);
         int height = abs(yMouse - yInit);
@@ -273,7 +302,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
                     rectVar.setTopLeft(target);
                 }
             }            
-        } else {
+        } else { // No proportion
             if (side) {
                 QPointF target;
                 if (xMouse >= xInit) {
@@ -323,10 +352,29 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
             }
         }
 
-        if (toolId() == TAction::Rectangle)
+        if (toolId() == TAction::Rectangle) {
             rect->setRect(rectVar);
-        else
+        } else if (toolId() == TAction::Ellipse) {
             ellipse->setRect(rectVar);
+        } else if (toolId() == TAction::Triangle) {
+            QPointF leftTopCorner = rectVar.topLeft();
+            QPointF rightBottomCorner = rectVar.bottomRight();
+
+            double topCornerX = leftTopCorner.x() + ((rightBottomCorner.x() - leftTopCorner.x())/2);
+            double topCornerY = leftTopCorner.y();
+            QPointF topCorner(topCornerX, topCornerY);
+            double leftCornerX = leftTopCorner.x();
+            double leftCornerY = rightBottomCorner.y();
+            QPointF leftCorner(leftCornerX, leftCornerY);
+
+            trianglePath = QPainterPath();
+            trianglePath.moveTo(topCorner);
+            trianglePath.cubicTo(rightBottomCorner, rightBottomCorner, rightBottomCorner);
+            trianglePath.cubicTo(leftCorner, leftCorner, leftCorner);
+            trianglePath.cubicTo(topCorner, topCorner, topCorner);
+
+            triangle->setPath(trianglePath);
+        }
     }
 }
 
@@ -350,6 +398,10 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
         ellipse->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(ellipse)->toXml(doc));
         point = QPoint(0, 0);
+    } else if (toolId() == TAction::Triangle) {
+        triangle->setBrush(fillBrush);
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(triangle)->toXml(doc));
+        point = triangle->pos();
     } else if (toolId() == TAction::Line) {
         return;
     }
@@ -383,6 +435,8 @@ QWidget *GeometricTool::configurator()
         toolType = GeometricSettings::Rectangle;
     else if (toolId() == TAction::Ellipse)
         toolType = GeometricSettings::Ellipse;
+    else if (toolId() == TAction::Triangle)
+        toolType = GeometricSettings::Triangle;
 
     configPanel = new GeometricSettings(toolType);
     connect(configPanel, SIGNAL(lineTypeChanged(GeometricSettings::LineType)),

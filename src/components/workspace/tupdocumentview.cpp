@@ -549,7 +549,7 @@ void TupDocumentView::loadPlugins()
         #endif
     }
 
-    QVector<TAction*> brushTools(3);
+    QVector<TAction*> brushTools(4);
     QVector<TAction*> tweenTools(7);
 
     foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
@@ -608,14 +608,6 @@ void TupDocumentView::loadPlugins()
                           connect(this, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
                       }
 
-                      if (toolId == TAction::Line) {
-                          brushTools[2] = action;
-
-                          TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
-                          connect(paintArea, SIGNAL(closeLine()), tool, SLOT(endItem()));
-                          connect(this, SIGNAL(closeLine()), tool, SLOT(endItem()));
-                      }
-
                       if (toolId == TAction::Rectangle) {
                           brushTools[0] = action;
                           shapesMenu->setDefaultAction(action);
@@ -624,8 +616,16 @@ void TupDocumentView::loadPlugins()
                       if (toolId == TAction::Ellipse)
                           brushTools[1] = action;
 
-                      // if (toolId == TAction::Text)
-                      //     textAction = action;
+                      if (toolId == TAction::Line) {
+                          brushTools[2] = action;
+
+                          TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
+                          connect(paintArea, SIGNAL(closeLine()), tool, SLOT(endItem()));
+                          connect(this, SIGNAL(closeLine()), tool, SLOT(endItem()));
+                      }
+
+                      if (toolId == TAction::Triangle)
+                          brushTools[3] = action;
                     }
                     break;
                     case TupToolInterface::Tweener:
@@ -895,6 +895,11 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                         action = static_cast<TAction *> (brushActions[2]);
                     }
                     break;
+                    case TAction::Triangle:
+                    {
+                        action = static_cast<TAction *> (brushActions[3]);
+                    }
+                    break;
                     case TAction::Text:
                     {
                         action = textAction;
@@ -1047,7 +1052,8 @@ void TupDocumentView::selectTool()
                         minWidth = 130;
                     */
                     } else {
-                        if (toolId == TAction::Rectangle || toolId == TAction::Ellipse || toolId == TAction::Line) {
+                        if (toolId == TAction::Rectangle || toolId == TAction::Ellipse ||
+                            toolId == TAction::Line || toolId == TAction::Triangle) {
                             minWidth = 130;
                             shapesMenu->setDefaultAction(action);
                             shapesMenu->setActiveAction(action);

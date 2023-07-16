@@ -52,7 +52,7 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
     Q_OBJECT
 
     public:
-        enum ToolType { Rectangle = 1, Ellipse, Line };
+        enum ToolType { Rectangle = 1, Ellipse, Line, Triangle };
         enum LineType { Bendable = 0, Straight };
 
         GeometricSettings(GeometricSettings::ToolType type, QWidget *parent = nullptr);

@@ -63,6 +63,9 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     } else if (type == GeometricSettings::Line) {
         pic = QPixmap(THEME_DIR + "icons/line.png");
         toolTitle->setToolTip(tr("Line Properties"));
+    } else if (type == GeometricSettings::Triangle) {
+        pic = QPixmap(THEME_DIR + "icons/triangle.png");
+        toolTitle->setToolTip(tr("Triangle Properties"));
     }
 
     toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));

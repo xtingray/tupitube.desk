@@ -102,6 +102,8 @@ void PencilTool::init(TupGraphicsScene *gScene)
 
     foreach (QGraphicsView *view, scene->views())
         view->setDragMode(QGraphicsView::NoDrag);
+
+    lineAdded = false;
 }
 
 void PencilTool::setZValueReferences()
@@ -473,7 +475,7 @@ void PencilTool::activeEraser(const QPointF &point)
             qDebug() << "-------------------------------------------------------";
             qDebug() << "PencilTool::activeEraser() - MATCH!!! MATCH!!! MATCH!!!";
             // qDebug() << "PencilTool::activeEraser() - eraser size ->" << eraserSize;
-            QPair<QString, QString> segments = item->extractPathSegments(point, eraserSize/2);
+            QPair<QString, QString> segments = item->recalculatePath(point, eraserSize/2);
             QString segment1 = segments.first;
             QString segment2 = segments.second;
 
@@ -538,16 +540,39 @@ void PencilTool::activeEraser(const QPointF &point)
 
 void PencilTool::addKeyPoints(TupPathItem *item)
 {
-    QList<QPointF> points = item->keyNodes();
-    QList<QColor> colors = item->nodeColors();
-    QList<QString> tips = item->nodeTips();
-    int i = 0;
+    #ifdef TUP_DEBUG
+        qDebug() << "[PencilTool::addKeyPoints()]";
+    #endif
 
     foreach (TupEllipseItem *item, route)
         scene->removeItem(item);
     route.clear();
 
-    if (lineItem)
+    if (!item) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PencilTool::addKeyPoints()] - Fatal Error: Path is NULL!";
+        #endif
+
+        return;
+    }
+
+    qDebug() << "[PencilTool::addKeyPoints()] - path ->" << item->pathToString();
+
+    QList<QPointF> points = item->keyNodes();
+    if (points.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[PencilTool::addKeyPoints()] - Fatal Error: Path item has no points!";
+        #endif
+
+        return;
+    }
+
+    QList<QColor> colors = item->nodeColors();
+    QList<QString> tips = item->nodeTips();
+    int i = 0;
+
+    // if (lineItem)
+    if (lineAdded)
         scene->removeItem(lineItem);
 
     QPainterPath path;
@@ -575,4 +600,5 @@ void PencilTool::addKeyPoints(TupPathItem *item)
     lineItem = new TupPathItem;
     lineItem->setPath(path);
     scene->includeObject(lineItem);
+    lineAdded = true;
 }

@@ -138,6 +138,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
 
         QList<TupEllipseItem *> route;
         TupPathItem *lineItem;
+        bool lineAdded;
 };
 
 #endif

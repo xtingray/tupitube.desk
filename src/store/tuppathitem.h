@@ -80,7 +80,7 @@ class TUPITUBE_EXPORT TupPathItem : public TupAbstractSerializable, public QGrap
         static QPainterPath brushPath(const QPainterPath &route, int tolerance);
         int nodesCount();
 
-        QPair<QString, QString> extractPathSegments(const QPointF &limitPoint, int tolerance);
+        QPair<QString, QString> recalculatePath(const QPointF &limitPoint, int tolerance);
 
     protected:
         virtual void dragEnterEvent(QGraphicsSceneDragDropEvent *event);

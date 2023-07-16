@@ -108,6 +108,8 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         TupRectItem *rect;
         TupEllipseItem *ellipse;
         TupLineItem *guideLine;
+        TupPathItem *triangle;
+        QPainterPath trianglePath;
         TupPathItem *linePath;
         TupGraphicsScene *scene;
         GeometricSettings *configPanel;
@@ -125,6 +127,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         QCursor squareCursor;
         QCursor circleCursor;
         QCursor lineCursor;
+        QCursor triangleCursor;
 
         bool straightMode;
 };
