@@ -92,6 +92,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
 
     private slots:
         void updateLineMode(GeometricSettings::LineType type);
+        void updateTriangleType(GeometricSettings::TriangleType type);
 
     signals:
         void closeHugeCanvas();
@@ -128,6 +129,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         QCursor circleCursor;
         QCursor lineCursor;
         QCursor triangleCursor;
+        GeometricSettings::TriangleType triangleType;
 
         bool straightMode;
 };

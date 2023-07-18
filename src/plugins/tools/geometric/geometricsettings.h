@@ -42,6 +42,7 @@
 #include <QBoxLayout>
 #include <QTextEdit>
 #include <QRadioButton>
+#include <QPushButton>
 
 /**
  * @author Gustav Gonzalez 
@@ -54,6 +55,7 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
     public:
         enum ToolType { Rectangle = 1, Ellipse, Line, Triangle };
         enum LineType { Bendable = 0, Straight };
+        enum TriangleType { Top = 0, Bottom, Left, Right, TopLeft, TopRight, BottomLeft, BottomRight };
 
         GeometricSettings(GeometricSettings::ToolType type, QWidget *parent = nullptr);
         ~GeometricSettings();
@@ -62,13 +64,18 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
 
     signals:
         void lineTypeChanged(GeometricSettings::LineType type);
+        void triangleTypeChanged(GeometricSettings::TriangleType type);
 
     private slots:
         void sendLineState(bool state);
+        void setTriangleDirection();
 
     private:
         QRadioButton *option1;
         QRadioButton *option2;
+
+        QButtonGroup* buttonsGroup;
+        TriangleType triangleType;
 };
 
 #endif

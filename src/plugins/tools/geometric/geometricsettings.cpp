@@ -40,6 +40,7 @@
 
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QButtonGroup>
 
 GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {
@@ -72,7 +73,44 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 
-    if (type == GeometricSettings::Line) {
+    if (type == GeometricSettings::Triangle) {
+        QLabel *label = new QLabel(tr("Direction"));
+        label->setAlignment(Qt::AlignHCenter);
+        layout->addWidget(label);
+
+        QGridLayout *toolboxLayout = new QGridLayout;
+        buttonsGroup = new QButtonGroup(this);
+
+        QList<QString> triangleLabels;
+        triangleLabels << "triangle.png" << "down_triangle.png" << "left_triangle.png" << "right_triangle.png";
+        triangleLabels << "topleft_triangle.png" << "topright_triangle.png" << "bottomleft_triangle.png" << "bottomright_triangle.png";
+
+        QList<QString> triangleTips;
+        triangleTips << tr("Top") << tr("Bottom") << tr("Left") << tr("Right");
+        triangleTips << tr("Top Left") << tr("Top Right") << tr("Bottom Left") << tr("Bottom Right");
+
+        for (int i=0; i<8; i++) {
+            QPushButton *button = new QPushButton();
+            button->setIcon(QIcon(THEME_DIR + "icons/" + triangleLabels[i]));
+            button->setToolTip(triangleTips.at(i));
+            button->setCheckable(true);
+            connect(button, SIGNAL(clicked()), this, SLOT(setTriangleDirection()));
+
+            if (i < 4)
+                toolboxLayout->addWidget(button, 0, i);
+            else
+                toolboxLayout->addWidget(button, 1, i - 4);
+
+            buttonsGroup->addButton(button, i);
+            if (i==0)
+                button->setChecked(true);
+        }
+
+        layout->addLayout(toolboxLayout);
+        layout->addSpacing(5);
+    }
+
+    if (type == GeometricSettings::Line || type == GeometricSettings::Triangle) {
         QGroupBox *groupBox = new QGroupBox(tr("Line Options"));
         QVBoxLayout *lineLayout = new QVBoxLayout(groupBox);
         option1 = new QRadioButton(tr("Bendable"));
@@ -94,7 +132,8 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     }
 
     QLabel *label = new QLabel(tr("Tips"));
-    label->setAlignment(Qt::AlignHCenter); 
+    label->setAlignment(Qt::AlignHCenter);
+    layout->addSpacing(10);
     layout->addWidget(label);
 
     mainLayout->addLayout(layout);
@@ -154,4 +193,10 @@ void GeometricSettings::updateLineType(int type)
         option1->setChecked(true);
         option1->blockSignals(false);
     }
+}
+
+void GeometricSettings::setTriangleDirection()
+{
+    triangleType = static_cast<TriangleType>(buttonsGroup->checkedId());
+    emit triangleTypeChanged(triangleType);
 }

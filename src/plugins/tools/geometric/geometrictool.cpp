@@ -84,6 +84,8 @@ void GeometricTool::init(TupGraphicsScene *gScene)
     if (type)
         straightMode = true;
 
+    triangleType = GeometricSettings::Top;
+
     if (configPanel && toolId() == TAction::Line)
         configPanel->updateLineType(type);
 
@@ -358,20 +360,105 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
             ellipse->setRect(rectVar);
         } else if (toolId() == TAction::Triangle) {
             QPointF leftTopCorner = rectVar.topLeft();
+            QPointF rightTopCorner = rectVar.topRight();
+            QPointF leftBottomCorner = rectVar.bottomLeft();
             QPointF rightBottomCorner = rectVar.bottomRight();
 
-            double topCornerX = leftTopCorner.x() + ((rightBottomCorner.x() - leftTopCorner.x())/2);
-            double topCornerY = leftTopCorner.y();
-            QPointF topCorner(topCornerX, topCornerY);
-            double leftCornerX = leftTopCorner.x();
-            double leftCornerY = rightBottomCorner.y();
-            QPointF leftCorner(leftCornerX, leftCornerY);
+            QPointF point1;
+            QPointF point2;
+            QPointF point3;
 
             trianglePath = QPainterPath();
-            trianglePath.moveTo(topCorner);
-            trianglePath.cubicTo(rightBottomCorner, rightBottomCorner, rightBottomCorner);
-            trianglePath.cubicTo(leftCorner, leftCorner, leftCorner);
-            trianglePath.cubicTo(topCorner, topCorner, topCorner);
+
+            switch(triangleType) {
+                case GeometricSettings::Top:
+                {
+                    double topCornerX = leftTopCorner.x() + ((rightBottomCorner.x() - leftTopCorner.x())/2);
+                    double topCornerY = leftTopCorner.y();
+
+                    point1 = QPointF(topCornerX, topCornerY);
+                    point2 = leftBottomCorner;
+                    point3 = rightBottomCorner;
+
+                    break;
+                }
+                case GeometricSettings::Bottom:
+                {
+                    point1 = leftTopCorner;
+                    point2 = rightTopCorner;
+
+                    double bottomCornerX = leftBottomCorner.x() + ((rightBottomCorner.x() - leftBottomCorner.x())/2);
+                    double bottomCornerY = leftBottomCorner.y();
+                    point3 = QPointF(bottomCornerX, bottomCornerY);
+
+                    break;
+                }
+                case GeometricSettings::Left:
+                {
+                    double leftCornerX = leftTopCorner.x();
+                    double leftCornerY = leftTopCorner.y() + ((leftBottomCorner.y() - leftTopCorner.y())/2);
+
+                    point1 = QPointF(leftCornerX, leftCornerY);
+                    point2 = rightTopCorner;
+                    point3 = rightBottomCorner;
+
+                    break;
+                }
+                case GeometricSettings::Right:
+                {
+                    double rightCornerX = rightTopCorner.x();
+                    double rightCornerY = rightTopCorner.y() + ((rightBottomCorner.y() - rightTopCorner.y())/2);
+
+                    point1 = QPointF(rightCornerX, rightCornerY);
+                    point2 = leftTopCorner;
+                    point3 = leftBottomCorner;
+
+                    break;
+                }
+                case GeometricSettings::TopLeft:
+                {
+                    point1 = leftTopCorner;
+                    point2 = rightTopCorner;
+                    point3 = leftBottomCorner;
+
+                    break;
+                }
+                case GeometricSettings::TopRight:
+                {
+                    point1 = rightTopCorner;
+                    point2 = leftTopCorner;
+                    point3 = rightBottomCorner;
+
+                    break;
+                }
+                case GeometricSettings::BottomLeft:
+                {
+                    point1 = leftBottomCorner;
+                    point2 = leftTopCorner;
+                    point3 = rightBottomCorner;
+
+                    break;
+                }
+                case GeometricSettings::BottomRight:
+                {
+                    point1 = rightBottomCorner;
+                    point2 = rightTopCorner;
+                    point3 = leftBottomCorner;
+
+                    break;
+                }
+            }
+            trianglePath.moveTo(point1);
+
+            if (straightMode) { // Straight Line
+                trianglePath.lineTo(point2);
+                trianglePath.lineTo(point3);
+                trianglePath.lineTo(point1);
+            } else { // Curve
+                trianglePath.cubicTo(point2, point2, point2);
+                trianglePath.cubicTo(point3, point3, point3);
+                trianglePath.cubicTo(point1, point1, point1);
+            }
 
             triangle->setPath(trianglePath);
         }
@@ -441,6 +528,8 @@ QWidget *GeometricTool::configurator()
     configPanel = new GeometricSettings(toolType);
     connect(configPanel, SIGNAL(lineTypeChanged(GeometricSettings::LineType)),
             this, SLOT(updateLineMode(GeometricSettings::LineType)));
+    connect(configPanel, SIGNAL(triangleTypeChanged(GeometricSettings::TriangleType)),
+            this, SLOT(updateTriangleType(GeometricSettings::TriangleType)));
 
     return configPanel;
 }
@@ -617,4 +706,9 @@ void GeometricTool::saveLineSettings()
         TCONFIG->setValue("LineType", 1);
     else
         TCONFIG->setValue("LineType", 0);
+}
+
+void GeometricTool::updateTriangleType(GeometricSettings::TriangleType type)
+{
+    triangleType = type;
 }
