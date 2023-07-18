@@ -259,8 +259,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         } else if (toolId() == TAction::Ellipse) {
             rectVar = ellipse->rect();
         } else if (toolId() == TAction::Triangle) {
-            rectVar = QRectF(currentPoint, QSize(5, 5));
-            // rectVar.setBottomLeft(input->pos());
+            rectVar = QRectF(currentPoint, QSize(0, 0));
         }
 
         int width = abs(xMouse - xInit);
@@ -564,6 +563,7 @@ void GeometricTool::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
+
         return;
     } else if (event->key() == Qt::Key_Control) {
         proportion = true;
@@ -690,7 +690,7 @@ void GeometricTool::frameResponse(const TupFrameResponse *event)
 void GeometricTool::updateLineMode(GeometricSettings::LineType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[GeometricTool::updateLineMode()] - type -> " << type;
+        qDebug() << "[GeometricTool::updateLineMode()] - type ->" << type;
     #endif
 
     if (type == GeometricSettings::Bendable)
