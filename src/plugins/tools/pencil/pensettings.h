@@ -62,8 +62,8 @@ class TUPITUBE_PLUGIN PenSettings : public QWidget
         void eraserSizeChanged(int value);
 
     public slots:
-        void enablePencilMode();
-        void enableEraserMode();
+        // void enablePencilMode();
+        // void enableEraserMode();
 
     private slots:
         void updateSmoothBox(bool enabled);

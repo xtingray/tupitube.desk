@@ -60,6 +60,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     layout->addWidget(pencilTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 
+    /*
     QPixmap pencilTarget(THEME_DIR + "icons/target.png");
     pencilButton = new QPushButton(pencilTarget, "");
     pencilButton->setCheckable(true);
@@ -77,6 +78,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     buttonsLayout->addWidget(eraserButton);
 
     layout->addLayout(buttonsLayout);
+    */
 
     smoothLabel = new QCheckBox;
     smoothLabel->setIcon(QIcon(QPixmap(THEME_DIR + "icons/smoothness.png")));
@@ -100,6 +102,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 
     layout->addWidget(pencilWidget);
 
+    /*
     TCONFIG->beginGroup("BrushParameters");
     int eraserValue = TCONFIG->value("EraserSize", 10).toInt();
     if (eraserValue > 40)
@@ -133,6 +136,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     eraserLayout->addWidget(eraserSizeBox, Qt::AlignHCenter);
 
     layout->addWidget(eraserWidget, Qt::AlignHCenter);
+    */
 
     mainLayout->addLayout(layout);
     mainLayout->addStretch(2);
@@ -145,6 +149,7 @@ PenSettings::~PenSettings()
     #endif
 }
 
+/*
 void PenSettings::enablePencilMode()
 {
     #ifdef TUP_DEBUG
@@ -176,6 +181,7 @@ void PenSettings::enableEraserMode()
 
     emit toolEnabled(EraserMode);
 }
+*/
 
 void PenSettings::updateSmoothBox(bool enabled)
 {

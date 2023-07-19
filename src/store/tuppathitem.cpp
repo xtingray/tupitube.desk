@@ -685,11 +685,6 @@ bool TupPathItem::pointMatchesPath(QPointF pos, float tolerance, PenTool tool)
     #endif
     */
 
-    qDebug() << "";
-    qDebug() << "";
-    qDebug() << "**********************************************************";
-    qDebug() << "[TupPathItem::pointMatchesPath()] - TESTING pos ->" << pos;
-
     int shift = 0;
     if (tool == EraserMode)
         shift = tolerance;
@@ -724,7 +719,7 @@ bool TupPathItem::pointMatchesPath(QPointF pos, float tolerance, PenTool tool)
 
     QPainterPath route = path();
     QPolygonF dots = route.toFillPolygon();
-    qDebug() << "[TupPathItem::pointMatchesPath()] - DOTS ->" << dots;
+    // qDebug() << "[TupPathItem::pointMatchesPath()] - DOTS ->" << dots;
     if (!dots.isEmpty())
         dots.removeLast();
 
@@ -748,7 +743,7 @@ bool TupPathItem::pointMatchesPath(QPointF pos, float tolerance, PenTool tool)
 
         pathPoints << dots.at(i+1);
     }
-    qDebug() << "[TupPathItem::pointMatchesPath()] - pathPoints.size() ->" << pathPoints.size();
+    // qDebug() << "[TupPathItem::pointMatchesPath()] - pathPoints.size() ->" << pathPoints.size();
 
     // Checking if point is part of a straight line segment
     if (pointIsPartOfLine(route, pos, tolerance, tool))
@@ -786,8 +781,8 @@ bool TupPathItem::pointMatchesPath(QPointF pos, float tolerance, PenTool tool)
                 qDebug() << "[TupPathItem::pointMatchesPath()] - Point is part of the path!";
             #endif
 
-            qDebug() << "distance ->" << distance;
-            qDebug() << "minimum ->" << minimum;
+            // qDebug() << "distance ->" << distance;
+            // qDebug() << "minimum ->" << minimum;
             if (distance < minimum) {
                 newNode = pathPoints.at(i);
                 minimum = distance;
@@ -1900,8 +1895,8 @@ bool TupPathItem::pointIsContainedBetweenFlatNodes(const QPointF &point1, const 
 
             // Measuring distance between point and line (point1-point2)
             qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
-            qDebug() << "   distance from line ->" << distance;
-            qDebug() << "   tolerance ->" << tolerance;
+            // qDebug() << "   distance from line ->" << distance;
+            // qDebug() << "   tolerance ->" << tolerance;
             if (distance <= tolerance)
                 return true;
         }
@@ -1918,8 +1913,8 @@ bool TupPathItem::pointIsContainedBetweenFlatNodes(const QPointF &point1, const 
 
             // Measuring distance between point and line (point1-point2)
             qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
-            qDebug() << "   distance from line ->" << distance;
-            qDebug() << "   tolerance ->" << tolerance;
+            // qDebug() << "   distance from line ->" << distance;
+            // qDebug() << "   tolerance ->" << tolerance;
             if (distance <= tolerance)
                 return true;
         }
@@ -1954,8 +1949,8 @@ bool TupPathItem::pointIsContainedBetweenFlatNodes(const QPointF &point1, const 
 
             // Measuring distance between point and line (point1-point2)
             qreal distance = TAlgorithm::distanceFromLine(point1, point2, point);
-            qDebug() << "   distance from line ->" << distance;
-            qDebug() << "   tolerance ->" << tolerance;
+            // qDebug() << "   distance from line ->" << distance;
+            // qDebug() << "   tolerance ->" << tolerance;
             if (distance <= tolerance)
                 return true;
         }
@@ -1974,7 +1969,7 @@ QList<QPointF> TupPathItem::keyNodes()
     QPainterPath route = path();
     int total = route.elementCount();
     QList<QPointF> points;
-    int dataCounter;
+    int dataCounter = -1;
 
     colors.clear();
     tips.clear();
@@ -2363,11 +2358,13 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
         qDebug() << "---";
     #endif
 
+    /*
     qDebug() << "[TupPathItem::recalculatePath()] - pathPoints.size() ->" << pathPoints.size();
     qDebug() << "[TupPathItem::recalculatePath()] - pathPoints ->" << pathPoints;
 
     if (!pathPoints.isEmpty())
         qDebug() << "[TupPathItem::recalculatePath()] - pathPoints.last() ->" << pathPoints.last();
+    */
 
     QPainterPath route = path();
     int elementsTotal = route.elementCount();
@@ -2382,10 +2379,12 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
 
     // bool isEarlyCurveNode = false;
 
+    /*
     qDebug() << "";
     qDebug() << "---";
     qDebug() << "[TupPathItem::recalculatePath()] - elementsTotal ->" << elementsTotal;
     qDebug() << "[TupPathItem::recalculatePath()] - DETECTING key point of the path...";
+    */
 
     // Getting the key points for the limit point (initPoint - endPoint)
     for(int i=0; i<elementsTotal; i++) {
@@ -2395,24 +2394,26 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
         switch (e.type) {                
             case QPainterPath::MoveToElement:
             {
-                qDebug() << "Tracing point - QPainterPath::MoveToElement...";
+                // qDebug() << "Tracing point - QPainterPath::MoveToElement...";
                 previewPoint = pathPoint;
 
+                /*
                 qDebug() << "MoveToElement - pathPoint ->" << pathPoint;
                 qDebug() << "MoveToElement - limitPoint ->" << limitPoint;
                 qDebug() << "MoveToElement - newNode ->" << newNode;
                 qDebug() << "MoveToElement - tolerance ->" << tolerance;
                 qDebug() << "MoveToElement - distance ->" << TAlgorithm::distance(pathPoint, limitPoint);
+                */
 
                 float distance = TAlgorithm::distance(pathPoint, limitPoint);
                 if (distance <= tolerance) {
-                    // advance = distance;
-                    // If the eraser is removing the last segment of the path
-                    qDebug() << "MoveToElement - pathPoints.size() ->" << pathPoints.size();
-                    qDebug() << "MoveToElement - pathPoints ->" << pathPoints;
+                    // advance = distance;                    
+                    // qDebug() << "MoveToElement - pathPoints.size() ->" << pathPoints.size();
+                    // qDebug() << "MoveToElement - pathPoints ->" << pathPoints;
 
+                    // If the eraser is removing the last segment of the path
                     if (pathPoints.size() == 2) {
-                        qDebug() << "MoveToElement - distance betweem first and last ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
+                        // qDebug() << "MoveToElement - distance betweem first and last ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
                         float dx = (pathPoints.first().x() - pathPoints.last().x()) / 2;
                         float dy = (pathPoints.first().y() - pathPoints.last().y()) / 2;
                         QPointF middlePoint = QPointF(pathPoints.first().x() + dx, pathPoints.first().y() + dy);
@@ -2427,47 +2428,49 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                         }
                     }
 
-                    qDebug() << "MoveToElement - found = TRUE!";
+                    // qDebug() << "MoveToElement - found = TRUE!";
                     found = true;
                     initBreakOn = true;
                     goto next;
                 } else {
+                    /*
                     qDebug() << "";
                     qDebug() << "MoveToElement - WARNING: point if TOO FAR from ->" << pathPoint;
                     qDebug() << "MoveToElement - tolerance ->" << tolerance;
                     qDebug() << "MoveToElement - distance ->" << TAlgorithm::distance(pathPoint, limitPoint);
                     qDebug() << "---";
                     qDebug() << "";
+                    */
                 }
             }
             break;
             case QPainterPath::LineToElement:
             {
-                qDebug() << "Tracing point - QPainterPath::LineToElement...";
+                // qDebug() << "Tracing point - QPainterPath::LineToElement...";
                 // Check if limit point is contained in this straight segment
                 if (pointIsContainedBetweenFlatNodes(previewPoint, pathPoint, limitPoint, tolerance, true)) {
                     if (pathPoints.size() == 2) { // Segment only has two nodes
-                        qDebug() << "LineToElement - distance ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
+                        // qDebug() << "LineToElement - distance ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
                         float dx = (pathPoints.first().x() - pathPoints.last().x()) / 2;
                         float dy = (pathPoints.first().y() - pathPoints.last().y()) / 2;
                         QPointF middlePoint = QPointF(pathPoints.first().x() + dx, pathPoints.first().y() + dy);
                         if (TAlgorithm::distance(limitPoint, middlePoint) <= tolerance &&
                             TAlgorithm::distance(pathPoints.first(), pathPoints.last()) <= tolerance) {
                             // Segment is too short, must be removed
-                            qDebug() << "[TupPathItem::recalculatePath()] - LineToElement - 2 Path was completely erased!";
+                            // qDebug() << "[TupPathItem::recalculatePath()] - LineToElement - 2 Path was completely erased!";
 
                             return QPair<QString, QString>("", "");
                         }
                     }
 
-                    qDebug() << "LineToElement - found = TRUE!";
-                    qDebug() << "";
+                    // qDebug() << "LineToElement - found = TRUE!";
+                    // qDebug() << "";
                     found = true;
 
                     if (nodeIndex == elementsTotal) {
-                        qDebug() << "nodeIndex ->" << nodeIndex;
-                        qDebug() << "elementsTotal ->" << elementsTotal;
-                        qDebug() << "lastPoint DETECTED!";
+                        // qDebug() << "nodeIndex ->" << nodeIndex;
+                        // qDebug() << "elementsTotal ->" << elementsTotal;
+                        // qDebug() << "lastPoint DETECTED!";
                         endBreakOn = true;
                     }
 
@@ -2479,14 +2482,14 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
             break;
             case QPainterPath::CurveToElement:
             {
-                qDebug() << "Tracing point - QPainterPath::CurveToElement...";
+                // qDebug() << "Tracing point - QPainterPath::CurveToElement...";
                 dataCounter = 0;
             }
             break;
             case QPainterPath::CurveToDataElement:
             {
-                qDebug() << "Tracing point - QPainterPath::CurveToDataElement...";
-                qDebug() << "*** flatCurveFlag ->" << flatCurveFlag;
+                // qDebug() << "Tracing point - QPainterPath::CurveToDataElement...";
+                // qDebug() << "*** flatCurveFlag ->" << flatCurveFlag;
 
                 if (dataCounter == 1) { // This is the node of the curve
                     if (flatCurveFlag) { // Flat curve segment
@@ -2495,7 +2498,7 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                         #endif
 
                         if (pathPoints.size() == 2) {
-                            qDebug() << "CurveToDataElement - distance ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
+                            // qDebug() << "CurveToDataElement - distance ->" << TAlgorithm::distance(pathPoints.first(), pathPoints.last());
                             float dx = (pathPoints.first().x() - pathPoints.last().x()) / 2;
                             float dy = (pathPoints.first().y() - pathPoints.last().y()) / 2;
                             QPointF middlePoint = QPointF(pathPoints.first().x() + dx, pathPoints.first().y() + dy);
@@ -2511,8 +2514,8 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                         }
 
                         if (pointIsContainedBetweenFlatNodes(previewPoint, pathPoint, limitPoint, tolerance, true)) {
-                            qDebug() << "[TupPathItem::recalculatePath()] - CurveToDataElement - Point is part of the FLAT segment!";
-                            qDebug() << "CurveTdDataElement - found = TRUE! - Flat Curve";
+                            // qDebug() << "[TupPathItem::recalculatePath()] - CurveToDataElement - Point is part of the FLAT segment!";
+                            // qDebug() << "CurveTdDataElement - found = TRUE! - Flat Curve";
 
                             /*
                             qDebug() << "*** tolerance ->" << tolerance;
@@ -2526,23 +2529,23 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                             //     isEarlyCurveNode = true;
 
                             if (nodeIndex == elementsTotal) {
-                                qDebug() << "   nodeIndex ->" << nodeIndex;
-                                qDebug() << "   elementsTotal ->" << elementsTotal;
-                                qDebug() << "   lastPoint DETECTED!";
+                                // qDebug() << "   nodeIndex ->" << nodeIndex;
+                                // qDebug() << "   elementsTotal ->" << elementsTotal;
+                                // qDebug() << "   lastPoint DETECTED!";
                                 endBreakOn = true;
                             }
 
                             goto next;
                         } else {
-                            qDebug() << "ERROR: Couldn't find point between flat nodes!";
+                            // qDebug() << "ERROR: Couldn't find point between flat nodes!";
                         }
                     } else { // Curve Segment
                         #ifdef TUP_DEBUG
                             qDebug() << "[TupPathItem::recalculatePath()] - CurveToDataElement - Evaluating CURVE nodes segment";
                         #endif
                         if (pointIsContainedBetweenNodes(previewPoint, pathPoint, limitPoint, tolerance)) {
-                            qDebug() << "Point was found in CURVE segment...";
-                            qDebug() << "CurveTdDataElement - found = TRUE! - Curve Segment";
+                            // qDebug() << "Point was found in CURVE segment...";
+                            // qDebug() << "CurveTdDataElement - found = TRUE! - Curve Segment";
                             found = true;
                             // if ((nodeIndex - 1) == 1)
                             //     isEarlyCurveNode = true;
@@ -2576,7 +2579,7 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
             qDebug() << "[TupPathItem::recalculatePath()] - Error: No INIT break and no END break!";
         #endif
 
-        qDebug() << "PATH ->" << pathToString();
+        // qDebug() << "PATH ->" << pathToString();
 
         return QPair<QString, QString>("-1", "-1");
     }
@@ -2596,6 +2599,7 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
     QPointF newPoint;
     // bool shiftDataElement = false;
 
+    /*
     qDebug() << "pathPoints.size() ->" << pathPoints.size();
     qDebug() << "elementsTotal ->" << elementsTotal;
     qDebug() << "";
@@ -2603,6 +2607,7 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
     qDebug() << "PATH RECREATION START HERE...";
     qDebug() << "initBreakOn ->" << initBreakOn;
     qDebug() << "endBreakOn ->" << endBreakOn;
+    */
 
     // Time to generate the path
     for(int i=0; i<elementsTotal; i++) {
@@ -2612,30 +2617,30 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
         switch (e.type) {
             case QPainterPath::MoveToElement:
             {
-                qDebug() << "Tracing segment - QPainterPath::MoveToElement...";
+                // qDebug() << "Tracing segment - QPainterPath::MoveToElement...";
                 nodesCounter++;
                 if (initBreakOn) {
                     // Recalculate first point here                    
                     for (int i=0; i<pathPoints.size(); i++) {
                         QPointF point = pathPoints.at(i);
                         if (TAlgorithm::distance(point, limitPoint) > tolerance) {
-                            qDebug() << "MoveToElement - P0 pathPoint ->" << pathPoint;
-                            qDebug() << "MoveToElement - P0 point ->" << point;
+                            // qDebug() << "MoveToElement - P0 pathPoint ->" << pathPoint;
+                            // qDebug() << "MoveToElement - P0 point ->" << point;
                             advance = TAlgorithm::distance(pathPoint, point);
                             newPoint = point;
-                            qDebug() << "[TupPathItem::recalculatePath()] - MoveToElement - ADDING New MoveToElement";
+                            // qDebug() << "[TupPathItem::recalculatePath()] - MoveToElement - ADDING New MoveToElement";
                             if (t != 'M') {
                                 t = 'M';
                                 parts1 << "M " + QString::number(point.x()) + " " + QString::number(point.y()) + " ";
                             } else {
                                 parts1 << QString::number(point.x()) + " " + QString::number(point.y()) + " ";
                             }
-                            qDebug() << "FLAG1 - parts1 ->" << parts1.last();
+                            // qDebug() << "FLAG1 - parts1 ->" << parts1.last();
                             break;
                         }
                     }
                 } else { // endBreakOn or middleBreakOn
-                    qDebug() << "[TupPathItem::recalculatePath()] - MoveToElement - ADDING original init point...";
+                    // qDebug() << "[TupPathItem::recalculatePath()] - MoveToElement - ADDING original init point...";
                     // Store element
                     if (t != 'M') {
                         t = 'M';
@@ -2643,43 +2648,45 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                     } else {
                         parts1 << QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                     }
-                    qDebug() << "FLAG2 - parts1 ->" << parts1.last();
+                    // qDebug() << "FLAG2 - parts1 ->" << parts1.last();
                 }
             }
             break;
             case QPainterPath::LineToElement:
             {
-                qDebug() << "Tracing segment - QPainterPath::LineToElement...";
+                // qDebug() << "Tracing segment - QPainterPath::LineToElement...";
                 nodesCounter++;
                 if (initBreakOn) { // Eraser is removing from the first node
                     if ((TAlgorithm::distance(pathPoint, newPoint) <= tolerance) && elementsTotal > 2) {
-                        qDebug() << "Replacing MoveToElement with LineToElement...";
+                        // qDebug() << "Replacing MoveToElement with LineToElement...";
                         parts1.removeLast();
                         t = 'M';
                         parts1 << "M " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
-                        qDebug() << "FLAG3 - parts1 ->" << parts1.last();
+                        // qDebug() << "FLAG3 - parts1 ->" << parts1.last();
                     } else {
-                        qDebug() << "[TupPathItem::recalculatePath()] - LineToElement - ADDING line element at ->" << pathPoint;
+                        // qDebug() << "[TupPathItem::recalculatePath()] - LineToElement - ADDING line element at ->" << pathPoint;
                         if (t != 'L') {
                             t = 'L';
                             parts1 << " L " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                         } else {
                             parts1 << QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                         }
-                        qDebug() << "FLAG4 - parts1 ->" << parts1.last();
+                        // qDebug() << "FLAG4 - parts1 ->" << parts1.last();
                     }
                 } else { // Eraser is removing from the last node
                     if (endBreakOn && (eCounter == nodeIndex)) {
                         int total = pathPoints.size()-1;
-                        qDebug() << "LineToElement - pathPoints.size() ->" << pathPoints.size();
+                        // qDebug() << "LineToElement - pathPoints.size() ->" << pathPoints.size();
                         for (int i=total; i>=0; i--) {
                             QPointF point = pathPoints.at(i);
+                            /*
                             qDebug() << "LineToElement - POINT ->" << point;
                             qDebug() << "LineToElement - distance ->" << TAlgorithm::distance(point, limitPoint);
                             qDebug() << "LineToElement - tolerance ->" << tolerance;
+                            */
                             if (TAlgorithm::distance(point, limitPoint) > tolerance) {
                                 if (i == 0) { // The distance of the path is zero
-                                    qDebug() << "LineToElement - Path length is ZERO! ->" << point;
+                                    // qDebug() << "LineToElement - Path length is ZERO! ->" << point;
                                     return QPair<QString, QString>("", "");
                                 }
 
@@ -2689,16 +2696,18 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                                 } else {
                                     parts1 << QString::number(point.x()) + " " + QString::number(point.y()) + " ";
                                 }
-                                qDebug() << "FLAG5 - parts1 ->" << parts1.last();
+                                // qDebug() << "FLAG5 - parts1 ->" << parts1.last();
                                 break;
                             }
                         }
                     } else {
                         // Line segment is inside the path
+                        /*
                         if (i == (elementsTotal-1))
                             qDebug() << "LineToElement - LINE node is last element of the path ->" << pathPoint;
                         else
                             qDebug() << "LineToElement - LINE node is inside the path ->" << pathPoint;
+                        */
 
                         if (t != 'L') {
                             t = 'L';
@@ -2706,16 +2715,16 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                         } else {
                             parts1 << QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                         }
-                        qDebug() << "FLAG6 - parts1 ->" << parts1.last();
+                        // qDebug() << "FLAG6 - parts1 ->" << parts1.last();
                     }
                 }
             }
             break;
             case QPainterPath::CurveToElement:
             {
-                qDebug() << "Tracing segment - QPainterPath::CurveToElement...";
+                // qDebug() << "Tracing segment - QPainterPath::CurveToElement...";
                 if (initBreakOn) { // Eraser is removing from the first node
-                    qDebug() << "QPainterPath::CurveToElement - initBreakOn -> true";
+                    // qDebug() << "QPainterPath::CurveToElement - initBreakOn -> true";
 
                     if (flatCurveFlag) {
                         if (t != 'C') {
@@ -2729,8 +2738,8 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                             QPainterPath::Element e = route.elementAt(i+1);
                             QPointF c2 = QPointF(e.x, e.y);
                             if ((pathPoint == c2) || TAlgorithm::distance(pathPoint, c2) < tolerance) { // C1 and C2 are too close
-                                qDebug() << "EARLY_NODE 1";
-                                qDebug() << "*** Calculating C1 for CURVE! - advance ->" << advance;
+                                // qDebug() << "EARLY_NODE 1";
+                                // qDebug() << "*** Calculating C1 for CURVE! - advance ->" << advance;
                                 if (t != 'C') {
                                     t = 'C';
                                     parts1 << " C " + QString::number(c2.x()) + " " + QString::number(c2.y()) + " ";
@@ -2738,8 +2747,8 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                                     parts1 << "  " + QString::number(c2.x()) + " " + QString::number(c2.y()) + " ";
                                 }
                             } else {
-                                qDebug() << "EARLY_NODE 2";
-                                qDebug() << "*** Calculating C1 for CURVE! - advance ->" << advance;
+                                // qDebug() << "EARLY_NODE 2";
+                                // qDebug() << "*** Calculating C1 for CURVE! - advance ->" << advance;
                                 QPointF c1 = getNewC1Element(pathPoint, c2, advance);
                                 if (t != 'C') {
                                     t = 'C';
@@ -2757,18 +2766,18 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                             }
                         }
                     }
-                    qDebug() << "FLAG7 - parts1 ->" << parts1.last();
+                    // qDebug() << "FLAG7 - parts1 ->" << parts1.last();
                 } else if (endBreakOn) { // Eraser is removing from the last node
-                    qDebug() << "QPainterPath::CurveToElement - endBreakOn -> true";
+                    // qDebug() << "QPainterPath::CurveToElement - endBreakOn -> true";
                     if (t != 'C') {
                         t = 'C';
                         parts1 << " C " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                     } else {
                         parts1 << "  " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
                     }
-                    qDebug() << "FLAG8 - parts1 ->" << parts1.last();
+                    // qDebug() << "FLAG8 - parts1 ->" << parts1.last();
                 } else {
-                    qDebug() << "CurveToElement -> NO DATA!";
+                    // qDebug() << "CurveToElement -> NO DATA!";
                 }
 
                 dataCounter = 0;
@@ -2776,18 +2785,20 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
             break;
             case QPainterPath::CurveToDataElement:
             {
+                /*
                 qDebug() << "Tracing segment - QPainterPath::CurveToDataElement...";
 
                 qDebug() << "---";
                 qDebug() << "CurveToDataElement - eCounter ->" << eCounter;
                 qDebug() << "CurveToDataElement - nodeIndex ->" << nodeIndex;
                 qDebug() << "---";
+                */
 
                 if (dataCounter == 1)
                     nodesCounter++;
 
                 if (initBreakOn) { // Removing path from the beginning
-                    qDebug() << "CurveToDataElement - initBreakOn ->" << initBreakOn;
+                    // qDebug() << "CurveToDataElement - initBreakOn ->" << initBreakOn;
                     if (dataCounter == 0) { // C2 point
                         if (eCounter == 3) { // Curve is next to the MoveElement
                             QPainterPath::Element e = route.elementAt(i+1);
@@ -2800,7 +2811,7 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                                     parts1 << "  " + QString::number(node.x()) + " " + QString::number(node.y()) + " ";
                                 }
                             } else {
-                                qDebug() << "*** Calculating C2 for CURVE! - advance ->" << advance;
+                                // qDebug() << "*** Calculating C2 for CURVE! - advance ->" << advance;
                                 QPointF c2 = getNewC1Element(pathPoint, node, advance);
                                 if (t != 'C') {
                                     t = 'C';
@@ -2820,63 +2831,65 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                     } else if (dataCounter == 1) { // Node Point
                         if ((elementsTotal == 4) && (TAlgorithm::distance(pathPoints.first(), pathPoints.last()) <= tolerance)) {
                             // Just 2 nodes and the path is too short
-                            qDebug() << "[TupPathItem::recalculatePath()] - CurveToDataElement - Last part of the CURVE is TOO short!";
-                            qDebug() << "[TupPathItem::recalculatePath()] - Removing path...";
+                            // qDebug() << "[TupPathItem::recalculatePath()] - CurveToDataElement - Last part of the CURVE is TOO short!";
+                            // qDebug() << "[TupPathItem::recalculatePath()] - Removing path...";
 
                             return QPair<QString, QString>("", "");
                         } else if (flatCurveFlag && (elementsTotal > 4) && (TAlgorithm::distance(newPoint, pathPoint) <= tolerance)) {
                             // The curve point is too close to the MoveToElement point, so it must be replaced
+                            /*
                             qDebug() << "Warning: MovementElement and CURVE node are too close!";
                             qDebug() << "Warning: Replacing CURVE with MovementElement...";
                             qDebug() << "pathPoints.size() ->" << pathPoints.size();
+                            */
 
                             parts1.removeLast();
                             parts1.removeLast();
                             t = 'M';
                             parts1 << "M " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
-                            qDebug() << "FLAG9 - parts1 ->" << parts1.last();
+                            // qDebug() << "FLAG9 - parts1 ->" << parts1.last();
                         } else {
                             // Node is NOT a flat curve                           
                             if (eCounter == 4) { // Node is close to MoveElement
                                 if ((TAlgorithm::distance(pathPoint, newPoint) <= tolerance) && elementsTotal > 2) {
                                     // Node is too close, must be replaced by MoveElement
-                                    qDebug() << "Replacing MoveToElement with LineToElement...";
+                                    // qDebug() << "Replacing MoveToElement with LineToElement...";
                                     parts1.removeLast(); // MoveToElment
                                     parts1.removeLast(); // C1
                                     parts1.removeLast(); // C2
 
                                     t = 'M';
                                     parts1 << "M " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
-                                    qDebug() << "FLAG9A - parts1 ->" << parts1.last();
+                                    // qDebug() << "FLAG9A - parts1 ->" << parts1.last();
                                 } else { // First node
                                     parts1 << " " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
-                                    qDebug() << "CurveToDataElement - CURVE NODE";
-                                    qDebug() << "FLAG10 - parts1 ->" << parts1.last();
+                                    // qDebug() << "CurveToDataElement - CURVE NODE";
+                                    // qDebug() << "FLAG10 - parts1 ->" << parts1.last();
                                 }
                            } else { // Nodes far from the MoveElement
                                parts1 << " " + QString::number(pathPoint.x()) + " " + QString::number(pathPoint.y()) + " ";
-                               qDebug() << "CurveToDataElement - CURVE NODE";
-                               qDebug() << "FLAG10 - parts1 ->" << parts1.last();
+                               // qDebug() << "CurveToDataElement - CURVE NODE";
+                               // qDebug() << "FLAG10 - parts1 ->" << parts1.last();
                            }
                         }
                     }
                 } else if (endBreakOn) { // Removing last node of the path
                     if (flatCurveFlag && (eCounter == nodeIndex)) {
-                        qDebug() << "CurveToDataElement - Eraser is removing last flat node...";
+                        // qDebug() << "CurveToDataElement - Eraser is removing last flat node...";
                         int total = pathPoints.size()-1;
-                        qDebug() << "CurveToDataElement - pathPoints.size() ->" << pathPoints.size();
+                        // qDebug() << "CurveToDataElement - pathPoints.size() ->" << pathPoints.size();
                         for (int i=total; i>=0; i--) {
                             QPointF point = pathPoints.at(i);
-                            qDebug() << "CurveToDataElement - POINT ->" << point;
-                            qDebug() << "CurveToDataElement - distance ->" << TAlgorithm::distance(point, limitPoint);
-                            qDebug() << "CurveToDataElement - tolerance ->" << tolerance;
+                            // qDebug() << "CurveToDataElement - POINT ->" << point;
+                            // qDebug() << "CurveToDataElement - distance ->" << TAlgorithm::distance(point, limitPoint);
+                            // qDebug() << "CurveToDataElement - tolerance ->" << tolerance;
                             if (TAlgorithm::distance(point, limitPoint) > tolerance) {
                                 if (i == 0) { // The distance of the path is zero
-                                    qDebug() << "CurveToDataElement - Path length is ZERO! ->" << point;
+                                    // qDebug() << "CurveToDataElement - Path length is ZERO! ->" << point;
                                     return QPair<QString, QString>("", "");
                                 }
 
-                                qDebug() << "CurveToDataElement - Adding flat node!";
+                                // qDebug() << "CurveToDataElement - Adding flat node!";
 
                                 parts1.removeLast();
                                 parts1.removeLast();
@@ -2885,21 +2898,21 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
                                 t = 'C';
                                 parts1 << " C " + QString::number(point.x()) + " " + QString::number(point.y()) + " ";
 
-                                qDebug() << "FLAG9 - parts1 ->" << parts1.last();
+                                // qDebug() << "FLAG9 - parts1 ->" << parts1.last();
                                 parts1 << " " + QString::number(point.x()) + "  " + QString::number(point.y()) + " ";
-                                qDebug() << "FLAG10 - parts1 ->" << parts1.last();
+                                // qDebug() << "FLAG10 - parts1 ->" << parts1.last();
                                 parts1 << " " + QString::number(point.x()) + "  " + QString::number(point.y()) + " ";
-                                qDebug() << "FLAG11 - parts1 ->" << parts1.last();
+                                // qDebug() << "FLAG11 - parts1 ->" << parts1.last();
 
                                 break;
                             }
                         }
                     } else {
-                        qDebug() << "CurveToDataElement -> Adding MIDDLE nodes data!";
+                        // qDebug() << "CurveToDataElement -> Adding MIDDLE nodes data!";
                         parts1 << " " + QString::number(pathPoint.x()) + "  " + QString::number(pathPoint.y()) + " ";
                     }
                 } else {
-                    qDebug() << "CurveToDataElement -> Processing middle point!";
+                    // qDebug() << "CurveToDataElement -> Processing middle point!";
                 }
 
                 dataCounter++;
@@ -2910,7 +2923,7 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
 
     if (parts1.size() == 1) {
         // Segment is too short, must be removed
-        qDebug() << "[TupPathItem::recalculatePath()] - 3 Path was completely erased!";
+        // qDebug() << "[TupPathItem::recalculatePath()] - 3 Path was completely erased!";
 
         return QPair<QString, QString>("", "");
     }
@@ -2921,16 +2934,18 @@ QPair<QString, QString> TupPathItem::recalculatePath(const QPointF &limitPoint, 
     foreach(QString line, parts2)
         pathStr2 += line;
 
-    qDebug() << "pathStr1 ->" << pathStr1;
-    qDebug() << "pathStr2 ->" << pathStr2;
+    // qDebug() << "pathStr1 ->" << pathStr1;
+    // qDebug() << "pathStr2 ->" << pathStr2;
 
     return QPair<QString, QString>(pathStr1, pathStr2);
 }
 
 QPointF TupPathItem::getNewC1Element(const QPointF &c1, const QPointF &c2, float advance)
 {
+    /*
     qDebug() << "";
     qDebug() << "[TupPathItem::getNewC1Element()] - advance ->" << advance;
+    */
 
     QPointF point;
 
@@ -2948,6 +2963,7 @@ QPointF TupPathItem::getNewC1Element(const QPointF &c1, const QPointF &c2, float
     point.setX(x);
     point.setY(y);
 
+    /*
     qDebug() << "[TupPathItem::getNewC1Element()] - m ->" << m;
     qDebug() << "[TupPathItem::getNewC1Element()] - b ->" << b;
     qDebug() << "[TupPathItem::getNewC1Element()] - x ->" << x;
@@ -2955,6 +2971,7 @@ QPointF TupPathItem::getNewC1Element(const QPointF &c1, const QPointF &c2, float
 
     qDebug() << "[TupPathItem::getNewC1Element()] - C1 POINT ->" << point;
     qDebug() << "---";
+    */
 
     return point;
 }

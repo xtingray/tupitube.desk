@@ -75,7 +75,7 @@ void PencilTool::init(TupGraphicsScene *gScene)
     #endif
 
     currentTool = PencilMode;
-    settings->enablePencilMode();
+    // settings->enablePencilMode();
 
     scene = gScene;
     brushManager = scene->getBrushManager();
