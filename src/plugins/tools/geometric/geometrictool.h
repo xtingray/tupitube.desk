@@ -93,6 +93,7 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
     private slots:
         void updateLineMode(GeometricSettings::LineType type);
         void updateTriangleType(GeometricSettings::TriangleType type);
+        void updateHexagonType(GeometricSettings::HexagonType type);
 
     signals:
         void closeHugeCanvas();
@@ -109,9 +110,12 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         TupRectItem *rect;
         TupEllipseItem *ellipse;
         TupLineItem *guideLine;
-        TupPathItem *triangle;
+        TupPathItem *triangle;        
         QPainterPath trianglePath;
         TupPathItem *linePath;
+        TupPathItem *hexagon;
+        QPainterPath hexagonPath;
+
         TupGraphicsScene *scene;
         GeometricSettings *configPanel;
         bool added;
@@ -129,7 +133,9 @@ class TUPITUBE_PLUGIN GeometricTool : public TupToolPlugin
         QCursor circleCursor;
         QCursor lineCursor;
         QCursor triangleCursor;
+        QCursor hexagonCursor;
         GeometricSettings::TriangleType triangleType;
+        GeometricSettings::HexagonType hexagonType;
 
         bool straightMode;
 };

@@ -53,9 +53,10 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
     Q_OBJECT
 
     public:
-        enum ToolType { Rectangle = 1, Ellipse, Line, Triangle };
+        enum ToolType { Rectangle = 1, Ellipse, Line, Triangle, Hexagon };
         enum LineType { Bendable = 0, Straight };
         enum TriangleType { Top = 0, Bottom, Left, Right, TopLeft, TopRight, BottomLeft, BottomRight };
+        enum HexagonType { Horizontal = 0, Vertical };
 
         GeometricSettings(GeometricSettings::ToolType type, QWidget *parent = nullptr);
         ~GeometricSettings();
@@ -65,10 +66,12 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
     signals:
         void lineTypeChanged(GeometricSettings::LineType type);
         void triangleTypeChanged(GeometricSettings::TriangleType type);
+        void hexagonTypeChanged(GeometricSettings::HexagonType type);
 
     private slots:
         void sendLineState(bool state);
         void setTriangleDirection();
+        void setHexagonDirection();
 
     private:
         QRadioButton *option1;
@@ -76,6 +79,7 @@ class TUPITUBE_PLUGIN GeometricSettings : public QWidget
 
         QButtonGroup* buttonsGroup;
         TriangleType triangleType;
+        HexagonType hexagonType;
 };
 
 #endif

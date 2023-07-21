@@ -49,7 +49,7 @@ class T_GUI_EXPORT TAction : public QAction
     Q_OBJECT
 
     public:
-        enum ActionId { NoAction = -1, Pencil, Ink, Polyline, Rectangle, Ellipse, Line, Triangle,
+        enum ActionId { NoAction = -1, Pencil, Ink, Polyline, Rectangle, Ellipse, Line, Triangle, Hexagon,
                         FillTool, Text, Motion, Rotation, Scale, Shear, Color, Opacity,
                         ObjectSelection, NodesEditor, LipSyncTool, Eraser, ExportImage, PostImage,
                         ColorPalette, Right_Arrow, Left_Arrow, Down_Arrow, Up_Arrow, Right_QuickCopy,

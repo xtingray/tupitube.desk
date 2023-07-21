@@ -549,7 +549,7 @@ void TupDocumentView::loadPlugins()
         #endif
     }
 
-    QVector<TAction*> brushTools(4);
+    QVector<TAction*> geometricTools(5);
     QVector<TAction*> tweenTools(7);
 
     foreach (QObject *plugin, TupPluginManager::instance()->getTools()) {
@@ -609,15 +609,15 @@ void TupDocumentView::loadPlugins()
                       }
 
                       if (toolId == TAction::Rectangle) {
-                          brushTools[0] = action;
+                          geometricTools[0] = action;
                           shapesMenu->setDefaultAction(action);
                       }
 
                       if (toolId == TAction::Ellipse)
-                          brushTools[1] = action;
+                          geometricTools[1] = action;
 
                       if (toolId == TAction::Line) {
-                          brushTools[2] = action;
+                          geometricTools[2] = action;
 
                           TupToolPlugin *tool = qobject_cast<TupToolPlugin *>(action->parent());
                           connect(paintArea, SIGNAL(closeLine()), tool, SLOT(endItem()));
@@ -625,7 +625,10 @@ void TupDocumentView::loadPlugins()
                       }
 
                       if (toolId == TAction::Triangle)
-                          brushTools[3] = action;
+                          geometricTools[3] = action;
+
+                      if (toolId == TAction::Hexagon)
+                          geometricTools[4] = action;
                     }
                     break;
                     case TupToolInterface::Tweener:
@@ -695,8 +698,8 @@ void TupDocumentView::loadPlugins()
         }
     } // end foreach
 
-    for (int i = 0; i < brushTools.size(); ++i)
-         shapesMenu->addAction(brushTools.at(i));
+    for (int i = 0; i < geometricTools.size(); ++i)
+         shapesMenu->addAction(geometricTools.at(i));
 
     for (int i = 0; i < 6; ++i)
          motionMenu->addAction(tweenTools.at(i));
@@ -770,7 +773,7 @@ void TupDocumentView::loadPlugins()
     toolbar->addSeparator();
     toolbar->addAction(miscMenu->menuAction());
 
-    brushTools.clear();
+    geometricTools.clear();
     tweenTools.clear();
 
     pencilAction->trigger();
@@ -1053,7 +1056,7 @@ void TupDocumentView::selectTool()
                     */
                     } else {
                         if (toolId == TAction::Rectangle || toolId == TAction::Ellipse ||
-                            toolId == TAction::Line || toolId == TAction::Triangle) {
+                            toolId == TAction::Line || toolId == TAction::Triangle || toolId == TAction::Hexagon) {
                             minWidth = 130;
                             shapesMenu->setDefaultAction(action);
                             shapesMenu->setActiveAction(action);

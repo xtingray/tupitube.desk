@@ -63,7 +63,8 @@ QList<TAction::ActionId> GeometricTool::keys() const
     return QList<TAction::ActionId>() << TAction::Rectangle
                                       << TAction::Ellipse
                                       << TAction::Line
-                                      << TAction::Triangle;
+                                      << TAction::Triangle
+                                      << TAction::Hexagon;
 }
 
 void GeometricTool::init(TupGraphicsScene *gScene)
@@ -85,6 +86,7 @@ void GeometricTool::init(TupGraphicsScene *gScene)
         straightMode = true;
 
     triangleType = GeometricSettings::Top;
+    hexagonType = GeometricSettings::Horizontal;
 
     if (configPanel && toolId() == TAction::Line)
         configPanel->updateLineType(type);
@@ -125,11 +127,20 @@ void GeometricTool::setupActions()
     TAction *action4 = new TAction(QIcon(kAppProp->themeDir() + "icons/triangle.png"), tr("Triangle"), this);
     action4->setShortcut(QKeySequence(tr("Ctrl+T")));
     action4->setToolTip(tr("Triangle") + " - " + tr("Ctrl+T"));
-    triangleCursor = QCursor(kAppProp->themeDir() + "cursors/triangle.png", 2, 2);
+    triangleCursor = QCursor(kAppProp->themeDir() + "cursors/triangle.png", 5, 3);
     action4->setCursor(triangleCursor);
     action4->setActionId(TAction::Triangle);
 
     geoActions.insert(TAction::Triangle, action4);
+
+    TAction *action5 = new TAction(QIcon(kAppProp->themeDir() + "icons/hexagon.png"), tr("Hexagon"), this);
+    action5->setShortcut(QKeySequence(tr("H")));
+    action5->setToolTip(tr("Hexagon") + " - " + tr("H"));
+    hexagonCursor = QCursor(kAppProp->themeDir() + "cursors/hexagon.png", 5, 4);
+    action5->setCursor(hexagonCursor);
+    action5->setActionId(TAction::Hexagon);
+
+    geoActions.insert(TAction::Hexagon, action5);
 }
 
 QBrush GeometricTool::setLiteBrush(QColor c, Qt::BrushStyle style)
@@ -221,6 +232,16 @@ void GeometricTool::press(const TupInputDeviceInformation *input, TupBrushManage
                 triangle->setBrush(brushManager->brush());
 
             currentPoint = input->pos();
+        } else if (toolId() == TAction::Hexagon) {
+            added = false;
+            hexagon = new TupPathItem();
+            hexagon->setPen(brushManager->pen());
+            if (brushManager->brush().color().alpha() > 0)
+                hexagon->setBrush(setLiteBrush(brushManager->brush().color(), brushManager->brush().style()));
+            else
+                hexagon->setBrush(brushManager->brush());
+
+            currentPoint = input->pos();
         }
     }
 }
@@ -237,7 +258,7 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
     Q_UNUSED(gScene)
     
     if (toolId() == TAction::Rectangle || toolId() == TAction::Ellipse ||
-        toolId() == TAction::Triangle) {
+        toolId() == TAction::Triangle || toolId() == TAction::Hexagon) {
         if (!added) {
             if (toolId() == TAction::Rectangle)
                 gScene->includeObject(rect);
@@ -245,6 +266,8 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
                 gScene->includeObject(ellipse);
             else if (toolId() == TAction::Triangle)
                 gScene->includeObject(triangle);
+            else if (toolId() == TAction::Hexagon)
+                gScene->includeObject(hexagon);
             added = true;
         }
 
@@ -259,6 +282,8 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
         } else if (toolId() == TAction::Ellipse) {
             rectVar = ellipse->rect();
         } else if (toolId() == TAction::Triangle) {
+            rectVar = QRectF(currentPoint, QSize(0, 0));
+        } else if (toolId() == TAction::Hexagon) {
             rectVar = QRectF(currentPoint, QSize(0, 0));
         }
 
@@ -459,7 +484,60 @@ void GeometricTool::move(const TupInputDeviceInformation *input, TupBrushManager
                 trianglePath.cubicTo(point1, point1, point1);
             }
 
-            triangle->setPath(trianglePath);
+            triangle->setPath(trianglePath);        
+        } else if (toolId() == TAction::Hexagon) {
+            QPointF leftTopCorner = rectVar.topLeft();
+            QPointF rightTopCorner = rectVar.topRight();
+            QPointF rightBottomCorner = rectVar.bottomRight();
+            QPointF leftBottomCorner = rectVar.bottomLeft();
+
+            hexagonPath = QPainterPath();
+
+            QList<QPointF> points;
+
+            if (hexagonType == GeometricSettings::Horizontal) {
+                int xSide = (rightTopCorner.x() - leftTopCorner.x())/2;
+                int shortXSide = xSide/2;
+                int shortYSide = rectVar.height() / 11;
+
+                points << QPointF(leftTopCorner.x() + shortXSide, leftTopCorner.y() + shortYSide);
+                points << QPointF(leftTopCorner.x() + shortXSide + xSide, leftTopCorner.y() + shortYSide);
+                points << QPointF(rightTopCorner.x(), rightTopCorner.y() + ((rightBottomCorner.y() - rightTopCorner.y())/2));
+                points << QPointF(leftBottomCorner.x() + xSide + shortXSide, leftBottomCorner.y() - shortYSide);
+                points << QPointF(leftBottomCorner.x() + shortXSide, leftBottomCorner.y() - shortYSide);
+                points << QPointF(leftTopCorner.x(), rightTopCorner.y() + ((rightBottomCorner.y() - rightTopCorner.y())/2));
+            } else { // Vertical
+                int ySide = (rightBottomCorner.y() - rightTopCorner.y())/2;
+                int shortYSide = ySide/2;
+                int shortXSide = rectVar.width() / 11;
+
+                points << QPointF(leftTopCorner.x() + shortXSide, leftTopCorner.y() + shortYSide);
+                points << QPointF(leftTopCorner.x() + ((rightTopCorner.x() - leftTopCorner.x())/2), leftTopCorner.y());
+                points << QPointF(rightTopCorner.x() - shortXSide, leftTopCorner.y() + shortYSide);
+                points << QPointF(rightTopCorner.x() - shortXSide, leftTopCorner.y() + shortYSide + ySide);
+                points << QPointF(leftTopCorner.x() + ((rightTopCorner.x() - leftTopCorner.x())/2), leftBottomCorner.y());
+                points << QPointF(leftTopCorner.x() + shortXSide, leftTopCorner.y() + shortYSide + ySide);
+            }
+
+            hexagonPath.moveTo(points[0]);
+
+            if (straightMode) { // Straight Line
+                hexagonPath.lineTo(points[1]);
+                hexagonPath.lineTo(points[2]);
+                hexagonPath.lineTo(points[3]);
+                hexagonPath.lineTo(points[4]);
+                hexagonPath.lineTo(points[5]);
+                hexagonPath.lineTo(points[0]);
+            } else { // Curve
+                hexagonPath.cubicTo(points[1], points[1], points[1]);
+                hexagonPath.cubicTo(points[2], points[2], points[2]);
+                hexagonPath.cubicTo(points[3], points[3], points[3]);
+                hexagonPath.cubicTo(points[4], points[4], points[4]);
+                hexagonPath.cubicTo(points[5], points[5], points[5]);
+                hexagonPath.cubicTo(points[0], points[0], points[0]);
+            }
+
+            hexagon->setPath(hexagonPath);
         }
     }
 }
@@ -487,7 +565,11 @@ void GeometricTool::release(const TupInputDeviceInformation *input, TupBrushMana
     } else if (toolId() == TAction::Triangle) {
         triangle->setBrush(fillBrush);
         doc.appendChild(dynamic_cast<TupAbstractSerializable *>(triangle)->toXml(doc));
-        point = triangle->pos();
+        point = triangle->pos();        
+    } else if (toolId() == TAction::Hexagon) {
+        hexagon->setBrush(fillBrush);
+        doc.appendChild(dynamic_cast<TupAbstractSerializable *>(hexagon)->toXml(doc));
+        point = hexagon->pos();
     } else if (toolId() == TAction::Line) {
         return;
     }
@@ -523,12 +605,16 @@ QWidget *GeometricTool::configurator()
         toolType = GeometricSettings::Ellipse;
     else if (toolId() == TAction::Triangle)
         toolType = GeometricSettings::Triangle;
+    else if (toolId() == TAction::Hexagon)
+        toolType = GeometricSettings::Hexagon;
 
     configPanel = new GeometricSettings(toolType);
     connect(configPanel, SIGNAL(lineTypeChanged(GeometricSettings::LineType)),
             this, SLOT(updateLineMode(GeometricSettings::LineType)));
     connect(configPanel, SIGNAL(triangleTypeChanged(GeometricSettings::TriangleType)),
             this, SLOT(updateTriangleType(GeometricSettings::TriangleType)));
+    connect(configPanel, SIGNAL(hexagonTypeChanged(GeometricSettings::HexagonType)),
+            this, SLOT(updateHexagonType(GeometricSettings::HexagonType)));
 
     return configPanel;
 }
@@ -595,6 +681,8 @@ QCursor GeometricTool::toolCursor()
         return circleCursor;
     } else if (this->toolId() == TAction::Line) {
         return lineCursor;
+    } else if (this->toolId() == TAction::Hexagon) {
+        return hexagonCursor;
     }
 
     return QCursor(Qt::ArrowCursor);
@@ -711,4 +799,9 @@ void GeometricTool::saveLineSettings()
 void GeometricTool::updateTriangleType(GeometricSettings::TriangleType type)
 {
     triangleType = type;
+}
+
+void GeometricTool::updateHexagonType(GeometricSettings::HexagonType type)
+{
+    hexagonType = type;
 }

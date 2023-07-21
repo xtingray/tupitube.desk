@@ -67,6 +67,9 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     } else if (type == GeometricSettings::Triangle) {
         pic = QPixmap(THEME_DIR + "icons/triangle.png");
         toolTitle->setToolTip(tr("Triangle Properties"));
+    } else if (type == GeometricSettings::Hexagon) {
+        pic = QPixmap(THEME_DIR + "icons/hexagon.png");
+        toolTitle->setToolTip(tr("Hexagon Properties"));
     }
 
     toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
@@ -89,7 +92,7 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
         triangleTips << tr("Top") << tr("Bottom") << tr("Left") << tr("Right");
         triangleTips << tr("Top Left") << tr("Top Right") << tr("Bottom Left") << tr("Bottom Right");
 
-        for (int i=0; i<8; i++) {
+        for (int i=0; i<triangleLabels.size(); i++) {
             QPushButton *button = new QPushButton();
             button->setIcon(QIcon(THEME_DIR + "icons/" + triangleLabels[i]));
             button->setToolTip(triangleTips.at(i));
@@ -110,7 +113,42 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
         layout->addSpacing(5);
     }
 
-    if (type == GeometricSettings::Line || type == GeometricSettings::Triangle) {
+    if (type == GeometricSettings::Hexagon) {
+        QLabel *label = new QLabel(tr("Direction"));
+        label->setAlignment(Qt::AlignHCenter);
+        layout->addWidget(label);
+
+        QGridLayout *toolboxLayout = new QGridLayout;
+        buttonsGroup = new QButtonGroup(this);
+
+        QList<QString> hexagonLabels;
+        hexagonLabels << "hexagon.png" << "hexagon_vertical.png";
+
+        QList<QString> hexagonTips;
+        hexagonTips << tr("Horizontal") << tr("Vertical");
+
+        for (int i=0; i<hexagonLabels.size(); i++) {
+            QPushButton *button = new QPushButton();
+            button->setIcon(QIcon(THEME_DIR + "icons/" + hexagonLabels[i]));
+            button->setToolTip(hexagonTips.at(i));
+            button->setCheckable(true);
+            connect(button, SIGNAL(clicked()), this, SLOT(setHexagonDirection()));
+
+            if (i < 4)
+                toolboxLayout->addWidget(button, 0, i);
+            else
+                toolboxLayout->addWidget(button, 1, i - 4);
+
+            buttonsGroup->addButton(button, i);
+            if (i==0)
+                button->setChecked(true);
+        }
+
+        layout->addLayout(toolboxLayout);
+        layout->addSpacing(5);
+    }
+
+    if (type == GeometricSettings::Line || type == GeometricSettings::Triangle || type == GeometricSettings::Hexagon) {
         QGroupBox *groupBox = new QGroupBox(tr("Line Options"));
         QVBoxLayout *lineLayout = new QVBoxLayout(groupBox);
         option1 = new QRadioButton(tr("Bendable"));
@@ -168,7 +206,7 @@ GeometricSettings::~GeometricSettings()
 void GeometricSettings::sendLineState(bool state)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[GeometricSettings::sendLineState()] - state -> " << state;
+        qDebug() << "[GeometricSettings::sendLineState()] - state ->" << state;
     #endif
 
     if (option1->isChecked())
@@ -180,7 +218,7 @@ void GeometricSettings::sendLineState(bool state)
 void GeometricSettings::updateLineType(int type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[GeometricSettings::updateLineType()] - type -> " << type;
+        qDebug() << "[GeometricSettings::updateLineType()] - type ->" << type;
     #endif
 
     if (type) {
@@ -199,4 +237,10 @@ void GeometricSettings::setTriangleDirection()
 {
     triangleType = static_cast<TriangleType>(buttonsGroup->checkedId());
     emit triangleTypeChanged(triangleType);
+}
+
+void GeometricSettings::setHexagonDirection()
+{
+    hexagonType = static_cast<HexagonType>(buttonsGroup->checkedId());
+    emit hexagonTypeChanged(hexagonType);
 }

@@ -2885,6 +2885,16 @@
        y1="13.580935"
        x2="34.385086"
        y2="15.566815" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6246"
+       id="linearGradient10291-9"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(5.158227,0,0,-5.158227,296.79846,684.14686)"
+       x1="37.423405"
+       y1="13.234225"
+       x2="34.80064"
+       y2="15.968066" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -2893,9 +2903,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="350.01786"
-     inkscape:cy="1538.4876"
+     inkscape:zoom="7.9999999"
+     inkscape:cx="483"
+     inkscape:cy="1542.8125"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -2913,7 +2923,8 @@
     <sodipodi:guide
        position="182.16286,454.13614"
        orientation="1,0"
-       id="guide8173" />
+       id="guide8173"
+       inkscape:locked="true" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -11042,7 +11053,7 @@
     </g>
     <g
        id="g5080"
-       transform="matrix(0.04881307,0,0,0.04881307,661.71229,265.04628)"
+       transform="matrix(0.04881307,0,0,0.04881307,345.69093,265.04628)"
        inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/shift.png"
        inkscape:export-xdpi="3765.8701"
        inkscape:export-ydpi="3765.8701">
@@ -19604,13 +19615,10 @@
       </g>
     </g>
     <g
-       id="g9043-1-7-3"
-       transform="matrix(0.60762351,0,0,0.60762351,62.374476,358.3108)"
-       inkscape:export-xdpi="105.07"
-       inkscape:export-ydpi="105.07"
-       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/triangle.png">
+       id="g7816">
       <g
-         id="g9035-2-5-8">
+         id="g9035-2-5-8"
+         transform="matrix(0.60762351,0,0,0.60762351,68.827332,355.95973)">
         <path
            style="fill:url(#linearGradient10289);fill-opacity:1;stroke:none"
            d="m 286.20063,385.75223 c 3.78235,8.24672 7.56471,16.49345 11.34706,24.74018 -8.92562,0.50203 -17.85124,1.00407 -26.77686,1.5061 6.31437,-13.00201 10.72712,-18.17129 15.4298,-26.24628 z"
@@ -21273,6 +21281,44 @@
          inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/square_big.png"
          inkscape:export-xdpi="913.15002"
          inkscape:export-ydpi="913.15002" />
+    </g>
+    <g
+       id="g8721"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hexagon.png"
+       inkscape:export-xdpi="88.660004"
+       inkscape:export-ydpi="88.660004"
+       transform="matrix(0.87983122,0,0,0.87983122,54.803759,72.610194)">
+      <g
+         style="fill:none;stroke:#000000;stroke-width:15.9193;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="g7106"
+         transform="matrix(0.11870902,0,0,0.11870902,464.70681,589.54071)">
+        <path
+           d="M 69.364317,12.764967 138.566,12.375 l 46.185,80 -46.185,80 H 46.188 L 0,92.375 l 46.188,-80"
+           id="path7098"
+           style="fill:none;stroke:#000000;stroke-width:21.0639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           sodipodi:nodetypes="ccccccc" />
+      </g>
+      <path
+         style="fill:url(#linearGradient10291-9);fill-opacity:1;stroke:none;stroke-width:1.00019183;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 465.00336,600.39577 5.70348,9.78526 10.90595,0.0595 4.88322,-9.64666 -5.9683,-9.44571 z"
+         id="path4501-7-9-5-7-4"
+         inkscape:connector-curvature="0"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/square_big.png"
+         inkscape:export-xdpi="913.15002"
+         inkscape:export-ydpi="913.15002"
+         sodipodi:nodetypes="cccccc" />
+    </g>
+    <g
+       style="fill:#fffffc;stroke:#000000;stroke-width:18.53219459;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+       id="g11803"
+       transform="matrix(0.1079203,0,0,0.1079203,497.99321,590.33455)"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/cursors/hexagon.png"
+       inkscape:export-xdpi="43.150002"
+       inkscape:export-ydpi="43.150002">
+      <path
+         d="m 0,92.375 46.188,-80 h 92.378 l 46.185,80 -46.185,80 H 46.188 Z"
+         id="path11795"
+         style="fill:#fffffc;stroke:#000000;stroke-width:18.53219459;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1" />
     </g>
   </g>
 </svg>
