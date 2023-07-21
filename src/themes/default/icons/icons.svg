@@ -2895,6 +2895,16 @@
        y1="13.234225"
        x2="34.80064"
        y2="15.968066" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6246"
+       id="linearGradient10291-9-6"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(5.158227,0,0,-5.158227,296.79846,684.14686)"
+       x1="37.423405"
+       y1="13.234225"
+       x2="34.80064"
+       y2="15.968066" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -21283,42 +21293,78 @@
          inkscape:export-ydpi="913.15002" />
     </g>
     <g
-       id="g8721"
-       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hexagon.png"
-       inkscape:export-xdpi="88.660004"
-       inkscape:export-ydpi="88.660004"
-       transform="matrix(0.87983122,0,0,0.87983122,54.803759,72.610194)">
+       id="g22702">
       <g
-         style="fill:none;stroke:#000000;stroke-width:15.9193;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="g7106"
-         transform="matrix(0.11870902,0,0,0.11870902,464.70681,589.54071)">
+         id="g8721"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hexagon.png"
+         inkscape:export-xdpi="88.660004"
+         inkscape:export-ydpi="88.660004"
+         transform="matrix(0.87983122,0,0,0.87983122,54.803759,72.610194)">
+        <g
+           style="fill:none;stroke:#000000;stroke-width:15.9193;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="g7106"
+           transform="matrix(0.11870902,0,0,0.11870902,464.70681,589.54071)">
+          <path
+             d="M 69.364317,12.764967 138.566,12.375 l 46.185,80 -46.185,80 H 46.188 L 0,92.375 l 46.188,-80"
+             id="path7098"
+             style="fill:none;stroke:#000000;stroke-width:21.0639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             sodipodi:nodetypes="ccccccc" />
+        </g>
         <path
-           d="M 69.364317,12.764967 138.566,12.375 l 46.185,80 -46.185,80 H 46.188 L 0,92.375 l 46.188,-80"
-           id="path7098"
-           style="fill:none;stroke:#000000;stroke-width:21.0639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="ccccccc" />
+           style="fill:url(#linearGradient10291-9);fill-opacity:1;stroke:none;stroke-width:1.00019183;stroke-miterlimit:4;stroke-dasharray:none"
+           d="m 465.00336,600.39577 5.70348,9.78526 10.90595,0.0595 4.88322,-9.64666 -5.9683,-9.44571 z"
+           id="path4501-7-9-5-7-4"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/square_big.png"
+           inkscape:export-xdpi="913.15002"
+           inkscape:export-ydpi="913.15002"
+           sodipodi:nodetypes="cccccc" />
       </g>
-      <path
-         style="fill:url(#linearGradient10291-9);fill-opacity:1;stroke:none;stroke-width:1.00019183;stroke-miterlimit:4;stroke-dasharray:none"
-         d="m 465.00336,600.39577 5.70348,9.78526 10.90595,0.0595 4.88322,-9.64666 -5.9683,-9.44571 z"
-         id="path4501-7-9-5-7-4"
-         inkscape:connector-curvature="0"
-         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/square_big.png"
-         inkscape:export-xdpi="913.15002"
-         inkscape:export-ydpi="913.15002"
-         sodipodi:nodetypes="cccccc" />
     </g>
     <g
-       style="fill:#fffffc;stroke:#000000;stroke-width:18.53219459;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+       id="g22702-5"
+       transform="rotate(90,488.02311,615.52014)"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hexagon_down.png"
+       inkscape:export-xdpi="123.62"
+       inkscape:export-ydpi="123.62">
+      <g
+         id="g8721-5"
+         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hexagon.png"
+         inkscape:export-xdpi="88.660004"
+         inkscape:export-ydpi="88.660004"
+         transform="matrix(0.87983122,0,0,0.87983122,54.803759,72.610194)">
+        <g
+           style="fill:none;stroke:#000000;stroke-width:15.9193;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="g7106-6"
+           transform="matrix(0.11870902,0,0,0.11870902,464.70681,589.54071)">
+          <path
+             d="M 69.364317,12.764967 138.566,12.375 l 46.185,80 -46.185,80 H 46.188 L 0,92.375 l 46.188,-80"
+             id="path7098-0"
+             style="fill:none;stroke:#000000;stroke-width:21.0639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             sodipodi:nodetypes="ccccccc" />
+        </g>
+        <path
+           style="fill:url(#linearGradient10291-9-6);fill-opacity:1;stroke:none;stroke-width:1.00019;stroke-miterlimit:4;stroke-dasharray:none"
+           d="m 465.00336,600.39577 5.70348,9.78526 10.90595,0.0595 4.88322,-9.64666 -5.9683,-9.44571 z"
+           id="path4501-7-9-5-7-4-6"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/square_big.png"
+           inkscape:export-xdpi="913.15002"
+           inkscape:export-ydpi="913.15002"
+           sodipodi:nodetypes="cccccc" />
+      </g>
+    </g>
+    <g
+       style="fill:#fffffc;fill-opacity:1;stroke:#000000;stroke-width:18.5322;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="g11803"
-       transform="matrix(0.1079203,0,0,0.1079203,497.99321,590.33455)"
+       transform="matrix(0.1079203,0,0,0.1079203,520.7917,590.39138)"
        inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/cursors/hexagon.png"
        inkscape:export-xdpi="43.150002"
        inkscape:export-ydpi="43.150002">
       <path
          d="m 0,92.375 46.188,-80 h 92.378 l 46.185,80 -46.185,80 H 46.188 Z"
          id="path11795"
-         style="fill:#fffffc;stroke:#000000;stroke-width:18.53219459;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1" />
+         style="fill:#fffffc;fill-opacity:1;stroke:#000000;stroke-width:18.5322;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
   </g>
 </svg>
