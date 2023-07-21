@@ -240,67 +240,133 @@
 <context>
     <name>GeometricSettings</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="59"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="60"/>
         <source>Rectangle Properties</source>
         <translation>Propriedades de Retângulo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="62"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="63"/>
         <source>Ellipse Properties</source>
         <translation>Propriedades de Elipse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="65"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="66"/>
         <source>Line Properties</source>
         <translation>Propriedades de Linha</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="73"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="69"/>
+        <source>Triangle Properties</source>
+        <translation>Propriedades do Triângulo</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="72"/>
+        <source>Hexagon Properties</source>
+        <translation>Propriedades do Hexágono</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="80"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="117"/>
+        <source>Direction</source>
+        <translation>Direção</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Top</source>
+        <translation>Acima</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Bottom</source>
+        <translation>Abaixo</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Left</source>
+        <translation>Esquerda</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Right</source>
+        <translation>Direito</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Top Left</source>
+        <translation>Acima Esquerda</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Top Right</source>
+        <translation>Acima Direita</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Bottom Left</source>
+        <translation>Abaixo Esquerda</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Bottom Right</source>
+        <translation>Abaixo Dereita</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="128"/>
+        <source>Horizontal</source>
+        <translation>Horizontal</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="128"/>
+        <source>Vertical</source>
+        <translation>Vertical</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="152"/>
         <source>Line Options</source>
         <translation>Opções de Linha</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="75"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="154"/>
         <source>Bendable</source>
         <translation>Flexível</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="76"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="155"/>
         <source>Straight</source>
         <translation>Direta</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="172"/>
         <source>Tips</source>
         <translation>Dicas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="188"/>
         <source>Mouse Right Click or X Key</source>
         <translation>Clique com o botão direito ou Tecla X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="188"/>
         <source>Close the line path</source>
         <translation>Fechar o caminho da linha</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="189"/>
         <source>Shift</source>
         <translation>Shift</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="189"/>
         <source>Align line to horizontal/vertical axis</source>
         <translation>Alinhar linha ao eixo horizontal/vertical</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="191"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + Botão Esquerdo do Mouse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="191"/>
         <source>Set width/height proportional dimensions</source>
         <translation>Definir dimensões de largura/altura proporcionais</translation>
     </message>
@@ -308,38 +374,62 @@
 <context>
     <name>GeometricTool</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="93"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="95"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="100"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
         <source>Rectangle</source>
         <translation>Retângulo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="104"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="109"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
         <source>Ellipse</source>
         <translation>Elipse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="113"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="118"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="120"/>
         <source>Line</source>
         <translation>Linha</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="94"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="95"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="127"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="129"/>
+        <source>Triangle</source>
+        <translation>Triângulo</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="128"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="129"/>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="136"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="138"/>
+        <source>Hexagon</source>
+        <translation>Hexágono</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="137"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="138"/>
+        <source>H</source>
+        <translation>H</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="101"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="103"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="104"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="110"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="112"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="113"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="119"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="120"/>
         <source>L</source>
         <translation>L</translation>
     </message>
@@ -666,8 +756,8 @@
 <context>
     <name>NodesTool</name>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="766"/>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="768"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="772"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="774"/>
         <source>Nodes Selection</source>
         <translation>Seleção de Nodos</translation>
     </message>
@@ -687,23 +777,23 @@
         <translation>Únicamente linhas de lápis/tinta podem ser editadas!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="354"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="358"/>
         <source>Too many nodes!</source>
         <translation>Muitos nós!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="356"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="360"/>
         <source>The selected path contains too many nodes.</source>
         <translation>O caminho selecionado contém muitos nós.</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="357"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="361"/>
         <source>It will be simplified, so you can edit it.</source>
         <translation>Ele será simplificado, para que você possa editá-lo.</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="767"/>
-        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="768"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="773"/>
+        <location filename="../../../plugins/tools/nodes/nodestool.cpp" line="774"/>
         <source>N</source>
         <translation>N</translation>
     </message>
@@ -929,12 +1019,12 @@
 <context>
     <name>PenSettings</name>
     <message>
-        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="57"/>
+        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="58"/>
         <source>Pencil Properties</source>
         <translation>Propriedades do Lápis</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="72"/>
+        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="85"/>
         <source>Smoothness</source>
         <translation>Suavidade</translation>
     </message>
@@ -942,14 +1032,14 @@
 <context>
     <name>PencilTool</name>
     <message>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="58"/>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="60"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="62"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="64"/>
         <source>Pencil</source>
         <translation>Lápis</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="59"/>
-        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="60"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="63"/>
+        <location filename="../../../plugins/tools/pencil/penciltool.cpp" line="64"/>
         <source>P</source>
         <translation>P</translation>
     </message>
@@ -1681,19 +1771,19 @@
 <context>
     <name>SelectionTool</name>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="386"/>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="388"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="387"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="389"/>
         <source>Object Selection</source>
         <translation>Seleção de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="387"/>
         <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="388"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="389"/>
         <source>O</source>
         <translation>O</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="827"/>
+        <location filename="../../../plugins/tools/selection/selectiontool.cpp" line="828"/>
         <source>SVG objects can&apos;t be grouped/ungrouped yet</source>
         <translation>Objetos SVG ainda não podem ser agrupados/desagrupados</translation>
     </message>
@@ -3048,7 +3138,7 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="430"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1357"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1366"/>
         <source>Onion Skin Factor</source>
         <translation>Fator de Transparência</translation>
     </message>
@@ -3114,97 +3204,97 @@
         <translation>Formatos de Vídeo</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1291"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1300"/>
         <source>Vector Static BG Properties</source>
         <translation>Propriedades do Fundo Estático Vetorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1292"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1301"/>
         <source>Vector Dynamic BG Properties</source>
         <translation>Propriedades do Fundo Dinâmico  Vetorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1298"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1307"/>
         <source>Vector Static BG Mode</source>
         <translation>Fundo Estático Vetorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1299"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1308"/>
         <source>Vector Dynamic BG Mode</source>
         <translation>Fundo Dinâmico Vetorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1300"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1309"/>
         <source>Raster Static BG Mode</source>
         <translation>Fundo Estático Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1301"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1310"/>
         <source>Raster Dynamic BG Mode</source>
         <translation>Fundo Dinâmico Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1302"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1311"/>
         <source>Vector Foreground Mode</source>
         <translation>Modo de Primeiro Plano Vetorial</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1374"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1381"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1383"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1390"/>
         <source>Static BG Opacity</source>
         <translation>Opacidade de Fundo Estático</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1393"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1397"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1402"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1406"/>
         <source>Movement Orientation</source>
         <translation>Orientação de Movimento</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1398"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1407"/>
         <source>Right</source>
         <translation>Direito</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1399"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1408"/>
         <source>Left</source>
         <translation>Esquerda</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1400"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1409"/>
         <source>Up</source>
         <translation>Cima</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1401"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1410"/>
         <source>Down</source>
         <translation>Baixo</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1434"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1441"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1443"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1450"/>
         <source>Dynamic BG Opacity</source>
         <translation>Opacidade de Fundo Dinâmico</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1541"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1542"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1549"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1550"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1551"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1558"/>
         <source>Raster Objects</source>
         <translation>Objetos Raster</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1553"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1562"/>
         <source>Image imported successfully</source>
         <translation>Imagem importada com sucesso</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2189"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2198"/>
         <source>Please, close current camera dialog first!</source>
         <translation>Por favor, feche o diálogo atual da câmera primeiro!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2372"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2381"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
@@ -3229,8 +3319,8 @@
         <translation>Ferramentas Diversas</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="997"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2639"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1005"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2648"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -3245,53 +3335,53 @@
         <translation>Tamanho da Tela do Projeto</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1288"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
         <source>Paint area actions</source>
         <translation>Ações da área de desenho</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1306"/>
         <source>Frames Mode</source>
         <translation>Modo Quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1330"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1339"/>
         <source>Previous Frames</source>
         <translation>Quadros Anteriores</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1342"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1351"/>
         <source>Next Frames</source>
         <translation>Próximos Quadros</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1423"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1429"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1432"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1438"/>
         <source>Shift Length</source>
         <translation>Comprimento do Deslocamento</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2009"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2018"/>
         <source>Export Frame As</source>
         <translation>Exportar Quadro Como</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2010"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2019"/>
         <source>Images</source>
         <translation>Imagens</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2016"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2025"/>
         <source>Frame has been exported successfully</source>
         <translation>Quadro foi exportado com sucesso</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2018"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2027"/>
         <source>Can&apos;t export frame as image</source>
         <translation>Não é possível exportar quadro como imagem</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2304"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2313"/>
         <source>No cameras detected</source>
         <translation>Nenhuma câmera detetada</translation>
     </message>
@@ -3702,7 +3792,7 @@
 <context>
     <name>TupFrame</name>
     <message>
-        <location filename="../../../store/tupframe.cpp" line="253"/>
+        <location filename="../../../store/tupframe.cpp" line="262"/>
         <source>Frame</source>
         <translation>Quadro</translation>
     </message>
@@ -3770,7 +3860,7 @@
         <translation>Idioma:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="170"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="171"/>
         <source>Confirmation Dialogs</source>
         <translation>Diálogos de Confirmação</translation>
     </message>
@@ -3790,103 +3880,103 @@
         <translation>minutos</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="173"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="174"/>
         <source>Player</source>
         <translation>Reprodutor</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="199"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="200"/>
         <source>Cache Settings</source>
         <translation>Configurações de Cache</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="205"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="206"/>
         <source>The CACHE path is the folder where TupiTube creates temporary files while you work on your animation projects.&lt;br/&gt;&lt;b&gt;Note:&lt;/b&gt; Don&apos;t change this parameter unless you know what you are doing.</source>
         <translation>O caminho do CACHE é a pasta em que o TupiTube cria arquivos temporários enquanto você trabalha em seus projetos de animação.&lt;br/&gt;&lt;b&gt;Nota:&lt;/b&gt; Não altere esse parâmetro, a menos que saiba o que está fazendo.</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="216"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="217"/>
         <source>Choose another path</source>
         <translation>Escolha outro caminho</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="220"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="221"/>
         <source>CACHE Path: </source>
         <translation>Caminho do CACHE: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="224"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="225"/>
         <source>Restore default value</source>
         <translation>Restaurar valor padrão</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="252"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="253"/>
         <source>TupiTube Credentials</source>
         <translation>Credenciais do TupiTube</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="259"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="260"/>
         <source>Username / Email: </source>
         <translation>Nome de Usuário / E-mail:</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="262"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="263"/>
         <source>Password: </source>
         <translation>Senha: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="277"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="278"/>
         <source>Enable anonymous mode</source>
         <translation>Ativar modo anônimo</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="283"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="284"/>
         <source>Don&apos;t have a TupiTube account?</source>
         <translation>Não tem uma conta no TupiTube?</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="288"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="289"/>
         <source>Email: </source>
         <translation>Email: </translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="298"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="299"/>
         <source>Register</source>
         <translation>Registro</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="363"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="364"/>
         <source>Email is invalid. Please, fix it!</source>
         <translation>Email inválido. Por favor, conserte!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="370"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="371"/>
         <source>Email field is empty. Type one!</source>
         <translation>O campo Email está vazio. Digite um!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="388"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="389"/>
         <source>Error: Email already registered!</source>
         <translation>Erro: Email já registrado!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="400"/>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="408"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="401"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="409"/>
         <source>Please contact us at info@maefloresta.com</source>
         <translation>Entre em contato conosco em info@maefloresta.com</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="461"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="462"/>
         <source>Choose a directory...</source>
         <translation>Escolha um diretório...</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="511"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="512"/>
         <source>Cache path is empty. Set a value!</source>
         <translation>O caminho do Cache está vazio. Defina um valor!</translation>
     </message>
     <message>
-        <location filename="../../../libui/tupgeneralpreferences.cpp" line="518"/>
+        <location filename="../../../libui/tupgeneralpreferences.cpp" line="519"/>
         <source>Cache path doesn&apos;t exist. Create it!</source>
         <translation>O caminho do Cache não existe. Crie!</translation>
     </message>
@@ -3927,8 +4017,8 @@
 <context>
     <name>TupGraphicsScene</name>
     <message>
-        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1144"/>
-        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1192"/>
+        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1151"/>
+        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1199"/>
         <source>lipsync:</source>
         <translation>lipsync:</translation>
     </message>

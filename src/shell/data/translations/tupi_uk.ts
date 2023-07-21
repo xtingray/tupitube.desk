@@ -240,67 +240,133 @@
 <context>
     <name>GeometricSettings</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="59"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="60"/>
         <source>Rectangle Properties</source>
         <translation>Властивості прямокутника</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="62"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="63"/>
         <source>Ellipse Properties</source>
         <translation>Властивості еліпса</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="65"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="66"/>
         <source>Line Properties</source>
         <translation>Властивості лінії</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="73"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="69"/>
+        <source>Triangle Properties</source>
+        <translation>Властивості трикутника</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="72"/>
+        <source>Hexagon Properties</source>
+        <translation>Властивості шестикутника</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="80"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="117"/>
+        <source>Direction</source>
+        <translation>Напрям</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Top</source>
+        <translation>вершина</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Bottom</source>
+        <translation>донний</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Left</source>
+        <translation>Ліворуч</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="92"/>
+        <source>Right</source>
+        <translation>Праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Top Left</source>
+        <translation>Зліва вгорі</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Top Right</source>
+        <translation>Верхній правий</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Bottom Left</source>
+        <translation>Внизу зліва</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <source>Bottom Right</source>
+        <translation>Внизу праворуч</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="128"/>
+        <source>Horizontal</source>
+        <translation>Горизонтальний</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="128"/>
+        <source>Vertical</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="152"/>
         <source>Line Options</source>
         <translation>Параметри лінії</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="75"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="154"/>
         <source>Bendable</source>
         <translation>Гнучка</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="76"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="155"/>
         <source>Straight</source>
         <translation>Пряма</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="172"/>
         <source>Tips</source>
         <translation>Підказки</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="188"/>
         <source>Mouse Right Click or X Key</source>
         <translation>Клацніть правою кнопкою або натисніть клавішу «X»</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="188"/>
         <source>Close the line path</source>
         <translation>Замикання шляху лінії</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="189"/>
         <source>Shift</source>
         <translation>Shift</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="189"/>
         <source>Align line to horizontal/vertical axis</source>
         <translation>Вирівнювання лінії за горизонтальною/вертикальною віссю</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="191"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + ліва кнопка</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="111"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="191"/>
         <source>Set width/height proportional dimensions</source>
         <translation>Зберегти співвідношення ширина/висота</translation>
     </message>
@@ -308,38 +374,62 @@
 <context>
     <name>GeometricTool</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="93"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="95"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="100"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
         <source>Rectangle</source>
         <translation>Прямокутник</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="104"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="109"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
         <source>Ellipse</source>
         <translation>Еліпс</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="113"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="118"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="120"/>
         <source>Line</source>
         <translation>Лінія</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="94"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="95"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="127"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="129"/>
+        <source>Triangle</source>
+        <translation>Трикутник</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="128"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="129"/>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="136"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="138"/>
+        <source>Hexagon</source>
+        <translation>Шестикутник</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="137"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="138"/>
+        <source>H</source>
+        <translation>H</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="101"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="102"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="103"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="104"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="110"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="111"/>
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="112"/>
-        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="113"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="119"/>
+        <location filename="../../../plugins/tools/geometric/geometrictool.cpp" line="120"/>
         <source>L</source>
         <translation>L</translation>
     </message>
@@ -934,17 +1024,7 @@
         <translation>Властивості олівця</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="66"/>
-        <source>Pencil Mode</source>
-        <translation>Режим олівця</translation>
-    </message>
-    <message>
-        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="72"/>
-        <source>Eraser Mode</source>
-        <translation>Режим гумки</translation>
-    </message>
-    <message>
-        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="83"/>
+        <location filename="../../../plugins/tools/pencil/pensettings.cpp" line="85"/>
         <source>Smoothness</source>
         <translation>Згладжування</translation>
     </message>
@@ -3063,7 +3143,7 @@
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="430"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1357"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1366"/>
         <source>Onion Skin Factor</source>
         <translation>Коефіцієнт прозорості для калькування</translation>
     </message>
@@ -3129,38 +3209,38 @@
         <translation>Послідовність зображень</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1291"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1300"/>
         <source>Vector Static BG Properties</source>
         <translation>Властивості статичного векторного тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1292"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1301"/>
         <source>Vector Dynamic BG Properties</source>
         <translation>Властивості динамічного векторного тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1298"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1307"/>
         <source>Vector Static BG Mode</source>
         <translation>Режим статичного векторного тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1299"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1308"/>
         <source>Vector Dynamic BG Mode</source>
         <translation>Режим динамічного векторного тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1300"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1309"/>
         <source>Raster Static BG Mode</source>
         <translation>Режим статичного растрового тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1301"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1310"/>
         <source>Raster Dynamic BG Mode</source>
         <translation>Режим динамічного растрового тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="997"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2639"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1005"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2648"/>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -3190,118 +3270,118 @@
         <translation>Формати відео</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1288"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
         <source>Paint area actions</source>
         <translation>Дії області малювання</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1297"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1306"/>
         <source>Frames Mode</source>
         <translation>Покадровий режим</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1302"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1311"/>
         <source>Vector Foreground Mode</source>
         <translation>Режим векторного переднього плану</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1330"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1339"/>
         <source>Previous Frames</source>
         <translation>Попередні кадри</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1342"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1351"/>
         <source>Next Frames</source>
         <translation>Наступні кадри</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1374"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1381"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1383"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1390"/>
         <source>Static BG Opacity</source>
         <translation>Щільність статичного тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1393"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1397"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1402"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1406"/>
         <source>Movement Orientation</source>
         <translation>Напрям руху</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1398"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1407"/>
         <source>Right</source>
         <translation>Праворуч</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1399"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1408"/>
         <source>Left</source>
         <translation>Ліворуч</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1400"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1409"/>
         <source>Up</source>
         <translation>Вгору</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1401"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1410"/>
         <source>Down</source>
         <translation>Вниз</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1423"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1429"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1432"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1438"/>
         <source>Shift Length</source>
         <translation>Довжина зміщення</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1434"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1441"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1443"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1450"/>
         <source>Dynamic BG Opacity</source>
         <translation>Щільність динамічного тла</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1541"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1542"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1549"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1550"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1551"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1558"/>
         <source>Raster Objects</source>
         <translation>Растрові об&apos;єкти</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1553"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="1562"/>
         <source>Image imported successfully</source>
         <translation>Зображення імпортовано успішно</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2009"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2018"/>
         <source>Export Frame As</source>
         <translation>Експортувати кадр як</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2010"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2019"/>
         <source>Images</source>
         <translation>Зображення</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2016"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2025"/>
         <source>Frame has been exported successfully</source>
         <translation>Кадр експортовано успішно</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2018"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2027"/>
         <source>Can&apos;t export frame as image</source>
         <translation>Не вдалось експортувати кадр як зображення</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2189"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2198"/>
         <source>Please, close current camera dialog first!</source>
         <translation>Спочатку закрийте діалогове вікно поточної камери!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2304"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2313"/>
         <source>No cameras detected</source>
         <translation>Камери не виявлено</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2372"/>
+        <location filename="../../../components/workspace/tupdocumentview.cpp" line="2381"/>
         <source>Frame</source>
         <translation>Кадр</translation>
     </message>
@@ -3712,7 +3792,7 @@
 <context>
     <name>TupFrame</name>
     <message>
-        <location filename="../../../store/tupframe.cpp" line="253"/>
+        <location filename="../../../store/tupframe.cpp" line="262"/>
         <source>Frame</source>
         <translation>Кадр</translation>
     </message>
@@ -3937,8 +4017,8 @@
 <context>
     <name>TupGraphicsScene</name>
     <message>
-        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1144"/>
-        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1192"/>
+        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1151"/>
+        <location filename="../../../libbase/tupgraphicsscene.cpp" line="1199"/>
         <source>lipsync:</source>
         <translation>синхронізація губ:</translation>
     </message>

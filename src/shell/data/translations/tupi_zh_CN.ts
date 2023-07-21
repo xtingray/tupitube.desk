@@ -240,6 +240,58 @@
         <source>Straight</source>
         <translation>直的</translation>
     </message>
+    <message>
+        <source>Triangle Properties</source>
+        <translation>三角形属性</translation>
+    </message>
+    <message>
+        <source>Hexagon Properties</source>
+        <translation>六角形属性</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>方向</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation>顶部</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation>底部</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>左</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>右</translation>
+    </message>
+    <message>
+        <source>Top Left</source>
+        <translation>左上方</translation>
+    </message>
+    <message>
+        <source>Top Right</source>
+        <translation>右上</translation>
+    </message>
+    <message>
+        <source>Bottom Left</source>
+        <translation>左下方</translation>
+    </message>
+    <message>
+        <source>Bottom Right</source>
+        <translation>右下角</translation>
+    </message>
+    <message>
+        <source>Horizontal</source>
+        <translation>水平的</translation>
+    </message>
+    <message>
+        <source>Vertical</source>
+        <translation>垂直的</translation>
+    </message>
 </context>
 <context>
     <name>GeometricTool</name>
@@ -266,6 +318,22 @@
     <message>
         <source>Ellipse</source>
         <translation>椭圆</translation>
+    </message>
+    <message>
+        <source>Triangle</source>
+        <translation>三角形</translation>
+    </message>
+    <message>
+        <source>Ctrl+T</source>
+        <translation>Ctrl+T</translation>
+    </message>
+    <message>
+        <source>Hexagon</source>
+        <translation>六边形</translation>
+    </message>
+    <message>
+        <source>H</source>
+        <translation>H</translation>
     </message>
 </context>
 <context>
