@@ -644,8 +644,6 @@ void TupGraphicsScene::addGraphicObject(TupGraphicObject *object, TupFrame::Fram
             item->setOpacity(opacityFactor);
 
         if (!object->hasTweens() || !tweenInAdvance) {
-            qDebug() << "";
-            qDebug() << "[TupGraphicsScene::addGraphicObject()] - ZLEVEL ->" << zLevel;
             item->setZValue(zLevel);
             zLevel++;
         }

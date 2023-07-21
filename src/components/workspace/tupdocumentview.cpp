@@ -1110,7 +1110,6 @@ void TupDocumentView::selectTool()
                         connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
                                 tool, SLOT(initItems(TupGraphicsScene*)));
                     } else if (toolId == TAction::NodesEditor) {
-                        qDebug() << "[TupDocumentView::selectTool()] - Nodes editor panel activated!";
                         minWidth = 200;
                     }
                 }

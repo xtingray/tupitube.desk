@@ -1415,8 +1415,6 @@ int TupFrame::indexOf(QGraphicsItem *item) const
     if (item) {
         for (int i = 0; i < graphics.size(); i++) {
              TupGraphicObject *object = graphics.at(i);
-             qDebug() << "*** object->item()->zValue() ->" << object->item()->zValue();
-             qDebug() << "*** item->zValue() ->" << item->zValue();
 
              // if (static_cast<int>(object->item()->zValue()) == static_cast<int>(item->zValue()))
              if (static_cast<int>(object->itemZValue()) == static_cast<int>(item->zValue()))

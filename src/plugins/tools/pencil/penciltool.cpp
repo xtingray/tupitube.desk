@@ -94,7 +94,6 @@ void PencilTool::init(TupGraphicsScene *gScene)
     #endif
 
     qreal radius = eraserSize/2;
-    qDebug() << "*** RADIUS ->" << radius;
     eraserDistance = QPointF(radius + 2, radius + 2);
     eraserPen = QPen(Qt::red, 3, Qt::DotLine, Qt::RoundCap, Qt::RoundJoin);
     eraserCircle = new QGraphicsEllipseItem(0, 0, eraserSize, eraserSize);
