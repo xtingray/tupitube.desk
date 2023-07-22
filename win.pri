@@ -5,7 +5,7 @@ DESTDIR = release
 DEFINES += HAVE_FFMPEG
 # DEFINES += TUP_32BIT
 
-DEFINES += TUPITUBE_VERSION=\\\"0.2\\\" REVISION=\\\"20\\\" CODE_NAME=\\\"Marajó\\\" CONFIG_VERSION=\\\"5\\\"
+DEFINES += TUPITUBE_VERSION=\\\"0.2\\\" REVISION=\\\"21\\\" CODE_NAME=\\\"Acauã\\\" CONFIG_VERSION=\\\"5\\\"
 
 contains(DEFINES, TUP_DEBUG) {
     CONFIG += console
