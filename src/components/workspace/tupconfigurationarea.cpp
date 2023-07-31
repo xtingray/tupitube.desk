@@ -79,7 +79,8 @@ void TupConfigurationArea::setConfigurator(QWidget *w, int minWidth)
     setWidget(w);
     if (minWidth > 0) {
         setMinimumWidth(minWidth);
-        setMaximumWidth(minWidth);
+        // setBaseSize(minWidth, -1);
+        setMaximumWidth(minWidth*2);
     }
 
     showConfigurator();

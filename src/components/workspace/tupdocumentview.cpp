@@ -100,6 +100,8 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     photoCounter = 1;
     nodesScaleFactor = 1;
     screen = QGuiApplication::screens().at(0);
+    screenWidth = screen->geometry().width();
+    screenHeight = screen->geometry().height();
 
     actionManager = new TActionManager(this);
 
@@ -1050,10 +1052,6 @@ void TupDocumentView::selectTool()
                         minWidth = 130;
                         if (toolId == TAction::Pencil)
                             connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
-                    /*
-                    } else if (toolId == TAction::Text) {
-                        minWidth = 130;
-                    */
                     } else {
                         if (toolId == TAction::Rectangle || toolId == TAction::Ellipse ||
                             toolId == TAction::Line || toolId == TAction::Triangle || toolId == TAction::Hexagon) {
@@ -1106,7 +1104,12 @@ void TupDocumentView::selectTool()
                     status->enableFullScreenFeature(true);
                     if (toolId == TAction::ObjectSelection) {
                         tool->setProjectSize(project->getDimension());
+
                         minWidth = 130;
+                        // Big resolutions
+                        if (screenWidth > 1920)
+                            minWidth = (screenWidth*11)/100; // 11% of the screen width
+
                         connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
                                 tool, SLOT(initItems(TupGraphicsScene*)));
                     } else if (toolId == TAction::NodesEditor) {
@@ -1892,20 +1895,17 @@ void TupDocumentView::showFullScreen()
 
     fullScreenOn = true;
 
-    int screenW = screen->geometry().width();
-    int screenH = screen->geometry().height();
-
     cacheScaleFactor = nodesScaleFactor;
     qreal scaleFactor = 1;
 
     QSize projectSize = project->getDimension();
     if (projectSize.width() < projectSize.height())
-        scaleFactor = static_cast<double>(screenW - 50) / static_cast<double>(projectSize.width());
+        scaleFactor = static_cast<double>(screenWidth - 50) / static_cast<double>(projectSize.width());
     else
-        scaleFactor = static_cast<double>(screenH - 50) / static_cast<double>(projectSize.height());
+        scaleFactor = static_cast<double>(screenHeight - 50) / static_cast<double>(projectSize.height());
 
     fullScreen = new TupCanvas(this, Qt::Window|Qt::FramelessWindowHint, paintArea->graphicsScene(),
-                                  paintArea->getCenterPoint(), QSize(screenW, screenH), project, scaleFactor,
+                                  paintArea->getCenterPoint(), QSize(screenWidth, screenHeight), project, scaleFactor,
                                   viewAngle, brushManager());
 
     fullScreen->updateCursor(currentTool->toolCursor());

@@ -246,6 +246,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         TupProject *project;
         QSize wsDimension;
         QScreen *screen;
+        int screenWidth;
+        int screenHeight;
         
         QToolBar *barGrid;
         QToolBar *toolbar;

@@ -176,7 +176,13 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
 
     mainLayout->addLayout(layout);
 
-    QTextEdit *textArea = new QTextEdit; 
+    QTextEdit *textArea = new QTextEdit;
+    textArea->setMinimumWidth(130);
+    textArea->setMaximumWidth(260);
+    textArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+
+    if (type == GeometricSettings::Line)
+        textArea->setMinimumHeight(150);
 
     // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
     // QFont font = this->font();
@@ -195,7 +201,10 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     // textArea->setFixedHeight(100);
     // textArea->setFixedHeight(150);
 
-    mainLayout->addWidget(textArea);
+    QVBoxLayout *textLayout = new QVBoxLayout;
+    textLayout->addWidget(textArea, Qt::AlignHCenter);
+
+    mainLayout->addLayout(textLayout);
     mainLayout->addStretch(2);
 }
 
