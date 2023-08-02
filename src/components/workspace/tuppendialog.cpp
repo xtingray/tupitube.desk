@@ -53,7 +53,7 @@ TupPenDialog::TupPenDialog(TupBrushManager *manager, QWidget *parent) : QDialog(
     setBrushCanvas();
     setButtonsPanel();
 
-    TImageButton *closeButton = new TImageButton(QPixmap(THEME_DIR + "icons/close_big.png"), 60, this, true);
+    TImageButton *closeButton = new TImageButton(QPixmap(THEME_DIR + "icons/close_big.png"), 60, this);
     closeButton->setToolTip(tr("Close"));
     closeButton->setDefault(true);
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
@@ -88,11 +88,11 @@ void TupPenDialog::setBrushCanvas()
 
 void TupPenDialog::setButtonsPanel()
 {
-    TImageButton *minus5 = new TImageButton(QPixmap(THEME_DIR + "icons/minus_sign_big.png"), 40, this, true);
+    TImageButton *minus5 = new TImageButton(QPixmap(THEME_DIR + "icons/minus_sign_big.png"), 40, this);
     minus5->setToolTip(tr("-5"));
     connect(minus5, SIGNAL(clicked()), this, SLOT(fivePointsLess()));
 
-    TImageButton *minus = new TImageButton(QPixmap(THEME_DIR + "icons/minus_sign_medium.png"), 40, this, true);
+    TImageButton *minus = new TImageButton(QPixmap(THEME_DIR + "icons/minus_sign_medium.png"), 40, this);
     minus->setToolTip(tr("-1"));
     connect(minus, SIGNAL(clicked()), this, SLOT(onePointLess()));
 
@@ -104,11 +104,11 @@ void TupPenDialog::setButtonsPanel()
     sizeLabel->setFont(font);
     sizeLabel->setFixedWidth(100);
 
-    TImageButton *plus = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign_medium.png"), 40, this, true);
+    TImageButton *plus = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign_medium.png"), 40, this);
     plus->setToolTip(tr("+1"));
     connect(plus, SIGNAL(clicked()), this, SLOT(onePointMore()));
 
-    TImageButton *plus5 = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign_big.png"), 40, this, true);
+    TImageButton *plus5 = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign_big.png"), 40, this);
     plus5->setToolTip(tr("+5"));
     connect(plus5, SIGNAL(clicked()), this, SLOT(fivePointsMore()));
 

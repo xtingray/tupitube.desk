@@ -100,7 +100,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, InsertFrame);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == ExtendFrame) {
@@ -111,7 +111,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, ExtendFrame);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == RemoveFrame) {
@@ -123,7 +123,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, RemoveFrame);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == MoveFrameBackward) {
@@ -141,7 +141,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, MoveFrameBackward);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == MoveFrameForward) {
@@ -160,7 +160,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, MoveFrameForward);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == ReverseFrameSelection) {
@@ -179,7 +179,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, ReverseFrameSelection);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == CopyFrame) {
@@ -188,7 +188,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, CopyFrame);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == PasteFrame) {
@@ -197,7 +197,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, PasteFrame);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == InsertLayer) {
@@ -208,7 +208,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, InsertLayer);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == RemoveLayer) {
@@ -219,7 +219,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, RemoveLayer);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == InsertScene) {
@@ -229,7 +229,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, InsertScene);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == RemoveScene) {
@@ -239,7 +239,7 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             actions.addButton(button, RemoveScene);
 
             buttonLayout->addWidget(button);
-            button->setAnimated(isAnimated);
+            // button->setAnimated(isAnimated);
         }
 
         if (action == Separator) {

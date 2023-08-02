@@ -80,76 +80,76 @@ TupCanvas::TupCanvas(QWidget *parent, Qt::WindowFlags flags, TupGraphicsScene *g
     graphicsView->scale(scaleFactor, scaleFactor);
     graphicsView->rotate(angle);
 
-    TImageButton *frameBackward = new TImageButton(QPixmap(THEME_DIR + "icons/frame_backward_big.png"), 50, this, true);
+    TImageButton *frameBackward = new TImageButton(QPixmap(THEME_DIR + "icons/frame_backward_big.png"), 50, this);
     frameBackward->setToolTip(tr("Frame Backward"));
     connect(frameBackward, SIGNAL(clicked()), this, SLOT(oneFrameBack()));
 
-    TImageButton *frameForward = new TImageButton(QPixmap(THEME_DIR + "icons/frame_forward_big.png"), 50, this, true);
+    TImageButton *frameForward = new TImageButton(QPixmap(THEME_DIR + "icons/frame_forward_big.png"), 50, this);
     frameForward->setToolTip(tr("Frame Forward"));
     connect(frameForward, SIGNAL(clicked()), this, SLOT(oneFrameForward()));
 
-    TImageButton *pencil = new TImageButton(QPixmap(THEME_DIR + "icons/pencil_big.png"), 50, this, true);
+    TImageButton *pencil = new TImageButton(QPixmap(THEME_DIR + "icons/pencil_big.png"), 50, this);
     pencil->setToolTip(tr("Pencil"));
     connect(pencil, SIGNAL(clicked()), this, SLOT(wakeUpPencil()));
 
-    TImageButton *polyline = new TImageButton(QPixmap(THEME_DIR + "icons/polyline_big.png"), 50, this, true);
+    TImageButton *polyline = new TImageButton(QPixmap(THEME_DIR + "icons/polyline_big.png"), 50, this);
     polyline->setToolTip(tr("Polyline"));
     connect(polyline, SIGNAL(clicked()), this, SLOT(wakeUpPolyline()));
 
-    TImageButton *rectangle = new TImageButton(QPixmap(THEME_DIR + "icons/square_big.png"), 50, this, true);
+    TImageButton *rectangle = new TImageButton(QPixmap(THEME_DIR + "icons/square_big.png"), 50, this);
     rectangle->setToolTip(tr("Rectangle"));
     connect(rectangle, SIGNAL(clicked()), this, SLOT(wakeUpRectangle()));
 
-    TImageButton *ellipse = new TImageButton(QPixmap(THEME_DIR + "icons/ellipse_big.png"), 50, this, true);
+    TImageButton *ellipse = new TImageButton(QPixmap(THEME_DIR + "icons/ellipse_big.png"), 50, this);
     ellipse->setToolTip(tr("Ellipse"));
     connect(ellipse, SIGNAL(clicked()), this, SLOT(wakeUpEllipse()));
 
-    TImageButton *selection = new TImageButton(QPixmap(THEME_DIR + "icons/selection_big.png"), 50, this, true);
+    TImageButton *selection = new TImageButton(QPixmap(THEME_DIR + "icons/selection_big.png"), 50, this);
     selection->setToolTip(tr("Selection"));
     connect(selection, SIGNAL(clicked()), this, SLOT(wakeUpSelection()));
 
-    TImageButton *trash = new TImageButton(QPixmap(THEME_DIR + "icons/delete_big.png"), 50, this, true);
+    TImageButton *trash = new TImageButton(QPixmap(THEME_DIR + "icons/delete_big.png"), 50, this);
     trash->setToolTip(tr("Delete Selection"));
     trash->setShortcut(QKeySequence(Qt::Key_Backspace));
     connect(trash, SIGNAL(clicked()), this, SLOT(wakeUpDeleteSelection()));
 
-    TImageButton *nodes = new TImageButton(QPixmap(THEME_DIR + "icons/nodes_big.png"), 50, this, true);
+    TImageButton *nodes = new TImageButton(QPixmap(THEME_DIR + "icons/nodes_big.png"), 50, this);
     nodes->setToolTip(tr("Nodes"));
     connect(nodes, SIGNAL(clicked()), this, SLOT(wakeUpNodes()));
 
-    TImageButton *undo = new TImageButton(QPixmap(THEME_DIR + "icons/undo_big.png"), 50, this, true);
+    TImageButton *undo = new TImageButton(QPixmap(THEME_DIR + "icons/undo_big.png"), 50, this);
     undo->setToolTip(tr("Undo"));
     connect(undo, SIGNAL(clicked()), this, SLOT(undo()));
 
-    TImageButton *redo = new TImageButton(QPixmap(THEME_DIR + "icons/redo_big.png"), 50, this, true);
+    TImageButton *redo = new TImageButton(QPixmap(THEME_DIR + "icons/redo_big.png"), 50, this);
     redo->setToolTip(tr("Redo"));
     connect(redo, SIGNAL(clicked()), this, SLOT(redo()));
 
-    TImageButton *zoomIn = new TImageButton(QPixmap(THEME_DIR + "icons/zoom_in_big.png"), 50, this, true);
+    TImageButton *zoomIn = new TImageButton(QPixmap(THEME_DIR + "icons/zoom_in_big.png"), 50, this);
     zoomIn->setToolTip(tr("Zoom In"));
     connect(zoomIn, SIGNAL(clicked()), this, SLOT(wakeUpZoomIn()));
 
-    TImageButton *zoomOut = new TImageButton(QPixmap(THEME_DIR + "icons/zoom_out_big.png"), 50, this, true);
+    TImageButton *zoomOut = new TImageButton(QPixmap(THEME_DIR + "icons/zoom_out_big.png"), 50, this);
     zoomOut->setToolTip(tr("Zoom Out"));
     connect(zoomOut, SIGNAL(clicked()), this, SLOT(wakeUpZoomOut()));
 
-    TImageButton *images = new TImageButton(QPixmap(THEME_DIR + "icons/bitmap_big.png"), 50, this, true);
+    TImageButton *images = new TImageButton(QPixmap(THEME_DIR + "icons/bitmap_big.png"), 50, this);
     images->setToolTip(tr("Images"));
     connect(images, SIGNAL(clicked()), this, SLOT(wakeUpLibrary()));
 
-    TImageButton *color = new TImageButton(QPixmap(THEME_DIR + "icons/color_palette_big.png"), 50, this, true);
+    TImageButton *color = new TImageButton(QPixmap(THEME_DIR + "icons/color_palette_big.png"), 50, this);
     color->setToolTip(tr("Color Palette"));
     connect(color, SIGNAL(clicked()), this, SLOT(showColorDialog()));
 
-    TImageButton *size = new TImageButton(QPixmap(THEME_DIR + "icons/pen_properties.png"), 50, this, true);
+    TImageButton *size = new TImageButton(QPixmap(THEME_DIR + "icons/pen_properties.png"), 50, this);
     size->setToolTip(tr("Pen Size"));
     connect(size, SIGNAL(clicked()), this, SLOT(penDialog()));
 
-    TImageButton *onion = new TImageButton(QPixmap(THEME_DIR + "icons/onion_big.png"), 50, this, true);
+    TImageButton *onion = new TImageButton(QPixmap(THEME_DIR + "icons/onion_big.png"), 50, this);
     onion->setToolTip(tr("Onion Skin Factor"));
     connect(onion, SIGNAL(clicked()), this, SLOT(onionDialog()));
 
-    TImageButton *close = new TImageButton(QPixmap(THEME_DIR + "icons/close_big.png"), 50, this, true);
+    TImageButton *close = new TImageButton(QPixmap(THEME_DIR + "icons/close_big.png"), 50, this);
     close->setToolTip(tr("Close Full Screen"));
     connect(close, SIGNAL(clicked()), this, SIGNAL(closeHugeCanvas()));
 

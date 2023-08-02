@@ -182,7 +182,7 @@ void RasterColorWidget::setupColorDisplay()
     space1->setFixedWidth(10);
     bgLayout->addWidget(space1);
 
-    TImageButton *resetBgButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/reset_bg.png")), 15, this, true);
+    TImageButton *resetBgButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/reset_bg.png")), 15, this);
     resetBgButton->setToolTip(tr("Reset background"));
     connect(resetBgButton, SIGNAL(clicked()), this, SLOT(initBg()));
     bgLayout->addWidget(resetBgButton);

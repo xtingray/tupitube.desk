@@ -2913,11 +2913,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9999999"
-     inkscape:cx="483"
-     inkscape:cy="1542.8125"
+     inkscape:zoom="8"
+     inkscape:cx="266.75"
+     inkscape:cy="927.5625"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g9225"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1005"
@@ -2929,13 +2929,7 @@
      inkscape:snap-global="false"
      inkscape:document-rotation="0"
      inkscape:pagecheckerboard="0"
-     inkscape:lockguides="true">
-    <sodipodi:guide
-       position="182.16286,454.13614"
-       orientation="1,0"
-       id="guide8173"
-       inkscape:locked="true" />
-  </sodipodi:namedview>
+     inkscape:lockguides="true" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -5573,8 +5567,9 @@
     <g
        id="g9222"
        transform="translate(-163.05764,-722.43918)"
-       inkscape:export-xdpi="36.619999"
-       inkscape:export-ydpi="36.619999">
+       inkscape:export-xdpi="66.099998"
+       inkscape:export-ydpi="66.099998"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/add_layer.png">
       <path
          sodipodi:nodetypes="ccccccccccccccccccc"
          inkscape:export-ydpi="279"
@@ -5587,24 +5582,17 @@
     </g>
     <g
        id="g9225"
-       transform="translate(-142.55835,-721.75606)">
+       transform="translate(-142.55835,-721.75606)"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/remove_layer.png"
+       inkscape:export-xdpi="66.099998"
+       inkscape:export-ydpi="66.099998">
       <path
-         inkscape:export-ydpi="279"
-         inkscape:export-xdpi="279"
-         inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/remove_layer.png"
-         inkscape:connector-curvature="0"
          id="path5311-5"
-         d="m 389.52971,679.41378 -0.40078,26.72408 c 0,0 -32.33613,0.53448 -31.53441,0.6681 0.80172,0.13362 2.40517,-27.79304 2.40517,-27.79304 z"
-         style="fill:#000000;fill-opacity:1;stroke:none" />
-      <path
-         inkscape:export-ydpi="279"
-         inkscape:export-xdpi="279"
+         style="fill:#000000;fill-opacity:1;stroke:none"
+         d="m 366.29934,679.8511 c 0,0 -1.55153,27.02575 -2.36524,27.77735 1.34605,-0.15453 31.49414,-0.65235 31.49414,-0.65235 l 0.40039,-26.72461 z m -2.36524,27.77735 c -0.0478,0.005 -0.0666,0.011 -0.0391,0.0156 0.0125,0.002 0.0262,-0.004 0.0391,-0.0156 z m 28.09375,-15.81641 -0.11523,4.43555 -20.84961,-0.10743 -0.54688,-4.32617 z"
          inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/remove_layer.png"
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path5313-8"
-         d="m 385.72834,690.97383 -0.11546,4.436 -20.84871,-0.10773 -0.54857,-4.32569 z"
-         style="fill:#ffffff;fill-opacity:1;stroke:none" />
+         inkscape:export-xdpi="66.110001"
+         inkscape:export-ydpi="66.110001" />
     </g>
     <g
        id="g5306"
@@ -11675,18 +11663,20 @@
        style="fill:#000000;fill-opacity:1;stroke:none"
        d="m 583.27539,322.8114 -0.5293,30.49023 39.53321,0.0215 -0.46094,-24.70313 -21.17383,-0.93359 -5.94726,-4.73828 z m 38.54297,5.80859 0.25391,0.0117 -0.25782,-0.25781 z m -12.90453,5.59212 4.22003,0.37536 -0.20548,6.55837 6.79001,-0.17888 -0.0813,4.02404 -6.55714,0.0312 -0.11405,6.37818 -4.06737,0.0426 0.10665,-6.7449 -6.22552,-0.0508 -0.41837,-3.97401 6.55795,0.3714 z"
        id="path5311-6-5"
-       inkscape:export-xdpi="34.150002"
-       inkscape:export-ydpi="34.150002"
+       inkscape:export-xdpi="53.487644"
+       inkscape:export-ydpi="53.487644"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccccccccccccccccc" />
+       sodipodi:nodetypes="cccccccccccccccccccccccc"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/add_scene.png" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:none"
-       d="m 636.95117,322.8114 -0.52929,30.49023 39.53515,0.0215 -0.46289,-24.70313 -21.17383,-0.93359 -5.94726,-4.73828 z m 38.54297,5.80859 0.25391,0.0117 -0.25782,-0.25781 z m -17.12695,12.05078 14.38867,0.42969 -0.2173,3.77156 -13.75,-0.17379 z"
+       d="m 641.4838,322.24874 -0.52929,30.49023 39.53515,0.0215 -0.46289,-24.70313 -21.17383,-0.93359 -5.94726,-4.73828 z m 38.54297,5.80859 0.25391,0.0117 -0.25782,-0.25781 z m -17.12695,12.05078 14.38867,0.42969 -0.2173,3.77156 -13.75,-0.17379 z"
        id="path5311-6-5-2"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccccccccc"
-       inkscape:export-xdpi="34.150002"
-       inkscape:export-ydpi="34.150002" />
+       inkscape:export-xdpi="53.419998"
+       inkscape:export-ydpi="53.419998"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/remove_scene.png" />
     <g
        id="g9229-8"
        transform="translate(-370.23246,-299.62232)"

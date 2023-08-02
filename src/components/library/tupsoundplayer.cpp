@@ -81,11 +81,11 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     sliderLayout->addWidget(slider);
     sliderLayout->setContentsMargins(0, 0, 0, 0);
 
-    playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_small.png"), 33, this, true);
+    playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_small.png"), 33, this);
     playButton->setToolTip(tr("Play"));
     connect(playButton, SIGNAL(clicked()), this, SLOT(playFile()));
 
-    muteButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this, true);
+    muteButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this);
     muteButton->setShortcut(QKeySequence(tr("M")));
     muteButton->setToolTip(tr("Mute"));
     connect(muteButton, SIGNAL(clicked()), this, SLOT(muteAction()));

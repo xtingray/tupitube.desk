@@ -362,14 +362,21 @@ void TupCameraWidget::doPlay()
         flag = true;
 
     status->enableButtons(flag);
+    cameraBar->updatePlaybackButton(false);
     cameraBar->updatePlayButton(flag);
 }
 
 void TupCameraWidget::doPlayBack()
 {
+    int frames = previewScreen->sceneTotalFrames();
+
+    bool flag = false;
+    if (frames > 1)
+        flag = true;
+
     previewScreen->playBack();
     cameraBar->updatePlayButton(false);
-    cameraBar->updatePlaybackButton(true);
+    cameraBar->updatePlaybackButton(flag);
 }
 
 void TupCameraWidget::doPause()

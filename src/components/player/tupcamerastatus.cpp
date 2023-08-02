@@ -89,7 +89,7 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
 
     sceneInfoLayout->addSpacing(15);
 
-    soundButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this, true);
+    soundButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this);
     soundButton->setShortcut(QKeySequence(tr("M")));
     soundButton->setToolTip(tr("Mute"));
     connect(soundButton, SIGNAL(clicked()), this, SLOT(muteAction()));

@@ -134,11 +134,11 @@ void TupColorButtonPanel::setPanel(const QSize &cellSize, const QString &buttonP
 
     baseColors << blue;
 
-    TImageButton *settings = new TImageButton(QPixmap(THEME_DIR + "icons/settings.png"), 22, this, true);
+    TImageButton *settings = new TImageButton(QPixmap(THEME_DIR + "icons/settings.png"), 22, this);
     settings->setToolTip(tr("Customize Colors Bar"));
     connect(settings, SIGNAL(clicked()), this, SLOT(customizeColors()));
 
-    TImageButton *reset = new TImageButton(QPixmap(THEME_DIR + "icons/reset_color_bar.png"), 22, this, true);
+    TImageButton *reset = new TImageButton(QPixmap(THEME_DIR + "icons/reset_color_bar.png"), 22, this);
     reset->setToolTip(tr("Reset Colors Bar"));
     connect(reset, SIGNAL(clicked()), this, SLOT(resetColors()));
 

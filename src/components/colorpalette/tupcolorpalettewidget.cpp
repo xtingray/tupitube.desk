@@ -150,7 +150,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     // mainLayout->addWidget(new QWidget());
     mainLayout->addStretch(1);
 
-    TImageButton *changeButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/exchange_colors.png")), 20, this, true);
+    TImageButton *changeButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/exchange_colors.png")), 20, this);
     changeButton->setToolTip(tr("Exchange colors"));
     connect(changeButton, SIGNAL(clicked()), this, SLOT(switchColors()));
     mainLayout->addWidget(changeButton);
@@ -184,7 +184,7 @@ void TupColorPaletteWidget::setupColorDisplay()
 
     mainLayout->addLayout(listLayout);
 
-    TImageButton *resetButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/reset_colors.png")), 15, this, true);
+    TImageButton *resetButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/reset_colors.png")), 15, this);
     resetButton->setToolTip(tr("Reset colors"));
     connect(resetButton, SIGNAL(clicked()), this, SLOT(init()));
     mainLayout->addWidget(resetButton);
@@ -204,7 +204,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(htmlField, SIGNAL(editingFinished()), this, SLOT(updateColorFromHTML()));
     mainLayout->addWidget(htmlField);
 
-    TImageButton *eyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this, true);
+    TImageButton *eyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this);
     eyedropperButton->setToolTip(tr("Eye Dropper"));
     // eyedropperButton->setShortcut(QKeySequence(tr("E")));
     connect(eyedropperButton, SIGNAL(clicked()), this, SLOT(activateEyeDropper()));
@@ -240,7 +240,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     space1->setFixedWidth(10);
     bgLayout->addWidget(space1);
 
-    TImageButton *resetBgButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/reset_bg.png")), 15, this, true);
+    TImageButton *resetBgButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/reset_bg.png")), 15, this);
     resetBgButton->setToolTip(tr("Reset background"));
     connect(resetBgButton, SIGNAL(clicked()), this, SLOT(initBg()));
     bgLayout->addWidget(resetBgButton);
@@ -262,7 +262,7 @@ void TupColorPaletteWidget::setupColorDisplay()
     connect(bgHtmlField, SIGNAL(editingFinished()), this, SLOT(updateBgColorFromHTML()));
     bgLayout->addWidget(bgHtmlField);
 
-    TImageButton *bgEyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this, true);
+    TImageButton *bgEyedropperButton = new TImageButton(QIcon(QPixmap(THEME_DIR + "icons/eyedropper.png")), 18, this);
     bgEyedropperButton->setToolTip(tr("Eye Dropper"));
     // bgEyedropperButton->setShortcut(QKeySequence(tr("E")));
     connect(bgEyedropperButton, SIGNAL(clicked()), this, SLOT(activateBgEyeDropper()));
