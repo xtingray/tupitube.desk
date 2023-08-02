@@ -42,6 +42,7 @@
 #include <QPushButton>
 #include <QActionGroup>
 #include <QPixmap>
+#include <QScreen>
 
 TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModuleWidgetBase(parent, "Exposure Sheet")
 {
@@ -63,10 +64,10 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     generalActions << TupProjectActionBar::Separator;
     generalActions << TupProjectActionBar::InsertScene << TupProjectActionBar::RemoveScene;
 
-    actionBar = new TupProjectActionBar(QString("Exposure"), generalActions);
+    topActionBar = new TupProjectActionBar(QString("Exposure"), generalActions);
 
-    connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
-    addChild(actionBar, Qt::AlignHCenter);
+    connect(topActionBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
+    addChild(topActionBar, Qt::AlignHCenter);
 
     QList<TupProjectActionBar::Action> frameActions;
     frameActions << TupProjectActionBar::InsertFrame
@@ -84,10 +85,10 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     frameActions << TupProjectActionBar::CopyFrame;
     frameActions << TupProjectActionBar::PasteFrame;
 
-    TupProjectActionBar *framesBar = new TupProjectActionBar(QString("Exposure"), frameActions);
+    bottomActionBar = new TupProjectActionBar(QString("Exposure"), frameActions);
 
-    connect(framesBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
-    addChild(framesBar, Qt::AlignHCenter);
+    connect(bottomActionBar, SIGNAL(actionSelected(int)), this, SLOT(applyAction(int)));
+    addChild(bottomActionBar, Qt::AlignHCenter);
 
     scenesContainer = new TupExposureSceneTabWidget(this);
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
@@ -97,6 +98,11 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     addChild(scenesContainer);
     createMenuForAFrame();
     // createMenuForSelection();
+
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    if (screenWidth > HD_WIDTH)
+        setMinimumWidth((screenWidth*11)/100); // 11%
 }
 
 TupExposureSheet::~TupExposureSheet()
@@ -108,7 +114,8 @@ TupExposureSheet::~TupExposureSheet()
     delete project;
     delete scenesContainer;
     delete currentTable;
-    delete actionBar;
+    delete topActionBar;
+    delete bottomActionBar;
     delete singleMenu;
 
     framesList.clear();
@@ -254,6 +261,7 @@ void TupExposureSheet::applyAction(int action)
         #ifdef TUP_DEBUG
             qDebug() << "[TupExposureSheet::applyAction()] - No layer view!";
         #endif
+
         return;
     }
 
@@ -541,7 +549,7 @@ void TupExposureSheet::selectFrame(int layerIndex, int frameIndex)
 
 void TupExposureSheet::removeFrame()
 {
-    actionBar->emitActionSelected(TupProjectActionBar::RemoveFrame);
+    topActionBar->emitActionSelected(TupProjectActionBar::RemoveFrame);
 }
 
 void TupExposureSheet::extendFrameForward(int layerIndex, int frameIndex)

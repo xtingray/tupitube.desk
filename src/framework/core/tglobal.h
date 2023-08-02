@@ -98,6 +98,13 @@ enum PapagayoAppViewType { Predefined = 0, Customized };
 
 enum ModuleSource { Library = 0, PapagayoApp };
 
+#define HD_WIDTH 1920
+#define HD_HEIGHT 1080
+#define PLUGIN_ICON_SIZE 16 // Lateral Toolbar
+#define TOOLVIEW_ICON_SIZE 16 // Panel Icons
+#define ACTIONBAR_ICON_SIZE 16 // Exposure Sheet, TimeLine Toolbars
+#define STATUS_ICON_SIZE 16 // Paint Area Status
+
 enum ProjectDimension {
     FREE = 0,
     FORMAT_520,

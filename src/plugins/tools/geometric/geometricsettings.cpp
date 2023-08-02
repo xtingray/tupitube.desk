@@ -41,6 +41,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QButtonGroup>
+#include <QScreen>
 
 GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {
@@ -176,9 +177,15 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
 
     mainLayout->addLayout(layout);
 
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    int minWidth = 130;
+    if (screenWidth > HD_WIDTH)
+        minWidth = 260;
+
     QTextEdit *textArea = new QTextEdit;
-    textArea->setMinimumWidth(130);
-    textArea->setMaximumWidth(260);
+    textArea->setMinimumWidth(minWidth);
+    textArea->setMaximumWidth(minWidth*2);
     textArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
     if (type == GeometricSettings::Line)

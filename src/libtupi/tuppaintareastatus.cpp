@@ -38,6 +38,7 @@
 #include "tupbrushmanager.h"
 
 #include <QHBoxLayout>
+#include <QScreen>
 
 TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, QWidget *parent) : QStatusBar(parent)
 {
@@ -48,22 +49,33 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     currentFrame = 1;
     colorContext = TColorCell::Contour;
 
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    QSize iconSize(STATUS_ICON_SIZE, STATUS_ICON_SIZE);
+    int panelWidth = 700;
+    // Big resolutions
+    if (screenWidth > HD_WIDTH) {
+        panelWidth = 1100;
+        int iconWidth = screenWidth/100;
+        iconSize = QSize(iconWidth, iconWidth);
+    }
+
     QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/clear_frame.png")), "");
-    clearAreaButton->setIconSize(QSize(16, 16));
+    clearAreaButton->setIconSize(iconSize);
     clearAreaButton->setToolTip(tr("Clear Frame"));
     // clearAreaButton->setShortcut(QKeySequence(Qt::Key_3));
     connect(clearAreaButton, SIGNAL(clicked()), this, SIGNAL(clearFrameClicked()));
     addPermanentWidget(clearAreaButton);
 
     QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset_workspace.png")), "");
-    resetWSButton->setIconSize(QSize(16, 16));
+    resetWSButton->setIconSize(iconSize);
     resetWSButton->setToolTip(tr("Reset WorkSpace"));
     resetWSButton->setShortcut(QKeySequence(Qt::Key_3));
     connect(resetWSButton, SIGNAL(clicked()), this, SIGNAL(resetClicked()));
     addPermanentWidget(resetWSButton);
 
     QPushButton *actionSafeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
-    actionSafeAreaButton->setIconSize(QSize(16, 16));
+    actionSafeAreaButton->setIconSize(iconSize);
     actionSafeAreaButton->setToolTip(tr("Action Safe Area"));
     // SQA: pending shortcut
     // actionSafeAreaButton->setShortcut(QKeySequence(tr(" ")));
@@ -72,8 +84,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     addPermanentWidget(actionSafeAreaButton);
 
     QPushButton *gridButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/subgrid.png")), "");
-    gridButton->setIconSize(QSize(16, 16));
-    gridButton->setToolTip(tr("Show grid"));
+    gridButton->setIconSize(iconSize);
+    gridButton->setToolTip(tr("Show Grid"));
     gridButton->setShortcut(QKeySequence(Qt::Key_G));
     gridButton->setCheckable(true);
     connect(gridButton, SIGNAL(clicked()), this, SIGNAL(gridClicked()));
@@ -81,8 +93,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
 
     if (type == Vector) {
         fullScreenButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/full_screen.png")), "");
-        fullScreenButton->setIconSize(QSize(16, 16));
-        fullScreenButton->setToolTip(tr("Full screen"));
+        fullScreenButton->setIconSize(iconSize);
+        fullScreenButton->setToolTip(tr("Full Screen"));
         fullScreenButton->setShortcut(QKeySequence(tr("F11")));
         connect(fullScreenButton, SIGNAL(clicked()), this, SIGNAL(fullClicked()));
         addPermanentWidget(fullScreenButton);
@@ -179,7 +191,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     empty2->setFixedWidth(5);
     addPermanentWidget(empty2);
 
-    setMinimumWidth(700);
+    setMinimumWidth(panelWidth);
 }
 
 TupPaintAreaStatus::~TupPaintAreaStatus()

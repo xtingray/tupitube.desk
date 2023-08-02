@@ -48,6 +48,7 @@
 #include <QVBoxLayout>
 #include <QVariant>
 #include <QSpacerItem>
+#include <QScreen>
 
 class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
 {
@@ -91,7 +92,7 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
                             Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
         ~TupProjectActionBar();
 
-        void setFixedSize(int size);
+        // void setFixedSize(int size);
         void insertSeparator(int position);
         void insertBlankSpace(int position);
         
@@ -113,6 +114,10 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
         QButtonGroup actions;
         QBoxLayout *buttonLayout;
         bool isAnimated;
+
+        QScreen *screen;
+        int screenWidth;
+        int screenHeight;
 };
 
 #endif

@@ -39,6 +39,7 @@
 
 #include <QBoxLayout>
 #include <QLabel>
+#include <QScreen>
 
 NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
 {
@@ -108,7 +109,17 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     help = new QWidget(this);
     help->hide();
     QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
+
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    int minWidth = 130;
+    if (screenWidth > HD_WIDTH)
+        minWidth = 260;
+
     textArea = new QTextEdit;
+    textArea->setMinimumWidth(minWidth);
+    textArea->setMaximumWidth(minWidth*2);
+    textArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     textArea->setFixedHeight(h);
 
     textArea->append("<p><b>" + tr("Ctrl Key + Left Mouse Button") + ":</b> "

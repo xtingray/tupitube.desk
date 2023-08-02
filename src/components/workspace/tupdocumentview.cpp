@@ -102,6 +102,10 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     screen = QGuiApplication::screens().at(0);
     screenWidth = screen->geometry().width();
     screenHeight = screen->geometry().height();
+    bigScreen = false;
+    // Big resolutions
+    if (screenWidth > HD_WIDTH)
+        bigScreen = true;
 
     actionManager = new TActionManager(this);
 
@@ -477,7 +481,11 @@ void TupDocumentView::setupDrawActions()
 void TupDocumentView::createLateralToolBar()
 {
     toolbar = new QToolBar(tr("Draw tools"), this);
-    toolbar->setIconSize(QSize(16, 16));
+    int iconSize = PLUGIN_ICON_SIZE;
+    if (bigScreen)
+        iconSize = (screenWidth*2)/100;
+    toolbar->setIconSize(QSize(iconSize, iconSize));
+
     toolbar->setMovable(false);
     addToolBar(Qt::LeftToolBarArea, toolbar);
     connect(toolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
@@ -1048,14 +1056,16 @@ void TupDocumentView::selectTool()
                 case TupToolInterface::Brush:
                 {
                     status->enableFullScreenFeature(true);
-                    if (toolId == TAction::Pencil || toolId == TAction::Polyline) {
-                        minWidth = 130;
+                    minWidth = 130;
+                    if (bigScreen)
+                        minWidth =(screenWidth*11)/100; // 11% of the screen width
+
+                    if (toolId == TAction::Pencil || toolId == TAction::Polyline || toolId == TAction::Ink) {
                         if (toolId == TAction::Pencil)
                             connect(currentTool, SIGNAL(penWidthChanged(int)), this, SIGNAL(penWidthChanged(int)));
                     } else {
                         if (toolId == TAction::Rectangle || toolId == TAction::Ellipse ||
-                            toolId == TAction::Line || toolId == TAction::Triangle || toolId == TAction::Hexagon) {
-                            minWidth = 130;
+                            toolId == TAction::Line || toolId == TAction::Triangle || toolId == TAction::Hexagon) {                            
                             shapesMenu->setDefaultAction(action);
                             shapesMenu->setActiveAction(action);
 
@@ -1074,6 +1084,9 @@ void TupDocumentView::selectTool()
                 {
                     status->enableFullScreenFeature(false);
                     minWidth = 230;
+                    if (bigScreen)
+                        minWidth =(screenWidth*12)/100; // 12% of the screen width
+
                     motionMenu->setDefaultAction(action);
                     motionMenu->setActiveAction(action);
                     if (!action->icon().isNull())
@@ -1106,14 +1119,15 @@ void TupDocumentView::selectTool()
                         tool->setProjectSize(project->getDimension());
 
                         minWidth = 130;
-                        // Big resolutions
-                        if (screenWidth > 1920)
+                        if (bigScreen)
                             minWidth = (screenWidth*11)/100; // 11% of the screen width
 
                         connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
                                 tool, SLOT(initItems(TupGraphicsScene*)));
                     } else if (toolId == TAction::NodesEditor) {
-                        minWidth = 200;
+                        minWidth = 150;
+                        if (bigScreen)
+                            minWidth =(screenWidth*8)/100; // 8% of the screen width
                     }
                 }
                 break;
@@ -1135,6 +1149,9 @@ void TupDocumentView::selectTool()
                 {
                     status->enableFullScreenFeature(false);
                     minWidth = 220;
+                    if (bigScreen)
+                        minWidth =(screenWidth*12)/100; // 12% of the screen width
+
                     connect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
                     connect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
 
@@ -1297,7 +1314,10 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
 void TupDocumentView::createToolBar()
 {
     barGrid = new QToolBar(tr("Paint area actions"), this);
-    barGrid->setIconSize(QSize(16, 16));
+    int iconSize = 16;
+    if (bigScreen)
+        iconSize = (screenWidth*2)/100;
+    barGrid->setIconSize(QSize(iconSize, iconSize));
 
     staticPropertiesBar = new QToolBar(tr("Vector Static BG Properties"), this);
     dynamicPropertiesBar = new QToolBar(tr("Vector Dynamic BG Properties"), this);
@@ -2676,8 +2696,13 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
 
         QWidget *toolConfigurator = tool->configurator();
         if (toolConfigurator) {
+
+            int minWidth = 80;
+            if (bigScreen)
+                minWidth =(screenWidth*12)/100; // 12% of the screen width
+
             configurationArea = new TupConfigurationArea(this);
-            configurationArea->setConfigurator(toolConfigurator, 80);
+            configurationArea->setConfigurator(toolConfigurator, minWidth);
             addDockWidget(Qt::RightDockWidgetArea, configurationArea);
             toolConfigurator->show();
             if (!configurationArea->isVisible())

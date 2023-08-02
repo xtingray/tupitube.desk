@@ -49,7 +49,7 @@ class TUPITUBE_EXPORT TupConfigurationArea : public QDockWidget
         TupConfigurationArea(QWidget *parent = nullptr);
         ~TupConfigurationArea();
 
-        void setConfigurator(QWidget *widget, int maxWidth = 0);
+        void setConfigurator(QWidget *widget, int minWidth);
 
         QSize sizeHint() const;
 

@@ -452,8 +452,15 @@ void TupMainWindow::setupHelpActions()
 
 void TupMainWindow::setupToolBar()
 {
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    int iconSize = 22;
+    // Big resolutions
+    if (screenWidth > HD_WIDTH)
+        iconSize = (screenWidth*2)/100; // 2%
+
     mainToolBar = new QToolBar(tr("Actions Bar"), this);
-    mainToolBar->setIconSize(QSize(22, 22));
+    mainToolBar->setIconSize(QSize(iconSize, iconSize));
     mainToolBar->setMovable(false);
 
     mainToolBar->addAction(m_actionManager->find("new_project"));

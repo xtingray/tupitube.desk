@@ -35,10 +35,20 @@
 
 #include "tbuttonbar.h"
 
+#include <QScreen>
+
 TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent), m_shouldBeVisible(true)
 {
     setMovable(false);
-    setIconSize(QSize(16, 16));
+
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    int iconSize = TOOLVIEW_ICON_SIZE;
+    // Big resolutions
+    if (screenWidth > HD_WIDTH)
+        iconSize = (screenWidth*2)/100; // 2%
+    setIconSize(QSize(iconSize, iconSize));
+
     m_buttons.setExclusive(true);
 
     switch (area) {

@@ -42,7 +42,8 @@ class TImageButton::Animation
         {
             aTimer = new QTimer;
         }
-        ~Animation() {};
+
+        ~Animation() {}
         
         void begin()
         {
@@ -61,14 +62,14 @@ class TImageButton::Animation
         int m_interval;
 };
 
-TImageButton::TImageButton(const QIcon &icon, int size, QWidget *parent, bool animate) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
+TImageButton::TImageButton(const QIcon &icon, int size, QWidget *parent, bool animate) : QPushButton(parent), m_imageSize(size), m_isAnimated(animate)
 {
     setup();
     setImage(icon);
 }
 
 TImageButton::TImageButton(const QIcon &icon, int size, QObject *reciever, const char *method, QWidget *parent, 
-                           bool animate) : QPushButton(parent), m_imageSize(size), m_animator(0), m_isAnimated(animate)
+                           bool animate) : QPushButton(parent), m_imageSize(size), m_isAnimated(animate)
 {
     setup();
     setImage(icon);
@@ -89,8 +90,11 @@ void TImageButton::setup()
     setIconSize(QSize(m_imageSize, m_imageSize));
     setMaximumSize(m_imageSize, m_imageSize);
     setMinimumSize(m_imageSize, m_imageSize);
-    m_animator = new Animation(m_imageSize);
-    connect(m_animator->aTimer, SIGNAL(timeout()), this, SLOT(animate()));
+
+    if (m_isAnimated) {
+        m_animator = new Animation(m_imageSize);
+        connect(m_animator->aTimer, SIGNAL(timeout()), this, SLOT(animate()));
+    }
     
     setFocusPolicy(Qt::NoFocus);
 }
@@ -159,7 +163,7 @@ void TImageButton::resizeEvent(QResizeEvent *e)
 
 void TImageButton::setImage(const QIcon & icon)
 {
-    setIconSize(QSize(m_imageSize,m_imageSize));
+    setIconSize(QSize(m_imageSize, m_imageSize));
     QPushButton::setIcon(icon);
 }
 

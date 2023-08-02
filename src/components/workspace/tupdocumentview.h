@@ -316,6 +316,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         bool cameraMode;
         TColorCell::FillType colorSpace;
         QColor contourColor;
+
+        bool bigScreen;
 };
 
 #endif

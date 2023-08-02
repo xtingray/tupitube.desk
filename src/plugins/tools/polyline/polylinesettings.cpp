@@ -37,6 +37,8 @@
 #include "tapplicationproperties.h"
 #include "tseparator.h"
 
+#include <QScreen>
+
 PolylineSettings::PolylineSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
@@ -60,7 +62,17 @@ PolylineSettings::PolylineSettings(QWidget *parent) : QWidget(parent)
 
     mainLayout->addLayout(layout);
 
-    QTextEdit *textArea = new QTextEdit; 
+    QScreen *screen = QGuiApplication::screens().at(0);
+    int screenWidth = screen->geometry().width();
+    int minWidth = 130;
+    if (screenWidth > HD_WIDTH)
+        minWidth = 260;
+
+    QTextEdit *textArea = new QTextEdit;
+    textArea->setMinimumWidth(minWidth);
+    textArea->setMaximumWidth(minWidth*2);
+    textArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+
     textArea->setFixedHeight(250);
     textArea->setHtml("<p><b>" + tr("X Key or Right Mouse Button") + ":</b> " + tr("Close line") + "</p>"); 
     mainLayout->addWidget(textArea);

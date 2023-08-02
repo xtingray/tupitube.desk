@@ -120,7 +120,9 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         TupProject *project;
         TupExposureSceneTabWidget *scenesContainer;
         TupExposureTable *currentTable;
-        TupProjectActionBar *actionBar;
+        TupProjectActionBar *topActionBar;
+        TupProjectActionBar *bottomActionBar;
+
         QMenu *singleMenu;
         // QMenu *multipleMenu;
         bool localRequest;
