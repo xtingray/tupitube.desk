@@ -49,7 +49,13 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
     QScreen *screen = QGuiApplication::screens().at(0);
     QRect rect = screen->availableGeometry();
+    int screenW = rect.width();
     int screenH = rect.height();
+
+    int iconSize = SELECT_ICON_SIZE;
+    // Big resolutions
+    if (screenW > HD_WIDTH)
+        iconSize = (screenW*2)/100;
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
@@ -244,11 +250,11 @@ QBoxLayout * SelectionSettings::setAlignBlock()
     alignLayout->setMargin(0);
     alignLayout->setSpacing(0);
 
-    TImageButton *hAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/h_center.png"), 22);
+    TImageButton *hAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/h_center.png"), iconSize);
     hAlignButton->setToolTip(tr("Horizontal Center"));
-    TImageButton *vAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/v_center.png"), 22);
+    TImageButton *vAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/v_center.png"), iconSize);
     vAlignButton->setToolTip(tr("Vertical Center"));
-    TImageButton *aAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/a_center.png"), 22);
+    TImageButton *aAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/a_center.png"), iconSize);
     aAlignButton->setToolTip(tr("Absolute Center"));
     connect(hAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectHorizontally()));
     connect(vAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectVertically()));
@@ -267,11 +273,11 @@ QBoxLayout * SelectionSettings::setFlipsBlock()
     flipLayout->setMargin(0);
     flipLayout->setSpacing(0);
 
-    TImageButton *horizontalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/horizontal_flip.png"), 22);
+    TImageButton *horizontalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/horizontal_flip.png"), iconSize);
     horizontalFlip->setToolTip(tr("Horizontal Flip"));
-    TImageButton *verticalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/vertical_flip.png"), 22);
+    TImageButton *verticalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/vertical_flip.png"), iconSize);
     verticalFlip->setToolTip(tr("Vertical Flip"));
-    TImageButton *crossedFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/crossed_flip.png"), 22);
+    TImageButton *crossedFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/crossed_flip.png"), iconSize);
     crossedFlip->setToolTip(tr("Crossed Flip"));
     connect(horizontalFlip, SIGNAL(clicked()), this, SLOT(hFlip()));
     connect(verticalFlip, SIGNAL(clicked()), this, SLOT(vFlip()));
@@ -290,16 +296,16 @@ QBoxLayout * SelectionSettings::setOrderBlock()
     orderLayout->setMargin(0);
     orderLayout->setSpacing(0);
 
-    TImageButton *toBack = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back.png"), 22);
+    TImageButton *toBack = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back.png"), iconSize);
     toBack->setToolTip(tr("Send object to back"));
 
-    TImageButton *toBackOneLevel = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back_one.png"), 22);
+    TImageButton *toBackOneLevel = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back_one.png"), iconSize);
     toBackOneLevel->setToolTip(tr("Send object to back one level"));
 
-    TImageButton *toFront = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_front.png"), 22);
+    TImageButton *toFront = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_front.png"), iconSize);
     toFront->setToolTip(tr("Send object to front"));
 
-    TImageButton *toFrontOneLevel = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_front_one.png"), 22);
+    TImageButton *toFrontOneLevel = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_front_one.png"), iconSize);
     toFrontOneLevel->setToolTip(tr("Send object to front one level"));
 
     connect(toBack, SIGNAL(clicked()), this, SLOT(sendToBack()));
@@ -321,10 +327,10 @@ QBoxLayout * SelectionSettings::setGroupBlock()
     groupLayout->setMargin(0);
     groupLayout->setSpacing(0);
 
-    TImageButton *groupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/group.png"), 22);
+    TImageButton *groupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/group.png"), iconSize);
     groupButton->setToolTip(tr("Group Objects"));
 
-    TImageButton *ungroupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/ungroup.png"), 22);
+    TImageButton *ungroupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/ungroup.png"), iconSize);
     ungroupButton->setToolTip(tr("Ungroup Objects"));
 
     connect(groupButton, SIGNAL(clicked()), this, SLOT(groupItems()));

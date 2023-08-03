@@ -104,6 +104,7 @@ enum ModuleSource { Library = 0, PapagayoApp };
 #define TOOLVIEW_ICON_SIZE 16 // Panel Icons
 #define ACTIONBAR_ICON_SIZE 16 // Exposure Sheet, TimeLine Toolbars
 #define STATUS_ICON_SIZE 16 // Paint Area Status
+#define SELECT_ICON_SIZE 22 // Select Tool Panel
 
 enum ProjectDimension {
     FREE = 0,
