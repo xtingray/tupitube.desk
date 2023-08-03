@@ -147,6 +147,9 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         double currentYFactor;
         QTextEdit *textArea;
         bool isVisible;
+
+        int screenW;
+        int screenH;
         int iconSize;
 };
 

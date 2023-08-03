@@ -49,10 +49,10 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
     QScreen *screen = QGuiApplication::screens().at(0);
     QRect rect = screen->availableGeometry();
-    int screenW = rect.width();
-    int screenH = rect.height();
+    screenW = rect.width();
+    screenH = rect.height();
 
-    int iconSize = SELECT_ICON_SIZE;
+    iconSize = SELECT_ICON_SIZE;
     // Big resolutions
     if (screenW > HD_WIDTH)
         iconSize = (screenW*2)/100;
@@ -450,12 +450,21 @@ QBoxLayout * SelectionSettings::setPasteBlock()
     pasteCheck->setChecked(onMouse);
     connect(pasteCheck, SIGNAL(stateChanged(int)), this, SLOT(enablePasteOnMouse(int)));
 
+    int pasteSize = 15;
+    int resetSize = 18;
+    if (screenW > HD_WIDTH) {
+        float value = (screenW*0.8)/100;
+        pasteSize = (int) value;
+        value = (screenW*0.95)/100;
+        resetSize = (int) value;
+    }
+
     TLabel *pasteLabel = new TLabel;
-    pasteLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/paste.png").scaledToWidth(15));
+    pasteLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/paste.png").scaledToWidth(pasteSize));
     pasteLabel->setToolTip(tr("Paste objects over mouse position"));
     connect(pasteLabel, SIGNAL(clicked()), this, SLOT(enablePasteOnMouse()));
 
-    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 18);
+    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), resetSize);
     resetButton->setToolTip(tr("Reset Item"));
     connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
 
