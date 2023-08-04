@@ -35,6 +35,7 @@
 
 #include "tupexposuresheet.h"
 #include "tupscenenamedialog.h"
+#include "talgorithm.h"
 
 #include <QHBoxLayout>
 #include <QButtonGroup>
@@ -42,7 +43,6 @@
 #include <QPushButton>
 #include <QActionGroup>
 #include <QPixmap>
-#include <QScreen>
 
 TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModuleWidgetBase(parent, "Exposure Sheet")
 {
@@ -99,8 +99,8 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     createMenuForAFrame();
     // createMenuForSelection();
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     if (screenWidth > HD_WIDTH)
         setMinimumWidth((screenWidth*11)/100); // 11%
 }

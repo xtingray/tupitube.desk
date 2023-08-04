@@ -407,6 +407,7 @@ void TupVideoSurface::setLastImage(const QImage &image)
             posX = 0;
             posY = (image.height() - height)/2;
         }
+
         QImage mask = image.copy(posX, posY, width, height);
         QImage pic = mask.scaledToWidth(displaySize.width(), Qt::SmoothTransformation);
         history << pic;

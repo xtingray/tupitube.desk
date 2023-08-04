@@ -42,7 +42,6 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <QDir>
-#include <QScreen>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QColorDialog>
@@ -62,17 +61,16 @@ TupReflexInterface::TupReflexInterface(const QString &cameraDesc, const QString 
     counter = i;
 
     QSize displaySize = cameraSize;
-    // QDesktopWidget desktop;
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int desktopWidth = screen->geometry().width();
 
-    if (cameraSize.width() > desktopWidth) {
-        int width = desktopWidth / 2;
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    if (cameraSize.width() > screenWidth) {
+        int width = screenWidth / 2;
         int height = width * cameraSize.height() / cameraSize.width();
         displaySize = QSize(width, height);
     } else {
         int maxWidth = 640;
-        if (desktopWidth > 800)
+        if (screenWidth > 800)
             maxWidth = 800;
 
         if (cameraSize.width() > maxWidth) {

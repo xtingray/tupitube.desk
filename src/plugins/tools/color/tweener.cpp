@@ -59,9 +59,9 @@
 #include "tupprojectresponse.h"
 #include "tupgraphiclibraryitem.h"
 #include "tuptextitem.h"
+#include "talgorithm.h"
 
 #include <QMessageBox>
-#include <QScreen>
 #include <QPointF>
 #include <QKeySequence>
 #include <QGraphicsView>
@@ -170,8 +170,10 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 objects = gScene->selectedItems();
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
-                    if (tip.contains(tr("Coloring"))) {
-                        QScreen *screen = QGuiApplication::screens().at(0);
+                    if (tip.contains(tr("Coloring"))) {                        
+                        QPair<int, int> dimension = TAlgorithm::screenDimension();
+                        int screenWidth = dimension.first;
+                        int screenHeight = dimension.second;
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Warning"));
                         msgBox.setIcon(QMessageBox::Warning);
@@ -179,8 +181,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                         msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
                         msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
                         msgBox.show();
-                        msgBox.move(static_cast<int>((screen->geometry().width() - msgBox.width())/2),
-                                    static_cast<int>((screen->geometry().height() - msgBox.height())/2));
+                        msgBox.move(static_cast<int>((screenWidth - msgBox.width())/2),
+                                    static_cast<int>((screenHeight - msgBox.height())/2));
                         msgBox.exec();
 
                         objects.clear();
@@ -206,7 +208,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 }
 
                 QGraphicsItem *item = objects.at(0);
-                QColor color = QColor("#fff");
+                QColor color = QColor(255, 255, 255); // White
                 if (TupTextItem *text = qgraphicsitem_cast<TupTextItem *>(item)) {
                     color = text->defaultTextColor();
                 } else if (TupPathItem *path = qgraphicsitem_cast<TupPathItem *>(item)) {

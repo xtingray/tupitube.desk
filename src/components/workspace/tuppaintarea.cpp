@@ -46,7 +46,6 @@
 #include "tupprojectimporterdialog.h"
 #include "tupprojectscanner.h"
 
-#include <QScreen>
 #include <cmath> // fabs
 #include <QMimeData>
 #include <QNetworkAccessManager>
@@ -69,6 +68,10 @@ TupPaintArea::TupPaintArea(TupProject *work, QWidget *parent): TupPaintAreaBase(
     copyIsValid = false;
     currentToolID = TAction::Pencil;
     webLock = false;
+
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    screenWidth = dimension.first;
+    screenHeight = dimension.second;
 
     setBgColor(work->getCurrentBgColor());
 
@@ -1605,10 +1608,8 @@ void TupPaintArea::removeCurrentFrame()
     if (ask) {
         TOptionalDialog dialog(tr("Do you want to remove this frame?"), tr("Confirmation"), true, false, this);
         dialog.setModal(true);
-
-        QScreen *screen = QGuiApplication::screens().at(0);
-        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
-                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
+        dialog.move(static_cast<int> ((screenWidth - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screenHeight - dialog.sizeHint().height()) / 2));
 
         if (dialog.exec() == QDialog::Rejected)
             return;
@@ -1884,9 +1885,8 @@ void TupPaintArea::importLocalProject(const QString &objectPath, bool onlyLibrar
                     msgBox.setDefaultButton(QMessageBox::Ok);
                     msgBox.show();
 
-                    QScreen *screen = QGuiApplication::screens().at(0);
-                    msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                                static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                    msgBox.move(static_cast<int> ((screenWidth - msgBox.width()) / 2),
+                                static_cast<int> ((screenHeight - msgBox.height()) / 2));
 
                     if (msgBox.exec() == QMessageBox::Yes) {
                         msgBox.close();

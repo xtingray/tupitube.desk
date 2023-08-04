@@ -42,7 +42,6 @@
 #include <QSpacerItem>
 #include <QGroupBox>
 #include <QLabel>
-#include <QScreen>
 
 // Constructor to open new lipsync projects
 TupPapagayoApp::TupPapagayoApp(PapagayoAppMode mode, TupProject *project, const QString &soundFile,
@@ -456,8 +455,9 @@ void TupPapagayoApp::setupUI()
 
     setCentralWidget(centralWidget);
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    setMinimumWidth(screen->geometry().width() * 0.7);
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    screenWidth = dimension.first;
+    setMinimumWidth(screenWidth * 0.7);
 
     if (mode == Update) {
         if (mouthType == Customized) {
@@ -578,10 +578,9 @@ bool TupPapagayoApp::confirmCloseDocument()
     if (document && document->isModified()) {
         TOptionalDialog dialog(tr("Do you want to save this lip-sync record?"), tr("Confirmation Required"),
                                false, true, this);
-        dialog.setModal(true);
-        QScreen *screen = QGuiApplication::screens().at(0);
-        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
-                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
+        dialog.setModal(true);        
+        dialog.move(static_cast<int> ((screenWidth - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screenHeight - dialog.sizeHint().height()) / 2));
         dialog.exec();
 
         TOptionalDialog::Result result = dialog.getResult();

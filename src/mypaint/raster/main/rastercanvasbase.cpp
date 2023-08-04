@@ -42,6 +42,7 @@
 #include "tconfig.h"
 #include "tapplication.h"
 #include "tosd.h"
+#include "talgorithm.h"
 
 #include <QStyleOptionGraphicsItem>
 #include <QClipboard>
@@ -50,7 +51,6 @@
 #include <QApplication>
 #include <cmath>
 #include <QGraphicsSceneMouseEvent>
-#include <QScreen>
 
 RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent) : QGraphicsView(parent)
 {
@@ -154,9 +154,11 @@ void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
         dial->setAngle(static_cast<int>(angle));
         dial->show();
 
-        QScreen *screen = QGuiApplication::screens().at(0);
-        dial->move(static_cast<int> ((screen->geometry().width() - dial->sizeHint().width()) / 2),
-                   static_cast<int> ((screen->geometry().height() - dial->sizeHint().height()) / 2));
+        QPair<int, int> dimension = TAlgorithm::screenDimension();
+        int screenWidth = dimension.first;
+        int screenHeight = dimension.second;
+        dial->move(static_cast<int> ((screenWidth - dial->sizeHint().width()) / 2),
+                   static_cast<int> ((screenHeight - dial->sizeHint().height()) / 2));
 
         return;
     }

@@ -40,8 +40,6 @@
 #include "tuptoolplugin.h"
 #include "eyedroppersettings.h"
 
-#include <QDesktopWidget>
-
 class TUPITUBE_PLUGIN EyeDropper: public TupToolPlugin
 {
     Q_OBJECT

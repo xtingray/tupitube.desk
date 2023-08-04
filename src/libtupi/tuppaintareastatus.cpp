@@ -36,9 +36,9 @@
 #include "tuppaintareastatus.h"
 #include "tcolorcell.h"
 #include "tupbrushmanager.h"
+#include "talgorithm.h"
 
 #include <QHBoxLayout>
-#include <QScreen>
 
 TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, QWidget *parent) : QStatusBar(parent)
 {
@@ -49,8 +49,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     currentFrame = 1;
     colorContext = TColorCell::Contour;
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     QSize iconSize(STATUS_ICON_SIZE, STATUS_ICON_SIZE);
     int panelWidth = 700;
     // Big resolutions

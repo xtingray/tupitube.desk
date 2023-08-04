@@ -36,10 +36,10 @@
 #include "nodesettings.h"
 #include "tconfig.h"
 #include "tseparator.h"
+#include "talgorithm.h"
 
 #include <QBoxLayout>
 #include <QLabel>
-#include <QScreen>
 
 NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
 {
@@ -110,8 +110,8 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     help->hide();
     QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     int minWidth = 130;
     if (screenWidth > HD_WIDTH)
         minWidth = 260;

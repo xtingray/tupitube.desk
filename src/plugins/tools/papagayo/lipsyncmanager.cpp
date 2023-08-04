@@ -36,11 +36,11 @@
 #include "lipsyncmanager.h"
 #include "tseparator.h"
 #include "toptionaldialog.h"
+#include "talgorithm.h"
 
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QListWidgetItem>
-#include <QScreen>
 
 LipSyncManager::LipSyncManager(QWidget *parent): QWidget(parent)
 {
@@ -153,9 +153,13 @@ void LipSyncManager::removeLipSync()
         TOptionalDialog dialog(tr("Are you sure you want to delete this lip-sync record?"),
                                tr("Confirmation Required"), false, false, this);
         dialog.setModal(true);
-        QScreen *screen = QGuiApplication::screens().at(0);
-        dialog.move(static_cast<int> ((screen->geometry().width() - dialog.sizeHint().width()) / 2),
-                    static_cast<int> ((screen->geometry().height() - dialog.sizeHint().height()) / 2));
+
+        QPair<int, int> dimension = TAlgorithm::screenDimension();
+        int screenWidth = dimension.first;
+        int screenHeight = dimension.second;
+
+        dialog.move(static_cast<int> ((screenWidth - dialog.sizeHint().width()) / 2),
+                    static_cast<int> ((screenHeight - dialog.sizeHint().height()) / 2));
         dialog.exec();
 
         TOptionalDialog::Result result = dialog.getResult();

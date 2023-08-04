@@ -34,17 +34,17 @@
  ***************************************************************************/
 
 #include "tupprojectactionbar.h"
-
-#include <QScreen>
+#include "talgorithm.h"
 
 TupProjectActionBar::TupProjectActionBar(const QString &tag, QList<Action> actionsList,
                                          Qt::Orientation direction, QWidget *parent) : QWidget(parent)
 {
     container = tag;
     orientation = direction;
-    screen = QGuiApplication::screens().at(0);
-    screenWidth = screen->geometry().width();
-    screenHeight = screen->geometry().height();
+
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    screenWidth = dimension.first;
+    screenHeight = dimension.second;
 
     connect(&actions, SIGNAL(buttonClicked(int)), this, SLOT(emitActionSelected(int)));
     setup(actionsList);

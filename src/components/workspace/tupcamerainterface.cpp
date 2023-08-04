@@ -42,7 +42,6 @@
 #include <QBoxLayout>
 #include <QIcon>
 #include <QDir>
-#include <QScreen>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QColorDialog>
@@ -64,19 +63,18 @@ TupCameraInterface::TupCameraInterface(const QString &title, QList<QCameraInfo> 
     counter = i;
 
     widgetStack = new QStackedWidget();
-    QSize displaySize = cameraSize;
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int desktopWidth = screen->geometry().width();
 
-    if (cameraSize.width() > desktopWidth) { // If camera resolution is bigger than screen resolution
-        int width = desktopWidth/2;
+    QSize displaySize = cameraSize;
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    if (cameraSize.width() > screenWidth) { // If camera resolution is bigger than screen resolution
+        int width = screenWidth / 2;
         int height = width * cameraSize.height() / cameraSize.width();
         displaySize = QSize(width, height);
     } else {
         int maxWidth = 640;
-        if (desktopWidth > 1000)
+        if (screenWidth > 1000)
             maxWidth = 1000;
-            // maxWidth = 800;
 
         if (cameraSize.width() > maxWidth) { // Limit display size to maxWidth
             int height = maxWidth * cameraSize.height() / cameraSize.width();

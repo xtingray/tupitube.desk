@@ -71,7 +71,6 @@
 #include <QKeySequence>
 #include <QTextBrowser>
 #include <QToolBar>
-#include <QScreen>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 
@@ -222,7 +221,8 @@ class TupMainWindow : public TabbedMainWindow
         bool lastSave;
 
     private:
-        QScreen *screen;
+        int screenWidth;
+        int screenHeight;
         TupDocumentView *animationTab;
         TupAnimationSpace *playerTab;
         TupNewsDialog *newsDialog;

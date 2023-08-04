@@ -198,6 +198,9 @@ class TUPITUBE_EXPORT TupPaintArea : public TupPaintAreaBase, public TupAbstract
         TupProjectScanner *projectScanner;
         QString webAssetName;
         bool webLock;
+
+        int screenWidth;
+        int screenHeight;
 };
 
 #endif

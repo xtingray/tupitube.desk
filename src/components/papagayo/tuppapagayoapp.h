@@ -157,6 +157,9 @@ class TUPITUBE_EXPORT TupPapagayoApp : public QMainWindow
         QString locale;
         QSpinBox *initFrameBox;
         TupLipSync *oldLipsync;
+
+        int screenWidth;
+        int screenHeight;
 };
 
 #endif // TUPPAPAGAYOAPP_H

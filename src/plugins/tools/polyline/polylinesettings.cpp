@@ -36,8 +36,7 @@
 #include "polylinesettings.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
-
-#include <QScreen>
+#include "talgorithm.h"
 
 PolylineSettings::PolylineSettings(QWidget *parent) : QWidget(parent)
 {
@@ -62,8 +61,8 @@ PolylineSettings::PolylineSettings(QWidget *parent) : QWidget(parent)
 
     mainLayout->addLayout(layout);
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     int minWidth = 130;
     if (screenWidth > HD_WIDTH)
         minWidth = 260;

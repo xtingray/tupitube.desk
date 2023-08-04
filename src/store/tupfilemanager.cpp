@@ -45,7 +45,6 @@
 #include "tosd.h"
 
 #include <QDir>
-#include <QScreen>
 #include <QMessageBox>
 
 TupFileManager::TupFileManager() : QObject()
@@ -370,7 +369,10 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             #endif
 
             QApplication::restoreOverrideCursor();
-            QScreen *screen = QGuiApplication::screens().at(0);
+            QPair<int, int> dimension = TAlgorithm::screenDimension();
+            int screenWidth = dimension.first;
+            int screenHeight = dimension.second;
+
             TBackupDialog *dialog = new TBackupDialog(projectDir.path(), filename);
             dialog->show();
 
@@ -388,8 +390,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                              "<b>https://www.tupitube.com</b>"));
                 msgBox.setStandardButtons(QMessageBox::Ok);
                 msgBox.show();
-                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                msgBox.move(static_cast<int> ((screenWidth - msgBox.width()) / 2),
+                            static_cast<int> ((screenHeight - msgBox.height()) / 2));
                 msgBox.exec();
             } else if (result == QDialog::Rejected) {
                 QMessageBox msgBox;
@@ -399,8 +401,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
                                   "Please, try to backup your animation files often.").arg(filename));
                 msgBox.setStandardButtons(QMessageBox::Ok);
                 msgBox.show();
-                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                msgBox.move(static_cast<int> ((screenWidth - msgBox.width()) / 2),
+                            static_cast<int> ((screenHeight - msgBox.height()) / 2));
                 msgBox.exec();
             }
 

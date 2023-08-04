@@ -452,8 +452,6 @@ void TupMainWindow::setupHelpActions()
 
 void TupMainWindow::setupToolBar()
 {
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
     int iconSize = 22;
     // Big resolutions
     if (screenWidth > HD_WIDTH)

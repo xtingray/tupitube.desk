@@ -48,7 +48,6 @@
 #include <QVBoxLayout>
 #include <QVariant>
 #include <QSpacerItem>
-#include <QScreen>
 
 class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
 {
@@ -115,7 +114,6 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
         QBoxLayout *buttonLayout;
         bool isAnimated;
 
-        QScreen *screen;
         int screenWidth;
         int screenHeight;
 };

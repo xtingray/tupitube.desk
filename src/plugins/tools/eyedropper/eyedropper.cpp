@@ -36,6 +36,7 @@
 #include "eyedropper.h"
 #include "tuprequestbuilder.h"
 
+#include <QDesktopWidget>
 #include <QScreen>
 
 EyeDropper::EyeDropper()

@@ -49,10 +49,10 @@
 #include "tuplibraryobject.h"
 #include "tupscene.h"
 #include "tuplayer.h"
+#include "talgorithm.h"
 
 #include <QMessageBox>
 #include <QDir>
-#include <QScreen>
 
 Tweener::Tweener(): TupToolPlugin()
 {
@@ -163,8 +163,10 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                 foreach (QGraphicsItem *item, objects) {
                     QString tip = item->toolTip();
                     if (tip.contains(tr("Shear"))) {
-                        // QDesktopWidget desktop;
-                        QScreen *screen = QGuiApplication::screens().at(0);
+                        QPair<int, int> dimension = TAlgorithm::screenDimension();
+                        int screenWidth = dimension.first;
+                        int screenHeight = dimension.second;
+
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Warning"));
                         msgBox.setIcon(QMessageBox::Warning);
@@ -172,8 +174,8 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                         msgBox.setInformativeText(tr("Please, edit the previous tween of these objects."));
                         msgBox.addButton(QString(tr("Accept")), QMessageBox::AcceptRole);
                         msgBox.show();
-                        msgBox.move(static_cast<int>((screen->geometry().width() - msgBox.width())/2),
-                                    static_cast<int>((screen->geometry().height() - msgBox.height())/2));
+                        msgBox.move(static_cast<int>((screenWidth - msgBox.width())/2),
+                                    static_cast<int>((screenHeight - msgBox.height())/2));
                         msgBox.exec();
 
                         objects.clear();

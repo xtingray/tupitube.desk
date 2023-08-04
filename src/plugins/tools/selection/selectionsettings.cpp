@@ -41,28 +41,31 @@
 #include "tlabel.h"
 #include "timagebutton.h"
 #include "tseparator.h"
+#include "talgorithm.h"
 
-#include <QScreen>
 #include <QButtonGroup>
 
 SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
-    QScreen *screen = QGuiApplication::screens().at(0);
-    QRect rect = screen->availableGeometry();
-    screenW = rect.width();
-    screenH = rect.height();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    screenW = dimension.first;
+    screenH = dimension.second;
 
-    iconSize = SELECT_ICON_SIZE;
+    iconSize = PANEL_ICON_SIZE;
+    int toolIconSize = PLUGIN_ICON_SIZE;
     // Big resolutions
-    if (screenW > HD_WIDTH)
+    if (screenW > HD_WIDTH) {
         iconSize = (screenW*2)/100;
+        float value = (screenW*0.8)/100;
+        toolIconSize = value;
+    }
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
+    QPixmap pic(THEME_DIR + "icons/selection.png");
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
-    QPixmap pic(THEME_DIR + "icons/selection.png");
-    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
+    toolTitle->setPixmap(pic.scaledToWidth(toolIconSize, Qt::SmoothTransformation));
     toolTitle->setToolTip(tr("Selection Properties"));
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
@@ -85,7 +88,7 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     tips = new QPushButton(tr("Show Tips"));
     tips->setToolTip(tr("A little help for the Selection tool"));
-    if (screenH <  1080) {
+    if (screenH < 1080) {
         QFont font = this->font();
         font.setPointSize(8);
         tips->setFont(font);

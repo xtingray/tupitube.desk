@@ -40,7 +40,6 @@
 #include "tupproxyitem.h"
 
 #include <QMessageBox>
-#include <QScreen>
 
 NodesTool::NodesTool()
 {
@@ -100,15 +99,12 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
     #endif
 
     QPointF coord = input->pos();
-    // qDebug() << "COORD ->" << coord;
-
     QList<QGraphicsItem *> currentSelection = gScene->selectedItems();
 
     QString pathStr = "";
     TupPathItem *pathItem = nullptr;
 
     if (!currentSelection.isEmpty()) {
-        // qDebug() << "ITEM WAS SELECTED!";
         TupFrame *frame = getCurrentFrame();
         int itemIndex;
 
@@ -169,19 +165,7 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
             QPointF shift = itemPos - pathItem->mapToScene(itemPos);
             coord += shift;
 
-            /*
-            qDebug() << "";
-            qDebug() << "*** itemPos ->" << itemPos;
-            qDebug() << "*** shift ->" << shift;
-            qDebug() << "*** coord ->" << coord;
-            */
-
             if ((shiftEnabled || ctrlEnabled) && activeSelection) { // Adding a new node
-                /*
-                qDebug() << "CTRL/SHIFT ENABLED!";
-                qDebug() << "";
-                qDebug() << "IN: The path rect was clicked!";
-                */
                 if (pathItem->pointMatchesPath(coord, brushManager->penWidth(), PencilMode)) { // Point is part of the path
                     #ifdef TUP_DEBUG
                         qDebug() << "[NodesTool::release()] - Inserting a node in the path...";
@@ -191,22 +175,17 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     if (ctrlEnabled)
                         node = LineNode;
 
-                    // qDebug() << "IN - Adding node in the path!";
                     pathStr = pathItem->addInnerNode(brushManager->penWidth(), node);
 
                     nodeGroup->clear();
                     nodeGroup->createNodes(pathItem);
                     nodeGroup->resizeNodes(realFactor);
 
-                    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
-                        // qDebug() << "CODE 29";
+                    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem()))
                         configPanel->setNodesTotal(pathItem->nodesCount());
-                    } else {
-                        // qDebug() << "CODE 30";
-                    }
+
 
                     if (itemIndex >= 0) {
-                        // qDebug() << "Calling EditNodes action...";
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
                                                                                        currentLayer, currentFrame, itemIndex,
                                                                                        QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
@@ -220,10 +199,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 
                     QPainterPath qPath = pathItem->path();
                     if (ctrlEnabled) {
-                        // qDebug() << "OUT 1 - Adding straight line around the path!";
                         qPath.lineTo(coord);
                     } else if (shiftEnabled) {
-                        // qDebug() << "OUT 1 - Adding curve line around the path!";
                         QPair<QPointF,QPointF> points = pathItem->calculateEndPathCPoints(coord);
                         qPath.cubicTo(points.first, points.second, coord);
                     }
@@ -235,15 +212,10 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     nodeGroup->createNodes(pathItem);
                     nodeGroup->resizeNodes(realFactor);
 
-                    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
-                        // qDebug() << "CODE 29";
+                    if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem()))
                         configPanel->setNodesTotal(pathItem->nodesCount());
-                    } else {
-                        // qDebug() << "CODE 30";
-                    }
 
                     if (itemIndex >= 0) {
-                        // qDebug() << "Calling EditNodes action...";
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
                                                                                        currentLayer, currentFrame, itemIndex,
                                                                                        QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
@@ -253,7 +225,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 }
             } else { // Processing path
                 if (itemIndex == -1) { // Node action
-                    // qDebug() << "FLAG 1";
                     // Node was selected
                     if (qgraphicsitem_cast<TControlNode*>(pathItem)) {
                         #ifdef TUP_DEBUG
@@ -286,13 +257,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
 
                 // Avoiding to select the same item twice
                 if (activeSelection) {
-                    // qDebug() << "FLAG 2";
                     TupFrame *frame = getCurrentFrame();
                     int oldIndex = frame->indexOf(nodeGroup->parentItem());
-
-                    // qDebug() << "OLDINDEX -> " << oldIndex;
-                    // qDebug() << "ITEMINDEX ->" << itemIndex;
-
                     if (oldIndex != itemIndex) { // New selection
                         #ifdef TUP_DEBUG
                             qDebug() << "[NodesTool::release()] - A new object has been selected! (active selection was on)";
@@ -308,8 +274,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         pathItem->resetPathHistory();
                         if (pathItem->isNotEdited())
                             pathItem->saveOriginalPath();
-
-                        // configPanel->setNodesTotal(pathItem->nodesCount());
 
                         #ifdef TUP_DEBUG
                             qDebug() << "---";
@@ -347,12 +311,10 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     #endif
 
                     int nodesTotal = pathItem->nodesCount();
-                    // qDebug() << "";
-                    // qDebug() << "PATH NODES TOTAL ->" << nodesTotal;
                     if (nodesTotal > 100) {
-                        // qDebug() << "Cleaning nodes path...";
-
-                        QScreen *screen = QGuiApplication::screens().at(0);
+                        QPair<int, int> dimension = TAlgorithm::screenDimension();
+                        int screenWidth = dimension.first;
+                        int screenHeight = dimension.second;
 
                         QMessageBox msgBox;
                         msgBox.setWindowTitle(tr("Too many nodes!"));
@@ -362,8 +324,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         msgBox.setStandardButtons(QMessageBox::Ok);
                         msgBox.show();
 
-                        msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                                    static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+                        msgBox.move(static_cast<int> ((screenWidth - msgBox.width()) / 2),
+                                    static_cast<int> ((screenHeight - msgBox.height()) / 2));
 
                         if (msgBox.exec() == QMessageBox::Ok)
                             msgBox.close();
@@ -393,7 +355,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
             #endif
         }
     } else {
-        // qDebug() << "FLAG 3";
         if (activeSelection) {
             if (shiftEnabled || ctrlEnabled) {
                 QGraphicsItem *item = nodeGroup->parentItem();
@@ -401,24 +362,9 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                 int itemIndex = frame->indexOf(item);
                 pathItem = qgraphicsitem_cast<TupPathItem *>(item);
 
-                /*
-                qDebug() << "---";
-                qDebug() << "2 pathItem->mapToScene(coords) ->" << pathItem->mapToScene(coord);
-                qDebug() << "2 pathItem->mapToItem(coords) ->" << pathItem->mapToItem(pathItem, coord);
-                qDebug() << "2 pathItem->mapToParent(coords) ->" << pathItem->mapToParent(coord);
-                coord = pathItem->mapToItem(pathItem, coord);
-                */
-
                 QPointF itemPos = pathItem->boundingRect().topLeft();
                 QPointF shift = itemPos - pathItem->mapToScene(itemPos);
                 coord += shift;
-
-                /*
-                qDebug() << "";
-                qDebug() << "*** itemPos ->" << itemPos;
-                qDebug() << "*** shift ->" << shift;
-                qDebug() << "*** coord ->" << coord;
-                */
 
                 if (pathItem->pointMatchesPath(coord, brushManager->penWidth(), PencilMode)) { // Point is part of the path
                     #ifdef TUP_DEBUG
@@ -429,7 +375,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     if (ctrlEnabled)
                         node = LineNode;
 
-                    // qDebug() << "2. IN - Adding node in the path!";
                     pathStr = pathItem->addInnerNode(brushManager->penWidth(), node);
 
                     nodeGroup->clear();
@@ -439,7 +384,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                     configPanel->setNodesTotal(pathItem->nodesCount());
 
                     if (itemIndex >= 0) {
-                        // qDebug() << "2. Calling EditNodes action...";
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
                                                                                        currentLayer, currentFrame, itemIndex,
                                                                                        QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
@@ -454,10 +398,8 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         QPainterPath qPath = pathItem->path();
 
                         if (ctrlEnabled) {
-                            // qDebug() << "OUT 1 - Adding straight line around the path!";
                             qPath.lineTo(coord);
                         } else if (shiftEnabled) {
-                            // qDebug() << "OUT 1 - Adding curve line around the path!";
                             QPair<QPointF,QPointF> points = pathItem->calculateEndPathCPoints(coord);
                             qPath.cubicTo(points.first, points.second, coord);
                         }
@@ -472,7 +414,6 @@ void NodesTool::release(const TupInputDeviceInformation *input, TupBrushManager 
                         configPanel->setNodesTotal(pathItem->nodesCount());
 
                         if (itemIndex >= 0) {
-                            // qDebug() << "Calling EditNodes action...";
                             TupProjectRequest event = TupRequestBuilder::createItemRequest(gScene->currentSceneIndex(),
                                                                                            currentLayer, currentFrame, itemIndex,
                                                                                            QPointF(), gScene->getSpaceContext(), TupLibraryObject::Item,
@@ -593,9 +534,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                          if (!path->isSelected())
                              path->setSelected(true);
 
-                         // qDebug() << "1 expandNode ->" << expandNode;
                          if (expandNode) {
-                             // qDebug() << "FLAG 1";
                              nodeGroup->expandNode(nodeIndex);
                              expandNode = false;
                          }
@@ -614,9 +553,7 @@ void NodesTool::itemResponse(const TupItemResponse *response)
                      if (!item->isSelected())
                          item->setSelected(true);
 
-                     // qDebug() << "2 expandNode ->" << expandNode;
                      if (expandNode) {
-                         // qDebug() << "FLAG 1";
                          nodeGroup->expandNode(nodeIndex);
                          expandNode = false;
                      }
@@ -699,26 +636,15 @@ void NodesTool::keyPressEvent(QKeyEvent *event)
                 emit callForPlugin(flags.first, flags.second);
         } else if (key == Qt::Key_X) {
             if (nodeGroup) {
-                // qDebug() << "   DELETING ELEMENT!";
-                // qDebug() << "";
-
                 nodeGroup->syncNodesFromParent();
                 nodeGroup->removeSelectedNode();
 
-                if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
-                    // qDebug() << "CODE 27";
+                if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem()))
                     configPanel->setNodesTotal(pathItem->nodesCount());
-                } else {
-                    // qDebug() << "CODE 28";
-                }
             }
         } else if (key == Qt::Key_M) {
-            if (nodeGroup) {
-                // qDebug() << "   CHANGING NODE TYPE!";
-                // qDebug() << "";
-
+            if (nodeGroup)
                 nodeGroup->changeSelectedNode();
-            }
         } else if ((key == Qt::Key_Left) || (key == Qt::Key_Up)
                    || (key == Qt::Key_Right) || (key == Qt::Key_Down)) {
             int delta = 5;
@@ -904,9 +830,6 @@ void NodesTool::updateCurrentPath(int newTotal)
     if (activeSelection) {
         if (TupPathItem *pathItem = qgraphicsitem_cast<TupPathItem *>(nodeGroup->parentItem())) {
             int nodesTotal = pathItem->nodesCount();
-            // qDebug() << "Path nodesTotal ->" << nodesTotal;
-            // qDebug() << "---";
-
             TupFrame *frame = getCurrentFrame();
             int position = frame->indexOf(nodeGroup->parentItem());
             QString path = "";
@@ -916,13 +839,10 @@ void NodesTool::updateCurrentPath(int newTotal)
             if (nodesTotal > newTotal) { // Removing nodes
                 if (nodesTotal > 2) {
                     int iterations = nodesTotal - newTotal;
-                    // qDebug() << "Removing nodes to the path...";
-                    // qDebug() << "Nodes to remove ->" << iterations;
                     int nodesCounter = nodesTotal;
                     for(int i=0; i < iterations; i++) {
                         path = pathItem->refactoringPath(configPanel->policyParam(), nodesCounter);
                         nodesCounter--;
-                        // qDebug() << "path ->" << path;
 
                         TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                                                        currentLayer, currentFrame, position,
@@ -933,13 +853,10 @@ void NodesTool::updateCurrentPath(int newTotal)
                 }
             } else { // Restoring nodes
                 int iterations = newTotal - nodesTotal;
-                // qDebug() << "Adding nodes to the path...";
-                // qDebug() << "Nodes to add ->" << iterations;
                 int nodesCounter = nodesTotal;
                 for(int i=0; i < iterations; i++) {
                     path = pathItem->pathRestored(newTotal);
                     nodesCounter--;
-                    // qDebug() << "path ->" << path;
 
                     TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                                                    currentLayer, currentFrame, position,
@@ -987,8 +904,6 @@ void NodesTool::removeNodeFromPath(int index)
             emit requested(&event);
         } else {
             QString path = pathItem->removeNodeFromPath(index);
-            // qDebug() << "PATH ->" << path;
-
             TupProjectRequest event = TupRequestBuilder::createItemRequest(scene->currentSceneIndex(),
                                                                            currentLayer, currentFrame, position,
                                                                            QPointF(), scene->getSpaceContext(), TupLibraryObject::Item,
@@ -1009,8 +924,6 @@ void NodesTool::modifyNodeFromPath(int index)
         int position = frame->indexOf(nodeGroup->parentItem());
 
         QString path = pathItem->changeNodeTypeFromPath(index);
-        // qDebug() << "PATH ->" << path;
-
         expandNode = true;
         nodeIndex = index;
 

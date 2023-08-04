@@ -34,15 +34,14 @@
  ***************************************************************************/
 
 #include "tbuttonbar.h"
-
-#include <QScreen>
+#include "talgorithm.h"
 
 TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent), m_shouldBeVisible(true)
 {
     setMovable(false);
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     int iconSize = TOOLVIEW_ICON_SIZE;
     // Big resolutions
     if (screenWidth > HD_WIDTH)

@@ -59,6 +59,7 @@ class TUPITUBE_PLUGIN ColorSettings : public QWidget
     Q_OBJECT
 
     public:
+        enum FillTypes{InternalFill = 0, LineFill, AllFill};
         ColorSettings(QWidget *parent = nullptr);
         ~ColorSettings();
 

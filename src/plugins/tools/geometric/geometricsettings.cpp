@@ -37,11 +37,11 @@
 #include "tapplicationproperties.h"
 #include "tconfig.h"
 #include "tseparator.h"
+#include "talgorithm.h"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QButtonGroup>
-#include <QScreen>
 
 GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {
@@ -177,8 +177,8 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
 
     mainLayout->addLayout(layout);
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     int minWidth = 130;
     if (screenWidth > HD_WIDTH)
         minWidth = 260;

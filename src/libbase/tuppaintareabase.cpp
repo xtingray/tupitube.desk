@@ -43,6 +43,7 @@
 #include "tconfig.h"
 #include "tapplication.h"
 #include "tosd.h"
+#include "talgorithm.h"
 
 #include <QGraphicsScene>
 #include <QStyleOptionGraphicsItem>
@@ -52,7 +53,6 @@
 #include <QApplication>
 #include <cmath>
 #include <QGraphicsSceneMouseEvent>
-#include <QScreen>
 #include <QMimeData>
 
 TupPaintAreaBase::TupPaintAreaBase(QWidget *parent, QSize dimension, TupLibrary *library) : QGraphicsView(parent)
@@ -244,13 +244,15 @@ void TupPaintAreaBase::keyPressEvent(QKeyEvent *event)
     }
 
     if (!gScene->userIsDrawing() && (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier))) {
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
 
-        QScreen *screen = QGuiApplication::screens().at(0);
-        dial->move(static_cast<int> ((screen->geometry().width() - dial->sizeHint().width()) / 2),
-                   static_cast<int> ((screen->geometry().height() - dial->sizeHint().height()) / 2));
+        QPair<int, int> dimension = TAlgorithm::screenDimension();
+        int screenWidth = dimension.first;
+        int screenHeight = dimension.second;
+        dial->move(static_cast<int> ((screenWidth - dial->sizeHint().width()) / 2),
+                   static_cast<int> ((screenHeight - dial->sizeHint().height()) / 2));
 
         return;
     }

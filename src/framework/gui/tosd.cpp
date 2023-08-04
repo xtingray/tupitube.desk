@@ -35,8 +35,7 @@
 
 #include "tosd.h"
 #include "tconfig.h"
-
-#include <QScreen>
+#include "talgorithm.h"
 
 TOsd *TOsd::s_osd = 0;
 
@@ -144,17 +143,15 @@ void TOsd::display(Level level, const QString &message,int ms)
     int width = (int)textSize.width() + 10;
     int height = (int)textSize.height() + 10;
 
-    // QDesktopWidget desktop;
-    // move((int) (desktop.screenGeometry().width() - textSize.width()) - 25, 
-    //            (int) (desktop.screenGeometry().height() - textSize.height()) - 45);
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int screenHeight = dimension.second;
 
-
-    QScreen *screen = QGuiApplication::screens().at(0);
-    move(static_cast<int> ((screen->geometry().width() - textSize.width()) - 25),
-         static_cast<int> ((screen->geometry().height() - textSize.height()) - 45));
+    move(static_cast<int> ((screenWidth - textSize.width()) - 25),
+         static_cast<int> ((screenHeight - textSize.height()) - 45));
 
     QRect geometry(0, 0, width + 10, height + 8);
-    QRect geometry2(0, 0, width + 9, height + 7);
+    // QRect geometry2(0, 0, width + 9, height + 7);
 
     // resize pixmap, mask and widget
     QBitmap mask;

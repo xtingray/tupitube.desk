@@ -39,8 +39,6 @@
 #include "tupcrashwidget.h"
 #include "tapptheme.h"
 
-#include <QScreen>
-
 TupCrashHandler *TupCrashHandler::m_instance = 0;
 
 void crashTrapper(int sig);
@@ -298,18 +296,6 @@ void crashTrapper(int sig)
         argument << QString(BIN_DIR + "tupitube.bin");
 
         execInfo = runCommand("/usr/bin/file", argument);
-
-        /*
-           SQA: Find the crash error in this piece of code
-           qDebug() << "*** Launching debugging dialog...";
-           QScreen *screen = QGuiApplication::screens().at(0);
-           TupCrashWidget widget(loadStyle(), sig);
-           widget.setPid(::getpid());
-           widget.addBacktracePage(execInfo, bt);
-           widget.exec();
-           widget.move(static_cast<int> ((screen->geometry().width() - widget.width()) / 2),
-                       static_cast<int> ((screen->geometry().height() - widget.height()) / 2));
-        */
 
         // Process crashed!
         ::alarm(0);

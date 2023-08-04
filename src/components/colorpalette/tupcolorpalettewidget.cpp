@@ -43,6 +43,7 @@
 #include "tconfig.h"
 #include "tuppaintareaevent.h"
 #include "tvhbox.h"
+#include "talgorithm.h"
 
 #include <QBoxLayout>
 #include <QPushButton>
@@ -51,7 +52,6 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QMenu>
-#include <QScreen>
 
 TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBase(parent)
 {
@@ -88,8 +88,8 @@ TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBa
     tab->setMinimumHeight(320);
     splitter->addWidget(tab);
 
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int screenWidth = screen->geometry().width();
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
     // Big resolutions
     if (screenWidth > HD_WIDTH) {
         int width = (screenWidth*18)/100;

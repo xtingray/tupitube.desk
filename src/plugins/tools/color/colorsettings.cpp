@@ -43,6 +43,7 @@
 #include "timagebutton.h"
 #include "tseparator.h"
 #include "tosd.h"
+#include "talgorithm.h"
 
 #include <QBoxLayout>
 #include <QColorDialog>
@@ -50,6 +51,13 @@
 
 ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 {
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenW = dimension.first;
+    int iconSize = PANEL_ICON_SIZE;
+    // Big resolutions
+    if (screenW > HD_WIDTH)
+        iconSize = (screenW*2)/100;
+
     selectionDone = false;
     totalStepsCount = 0;
 
@@ -71,10 +79,10 @@ ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
     options->addItem(tr("Set Properties"), 1);
     connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), iconSize);
     connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
-    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
+    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), iconSize);
     connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
@@ -161,7 +169,7 @@ void ColorSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    initialColor = QColor("#fff");
+    initialColor = QColor(255, 255, 255);
     initColorButton = new QPushButton();
     initColorButton->setText(tr("White"));
     initColorButton->setPalette(QPalette(initialColor));
@@ -190,7 +198,7 @@ void ColorSettings::setInnerForm()
     coloringInitLayout->addWidget(coloringInitLabel);
     coloringInitLayout->addWidget(initColorButton);
 
-    endingColor = QColor("#fff");
+    endingColor = QColor(255, 255, 255);
     endColorButton = new QPushButton();
     endColorButton->setText(tr("White"));
     endColorButton->setPalette(QPalette(endingColor));
@@ -394,7 +402,7 @@ void ColorSettings::setInitialColor()
 
 void ColorSettings::setInitialColor(QColor color) {
     initialColor = color;
-    endingColor = QColor("#fff");
+    endingColor = QColor(255, 255, 255);
     updateColor(initialColor, initColorButton);
     updateColor(endingColor, endColorButton);
 }
@@ -441,13 +449,17 @@ QString ColorSettings::tweenToXml(int currentScene, int currentLayer, int curren
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
 
-    QString type = fillTypeCombo->currentText();
-    TupItemTweener::FillType fillType;
-    if (type.compare(tr("Internal Fill")) == 0) 
+    // QString type = fillTypeCombo->currentText();
+    int index = fillTypeCombo->currentIndex();
+    TupItemTweener::FillType fillType = TupItemTweener::Internal;
+    // if (type.compare(tr("Internal Fill")) == 0)
+    if (index == InternalFill) // Internal Fill
         fillType = TupItemTweener::Internal;
-    if (type.compare(tr("Line Fill")) == 0)
+    // if (type.compare(tr("Line Fill")) == 0)
+    if (index == LineFill) // Line Fill
         fillType = TupItemTweener::Line;
-    if (type.compare(tr("Line & Internal Fill")) == 0)
+    // if (type.compare(tr("Line & Internal Fill")) == 0)
+    if (index == AllFill) // Internal and Line Fill
         fillType = TupItemTweener::FillAll;
 
     root.setAttribute("fillType", fillType);

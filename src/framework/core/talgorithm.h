@@ -62,6 +62,7 @@ class T_CORE_EXPORT TAlgorithm
         static float calculateBFromLine(const QPointF &point, float slope);
         static float calculateYFromLine(float x, float m, float b);
         static float distanceFromLine(QPointF linePoint1, QPointF linePoint2, QPointF point);
+        static QPair<int, int> screenDimension();
 };
 
 #endif

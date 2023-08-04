@@ -50,6 +50,7 @@
 #include <QCryptographicHash>
 #include <QRandomGenerator>
 #include <QCollator>
+#include <QScreen>
 
 int TAlgorithm::random()
 {
@@ -299,4 +300,15 @@ float TAlgorithm::distanceFromLine(QPointF linePoint1, QPointF linePoint2, QPoin
     qreal bottom = sqrt(pow(linePoint2.x() - linePoint1.x(), 2) + pow(linePoint2.y() - linePoint1.y(), 2));
 
     return (top / bottom);
+}
+
+QPair<int, int> TAlgorithm::screenDimension()
+{
+    QPair<int, int> dimension;
+    QScreen *screen = QGuiApplication::screens().at(0);
+    QRect rect = screen->availableGeometry();
+    dimension.first = rect.width();
+    dimension.second = rect.height();
+
+    return dimension;
 }

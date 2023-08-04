@@ -42,7 +42,6 @@
 #include <QDir>
 #include <QBoxLayout>
 #include <QPushButton>
-#include <QScreen>
 
 TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCameraInfo> cameraDevices, QComboBox *devicesCombo,
                                                  int cameraIndex, const QSize cameraSize, int i, QWidget *parent) : QFrame(parent)
@@ -58,16 +57,16 @@ TupBasicCameraInterface::TupBasicCameraInterface(const QString &title, QList<QCa
     path = randomPath();
     QSize displaySize = cameraSize;
     widgetStack = new QStackedWidget();
-    QScreen *screen = QGuiApplication::screens().at(0);
-    int desktopWidth = screen->geometry().width();
 
-    if (cameraSize.width() > desktopWidth) {
-        int width = desktopWidth / 2;
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    if (cameraSize.width() > screenWidth) {
+        int width = screenWidth / 2;
         int height = width * cameraSize.height() / cameraSize.width();
         displaySize = QSize(width, height);
     } else {
         int maxWidth = 640;
-        if (desktopWidth > 800)
+        if (screenWidth > 800)
             maxWidth = 800;
 
         if (cameraSize.width() > maxWidth) {

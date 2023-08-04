@@ -1314,7 +1314,7 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
 void TupDocumentView::createToolBar()
 {
     barGrid = new QToolBar(tr("Paint area actions"), this);
-    int iconSize = 16;
+    int iconSize = TOPBAR_ICON_SIZE;
     if (bigScreen)
         iconSize = (screenWidth*2)/100;
     barGrid->setIconSize(QSize(iconSize, iconSize));
