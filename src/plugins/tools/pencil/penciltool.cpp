@@ -59,7 +59,7 @@ void PencilTool::setupActions()
 {
     penCursor = QCursor(QPixmap(kAppProp->themeDir() + "cursors/target.png"), 4, 4);
 
-    TAction *pencil = new TAction(QPixmap(kAppProp->themeDir() + "icons/pencil.png"), tr("Pencil"), this);
+    TAction *pencil = new TAction(QPixmap(ICONS_DIR + "pencil.png"), tr("Pencil"), this);
     pencil->setShortcut(QKeySequence(tr("P")));
     pencil->setToolTip(tr("Pencil") + " - " + tr("P"));
     pencil->setCursor(penCursor);
@@ -272,7 +272,7 @@ QWidget *PencilTool::configurator()
     #endif
 
     if (!settings) {
-        settings = new PenSettings;
+        settings = new PencilSettings;
         connect(settings, SIGNAL(toolEnabled(PenTool)), this, SLOT(updatePenTool(PenTool)));
         connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
         connect(settings, SIGNAL(eraserSizeChanged(int)), this, SLOT(updateEraserSize(int)));
@@ -351,7 +351,7 @@ void PencilTool::saveConfig()
 
     /*
     if (settings) {
-        settings = new PenSettings;
+        settings = new PencilSettings;
         connect(settings, SIGNAL(toolEnabled(PenTool)), this, SLOT(updatePenTool(PenTool)));
         connect(settings, SIGNAL(smoothnessUpdated(double)), this, SLOT(updateSmoothness(double)));
         connect(settings, SIGNAL(eraserSizeChanged(int)), this, SLOT(updateEraserSize(int)));

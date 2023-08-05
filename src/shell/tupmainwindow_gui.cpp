@@ -39,7 +39,7 @@
 #include "tcommandhistory.h"
 #include "toolview.h"
 #include "tviewbutton.h"
-// #include "taudioplayer.h"
+#include "tresponsiveui.h"
 
 void TupMainWindow::createGUI()
 {
@@ -323,49 +323,49 @@ void TupMainWindow::setMenuItemsContext(bool flag)
 
 void TupMainWindow::setupFileActions()
 {
-    TAction *newProject = new TAction(QPixmap(THEME_DIR + "icons/new.png"), tr("New Project"), QKeySequence(tr("Ctrl+N")),
+    TAction *newProject = new TAction(QPixmap(ICONS_DIR + "new.png"), tr("New Project"), QKeySequence(tr("Ctrl+N")),
 				      this, SLOT(newProject()), m_actionManager);
     newProject->setStatusTip(tr("Open new project"));
     m_actionManager->insert(newProject, "new_project", "file");
 
-    TAction *openFile = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Open Project"), QKeySequence(tr("Ctrl+O")), 
+    TAction *openFile = new TAction(QPixmap(ICONS_DIR + "open.png"), tr("Open Project"), QKeySequence(tr("Ctrl+O")),
 				    this, SLOT(openProject()), m_actionManager);
     m_actionManager->insert(openFile, "open_project", "file");
     openFile->setStatusTip(tr("Load existent project"));
 
     // SQA: This code has been disabled temporary
     /*
-    TAction *openNetFile = new TAction(QPixmap(THEME_DIR + "icons/net_document.png"), tr("Open Project From Server..."), 
+    TAction *openNetFile = new TAction(QPixmap(ICONS_DIR + "net_document.png"), tr("Open Project From Server..."),
 				       tr(""), this, SLOT(openProjectFromServer()), m_actionManager);
     m_actionManager->insert(openNetFile, "opennetproject", "file");
 
-    TAction *importNetFile = new TAction(QPixmap(THEME_DIR + "icons/import_project.png"), tr("Export Project To Server..."), tr(""), this, 
+    TAction *importNetFile = new TAction(QPixmap(ICONS_DIR + "import_project.png"), tr("Export Project To Server..."), tr(""), this,
 					 SLOT(importProjectToServer()), m_actionManager);
     m_actionManager->insert(importNetFile, "exportprojectserver", "file");
     */
 
-    TAction *openDemo = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Open Example"), tr(""),
+    TAction *openDemo = new TAction(QPixmap(ICONS_DIR + "open.png"), tr("Open Example"), tr(""),
                     this, SLOT(openExample()), m_actionManager);
     m_actionManager->insert(openDemo, "open_demo", "file");
     openDemo->setStatusTip(tr("Open example project"));
 
-    TAction *importProject = new TAction(QPixmap(THEME_DIR + "icons/open.png"), tr("Import Project"), QKeySequence(tr("Ctrl+I")),
+    TAction *importProject = new TAction(QPixmap(ICONS_DIR + "open.png"), tr("Import Project"), QKeySequence(tr("Ctrl+I")),
                     this, SLOT(importProject()), m_actionManager);
     m_actionManager->insert(importProject, "import_project", "file");
     importProject->setStatusTip(tr("Import project"));
     m_actionManager->enable("import_project", false);
 
-    TAction *save = new TAction(QPixmap(THEME_DIR + "icons/save.png"), tr( "Save Project" ),
+    TAction *save = new TAction(QPixmap(ICONS_DIR + "save.png"), tr( "Save Project" ),
 				QKeySequence(tr("Ctrl+S")), this, SLOT(saveProject()), m_actionManager);
     m_actionManager->insert(save, "save_project", "file");
     save->setStatusTip(tr("Save current project in current location"));
 
-    TAction *saveAs = new TAction(QPixmap(THEME_DIR + "icons/save_as.png"), tr("Save Project As..."),
+    TAction *saveAs = new TAction(QPixmap(ICONS_DIR + "save_as.png"), tr("Save Project As..."),
 				  QKeySequence(tr("Ctrl+Shift+S")), this, SLOT(saveAs()), m_actionManager);
     saveAs->setStatusTip(tr("Open dialog box to save current project in any location"));
     m_actionManager->insert(saveAs, "save_project_as", "file");
 
-    TAction *close = new TAction(QPixmap(THEME_DIR + "icons/close.png"), tr("Cl&ose Project"), QKeySequence(tr("Ctrl+W")),
+    TAction *close = new TAction(QPixmap(ICONS_DIR + "close.png"), tr("Cl&ose Project"), QKeySequence(tr("Ctrl+W")),
                  this, SLOT(closeInterface()), m_actionManager);
     close->setStatusTip(tr("Close active project"));
     m_actionManager->insert(close, "close_project", "file");
@@ -404,7 +404,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(postFrame, "post_image", "file");
 
     // Visit TupiTube Network action
-    TAction *openNetwork = new TAction(QPixmap(THEME_DIR + "icons/social_network.png"), tr("TupiTube Social Media"),
+    TAction *openNetwork = new TAction(QPixmap(ICONS_DIR + "social_network.png"), tr("TupiTube Social Media"),
                                        QKeySequence(), this, SLOT(openTupiTubeNetwork()), m_actionManager);
     openNetwork->setStatusTip(tr("Open TupiTube Network"));
     m_actionManager->insert(openNetwork, "open_network", "file");
@@ -452,13 +452,8 @@ void TupMainWindow::setupHelpActions()
 
 void TupMainWindow::setupToolBar()
 {
-    int iconSize = 22;
-    // Big resolutions
-    if (screenWidth > HD_WIDTH)
-        iconSize = (screenWidth*2)/100; // 2%
-
     mainToolBar = new QToolBar(tr("Actions Bar"), this);
-    mainToolBar->setIconSize(QSize(iconSize, iconSize));
+    mainToolBar->setIconSize(TResponsiveUI::fitMainTopBarIconSize());
     mainToolBar->setMovable(false);
 
     mainToolBar->addAction(m_actionManager->find("new_project"));

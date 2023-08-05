@@ -35,6 +35,7 @@
 
 #include "tupexposurescenetabwidget.h"
 #include "timagebutton.h"
+#include "tresponsiveui.h"
 
 TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(parent)
 {
@@ -93,9 +94,9 @@ void TupExposureSceneTabWidget::addScene(int index, const QString &name, TupExpo
     toolsLayout->setAlignment(Qt::AlignHCenter);
 
     QLabel *header = new QLabel();
-    QPixmap pix(THEME_DIR + "icons/layer_opacity.png");
+    QPixmap pix(ICONS_DIR + "layer_opacity.png");
     header->setToolTip(tr("Current Layer Opacity"));
-    header->setPixmap(pix);
+    header->setPixmap(pix.scaledToWidth(TResponsiveUI::fitLayerOpacityIconSize()));
 
     QDoubleSpinBox *opacitySpinBox = new QDoubleSpinBox(this);
     opacitySpinBox->setRange(0.1, 1.0);

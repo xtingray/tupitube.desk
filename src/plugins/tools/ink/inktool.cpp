@@ -294,7 +294,7 @@ void InkTool::removeExtraPoints()
 
 void InkTool::setupActions()
 {
-    TAction *inkPen = new TAction(QPixmap(kAppProp->themeDir() + "icons/ink.png"), tr("Ink"), this);
+    TAction *inkPen = new TAction(QPixmap(ICONS_DIR + "ink.png"), tr("Ink"), this);
     inkPen->setShortcut(QKeySequence(tr("K")));
     inkPen->setToolTip(tr("Ink") + " - " + tr("K"));
     inkPen->setCursor(inkCursor);

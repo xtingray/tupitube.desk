@@ -40,6 +40,7 @@
 #include "tuptweenerstep.h"
 #include "tosd.h"
 #include "tradiobuttongroup.h"
+#include "tresponsiveui.h"
 
 Configurator::Configurator(QWidget *parent) : QFrame(parent)
 {
@@ -56,7 +57,7 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pic(THEME_DIR + "icons/motion_tween.png");
-    toolTitle->setPixmap(pic.scaledToWidth(20, Qt::SmoothTransformation));
+    toolTitle->setPixmap(pic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     toolTitle->setToolTip(tr("Motion Tween Properties"));
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));

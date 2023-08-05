@@ -37,7 +37,7 @@
 #include "tapplicationproperties.h"
 #include "tconfig.h"
 #include "tseparator.h"
-#include "talgorithm.h"
+#include "tresponsiveui.h"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
@@ -73,7 +73,7 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
         toolTitle->setToolTip(tr("Hexagon Properties"));
     }
 
-    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
+    toolTitle->setPixmap(pic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));
 
@@ -177,12 +177,7 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
 
     mainLayout->addLayout(layout);
 
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenWidth = dimension.first;
-    int minWidth = 130;
-    if (screenWidth > HD_WIDTH)
-        minWidth = 260;
-
+    int minWidth = TResponsiveUI::fitRightPanelWidth();
     QTextEdit *textArea = new QTextEdit;
     textArea->setMinimumWidth(minWidth);
     textArea->setMaximumWidth(minWidth*2);

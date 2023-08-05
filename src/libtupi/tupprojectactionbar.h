@@ -91,7 +91,6 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
                             Qt::Orientation orientation = Qt::Horizontal, QWidget *parent = nullptr);
         ~TupProjectActionBar();
 
-        // void setFixedSize(int size);
         void insertSeparator(int position);
         void insertBlankSpace(int position);
         

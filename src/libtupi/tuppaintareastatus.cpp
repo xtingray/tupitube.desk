@@ -37,6 +37,7 @@
 #include "tcolorcell.h"
 #include "tupbrushmanager.h"
 #include "talgorithm.h"
+#include "tresponsiveui.h"
 
 #include <QHBoxLayout>
 
@@ -49,32 +50,34 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     currentFrame = 1;
     colorContext = TColorCell::Contour;
 
+    QSize iconSize = TResponsiveUI::fitStatusIconSize();
+    int panelWidth = TResponsiveUI::fitStatusPanelWidth();
+    int imgWidth = TResponsiveUI::fitStatusPanelImageWidth();
+
+    /*
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
-    QSize iconSize(STATUS_ICON_SIZE, STATUS_ICON_SIZE);
     int panelWidth = 700;
     // Big resolutions
-    if (screenWidth > HD_WIDTH) {
+    if (screenWidth > HD_WIDTH)
         panelWidth = 1100;
-        int iconWidth = screenWidth/100;
-        iconSize = QSize(iconWidth, iconWidth);
-    }
+    */
 
-    QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/clear_frame.png")), "");
+    QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "clear_frame.png")), "");
     clearAreaButton->setIconSize(iconSize);
     clearAreaButton->setToolTip(tr("Clear Frame"));
     // clearAreaButton->setShortcut(QKeySequence(Qt::Key_3));
     connect(clearAreaButton, SIGNAL(clicked()), this, SIGNAL(clearFrameClicked()));
     addPermanentWidget(clearAreaButton);
 
-    QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/reset_workspace.png")), "");
+    QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "reset_workspace.png")), "");
     resetWSButton->setIconSize(iconSize);
     resetWSButton->setToolTip(tr("Reset WorkSpace"));
     resetWSButton->setShortcut(QKeySequence(Qt::Key_3));
     connect(resetWSButton, SIGNAL(clicked()), this, SIGNAL(resetClicked()));
     addPermanentWidget(resetWSButton);
 
-    QPushButton *actionSafeAreaButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/safe_area.png")), "");
+    QPushButton *actionSafeAreaButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "safe_area.png")), "");
     actionSafeAreaButton->setIconSize(iconSize);
     actionSafeAreaButton->setToolTip(tr("Action Safe Area"));
     // SQA: pending shortcut
@@ -83,7 +86,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     connect(actionSafeAreaButton, SIGNAL(clicked()), this, SIGNAL(safeAreaClicked()));
     addPermanentWidget(actionSafeAreaButton);
 
-    QPushButton *gridButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/subgrid.png")), "");
+    QPushButton *gridButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "subgrid.png")), "");
     gridButton->setIconSize(iconSize);
     gridButton->setToolTip(tr("Show Grid"));
     gridButton->setShortcut(QKeySequence(Qt::Key_G));
@@ -92,7 +95,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     addPermanentWidget(gridButton);
 
     if (type == Vector) {
-        fullScreenButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/full_screen.png")), "");
+        fullScreenButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "full_screen.png")), "");
         fullScreenButton->setIconSize(iconSize);
         fullScreenButton->setToolTip(tr("Full Screen"));
         fullScreenButton->setShortcut(QKeySequence(tr("F11")));
@@ -106,8 +109,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
         frameLayout->setMargin(1);
         QLabel *frameLabel = new QLabel("");
         frameLabel->setToolTip(tr("Current Frame"));
-        QPixmap framePix(THEME_DIR + "icons/frame_number.png");
-        frameLabel->setPixmap(framePix);
+        QPixmap framePix(ICONS_DIR + "frame_number.png");
+        frameLabel->setPixmap(framePix.scaledToWidth(imgWidth));
 
         frameField = new QLineEdit(frameContainer);
         frameField->setFixedWidth(40);
@@ -127,8 +130,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
 
     QLabel *zoomTool = new QLabel("");
     zoomTool->setToolTip(tr("Zoom"));
-    QPixmap pix(THEME_DIR + "icons/zoom_small.png");
-    zoomTool->setPixmap(pix);
+    QPixmap pix(ICONS_DIR + "zoom_small.png");
+    zoomTool->setPixmap(pix.scaledToWidth(imgWidth));
     zoomLayout->addWidget(zoomTool);
 
     zoomCombo = new QComboBox();
@@ -154,8 +157,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
 
     QLabel *rotateLabel = new QLabel("");
     rotateLabel->setToolTip(tr("Rotate Workspace"));
-    QPixmap rotatePix(THEME_DIR + "icons/rotate_workspace.png");
-    rotateLabel->setPixmap(rotatePix);
+    QPixmap rotatePix(ICONS_DIR + "rotate_workspace.png");
+    rotateLabel->setPixmap(rotatePix.scaledToWidth(10));
 
     rotLayout->addWidget(rotateLabel);
 
@@ -172,11 +175,11 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
 
     if (type == Vector) {
-        contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(THEME_DIR + "icons/contour_color.png"));
+        contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(ICONS_DIR + "contour_color.png").scaledToWidth(18));
         contourStatus->setTooltip(tr("Contour Color"));
         addPermanentWidget(contourStatus);
 
-        fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(THEME_DIR + "icons/fill_color.png"));
+        fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(ICONS_DIR + "fill_color.png").scaledToWidth(18));
         fillStatus->setTooltip(tr("Fill Color"));
         addPermanentWidget(fillStatus);
 
@@ -308,9 +311,9 @@ void TupPaintAreaStatus::updateFramePointer()
     }
 
     bool ok = false;
-    int index = text.toInt(&ok);   
+    int index = text.toInt(&ok);
     if (ok) {
-        if (index < 1 || index > 999) {
+        if ((index < 1) || (index > 999)) {
             frameField->setText(QString::number(currentFrame));
             return;
         }

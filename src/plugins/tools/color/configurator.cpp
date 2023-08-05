@@ -36,6 +36,7 @@
 #include "configurator.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 
@@ -53,7 +54,7 @@ Configurator::Configurator(QWidget *parent) : QFrame(parent)
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pic(THEME_DIR + "icons/coloring_tween.png");
-    toolTitle->setPixmap(pic.scaledToWidth(20, Qt::SmoothTransformation));
+    toolTitle->setPixmap(pic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     toolTitle->setToolTip(tr("Coloring Tween Properties"));
     layout->addWidget(toolTitle);
     layout->addWidget(new TSeparator(Qt::Horizontal));

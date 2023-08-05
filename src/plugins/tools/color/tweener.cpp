@@ -292,7 +292,7 @@ void Tweener::setupActions()
     QString name = tr("Coloring Tween");
     QString shortcut = tr("Shift+C");
 
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/coloring_tween.png"), name, this);
+    TAction *action = new TAction(QPixmap(ICONS_DIR + "coloring_tween.png"), name, this);
     action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
     action->setShortcut(QKeySequence(shortcut));
     action->setToolTip(name + " - " + shortcut);

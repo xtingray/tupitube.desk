@@ -33,18 +33,19 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "pensettings.h"
+#include "pencilsettings.h"
 #include "tconfig.h"
 #include "tseparator.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QLabel>
 
-PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
+PencilSettings::PencilSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PenSettings()]";
+        qDebug() << "[PencilSettings()]";
     #endif
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -53,8 +54,8 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
 
     QLabel *pencilTitle = new QLabel;
     pencilTitle->setAlignment(Qt::AlignHCenter);
-    QPixmap pencilPic(THEME_DIR + "icons/pencil.png");
-    pencilTitle->setPixmap(pencilPic.scaledToWidth(16, Qt::SmoothTransformation));
+    QPixmap pencilPic(ICONS_DIR + "pencil.png");
+    pencilTitle->setPixmap(pencilPic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     pencilTitle->setToolTip(tr("Pencil Properties"));
 
     layout->addWidget(pencilTitle);
@@ -81,7 +82,7 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     */
 
     smoothLabel = new QCheckBox;
-    smoothLabel->setIcon(QIcon(QPixmap(THEME_DIR + "icons/smoothness.png")));
+    smoothLabel->setIcon(QIcon(QPixmap(ICONS_DIR + "smoothness.png")));
     smoothLabel->setToolTip(tr("Smoothness"));
     smoothLabel->setChecked(true);
     connect(smoothLabel, SIGNAL(toggled(bool)), this, SLOT(updateSmoothBox(bool)));
@@ -142,18 +143,18 @@ PenSettings::PenSettings(QWidget *parent) : QWidget(parent)
     mainLayout->addStretch(2);
 }
 
-PenSettings::~PenSettings()
+PencilSettings::~PencilSettings()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[~PenSettings()]";
+        qDebug() << "[~PencilSettings()]";
     #endif
 }
 
 /*
-void PenSettings::enablePencilMode()
+void PencilSettings::enablePencilMode()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PenSettings::enablePencilMode()]";
+        qDebug() << "[PencilSettings::enablePencilMode()]";
     #endif
 
     pencilButton->setChecked(true);
@@ -166,10 +167,10 @@ void PenSettings::enablePencilMode()
     emit toolEnabled(PencilMode);
 }
 
-void PenSettings::enableEraserMode()
+void PencilSettings::enableEraserMode()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[PenSettings::enableEraserMode()]";
+        qDebug() << "[PencilSettings::enableEraserMode()]";
     #endif
 
     eraserButton->setChecked(true);
@@ -183,7 +184,7 @@ void PenSettings::enableEraserMode()
 }
 */
 
-void PenSettings::updateSmoothBox(bool enabled)
+void PencilSettings::updateSmoothBox(bool enabled)
 {
     smoothBox->setEnabled(enabled);
     if (!enabled)
@@ -192,14 +193,14 @@ void PenSettings::updateSmoothBox(bool enabled)
         emit smoothnessUpdated(smoothBox->value());
 }
 
-void PenSettings::updateSmoothness(double value)
+void PencilSettings::updateSmoothness(double value)
 {
     smoothBox->blockSignals(true);
     smoothBox->setValue(value);
     smoothBox->blockSignals(false);
 }
 
-void PenSettings::updateEraserSizeFromSlider(int value)
+void PencilSettings::updateEraserSizeFromSlider(int value)
 {
     emit eraserSizeChanged(value);
 
@@ -208,7 +209,7 @@ void PenSettings::updateEraserSizeFromSlider(int value)
     eraserSizeBox->blockSignals(false);
 }
 
-void PenSettings::updateEraserSizeFromBox(int value)
+void PencilSettings::updateEraserSizeFromBox(int value)
 {
     emit eraserSizeChanged(value);
 

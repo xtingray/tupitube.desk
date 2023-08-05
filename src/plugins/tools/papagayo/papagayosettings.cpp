@@ -37,6 +37,7 @@
 #include "timagebutton.h"
 #include "tseparator.h"
 #include "tupsvg2qt.h"
+#include "tresponsiveui.h"
 
 PapagayoSettings::PapagayoSettings(QWidget *parent) : QWidget(parent)
 {
@@ -218,14 +219,15 @@ void PapagayoSettings::setInnerForm()
     scaleLayout->addWidget(forwardCheck);
     scaleLayout->setAlignment(forwardCheck, Qt::AlignHCenter);
 
-    // Bottom section
+    // Bottom section    
+    int iconSize = TResponsiveUI::fitRightPanelIconSize();
 
-    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), 22);
+    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), iconSize);
     resetButton->setToolTip(tr("Reset Mouth"));
     resetButton->setMaximumWidth(50);
     connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
 
-    TImageButton *closeButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), 22);
+    TImageButton *closeButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close_properties.png"), iconSize);
     closeButton->setToolTip(tr("Close properties"));
     connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeLipSyncProperties()));
 

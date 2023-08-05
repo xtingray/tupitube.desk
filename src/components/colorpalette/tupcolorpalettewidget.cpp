@@ -43,7 +43,7 @@
 #include "tconfig.h"
 #include "tuppaintareaevent.h"
 #include "tvhbox.h"
-#include "talgorithm.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 #include <QPushButton>
@@ -69,7 +69,7 @@ TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBa
     flagGradient = true;
 
     setWindowTitle(tr("Color Palette"));
-    setWindowIcon(QPixmap(THEME_DIR + "icons/color_palette.png"));
+    setWindowIcon(QPixmap(ICONS_DIR + "color_palette.png"));
 
     splitter = new QSplitter(Qt::Vertical, this);
 
@@ -88,17 +88,9 @@ TupColorPaletteWidget::TupColorPaletteWidget(QWidget *parent): TupModuleWidgetBa
     tab->setMinimumHeight(320);
     splitter->addWidget(tab);
 
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenWidth = dimension.first;
-    // Big resolutions
-    if (screenWidth > HD_WIDTH) {
-        int width = (screenWidth*18)/100;
-        setMinimumWidth(width);
-        setMaximumWidth(width*2);
-    } else {
-        setMinimumWidth(316);
-        setMaximumWidth(470);
-    }
+    QPair<int, int> widthValues = TResponsiveUI::fitColorPaletteWidth();
+    setMinimumWidth(widthValues.first);
+    setMaximumWidth(widthValues.second);
 }
 
 TupColorPaletteWidget::~TupColorPaletteWidget()

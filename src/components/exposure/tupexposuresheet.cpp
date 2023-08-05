@@ -36,6 +36,7 @@
 #include "tupexposuresheet.h"
 #include "tupscenenamedialog.h"
 #include "talgorithm.h"
+#include "tuivalues.h"
 
 #include <QHBoxLayout>
 #include <QButtonGroup>
@@ -57,7 +58,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     previousLayer = 0;
 
     setWindowTitle(tr("Exposure Sheet"));
-    setWindowIcon(QPixmap(kAppProp->themeDir() + "icons/exposure_sheet.png"));
+    setWindowIcon(QPixmap(ICONS_DIR + "exposure_sheet.png"));
 
     QList<TupProjectActionBar::Action> generalActions;
     generalActions << TupProjectActionBar::InsertLayer << TupProjectActionBar::RemoveLayer;
@@ -102,7 +103,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
     if (screenWidth > HD_WIDTH)
-        setMinimumWidth((screenWidth*11)/100); // 11%
+        setMinimumWidth(FIT_EXPOSURESHEET_WIDTH(screenWidth));
 }
 
 TupExposureSheet::~TupExposureSheet()

@@ -37,6 +37,7 @@
 #include "tconfig.h"
 #include "tseparator.h"
 #include "talgorithm.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 #include <QLabel>
@@ -48,7 +49,6 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     #endif
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-
     clearWidget = new QWidget;
     QBoxLayout *clearLayout = new QBoxLayout(QBoxLayout::TopToBottom, clearWidget);
     clearLayout->setAlignment(Qt::AlignHCenter);
@@ -56,7 +56,7 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     QLabel *nodesTitle = new QLabel;
     nodesTitle->setAlignment(Qt::AlignHCenter);
     QPixmap nodesPic(THEME_DIR + "icons/nodes.png");
-    nodesTitle->setPixmap(nodesPic.scaledToWidth(16, Qt::SmoothTransformation));
+    nodesTitle->setPixmap(nodesPic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     nodesTitle->setToolTip(tr("Nodes Properties"));
 
     QLabel *clearLabel = new QLabel("<b>" + tr("Nodes Editor") + "</b>");
@@ -110,12 +110,7 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     help->hide();
     QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
 
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenWidth = dimension.first;
-    int minWidth = 130;
-    if (screenWidth > HD_WIDTH)
-        minWidth = 260;
-
+    int minWidth = TResponsiveUI::fitRightPanelWidth();
     textArea = new QTextEdit;
     textArea->setMinimumWidth(minWidth);
     textArea->setMaximumWidth(minWidth*2);

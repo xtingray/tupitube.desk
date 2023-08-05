@@ -276,7 +276,7 @@ void Tweener::setupActions()
     QString name = tr("Rotation Tween");
     QString shortcut = tr("Shift+R");
 
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/rotation_tween.png"), name, this);
+    TAction *action = new TAction(QPixmap(ICONS_DIR + "rotation_tween.png"), name, this);
     action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
     action->setShortcut(QKeySequence(shortcut));
     action->setToolTip(name + " - " + shortcut);

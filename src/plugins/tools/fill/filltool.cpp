@@ -95,7 +95,7 @@ void FillTool::setupActions()
     insideCursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
     contourCursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 13);
 
-    TAction *action1 = new TAction(QIcon(kAppProp->themeDir() + "icons/internal_fill.png"), tr("Fill Tool"), this);
+    TAction *action1 = new TAction(QIcon(ICONS_DIR + "internal_fill.png"), tr("Fill Tool"), this);
     action1->setShortcut(QKeySequence(tr("F")));
     action1->setToolTip(tr("Fill Tool") + " - " + "F");
     action1->setCursor(insideCursor);

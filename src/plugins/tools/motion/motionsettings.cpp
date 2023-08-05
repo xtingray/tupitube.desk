@@ -39,11 +39,13 @@
 #include "tosd.h"
 #include "tconfig.h"
 #include "tseparator.h"
+#include "tresponsiveui.h"
 
 #include <QColorDialog>
 
 MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
 {
+    int iconSize = TResponsiveUI::fitRightPanelIconSize();
     selectionDone = false;
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
@@ -64,10 +66,10 @@ MotionSettings::MotionSettings(QWidget *parent) : QWidget(parent)
     options->addItem(tr("Set Path Properties"), 1);
     connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    applyButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
+    applyButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), iconSize);
     connect(applyButton, SIGNAL(clicked()), this, SLOT(applyTween()));
 
-    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
+    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), iconSize);
     connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;

@@ -35,6 +35,7 @@
 
 #include "tupexposuretable.h"
 #include "tconfig.h"
+#include "tresponsiveui.h"
 
 #include <QPainterPath>
 
@@ -53,7 +54,7 @@ class TUPITUBE_EXPORT TupExposureVerticalHeader: public QHeaderView
 
 TupExposureVerticalHeader::TupExposureVerticalHeader(int value, QWidget *parent): QHeaderView(Qt::Vertical, parent)
 {
-    setFixedWidth(25);
+    setFixedWidth(TResponsiveUI::fitExposureVerticalHeader());
     fps = value;
 }
 
@@ -212,7 +213,7 @@ TupExposureTable::TupExposureTable(int fps, QWidget *parent) : QTableWidget(pare
     setRowCount(100);
 
     for(int i=0; i < 100; i++)
-        setRowHeight(i, 20);
+        setRowHeight(i, TResponsiveUI::fitExposureRowHeight());
 
     header = new TupExposureHeader(this);
     connect(header, SIGNAL(visibilityChanged(int, bool)), this, SIGNAL(layerVisibilityChanged(int, bool)));
@@ -466,7 +467,7 @@ int TupExposureTable::currentFrame() const
 void TupExposureTable::insertLayer(int index, const QString & name)
 {
     insertColumn(index);
-    setColumnWidth(index, 70);
+    setColumnWidth(index, TResponsiveUI::fitExposureRowWidth());
     header->insertSection(index, name);
 }
 

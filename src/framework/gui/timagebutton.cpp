@@ -62,6 +62,10 @@ class TImageButton::Animation
         int m_interval;
 };
 
+TImageButton::TImageButton(QWidget *parent) : QPushButton(parent)
+{
+}
+
 TImageButton::TImageButton(const QIcon &icon, int size, QWidget *parent, bool animate) : QPushButton(parent), m_imageSize(size), m_isAnimated(animate)
 {
     setup();

@@ -70,7 +70,7 @@ PolyLineTool::~PolyLineTool()
 
 void PolyLineTool::setupActions()
 {
-    TAction *polyline = new TAction(QIcon(kAppProp->themeDir() + "/icons/polyline.png"), tr("PolyLine"), this);
+    TAction *polyline = new TAction(QIcon(ICONS_DIR + "polyline.png"), tr("PolyLine"), this);
     polyline->setShortcut(QKeySequence(tr("S")));
     polyline->setToolTip(tr("PolyLine") + " - " + tr("S"));
     polyline->setCursor(cursor);

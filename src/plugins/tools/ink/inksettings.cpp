@@ -37,6 +37,7 @@
 #include "tconfig.h"
 #include "tapplicationproperties.h"
 #include "tseparator.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 #include <QLabel>
@@ -44,7 +45,7 @@
 InkSettings::InkSettings(QWidget *parent) : QWidget(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "InkSettings()";
+        qDebug() << "[InkSettings()]";
     #endif
 
     QFont titleFont = font(); 
@@ -63,7 +64,7 @@ InkSettings::InkSettings(QWidget *parent) : QWidget(parent)
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
     QPixmap pic(THEME_DIR + "icons/ink.png");
-    toolTitle->setPixmap(pic.scaledToWidth(16, Qt::SmoothTransformation));
+    toolTitle->setPixmap(pic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     toolTitle->setToolTip(tr("Ink Properties"));
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));

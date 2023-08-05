@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-#include "pensettings.h"
+#include "pencilsettings.h"
 #include "tuppathitem.h"
 
 #include "tupinputdeviceinformation.h"
@@ -107,7 +107,7 @@ class TUPITUBE_PLUGIN PencilTool : public TupToolPlugin
         QPointF firstPoint;
         QPointF previousPos;
         QPainterPath path;
-        PenSettings *settings;
+        PencilSettings *settings;
         QMap<TAction::ActionId, TAction *> penActions;
         TupPathItem *item;
         QCursor penCursor;

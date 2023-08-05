@@ -34,18 +34,13 @@
  ***************************************************************************/
 
 #include "tbuttonbar.h"
-#include "talgorithm.h"
+#include "tresponsiveui.h"
 
 TButtonBar::TButtonBar(Qt::ToolBarArea area, QWidget *parent) : QToolBar(parent), m_shouldBeVisible(true)
 {
     setMovable(false);
 
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenWidth = dimension.first;
-    int iconSize = TOOLVIEW_ICON_SIZE;
-    // Big resolutions
-    if (screenWidth > HD_WIDTH)
-        iconSize = (screenWidth*2)/100; // 2%
+    int iconSize = TResponsiveUI::fitToolViewIconSize();
     setIconSize(QSize(iconSize, iconSize));
 
     m_buttons.setExclusive(true);

@@ -41,6 +41,7 @@
 #include "tlabel.h"
 #include "timagebutton.h"
 #include "tseparator.h"
+#include "tresponsiveui.h"
 #include "talgorithm.h"
 
 #include <QButtonGroup>
@@ -48,24 +49,16 @@
 SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 {
     QPair<int, int> dimension = TAlgorithm::screenDimension();
-    screenW = dimension.first;
-    screenH = dimension.second;
+    int screenHeight = dimension.second;
 
-    iconSize = PANEL_ICON_SIZE;
-    int toolIconSize = PLUGIN_ICON_SIZE;
-    // Big resolutions
-    if (screenW > HD_WIDTH) {
-        iconSize = (screenW*2)/100;
-        float value = (screenW*0.8)/100;
-        toolIconSize = value;
-    }
+    iconSize = TResponsiveUI::fitRightPanelIconSize();
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 
-    QPixmap pic(THEME_DIR + "icons/selection.png");
+    QPixmap pic(ICONS_DIR + "selection.png");
     QLabel *toolTitle = new QLabel;
     toolTitle->setAlignment(Qt::AlignHCenter);
-    toolTitle->setPixmap(pic.scaledToWidth(toolIconSize, Qt::SmoothTransformation));
+    toolTitle->setPixmap(pic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     toolTitle->setToolTip(tr("Selection Properties"));
     mainLayout->addWidget(toolTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
@@ -73,12 +66,12 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
     formPanel = new QWidget;
 
 #if defined(Q_OS_MAC)
-    if (screenH >= 900)
+    if (screenHeight >= 900)
         setLargetInterface();
     else
         setCompactInterface();
 #else
-    if (screenH >= 1080)
+    if (screenHeight >= HD_HEIGHT)
         setLargetInterface();
     else
         setCompactInterface();
@@ -88,7 +81,7 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     tips = new QPushButton(tr("Show Tips"));
     tips->setToolTip(tr("A little help for the Selection tool"));
-    if (screenH < 1080) {
+    if (screenHeight < 1080) {
         QFont font = this->font();
         font.setPointSize(8);
         tips->setFont(font);
@@ -167,14 +160,12 @@ void SelectionSettings::setLargetInterface()
     formLayout->addWidget(position);
 
     formLayout->addLayout(setPosBlock());
-    // formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     QLabel *rotation = new QLabel("<b>" + tr("Rotation") + "</b>");
     rotation->setAlignment(Qt::AlignHCenter);
     formLayout->addWidget(rotation);
 
     formLayout->addLayout(setRotateBlock());
-    // formLayout->addWidget(new TSeparator(Qt::Horizontal));
 
     QLabel *scale = new QLabel("<b>" + tr("Scale") + "</b>");
     scale->setAlignment(Qt::AlignHCenter);
@@ -253,11 +244,11 @@ QBoxLayout * SelectionSettings::setAlignBlock()
     alignLayout->setMargin(0);
     alignLayout->setSpacing(0);
 
-    TImageButton *hAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/h_center.png"), iconSize);
+    TImageButton *hAlignButton = new TImageButton(QPixmap(ICONS_DIR + "h_center.png"), iconSize);
     hAlignButton->setToolTip(tr("Horizontal Center"));
-    TImageButton *vAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/v_center.png"), iconSize);
+    TImageButton *vAlignButton = new TImageButton(QPixmap(ICONS_DIR + "v_center.png"), iconSize);
     vAlignButton->setToolTip(tr("Vertical Center"));
-    TImageButton *aAlignButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/a_center.png"), iconSize);
+    TImageButton *aAlignButton = new TImageButton(QPixmap(ICONS_DIR + "a_center.png"), iconSize);
     aAlignButton->setToolTip(tr("Absolute Center"));
     connect(hAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectHorizontally()));
     connect(vAlignButton, SIGNAL(clicked()), this, SLOT(alignObjectVertically()));
@@ -276,11 +267,11 @@ QBoxLayout * SelectionSettings::setFlipsBlock()
     flipLayout->setMargin(0);
     flipLayout->setSpacing(0);
 
-    TImageButton *horizontalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/horizontal_flip.png"), iconSize);
+    TImageButton *horizontalFlip = new TImageButton(QPixmap(ICONS_DIR + "horizontal_flip.png"), iconSize);
     horizontalFlip->setToolTip(tr("Horizontal Flip"));
-    TImageButton *verticalFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/vertical_flip.png"), iconSize);
+    TImageButton *verticalFlip = new TImageButton(QPixmap(ICONS_DIR + "vertical_flip.png"), iconSize);
     verticalFlip->setToolTip(tr("Vertical Flip"));
-    TImageButton *crossedFlip = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/crossed_flip.png"), iconSize);
+    TImageButton *crossedFlip = new TImageButton(QPixmap(ICONS_DIR + "crossed_flip.png"), iconSize);
     crossedFlip->setToolTip(tr("Crossed Flip"));
     connect(horizontalFlip, SIGNAL(clicked()), this, SLOT(hFlip()));
     connect(verticalFlip, SIGNAL(clicked()), this, SLOT(vFlip()));
@@ -299,16 +290,16 @@ QBoxLayout * SelectionSettings::setOrderBlock()
     orderLayout->setMargin(0);
     orderLayout->setSpacing(0);
 
-    TImageButton *toBack = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back.png"), iconSize);
+    TImageButton *toBack = new TImageButton(QPixmap(ICONS_DIR + "to_back.png"), iconSize);
     toBack->setToolTip(tr("Send object to back"));
 
-    TImageButton *toBackOneLevel = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_back_one.png"), iconSize);
+    TImageButton *toBackOneLevel = new TImageButton(QPixmap(ICONS_DIR + "to_back_one.png"), iconSize);
     toBackOneLevel->setToolTip(tr("Send object to back one level"));
 
-    TImageButton *toFront = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_front.png"), iconSize);
+    TImageButton *toFront = new TImageButton(QPixmap(ICONS_DIR + "to_front.png"), iconSize);
     toFront->setToolTip(tr("Send object to front"));
 
-    TImageButton *toFrontOneLevel = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/to_front_one.png"), iconSize);
+    TImageButton *toFrontOneLevel = new TImageButton(QPixmap(ICONS_DIR + "to_front_one.png"), iconSize);
     toFrontOneLevel->setToolTip(tr("Send object to front one level"));
 
     connect(toBack, SIGNAL(clicked()), this, SLOT(sendToBack()));
@@ -330,10 +321,10 @@ QBoxLayout * SelectionSettings::setGroupBlock()
     groupLayout->setMargin(0);
     groupLayout->setSpacing(0);
 
-    TImageButton *groupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/group.png"), iconSize);
+    TImageButton *groupButton = new TImageButton(QPixmap(ICONS_DIR + "group.png"), iconSize);
     groupButton->setToolTip(tr("Group Objects"));
 
-    TImageButton *ungroupButton = new TImageButton(QPixmap(kAppProp->themeDir() + "/icons/ungroup.png"), iconSize);
+    TImageButton *ungroupButton = new TImageButton(QPixmap(ICONS_DIR + "ungroup.png"), iconSize);
     ungroupButton->setToolTip(tr("Ungroup Objects"));
 
     connect(groupButton, SIGNAL(clicked()), this, SLOT(groupItems()));
@@ -453,21 +444,14 @@ QBoxLayout * SelectionSettings::setPasteBlock()
     pasteCheck->setChecked(onMouse);
     connect(pasteCheck, SIGNAL(stateChanged(int)), this, SLOT(enablePasteOnMouse(int)));
 
-    int pasteSize = 15;
-    int resetSize = 18;
-    if (screenW > HD_WIDTH) {
-        float value = (screenW*0.8)/100;
-        pasteSize = (int) value;
-        value = (screenW*0.95)/100;
-        resetSize = (int) value;
-    }
+    QPair<int, int> optionValues = TResponsiveUI::fitSelectionOptionIconsSize();
 
     TLabel *pasteLabel = new TLabel;
-    pasteLabel->setPixmap(QPixmap(kAppProp->themeDir() + "/icons/paste.png").scaledToWidth(pasteSize));
+    pasteLabel->setPixmap(QPixmap(ICONS_DIR + "paste.png").scaledToWidth(optionValues.first));
     pasteLabel->setToolTip(tr("Paste objects over mouse position"));
     connect(pasteLabel, SIGNAL(clicked()), this, SLOT(enablePasteOnMouse()));
 
-    TImageButton *resetButton = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/reset.png"), resetSize);
+    TImageButton *resetButton = new TImageButton(QPixmap(ICONS_DIR + "reset.png"), optionValues.second);
     resetButton->setToolTip(tr("Reset Item"));
     connect(resetButton, SIGNAL(clicked()), this, SIGNAL(objectHasBeenReset()));
 

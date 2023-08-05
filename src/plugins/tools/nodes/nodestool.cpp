@@ -695,7 +695,7 @@ void NodesTool::setupActions()
     configPanel = nullptr;
     activeSelection = false;
 
-    TAction *nodes = new TAction(QPixmap(kAppProp->themeDir() + "icons/nodes.png"), tr("Nodes Selection"), this);
+    TAction *nodes = new TAction(QPixmap(ICONS_DIR + "nodes.png"), tr("Nodes Selection"), this);
     nodes->setShortcut(QKeySequence(tr("N")));
     nodes->setToolTip(tr("Nodes Selection") + " - " + tr("N"));
     nodes->setActionId(TAction::NodesEditor);

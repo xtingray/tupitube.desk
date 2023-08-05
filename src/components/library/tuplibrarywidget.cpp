@@ -62,7 +62,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     removeTempVideo = false;
     removeTempVideo = "";
 
-    setWindowIcon(QPixmap(THEME_DIR + "icons/library.png"));
+    setWindowIcon(QPixmap(ICONS_DIR + "library.png"));
     setWindowTitle(tr("Library"));
 
     screen = QGuiApplication::screens().at(0);

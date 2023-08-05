@@ -37,9 +37,11 @@
 #include "tuptweenerstep.h"
 #include "tseparator.h"
 #include "tosd.h"
+#include "tresponsiveui.h"
 
 OpacitySettings::OpacitySettings(QWidget *parent) : QWidget(parent)
 {
+    int iconSize = TResponsiveUI::fitRightPanelIconSize();
     selectionDone = false;
     stepsCounter = 0;
 
@@ -61,10 +63,10 @@ OpacitySettings::OpacitySettings(QWidget *parent) : QWidget(parent)
     options->addItem(tr("Set Properties"), 1);
     connect(options, SIGNAL(clicked(int)), this, SLOT(emitOptionChanged(int)));
 
-    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), 22);
+    apply = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/apply.png"), iconSize);
     connect(apply, SIGNAL(clicked()), this, SLOT(applyTween()));
 
-    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), 22);
+    remove = new TImageButton(QPixmap(kAppProp->themeDir() + "icons/close.png"), iconSize);
     connect(remove, SIGNAL(clicked()), this, SIGNAL(clickedResetTween()));
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;

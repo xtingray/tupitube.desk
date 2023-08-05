@@ -53,7 +53,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     #endif
     
     setWindowTitle(tr("Time Line"));
-    setWindowIcon(QPixmap(THEME_DIR + "icons/time_line.png"));
+    setWindowIcon(QPixmap(ICONS_DIR + "time_line.png"));
 
     project = projectData;
     library = project->getLibrary();

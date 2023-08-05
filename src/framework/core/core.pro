@@ -31,6 +31,7 @@ HEADERS += talgorithm.h \
            tapplicationproperties.h \
            tconfig.h \
            tglobal.h \
+           tuivalues.h \
            tipdatabase.h \
            tcachehandler.h \
            tapptheme.h

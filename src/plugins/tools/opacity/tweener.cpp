@@ -241,7 +241,7 @@ void Tweener::setupActions()
     QString name = tr("Opacity Tween");
     QString shortcut = tr("Shift+O");
 
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/opacity_tween.png"), name, this);
+    TAction *action = new TAction(QPixmap(ICONS_DIR + "opacity_tween.png"), name, this);
     action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png",0 ,0));
     action->setShortcut(QKeySequence(shortcut));
     action->setToolTip(name + " - " + shortcut);

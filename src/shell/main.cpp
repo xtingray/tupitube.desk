@@ -37,6 +37,7 @@
 #include "tupmainwindow.h"
 #include "tapplicationproperties.h"
 #include "talgorithm.h"
+#include "tuivalues.h"
 
 #ifdef TUP_DEBUG
   #include <QDebug>
@@ -152,7 +153,17 @@ int main(int argc, char ** argv)
     else
         kAppProp->setDataDir(xmlDir + locale + "/");
 
-    kAppProp->setThemeDir(kAppProp->shareDir() + "themes/default/");
+    QString themePath = kAppProp->shareDir() + "themes/default/";
+    kAppProp->setThemeDir(themePath);
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    if (screenWidth > HD_WIDTH) // Big resolutions
+        kAppProp->setIconsDir(themePath + "icons/hd/");
+    else
+        kAppProp->setIconsDir(themePath + "icons/");
+
+    // kAppProp->setIconsDir(themePath + "icons/hd/");
+
     kAppProp->setRasterResourcesDir(kAppProp->shareDir() + "themes/raster/");
 
     // Setting the repository directory (where the projects are saved)

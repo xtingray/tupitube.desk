@@ -1,5 +1,6 @@
 SUBDIRS += config \
            icons \
+           icons/hd \
            cursors \
            images 
 

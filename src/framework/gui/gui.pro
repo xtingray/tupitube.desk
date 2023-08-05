@@ -72,6 +72,7 @@ HEADERS += taction.h \
            tpushbutton.h \
            tradiobutton.h \
            tradiobuttongroup.h \
+           tresponsiveui.h \
            trulerbase.h \
            # tstackedmainwindow.h \
            tstylecombobox.h \
@@ -141,6 +142,7 @@ SOURCES += taction.cpp \
            tpushbutton.cpp \
            tradiobutton.cpp \
            tradiobuttongroup.cpp \
+           tresponsiveui.cpp \
            trulerbase.cpp \
            # tstackedmainwindow.cpp \
            tstylecombobox.cpp \

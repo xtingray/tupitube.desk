@@ -36,6 +36,7 @@
 #include "eyedroppersettings.h"
 #include "tconfig.h"
 #include "tseparator.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 #include <QPushButton>
@@ -52,8 +53,8 @@ EyeDropperSettings::EyeDropperSettings(QWidget *parent): QWidget(parent)
 
     QLabel *eyeDropperLabel = new QLabel;
     eyeDropperLabel->setAlignment(Qt::AlignHCenter);
-    QPixmap pencilPic(THEME_DIR + "icons/eyedropper.png");
-    eyeDropperLabel->setPixmap(pencilPic.scaledToWidth(16, Qt::SmoothTransformation));
+    QPixmap eyePic(THEME_DIR + "icons/eyedropper.png");
+    eyeDropperLabel->setPixmap(eyePic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
     eyeDropperLabel->setToolTip(tr("Eye Dropper Properties"));
 
     layout->addWidget(eyeDropperLabel);

@@ -148,8 +148,6 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         QTextEdit *textArea;
         bool isVisible;
 
-        int screenW;
-        int screenH;
         int iconSize;
 };
 

@@ -269,7 +269,7 @@ void Tweener::setupActions()
     QString name = tr("Shear Tween");
     QString shortcut = tr("Shift+H");
 
-    TAction *action = new TAction(QPixmap(kAppProp->themeDir() + "icons/shear_tween.png"), name, this);
+    TAction *action = new TAction(QPixmap(ICONS_DIR + "shear_tween.png"), name, this);
     action->setCursor(QCursor(kAppProp->themeDir() + "cursors/tweener.png", 0, 0));
     action->setShortcut(QKeySequence(shortcut));
     action->setToolTip(name + " - " + shortcut);

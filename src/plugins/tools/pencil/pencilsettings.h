@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef PENCILSETTINGS_H
+#define PENCILSETTINGS_H
 
 #include "tglobal.h"
 #include "tapplicationproperties.h"
@@ -46,13 +46,13 @@
 #include <QCheckBox>
 #include <QSlider>
 
-class TUPITUBE_PLUGIN PenSettings : public QWidget
+class TUPITUBE_PLUGIN PencilSettings : public QWidget
 {
     Q_OBJECT
 
     public:
-        PenSettings(QWidget *parent = nullptr);
-        ~PenSettings();
+        PencilSettings(QWidget *parent = nullptr);
+        ~PencilSettings();
 
         void updateSmoothness(double value);
 

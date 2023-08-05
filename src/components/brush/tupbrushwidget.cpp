@@ -38,6 +38,7 @@
 
 TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
+    setWindowIcon(QIcon(ICONS_DIR + "brush.png"));
     setWindowTitle(tr("Brush Properties"));
 
     QWidget *borderWidget = new QWidget;
@@ -182,8 +183,6 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
     */
 
     boxLayout()->addStretch();
-
-    setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
 }
 
 TupBrushWidget::~TupBrushWidget()

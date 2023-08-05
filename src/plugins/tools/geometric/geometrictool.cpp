@@ -97,7 +97,7 @@ void GeometricTool::init(TupGraphicsScene *gScene)
 
 void GeometricTool::setupActions()
 {
-    TAction *action1 = new TAction(QIcon(kAppProp->themeDir() + "icons/square.png"), tr("Rectangle"), this);
+    TAction *action1 = new TAction(QIcon(ICONS_DIR + "square.png"), tr("Rectangle"), this);
     action1->setShortcut(QKeySequence(tr("R")));
     action1->setToolTip(tr("Rectangle") + " - " + tr("R"));
     squareCursor = QCursor(kAppProp->themeDir() + "cursors/square.png", 0, 0);
@@ -106,7 +106,7 @@ void GeometricTool::setupActions()
     
     geoActions.insert(TAction::Rectangle, action1);
     
-    TAction *action2 = new TAction(QIcon(kAppProp->themeDir() + "icons/ellipse.png"), tr("Ellipse"), this);
+    TAction *action2 = new TAction(QIcon(ICONS_DIR + "ellipse.png"), tr("Ellipse"), this);
     action2->setShortcut(QKeySequence(tr("C")));
     action2->setToolTip(tr("Ellipse") + " - " + tr("C"));
     circleCursor = QCursor(kAppProp->themeDir() + "cursors/circle.png", 2, 2);
@@ -115,7 +115,7 @@ void GeometricTool::setupActions()
 
     geoActions.insert(TAction::Ellipse, action2);
     
-    TAction *action3 = new TAction(QIcon(kAppProp->themeDir() + "icons/line.png"), tr("Line"), this);
+    TAction *action3 = new TAction(QIcon(ICONS_DIR + "line.png"), tr("Line"), this);
     action3->setShortcut(QKeySequence(tr("L")));
     action3->setToolTip(tr("Line") + " - " + tr("L"));
     lineCursor = QCursor(kAppProp->themeDir() + "cursors/line.png", 0, 15);
@@ -124,7 +124,7 @@ void GeometricTool::setupActions()
 
     geoActions.insert(TAction::Line, action3);
 
-    TAction *action4 = new TAction(QIcon(kAppProp->themeDir() + "icons/triangle.png"), tr("Triangle"), this);
+    TAction *action4 = new TAction(QIcon(ICONS_DIR + "triangle.png"), tr("Triangle"), this);
     action4->setShortcut(QKeySequence(tr("Ctrl+T")));
     action4->setToolTip(tr("Triangle") + " - " + tr("Ctrl+T"));
     triangleCursor = QCursor(kAppProp->themeDir() + "cursors/triangle.png", 5, 3);
@@ -133,7 +133,7 @@ void GeometricTool::setupActions()
 
     geoActions.insert(TAction::Triangle, action4);
 
-    TAction *action5 = new TAction(QIcon(kAppProp->themeDir() + "icons/hexagon.png"), tr("Hexagon"), this);
+    TAction *action5 = new TAction(QIcon(ICONS_DIR + "hexagon.png"), tr("Hexagon"), this);
     action5->setShortcut(QKeySequence(tr("H")));
     action5->setToolTip(tr("Hexagon") + " - " + tr("H"));
     hexagonCursor = QCursor(kAppProp->themeDir() + "cursors/hexagon.png", 5, 4);

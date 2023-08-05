@@ -43,7 +43,7 @@
 #include "timagebutton.h"
 #include "tseparator.h"
 #include "tosd.h"
-#include "talgorithm.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 #include <QColorDialog>
@@ -51,13 +51,7 @@
 
 ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 {
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenW = dimension.first;
-    int iconSize = PANEL_ICON_SIZE;
-    // Big resolutions
-    if (screenW > HD_WIDTH)
-        iconSize = (screenW*2)/100;
-
+    int iconSize = TResponsiveUI::fitRightPanelIconSize();
     selectionDone = false;
     totalStepsCount = 0;
 

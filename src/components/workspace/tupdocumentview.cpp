@@ -37,6 +37,7 @@
 #include "tupapplication.h"
 #include "tconfig.h"
 #include "talgorithm.h"
+#include "tresponsiveui.h"
 #include "tuprequestbuilder.h"
 #include "tuppaintareaproperties.h"
 #include "tuppluginmanager.h"
@@ -395,55 +396,55 @@ void TupDocumentView::showPos(const QPointF &point)
 
 void TupDocumentView::setupDrawActions()
 {
-    new TAction(QPixmap(THEME_DIR + "icons/modes_settings.png"), tr("Modes Settings"), QKeySequence(),
+    new TAction(QPixmap(ICONS_DIR + "modes_settings.png"), tr("Modes Settings"), QKeySequence(),
                 this, SLOT(showModesSettings()), actionManager, "modes_settings");
 
-    new TAction(QPixmap(THEME_DIR + "icons/copy.png"), tr("Copy"), QKeySequence(), 
+    new TAction(QPixmap(ICONS_DIR + "copy.png"), tr("Copy"), QKeySequence(),
                 paintArea, SLOT(copyItems()), actionManager, "copy");
 
-    new TAction(QPixmap(THEME_DIR + "icons/paste.png"), tr("Paste"), QKeySequence(), 
+    new TAction(QPixmap(ICONS_DIR + "paste.png"), tr("Paste"), QKeySequence(),
                 paintArea, SLOT(pasteItems()), actionManager, "paste");
 
-    new TAction(QPixmap(THEME_DIR + "icons/cut.png"), tr("Cut"), QKeySequence(),
+    new TAction(QPixmap(ICONS_DIR + "cut.png"), tr("Cut"), QKeySequence(),
                 paintArea, SLOT(cutItems()), actionManager, "cut");
 
-    // new TAction(QPixmap(THEME_DIR + "icons/delete.png"), tr("Delete"), QKeySequence(Qt::Key_Delete), 
+    // new TAction(QPixmap(ICONS_DIR + "delete.png"), tr("Delete"), QKeySequence(Qt::Key_Delete),
     //             paintArea, SLOT(deleteItems()), actionManager, "delete");
 
-    new TAction(QPixmap(THEME_DIR + "icons/delete.png"), tr("Delete"), QKeySequence(),
+    new TAction(QPixmap(ICONS_DIR + "delete.png"), tr("Delete"), QKeySequence(),
                 paintArea, SLOT(deleteItems()), actionManager, "delete");
 
-    new TAction(QPixmap(THEME_DIR + "icons/size.png"), tr("Project Canvas Size"),
-                                        QKeySequence(tr("")), this, SLOT(editProjectSize()),
-                                        actionManager, "edit_project_size");
+    new TAction(QPixmap(ICONS_DIR + "size.png"), tr("Project Canvas Size"),
+                        QKeySequence(tr("")), this, SLOT(editProjectSize()),
+                        actionManager, "edit_project_size");
 
     /* 
-    TAction *group = new TAction(QPixmap(THEME_DIR + "icons/group.png"), tr("&Group"), QKeySequence(tr("Ctrl+G")), 
+    TAction *group = new TAction(QPixmap(ICONS_DIR + "group.png"), tr("&Group"), QKeySequence(tr("Ctrl+G")),
                                  paintArea, SLOT(groupItems()), actionManager, "group");
     // SQA: Enabled just for initial development
     group->setDisabled(true);
 
-    TAction *ungroup = new TAction(QPixmap(THEME_DIR + "icons/ungroup.png"), tr("&Ungroup"), 
+    TAction *ungroup = new TAction(QPixmap(ICONS_DIR + "ungroup.png"), tr("&Ungroup"),
                                     QKeySequence(tr("Ctrl+Shift+G")) , paintArea, SLOT(ungroupItems()),
                                     actionManager, "ungroup");
     // SQA: Enabled just for initial development
     ungroup->setDisabled(true);
     */
 
-    new TAction(QPixmap(THEME_DIR + "icons/layer.png"), tr("Onion Skin"), QKeySequence(Qt::Key_U), 
+    new TAction(QPixmap(ICONS_DIR + "layer.png"), tr("Onion Skin"), QKeySequence(Qt::Key_U),
                 this, SLOT(enableOnionFeature()), actionManager, "onion");
 
-    new TAction(QPixmap(THEME_DIR + "icons/onion.png"), tr("Onion Skin Factor"), QKeySequence(tr("Ctrl+Shift+S")), 
+    new TAction(QPixmap(ICONS_DIR + "onion.png"), tr("Onion Skin Factor"), QKeySequence(tr("Ctrl+Shift+S")),
                 this, SLOT(setDefaultOnionFactor()), actionManager, "onion_factor");
 
-    new TAction(QPixmap(THEME_DIR + "icons/export_frame.png"), tr("Export Frame As Image"), QKeySequence(tr("@")),
+    new TAction(QPixmap(ICONS_DIR + "export_frame.png"), tr("Export Frame As Image"), QKeySequence(tr("@")),
                 this, SLOT(exportImage()), actionManager, "export_image");
 
-    new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("Post Frame On TupiTube"), QKeySequence(tr("Ctrl+@")),
+    new TAction(QPixmap(ICONS_DIR + "share.png"), tr("Post Frame On TupiTube"), QKeySequence(tr("Ctrl+@")),
                 this, SLOT(postImage()), actionManager, "post_image");
 
     /*
-    new TAction(QPixmap(THEME_DIR + "icons/onion_color.png"), tr("Onion Color"), QKeySequence(),
+    new TAction(QPixmap(ICONS_DIR + "onion_color.png"), tr("Onion Color"), QKeySequence(),
                           this, SLOT(activeOnionColorScheme()), actionManager, "onion_color");
     */
 
@@ -451,40 +452,25 @@ void TupDocumentView::setupDrawActions()
     TCONFIG->beginGroup("Network");
     QString server = TCONFIG->value("Server").toString();
     if (isNetworked && server.compare("tupitu.be") == 0) {
-        new TAction(QPixmap(THEME_DIR + "icons/import_project.png"), tr("Export Frame To Gallery"), QKeySequence(tr("@")),
+        new TAction(QPixmap(ICONS_DIR + "import_project.png"), tr("Export Frame To Gallery"), QKeySequence(tr("@")),
                     this, SLOT(postImage()), actionManager, "post_image");
     }
     */
 
-    new TAction(QPixmap(THEME_DIR + "icons/storyboard.png"), tr("Storyboard Settings"), QKeySequence(tr("Ctrl+Shift+S")),
+    new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Storyboard Settings"), QKeySequence(tr("Ctrl+Shift+S")),
                 this, SLOT(storyboardSettings()), actionManager, "storyboard");
 
-    /*
-    #ifdef Q_OS_WIN
-        if (QSysInfo::windowsVersion() != QSysInfo::WV_XP) {
-            new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
-                        this, SLOT(cameraInterface()), actionManager, "camera");
-        }
-    #else
-        new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
-                    this, SLOT(cameraInterface()), actionManager, "camera");
-    #endif
-    */
-
-    new TAction(QPixmap(THEME_DIR + "icons/camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
+    new TAction(QPixmap(ICONS_DIR + "camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
                 this, SLOT(cameraInterface()), actionManager, "camera");
 
-    new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(tr("Ctrl+Shift+P")),
+    new TAction(QPixmap(ICONS_DIR + "papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(tr("Ctrl+Shift+P")),
                 this, SLOT(papagayoManager()), actionManager, "papagayo");
 }
 
 void TupDocumentView::createLateralToolBar()
 {
     toolbar = new QToolBar(tr("Draw tools"), this);
-    int iconSize = PLUGIN_ICON_SIZE;
-    if (bigScreen)
-        iconSize = (screenWidth*2)/100;
-    toolbar->setIconSize(QSize(iconSize, iconSize));
+    toolbar->setIconSize(TResponsiveUI::fitLateralToolBarIconSize(bigScreen, screenWidth));
 
     toolbar->setMovable(false);
     addToolBar(Qt::LeftToolBarArea, toolbar);
