@@ -56,9 +56,9 @@ class T_GUI_EXPORT TResponsiveUI
         static int fitExposureRowWidth();
         static int fitExposureRowHeight();
         static int fitStatusPanelWidth();
-        static int fitStatusPanelImageWidth();
+        static int fitStatusPanelCurrentFrameIconSize();
         static int fitStatusPanelRotateWidth();
-        static int fitLayerOpacityIconSize();
+        static int fitSmallIconSize();
 };
 
 #endif

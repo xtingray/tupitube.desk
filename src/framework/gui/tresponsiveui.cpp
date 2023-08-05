@@ -211,13 +211,13 @@ int TResponsiveUI::fitStatusPanelWidth()
     return width;
 }
 
-int TResponsiveUI::fitStatusPanelImageWidth()
+int TResponsiveUI::fitStatusPanelCurrentFrameIconSize()
 {
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
-    int width = STATUS_PANEL_IMAGE_WIDTH;
+    int width = STATUS_PANEL_CURRENT_FRAME_ICON_SIZE;
     if (screenWidth > HD_WIDTH)
-        width = FIT_STATUS_PANEL_IMAGE_WIDTH(screenWidth);
+        width = FIT_STATUS_PANEL_CURRENT_FRAME_ICON_SIZE(screenWidth);
 
     return width;
 }
@@ -233,13 +233,13 @@ int TResponsiveUI::fitStatusPanelRotateWidth()
     return width;
 }
 
-int TResponsiveUI::fitLayerOpacityIconSize()
+int TResponsiveUI::fitSmallIconSize()
 {
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
-    int width = LAYER_OPACITY_ICON_SIZE;
+    int width = SMALL_ICON_SIZE;
     if (screenWidth > HD_WIDTH)
-        width = FIT_LAYER_OPACITY_ICON_SIZE(screenWidth);
+        width = FIT_SMALL_ICON_SIZE(screenWidth);
 
     return width;
 }

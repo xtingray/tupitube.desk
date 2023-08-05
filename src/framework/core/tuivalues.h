@@ -59,8 +59,8 @@
 #define STATUS_PANEL_WIDTH 700 // Paint Area Status Width
 #define FIT_STATUS_PANEL_WIDTH(screenWidth) ((screenWidth*36.6)/100)
 
-#define STATUS_PANEL_IMAGE_WIDTH 18 // Paint Area Status Icon Size
-#define FIT_STATUS_PANEL_IMAGE_WIDTH(screenWidth) ((screenWidth*0.9)/100)
+#define STATUS_PANEL_CURRENT_FRAME_ICON_SIZE 18 // Paint Area Status Icon Size
+#define FIT_STATUS_PANEL_CURRENT_FRAME_ICON_SIZE(screenWidth) ((screenWidth*0.9)/100)
 
 #define STATUS_PANEL_ROTATE_WIDTH 10 // Paint Area Status Rotate Icon Size
 #define FIT_STATUS_PANEL_ROTATE_WIDTH(screenWidth) ((screenWidth*0.5)/100)
@@ -96,7 +96,7 @@
 #define EXPOSURE_ROW_HEIGHT 20 // Exposure Sheet Row Height
 #define FIT_EXPOSURE_ROW_HEIGHT(screenWidth) (screenWidth/100)
 
-#define LAYER_OPACITY_ICON_SIZE 12
-#define FIT_LAYER_OPACITY_ICON_SIZE(screenWidth) ((screenWidth*0.6)/100)
+#define SMALL_ICON_SIZE 12
+#define FIT_SMALL_ICON_SIZE(screenWidth) ((screenWidth*0.6)/100)
 
 #endif

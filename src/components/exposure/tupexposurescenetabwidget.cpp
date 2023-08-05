@@ -96,7 +96,7 @@ void TupExposureSceneTabWidget::addScene(int index, const QString &name, TupExpo
     QLabel *header = new QLabel();
     QPixmap pix(ICONS_DIR + "layer_opacity.png");
     header->setToolTip(tr("Current Layer Opacity"));
-    header->setPixmap(pix.scaledToWidth(TResponsiveUI::fitLayerOpacityIconSize()));
+    header->setPixmap(pix.scaledToWidth(TResponsiveUI::fitSmallIconSize()));
 
     QDoubleSpinBox *opacitySpinBox = new QDoubleSpinBox(this);
     opacitySpinBox->setRange(0.1, 1.0);

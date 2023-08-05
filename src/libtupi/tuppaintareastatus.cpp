@@ -49,19 +49,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     angle = 0;
     currentFrame = 1;
     colorContext = TColorCell::Contour;
-
     QSize iconSize = TResponsiveUI::fitStatusIconSize();
-    int panelWidth = TResponsiveUI::fitStatusPanelWidth();
-    int imgWidth = TResponsiveUI::fitStatusPanelImageWidth();
-
-    /*
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenWidth = dimension.first;
-    int panelWidth = 700;
-    // Big resolutions
-    if (screenWidth > HD_WIDTH)
-        panelWidth = 1100;
-    */
 
     QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "clear_frame.png")), "");
     clearAreaButton->setIconSize(iconSize);
@@ -110,7 +98,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
         QLabel *frameLabel = new QLabel("");
         frameLabel->setToolTip(tr("Current Frame"));
         QPixmap framePix(ICONS_DIR + "frame_number.png");
-        frameLabel->setPixmap(framePix.scaledToWidth(imgWidth));
+        frameLabel->setPixmap(framePix.scaledToWidth(TResponsiveUI::fitStatusPanelCurrentFrameIconSize(),
+                                                     Qt::SmoothTransformation));
 
         frameField = new QLineEdit(frameContainer);
         frameField->setFixedWidth(40);
@@ -131,7 +120,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     QLabel *zoomTool = new QLabel("");
     zoomTool->setToolTip(tr("Zoom"));
     QPixmap pix(ICONS_DIR + "zoom_small.png");
-    zoomTool->setPixmap(pix.scaledToWidth(imgWidth));
+    zoomTool->setPixmap(pix.scaledToWidth(TResponsiveUI::fitSmallIconSize(),
+                                          Qt::SmoothTransformation));
     zoomLayout->addWidget(zoomTool);
 
     zoomCombo = new QComboBox();
@@ -158,8 +148,8 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     QLabel *rotateLabel = new QLabel("");
     rotateLabel->setToolTip(tr("Rotate Workspace"));
     QPixmap rotatePix(ICONS_DIR + "rotate_workspace.png");
-    rotateLabel->setPixmap(rotatePix.scaledToWidth(10));
-
+    rotateLabel->setPixmap(rotatePix.scaledToWidth(TResponsiveUI::fitStatusPanelRotateWidth(),
+                                                   Qt::SmoothTransformation));
     rotLayout->addWidget(rotateLabel);
 
     rotationCombo = new QComboBox();
@@ -175,11 +165,13 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     connect(rotationCombo, SIGNAL(activated(const QString &)), this, SLOT(applyRotation(const QString &)));
 
     if (type == Vector) {
-        contourStatus = new TupBrushStatus(tr("Contour Color"), TColorCell::Contour, QPixmap(ICONS_DIR + "contour_color.png").scaledToWidth(18));
+        contourStatus = new TupBrushStatus(tr("Contour Color"),
+                                           TColorCell::Contour, QPixmap(ICONS_DIR + "contour_color.png").scaledToWidth(18));
         contourStatus->setTooltip(tr("Contour Color"));
         addPermanentWidget(contourStatus);
 
-        fillStatus = new TupBrushStatus(tr("Fill Color"), TColorCell::Inner, QPixmap(ICONS_DIR + "fill_color.png").scaledToWidth(18));
+        fillStatus = new TupBrushStatus(tr("Fill Color"),
+                                        TColorCell::Inner, QPixmap(ICONS_DIR + "fill_color.png").scaledToWidth(18));
         fillStatus->setTooltip(tr("Fill Color"));
         addPermanentWidget(fillStatus);
 
@@ -194,7 +186,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     empty2->setFixedWidth(5);
     addPermanentWidget(empty2);
 
-    setMinimumWidth(panelWidth);
+    setMinimumWidth(TResponsiveUI::fitStatusPanelWidth());
 }
 
 TupPaintAreaStatus::~TupPaintAreaStatus()
