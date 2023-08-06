@@ -75,7 +75,7 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
 
     loopBox = new QCheckBox();
     loopBox->setToolTip(tr("Loop"));
-    loopBox->setIcon(QPixmap(THEME_DIR + "icons/loop.png"));
+    loopBox->setIcon(QPixmap(ICONS_DIR + "loop.png"));
     loopBox->setFocusPolicy(Qt::NoFocus);
     loopBox->setShortcut(QKeySequence(tr("Ctrl+L")));
     connect(loopBox, SIGNAL(clicked()), this, SIGNAL(loopChanged()));
@@ -89,7 +89,7 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
 
     sceneInfoLayout->addSpacing(15);
 
-    soundButton = new TImageButton(QPixmap(THEME_DIR + "icons/speaker.png"), 22, this);
+    soundButton = new TImageButton(QPixmap(ICONS_DIR + "speaker.png"), 22, this);
     soundButton->setShortcut(QKeySequence(tr("M")));
     soundButton->setToolTip(tr("Mute"));
     connect(soundButton, SIGNAL(clicked()), this, SLOT(muteAction()));
@@ -97,7 +97,7 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
     sceneInfoLayout->addSpacing(15);
 
     exportButton = new QPushButton(tr("Export"));
-    exportButton->setIcon(QIcon(THEME_DIR + "icons/export_button.png"));
+    exportButton->setIcon(QIcon(ICONS_DIR + "export_button.png"));
     exportButton->setToolTip(tr("Export Project as Video File"));
     connect(exportButton, SIGNAL(pressed()), this, SIGNAL(exportClicked()));
 
@@ -107,7 +107,7 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
     #endif
 
     postButton = new QPushButton(tr("Post"));
-    postButton->setIcon(QIcon(THEME_DIR + "icons/share.png"));
+    postButton->setIcon(QIcon(ICONS_DIR + "share.png"));
     connect(postButton, SIGNAL(pressed()), this, SIGNAL(postClicked()));
     sceneInfoLayout->addWidget(postButton, 1);
 
@@ -174,18 +174,18 @@ bool TupCameraStatus::isLooping()
 
 void TupCameraStatus::muteAction()
 {
-    QString img("icons/mute.png");
+    QString img("mute.png");
 
     if (mute) {
         mute = false;
-        img = "icons/speaker.png";
+        img = "speaker.png";
         soundButton->setToolTip(tr("Mute"));
     } else {
         mute = true;
         soundButton->setToolTip(tr("Unmute"));
     }
 
-    soundButton->setImage(QPixmap(THEME_DIR + img));
+    soundButton->setImage(QPixmap(ICONS_DIR + img));
 
     emit muteEnabled(mute);
 }

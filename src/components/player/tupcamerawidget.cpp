@@ -129,7 +129,7 @@ void TupCameraWidget::addVideoHeader()
     labelLayout->setSpacing(0);
 
     QLabel *icon = new QLabel();
-    icon->setPixmap(QPixmap(THEME_DIR + "icons/player.png"));
+    icon->setPixmap(QPixmap(ICONS_DIR + "player.png"));
     QLabel *title = new QLabel(tr("Scene Preview"));
     QFont font = this->font();
     font.setBold(true);
@@ -159,7 +159,7 @@ void TupCameraWidget::addVideoHeader()
     scaleLayout->addWidget(scaleLabel);
 
     QPushButton *editButton = new QPushButton();
-    editButton->setIcon(QIcon(THEME_DIR + "icons/edit_sign.png"));
+    editButton->setIcon(QIcon(ICONS_DIR + "edit_sign.png"));
     editButton->setFocusPolicy(Qt::NoFocus);
     editButton->setToolTip(tr("Edit Project Information"));
     connect(editButton, SIGNAL(pressed()), this, SLOT(infoDialog()));

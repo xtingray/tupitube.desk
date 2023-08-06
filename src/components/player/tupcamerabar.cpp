@@ -35,6 +35,7 @@
 
 #include "tupcamerabar.h"
 #include "tapplicationproperties.h"
+#include "tresponsiveui.h"
 
 #include <QBoxLayout>
 
@@ -54,32 +55,35 @@ TupCameraBar::TupCameraBar(QWidget *parent) : QFrame(parent)
     mainLayout->setSpacing(10);
     mainLayout->setMargin(3);
 
-    rewindButton = new TImageButton(QPixmap(THEME_DIR + "icons/rw.png"), 33, this, true);
+    int smallButtonSize = TResponsiveUI::fitSmallPlayerButtonSize();
+    int buttonSize = TResponsiveUI::fitPlayerButtonSize();
+
+    rewindButton = new TImageButton(QPixmap(ICONS_DIR + "rw.png"), buttonSize, this, true);
     rewindButton->setToolTip(tr("Rewind"));
     mainLayout->addWidget(rewindButton);
     connect(rewindButton, SIGNAL(clicked()), this, SIGNAL(rew()));
 
-    playBackButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_back.png"), 25, this, true);
+    playBackButton = new TImageButton(QPixmap(ICONS_DIR + "play_back.png"), smallButtonSize, this, true);
     playBackButton->setToolTip(tr("Play in reverse"));
     mainLayout->addWidget(playBackButton);
     connect(playBackButton, SIGNAL(clicked()), this, SIGNAL(playBack()));
 
-    playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play.png"), 33, this, true);
+    playButton = new TImageButton(QPixmap(ICONS_DIR + "play.png"), buttonSize, this, true);
     playButton->setToolTip(tr("Play"));
     mainLayout->addWidget(playButton);
     connect(playButton, SIGNAL(clicked()), this, SIGNAL(play()));
 
-    pauseButton = new TImageButton(QPixmap(THEME_DIR + "icons/pause.png"), 33, this, true);
+    pauseButton = new TImageButton(QPixmap(ICONS_DIR + "pause.png"), smallButtonSize, this, true);
     pauseButton->setToolTip(tr("Pause"));
     mainLayout->addWidget(pauseButton);
     connect(pauseButton, SIGNAL(clicked()), this, SIGNAL(pause()));
 
-    stopButton = new TImageButton(QPixmap(THEME_DIR + "icons/stop.png"), 25, this, true);
+    stopButton = new TImageButton(QPixmap(ICONS_DIR + "stop.png"), smallButtonSize, this, true);
     stopButton->setToolTip(tr("Stop"));
     mainLayout->addWidget(stopButton);
     connect(stopButton, SIGNAL(clicked()), this, SIGNAL(stop()));
 
-    ffButton = new TImageButton(QPixmap(THEME_DIR + "icons/ff.png"), 33, this, true);
+    ffButton = new TImageButton(QPixmap(ICONS_DIR + "ff.png"), buttonSize, this, true);
     ffButton->setToolTip(tr("Forward"));
     mainLayout->addWidget(ffButton);
     connect(ffButton, SIGNAL(clicked()), this, SIGNAL(ff()));
@@ -100,7 +104,7 @@ void TupCameraBar::updatePlayButton(bool playOn)
     if (playOn)
         pic = "_on";
 
-    playButton->setIcon(QPixmap(THEME_DIR + "icons/play" + pic + ".png"));
+    playButton->setIcon(QPixmap(ICONS_DIR + "play" + pic + ".png"));
 }
 
 void TupCameraBar::updatePlaybackButton(bool playOn)
@@ -109,5 +113,5 @@ void TupCameraBar::updatePlaybackButton(bool playOn)
     if (playOn)
         pic = "_on";
 
-    playBackButton->setIcon(QPixmap(THEME_DIR + "icons/play_back" + pic + ".png"));
+    playBackButton->setIcon(QPixmap(ICONS_DIR + "play_back" + pic + ".png"));
 }

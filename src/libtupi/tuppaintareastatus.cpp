@@ -98,7 +98,7 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
         QLabel *frameLabel = new QLabel("");
         frameLabel->setToolTip(tr("Current Frame"));
         QPixmap framePix(ICONS_DIR + "frame_number.png");
-        frameLabel->setPixmap(framePix.scaledToWidth(TResponsiveUI::fitStatusPanelCurrentFrameIconSize(),
+        frameLabel->setPixmap(framePix.scaledToWidth(TResponsiveUI::fitStatusPanelFormIconSize(),
                                                      Qt::SmoothTransformation));
 
         frameField = new QLineEdit(frameContainer);
@@ -166,12 +166,14 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
 
     if (type == Vector) {
         contourStatus = new TupBrushStatus(tr("Contour Color"),
-                                           TColorCell::Contour, QPixmap(ICONS_DIR + "contour_color.png").scaledToWidth(18));
+                                           TColorCell::Contour,
+                                            QPixmap(ICONS_DIR + "contour_color.png").scaledToWidth(TResponsiveUI::fitStatusPanelFormIconSize()));
         contourStatus->setTooltip(tr("Contour Color"));
         addPermanentWidget(contourStatus);
 
         fillStatus = new TupBrushStatus(tr("Fill Color"),
-                                        TColorCell::Inner, QPixmap(ICONS_DIR + "fill_color.png").scaledToWidth(18));
+                                        TColorCell::Inner,
+                                        QPixmap(ICONS_DIR + "fill_color.png").scaledToWidth(TResponsiveUI::fitStatusPanelFormIconSize()));
         fillStatus->setTooltip(tr("Fill Color"));
         addPermanentWidget(fillStatus);
 

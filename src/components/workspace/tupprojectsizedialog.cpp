@@ -42,7 +42,7 @@ TupProjectSizeDialog::TupProjectSizeDialog(const QSize &size, QWidget *parent) :
 {
     setModal(true);
     setWindowTitle(tr("Project Canvas Size"));
-    setWindowIcon(QIcon(QPixmap(THEME_DIR + "icons/size.png")));
+    setWindowIcon(QIcon(QPixmap(ICONS_DIR + "size.png")));
 
     QString uiStyleSheet = TAppTheme::themeSettings();
     setStyleSheet(uiStyleSheet);
@@ -58,7 +58,7 @@ TupProjectSizeDialog::~TupProjectSizeDialog()
 
 void TupProjectSizeDialog::setUI(const QSize &size)
 {
-    okButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/apply.png")), "");
+    okButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "apply.png")), "");
     okButton->setToolTip(tr("Apply"));
     okButton->setVisible(false);
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
@@ -93,7 +93,7 @@ void TupProjectSizeDialog::setUI(const QSize &size)
 
     layout->addLayout(sizeLayout, Qt::AlignHCenter);
 
-    QPushButton *closeButton = new QPushButton(QIcon(QPixmap(THEME_DIR + "icons/close.png")), "");
+    QPushButton *closeButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "close.png")), "");
     closeButton->setToolTip(tr("Cancel"));
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 

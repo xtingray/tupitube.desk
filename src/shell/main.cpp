@@ -162,7 +162,7 @@ int main(int argc, char ** argv)
     else
         kAppProp->setIconsDir(themePath + "icons/");
 
-    // kAppProp->setIconsDir(themePath + "icons/hd/");
+    kAppProp->setIconsDir(themePath + "icons/hd/");
 
     kAppProp->setRasterResourcesDir(kAppProp->shareDir() + "themes/raster/");
 

@@ -67,7 +67,7 @@ TXYSpinBox::TXYSpinBox(const QString &title, const QString &xLabel, const QStrin
     m_separator = new QPushButton;
     // m_separator->setFlat(true);
     m_separator->setMaximumWidth(20);
-    m_separator->setIcon(QPixmap(THEME_DIR + "icons/open_padlock.png"));
+    m_separator->setIcon(QPixmap(ICONS_DIR + "open_padlock.png"));
 
     layout->addWidget(m_separator);
 
@@ -118,7 +118,7 @@ void TXYSpinBox::toggleModify()
 {
     if (!m_modifyTogether) {
         m_modifyTogether = true;
-        m_separator->setIcon(QPixmap(THEME_DIR + "icons/padlock.png"));
+        m_separator->setIcon(QPixmap(ICONS_DIR + "padlock.png"));
 
         int x = m_x->value();
         if (m_y->value() != x)
@@ -126,7 +126,7 @@ void TXYSpinBox::toggleModify()
 
     } else {
         m_modifyTogether = false;
-        m_separator->setIcon(QPixmap(THEME_DIR + "icons/open_padlock.png")); // open padlock
+        m_separator->setIcon(QPixmap(ICONS_DIR + "open_padlock.png")); // open padlock
     }
 }
 

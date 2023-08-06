@@ -211,13 +211,13 @@ int TResponsiveUI::fitStatusPanelWidth()
     return width;
 }
 
-int TResponsiveUI::fitStatusPanelCurrentFrameIconSize()
+int TResponsiveUI::fitStatusPanelFormIconSize()
 {
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
-    int width = STATUS_PANEL_CURRENT_FRAME_ICON_SIZE;
+    int width = STATUS_PANEL_ICON_SIZE;
     if (screenWidth > HD_WIDTH)
-        width = FIT_STATUS_PANEL_CURRENT_FRAME_ICON_SIZE(screenWidth);
+        width = FIT_STATUS_PANEL_ICON_SIZE(screenWidth);
 
     return width;
 }
@@ -240,6 +240,28 @@ int TResponsiveUI::fitSmallIconSize()
     int width = SMALL_ICON_SIZE;
     if (screenWidth > HD_WIDTH)
         width = FIT_SMALL_ICON_SIZE(screenWidth);
+
+    return width;
+}
+
+int TResponsiveUI::fitPlayerButtonSize()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int width = PLAYER_BUTTON_SIZE;
+    if (screenWidth > HD_WIDTH)
+        width = FIT_PLAYER_BUTTON_SIZE(screenWidth);
+
+    return width;
+}
+
+int TResponsiveUI::fitSmallPlayerButtonSize()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int width = SMALL_PLAYER_BUTTON_SIZE;
+    if (screenWidth > HD_WIDTH)
+        width = FIT_SMALL_PLAYER_BUTTON_SIZE(screenWidth);
 
     return width;
 }
