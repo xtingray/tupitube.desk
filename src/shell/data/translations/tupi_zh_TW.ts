@@ -797,14 +797,14 @@
     </message>
 </context>
 <context>
-    <name>PenSettings</name>
-    <message>
-        <source>Smoothness</source>
-        <translation>平滑度</translation>
-    </message>
+    <name>PencilSettings</name>
     <message>
         <source>Pencil Properties</source>
         <translation>鉛筆屬性</translation>
+    </message>
+    <message>
+        <source>Smoothness</source>
+        <translation>平滑度</translation>
     </message>
 </context>
 <context>
@@ -4723,14 +4723,6 @@
         <translation>重置工作區</translation>
     </message>
     <message>
-        <source>Show grid</source>
-        <translation>顯示栅格</translation>
-    </message>
-    <message>
-        <source>Full screen</source>
-        <translation>全螢幕</translation>
-    </message>
-    <message>
         <source>Action Safe Area</source>
         <translation>操作安全區</translation>
     </message>
@@ -4749,6 +4741,14 @@
     <message>
         <source>Clear Frame</source>
         <translation>清除幀</translation>
+    </message>
+    <message>
+        <source>Show Grid</source>
+        <translation>顯示網格</translation>
+    </message>
+    <message>
+        <source>Full Screen</source>
+        <translation>全屏</translation>
     </message>
 </context>
 <context>
