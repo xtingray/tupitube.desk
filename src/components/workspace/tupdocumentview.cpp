@@ -1034,17 +1034,14 @@ void TupDocumentView::selectTool()
             paintArea->setCurrentTool(toolId);
 
             if (!action->icon().isNull())
-                status->updateTool(toolName, action->icon().pixmap(15, 15));
+                status->updateTool(toolName, action->icon().pixmap(TResponsiveUI::fitStatusIconSize()));
 
-            int minWidth = 0;
+            int minWidth = TResponsiveUI::fitRightPanelWidth();
 
             switch (tool->toolType()) {
                 case TupToolInterface::Brush:
                 {
                     status->enableFullScreenFeature(true);
-                    minWidth = 130;
-                    if (bigScreen)
-                        minWidth =(screenWidth*11)/100; // 11% of the screen width
 
                     if (toolId == TAction::Pencil || toolId == TAction::Polyline || toolId == TAction::Ink) {
                         if (toolId == TAction::Pencil)
@@ -1059,19 +1056,12 @@ void TupDocumentView::selectTool()
                                 shapesMenu->menuAction()->setIcon(action->icon());
                         }
                     }
-                    /*
-                        SQA: Enable it only for debugging
-                        if (toolId == TAction::Scheme)
-                            minWidth = 130;
-                    */
                 }
                 break;
                 case TupToolInterface::Tweener:
                 {
                     status->enableFullScreenFeature(false);
-                    minWidth = 230;
-                    if (bigScreen)
-                        minWidth =(screenWidth*12)/100; // 12% of the screen width
+                    minWidth = TResponsiveUI::fitTweenerPanelWidth();
 
                     motionMenu->setDefaultAction(action);
                     motionMenu->setActiveAction(action);
@@ -1081,6 +1071,7 @@ void TupDocumentView::selectTool()
                 break;
                 case TupToolInterface::Fill:
                 {
+                    minWidth = 0;
                     QString cursorIcon = "line_fill.png";
                     if (colorSpace == TColorCell::Background) {
                         TCONFIG->beginGroup("ColorPalette");
@@ -1103,50 +1094,22 @@ void TupDocumentView::selectTool()
                     status->enableFullScreenFeature(true);
                     if (toolId == TAction::ObjectSelection) {
                         tool->setProjectSize(project->getDimension());
-
-                        minWidth = 130;
-                        if (bigScreen)
-                            minWidth = (screenWidth*11)/100; // 11% of the screen width
-
                         connect(paintArea, SIGNAL(itemAddedOnSelection(TupGraphicsScene*)),
                                 tool, SLOT(initItems(TupGraphicsScene*)));
                     } else if (toolId == TAction::NodesEditor) {
-                        minWidth = 150;
-                        if (bigScreen)
-                            minWidth =(screenWidth*8)/100; // 8% of the screen width
+                        minWidth = TResponsiveUI::fitNodesPanelWidth();
+                    } else if (toolId == TAction::Text) {
+                        minWidth = TResponsiveUI::fitTextPanelWidth();
                     }
                 }
                 break;
-                /*
-                case TupToolInterface::View:
-                {
-                    status->enableFullScreenFeature(true);
-                    if (toolId == TAction::Shift) {
-                        tool->setProjectSize(project->getDimension());
-                        if (fullScreenOn)
-                            tool->setActiveView("FULL_SCREEN");
-                        else
-                            tool->setActiveView("WORKSPACE");
-                    }
-                }
-                break;
-                */
                 case TupToolInterface::LipSync:
                 {
                     status->enableFullScreenFeature(false);
-                    minWidth = 220;
-                    if (bigScreen)
-                        minWidth =(screenWidth*12)/100; // 12% of the screen width
+                    minWidth = TResponsiveUI::fitLipsyncPanelWidth();
 
                     connect(currentTool, SIGNAL(lipsyncCreatorRequested()), this, SLOT(openLipSyncCreator()));
                     connect(currentTool, SIGNAL(lipsyncEditionRequested(QString)), this, SLOT(openLipSyncCreator(QString)));
-
-                    /*
-                    miscMenu->setDefaultAction(action);
-                    miscMenu->setActiveAction(action);
-                    if (!action->icon().isNull())
-                        miscMenu->menuAction()->setIcon(action->icon());
-                    */
                 }
             }
 

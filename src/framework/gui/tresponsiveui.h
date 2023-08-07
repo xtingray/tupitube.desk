@@ -50,8 +50,12 @@ class T_GUI_EXPORT TResponsiveUI
         static QPair<int, int> fitColorPaletteWidth();
         static QSize fitLateralToolBarIconSize(bool bigScreen, int screenWidth);
         static int fitRightPanelIconSize();
-        static QPair<int, int> fitSelectionOptionIconsSize();
         static int fitRightPanelWidth();
+        static QPair<int, int> fitSelectionOptionIconsSize();
+        static int fitNodesPanelWidth();
+        static int fitTweenerPanelWidth();
+        static int fitLipsyncPanelWidth();
+        static int fitTextPanelWidth();
         static int fitExposureVerticalHeader();
         static int fitExposureRowWidth();
         static int fitExposureRowHeight();

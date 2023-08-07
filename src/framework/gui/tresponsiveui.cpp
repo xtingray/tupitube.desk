@@ -139,6 +139,30 @@ int TResponsiveUI::fitRightPanelIconSize()
     return iconSize;
 }
 
+int TResponsiveUI::fitRightPanelWidth()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int iconSize = RIGHT_PANEL_MIN_WIDTH;
+    // Big resolutions
+    if (screenWidth > HD_WIDTH)
+        iconSize = FIT_RIGHT_PANEL_MIN_WIDTH(screenWidth);
+
+    return iconSize;
+}
+
+int TResponsiveUI::fitTweenerPanelWidth()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int iconSize = TWEENER_PANEL_MIN_WIDTH;
+    // Big resolutions
+    if (screenWidth > HD_WIDTH)
+        iconSize = FIT_TWEENER_PANEL_MIN_WIDTH(screenWidth);
+
+    return iconSize;
+}
+
 QPair<int, int> TResponsiveUI::fitSelectionOptionIconsSize()
 {
     QPair<int, int> widthValues;
@@ -156,13 +180,35 @@ QPair<int, int> TResponsiveUI::fitSelectionOptionIconsSize()
     return widthValues;
 }
 
-int TResponsiveUI::fitRightPanelWidth()
+int TResponsiveUI::fitNodesPanelWidth()
 {
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
-    int minWidth = RIGHT_PANEL_MIN_WITDH;
+    int minWidth = NODES_PANEL_MIN_WIDTH;
     if (screenWidth > HD_WIDTH)
-        minWidth = RIGHT_PANEL_MAX_WITDH;
+        minWidth = FIT_NODES_PANEL_MIN_WIDTH(screenWidth);
+
+    return minWidth;
+}
+
+int TResponsiveUI::fitLipsyncPanelWidth()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int minWidth = LIPSYNC_PANEL_MIN_WIDTH;
+    if (screenWidth > HD_WIDTH)
+        minWidth = FIT_LIPSYNC_PANEL_MIN_WIDTH(screenWidth);
+
+    return minWidth;
+}
+
+int TResponsiveUI::fitTextPanelWidth()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int minWidth = TEXT_PANEL_MIN_WIDTH;
+    if (screenWidth > HD_WIDTH)
+        minWidth = FIT_TEXT_PANEL_MIN_WIDTH(screenWidth);
 
     return minWidth;
 }

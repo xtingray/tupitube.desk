@@ -48,13 +48,13 @@
 #define FIT_PLUGIN_ICON_SIZE(screenWidth) ((screenWidth*2)/100)
 
 #define TOOLVIEW_ICON_SIZE 16 // Panel Icons
-#define FIT_TOOLVIEW_ICON_SIZE(screenWidth) ((screenWidth*0.8)/100)
+#define FIT_TOOLVIEW_ICON_SIZE(screenWidth) ((screenWidth*1.2)/100)
 
 #define ACTIONBAR_ICON_SIZE 16 // Exposure Sheet, TimeLine Toolbars
 #define FIT_ACTIONBAR_ICON_SIZE(screenWidth) ((screenWidth*0.8)/100)
 
 #define STATUS_ICON_SIZE 16 // Paint Area Status Icon
-#define FIT_STATUS_ICON_SIZE(screenWidth) (screenWidth/100)
+#define FIT_STATUS_ICON_SIZE(screenWidth) ((screenWidth*1.4)/100)
 
 #define STATUS_PANEL_WIDTH 700 // Paint Area Status Width
 #define FIT_STATUS_PANEL_WIDTH(screenWidth) ((screenWidth*36.6)/100)
@@ -66,7 +66,22 @@
 #define FIT_STATUS_PANEL_ROTATE_WIDTH(screenWidth) ((screenWidth*0.5)/100)
 
 #define RIGHT_PANEL_ICON_SIZE 22 // Plugin Right Panel
-#define FIT_RIGHT_PANEL_ICON_SIZE(screenWidth) (screenWidth/100)
+#define FIT_RIGHT_PANEL_ICON_SIZE(screenWidth) ((screenWidth*1.2)/100)
+
+#define RIGHT_PANEL_MIN_WIDTH 130 // Plugin Right Panel Min Width
+#define FIT_RIGHT_PANEL_MIN_WIDTH(screenWidth) ((screenWidth*7)/100)
+
+#define TWEENER_PANEL_MIN_WIDTH 230 // Tweener Right Panel Min Width
+#define FIT_TWEENER_PANEL_MIN_WIDTH(screenWidth) ((screenWidth*12)/100)
+
+#define NODES_PANEL_MIN_WIDTH 150 // Nodes Right Panel Min Width
+#define FIT_NODES_PANEL_MIN_WIDTH(screenWidth) ((screenWidth*8)/100)
+
+#define LIPSYNC_PANEL_MIN_WIDTH 220 // Lipsync Right Panel Min Width
+#define FIT_LIPSYNC_PANEL_MIN_WIDTH(screenWidth) ((screenWidth*12)/100)
+
+#define TEXT_PANEL_MIN_WIDTH 320 // Text Right Panel Min Width
+#define FIT_TEXT_PANEL_MIN_WIDTH(screenWidth) ((screenWidth*17)/100)
 
 #define PANEL_TITLE_ICON_SIZE 16 // Plugin Right Panel Title
 #define FIT_TITLE_ICON_SIZE(screenWidth) ((screenWidth*0.8)/100)
@@ -83,9 +98,6 @@
 
 #define SELECTION_RESET_ICON_SIZE 18 // Selection Reset Icon
 #define FIT_SELECTION_RESET_ICON_SIZE(screenWidth) ((screenWidth*0.95)/100)
-
-#define RIGHT_PANEL_MIN_WITDH 130 // Right Panel Min Width (Plugin)
-#define RIGHT_PANEL_MAX_WITDH 260 // Right Panel Max Width (Plugin)
 
 #define EXPOSURE_VERTICAL_HEADER_WIDTH 25 // Exposure Sheet Numbers Column
 #define FIT_EXPOSURE_VERTICAL_HEADER_WIDTH(screenWidth) ((screenWidth*1.3)/100)

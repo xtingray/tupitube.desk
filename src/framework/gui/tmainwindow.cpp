@@ -34,6 +34,7 @@
  ***************************************************************************/
 
 #include "tmainwindow.h"
+#include "tresponsiveui.h"
 
 class T_GUI_EXPORT DefaultSettings : public TMainWindowAbstractSettings
 {
@@ -151,7 +152,8 @@ TMainWindow::TMainWindow(const QString &key, QWidget *parent): QMainWindow(paren
     settings = new DefaultSettings(this);
 
     specialToolBar = new QToolBar(tr("Show Top Panel"), this);
-    specialToolBar->setIconSize(QSize(9, 5));
+    int iconSize = TResponsiveUI::fitToolViewIconSize();
+    specialToolBar->setIconSize(QSize(iconSize, iconSize/2));
     specialToolBar->setMovable(false);
 
     addToolBar(Qt::LeftToolBarArea, specialToolBar);
