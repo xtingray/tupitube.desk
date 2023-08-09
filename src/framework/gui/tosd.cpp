@@ -36,6 +36,7 @@
 #include "tosd.h"
 #include "tconfig.h"
 #include "talgorithm.h"
+#include "tresponsiveui.h"
 
 TOsd *TOsd::s_osd = 0;
 
@@ -70,64 +71,72 @@ TOsd::~TOsd()
     delete m_timer;
 }
 
+QString TOsd::htmlHeader(const QString &logo, const QString &imgWidth, const QString &fontSize) const
+{
+    QString html = "<img src=\"" + logo + "\" width=\"" + imgWidth + "\"><font style=\"font-size:" + fontSize + "px;\"><b>&nbsp;&nbsp;";
+
+    return html;
+}
+
 void TOsd::display(Level level, const QString &message,int ms)
 {
     if (message.isEmpty()) 
         return;
 
+    QString fontSize = TResponsiveUI::fitMsgFontSize();
+
     QString htmlMessage = message;
     htmlMessage.replace('\n', "<br/>");
-    QString tail = "</b></font><br><font style=\"font-size:11px\">" + htmlMessage + "</font>";
+    QString tail = "</b></font><br><font style=\"font-size:" + fontSize + "px\">" + htmlMessage + "</font>";
 
-    // QBrush background = palette().background();
     QBrush background = palette().window();
-    // QBrush foreground = palette().foreground();
     QBrush foreground = palette().windowText();
 
     if (level != None) {
+        fontSize = TResponsiveUI::fitTitleFontSize();
         switch (level) {
                 case Info:
                    {
-                     tail = tr("Information") + tail;
-                     QString logo = THEME_DIR + "icons/info_message.png";
-                     if (uiTheme == DARK_THEME)
-                         background = QColor(0, 80, 0);
-                     else
-                         background = QColor(0xc1e2fb);
-                     m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \
-                                         + tail);
+                        tail = tr("Information") + tail;
+                        QString logo = ICONS_DIR + "info_message.png";
+                        if (uiTheme == DARK_THEME)
+                            background = QColor(0, 80, 0);
+                        else
+                            background = QColor(0xc1e2fb);
+
+                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitInfoIconSize(), fontSize) + tail);
                    }
                    break;
                 case Warning:
                    {
-                     tail = tr("Warning") + tail;
-                     QString logo = THEME_DIR + "icons/warning_message.png";
-                     background = QColor(0xf77100);
-                     m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \
-                                         + tail);
+                        tail = tr("Warning") + tail;
+                        QString logo = ICONS_DIR + "warning_message.png";
+                        background = QColor(0xf77100);
+
+                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
                    }
                    break;
                 case Error:
                    {
-                     tail = tr("Error") + tail;
-                     QString logo = THEME_DIR + "icons/error_message.png";
-                     background = Qt::red;
-                     m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \
-                                         + tail);
+                        tail = tr("Error") + tail;
+                        QString logo = ICONS_DIR + "error_message.png";
+                        background = Qt::red;
+
+                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
                    }
                    break;
                 case Fatal:
                    {
-                     tail = tr("Fatal") + tail;
-                     QString logo = THEME_DIR + "icons/fatal_message.png";
-                     background = Qt::red;
-                     m_document->setHtml("<img src=\"" + logo + "\"><font style=\"font-size:12px;\"><b>&nbsp;&nbsp;" \
-                                         + tail);
+                        tail = tr("Fatal") + tail;
+                        QString logo = ICONS_DIR + "fatal_message.png";
+                        background = Qt::red;
+
+                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
                    }
                    break;
                 default:
                    {
-                     m_document->setHtml(htmlMessage);
+                        m_document->setHtml(htmlMessage);
                    }
                    break;
         }
@@ -135,6 +144,8 @@ void TOsd::display(Level level, const QString &message,int ms)
 
     if (ms < 0)
         ms = m_document->toPlainText().length() * 70;
+
+    ms = 8000;
 
     m_animator->level = level;
 
@@ -151,24 +162,12 @@ void TOsd::display(Level level, const QString &message,int ms)
          static_cast<int> ((screenHeight - textSize.height()) - 45));
 
     QRect geometry(0, 0, width + 10, height + 8);
-    // QRect geometry2(0, 0, width + 9, height + 7);
-
     // resize pixmap, mask and widget
     QBitmap mask;
     mask = QBitmap(geometry.size());
     m_pixmap = QPixmap(geometry.size());
 
     resize(geometry.size());
-
-    // create and set transparency mask
-    /*
-    QPainter maskPainter(&mask);
-    maskPainter.setRenderHint(QPainter::Antialiasing);
-    mask.fill(Qt::white);
-    maskPainter.drawRoundedRect(0, 0, width + 9, height + 7, 1, 1, Qt::AbsoluteSize);
-    setMask(mask);
-    maskPainter.end();
-    */
    
     drawPixmap(background, foreground);
 
@@ -201,7 +200,7 @@ void TOsd::paintEvent(QPaintEvent *e)
 
 void TOsd::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
 
     if (m_timer)
         m_timer->stop();
@@ -224,24 +223,19 @@ void TOsd::animate()
             background = Qt::red;
         else
             background = palette().window();
-            // background = palette().background();
     } else if (m_animator->level == Warning) {
                if (m_animator->on)
                    background = QColor("orange");
                else
                    background = palette().window();
-                   // background = palette().background();
     } else if (m_animator->level == Fatal) {
                if (m_animator->on)
                    background = Qt::magenta;
                else
                    background = palette().window();
-                   // background = palette().background();
     }
 
     m_animator->on = m_animator->on ? false : true;
-
-    // drawPixmap(background, palette().foreground());
     drawPixmap(background, palette().windowText()); 
 
     repaint();
@@ -262,7 +256,6 @@ void TOsd::drawPixmap(const QBrush &background, const QBrush &foreground)
     int shadowOffset = QApplication::isRightToLeft() ? -1 : 1;
 
     QRect geometry(0, 0, width + 10, height + 8);
-    QRect geometry2(0, 0, width + 9, height + 7);
 
     textXOffset = 2;
 
@@ -291,7 +284,6 @@ void TOsd::drawPixmap(const QBrush &background, const QBrush &foreground)
     bufferPainter.drawRoundedRect(0, 0, width + 8, height + 6, 1, 1, Qt::AbsoluteSize);
 
     // draw shadow and text
-    // bufferPainter.setPen(palette().background().color().dark(115));
     bufferPainter.setPen(palette().window().color().darker(115));
     bufferPainter.translate(5 + textXOffset + shadowOffset, 1);
 

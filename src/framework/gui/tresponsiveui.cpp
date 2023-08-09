@@ -311,3 +311,47 @@ int TResponsiveUI::fitSmallPlayerButtonSize()
 
     return width;
 }
+
+QString TResponsiveUI::fitTitleFontSize()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int fontSize = TITLE_FONT_SIZE;
+    if (screenWidth > HD_WIDTH)
+        fontSize = FIT_TITLE_FONT_SIZE(screenWidth);
+
+    return QString::number(fontSize);
+}
+
+QString TResponsiveUI::fitMsgFontSize()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int fontSize = MSG_FONT_SIZE;
+    if (screenWidth > HD_WIDTH)
+        fontSize = FIT_MSG_FONT_SIZE(screenWidth);
+
+    return QString::number(fontSize);
+}
+
+QString TResponsiveUI::fitInfoIconSize()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int iconSize = INFO_ICON_SIZE;
+    if (screenWidth > HD_WIDTH)
+        iconSize = FIT_INFO_ICON_SIZE(screenWidth);
+
+    return QString::number(iconSize);
+}
+
+QString TResponsiveUI::fitMsgIconSize()
+{
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenWidth = dimension.first;
+    int iconSize = MSG_FONT_SIZE;
+    if (screenWidth > HD_WIDTH)
+        iconSize = FIT_MSG_FONT_SIZE(screenWidth);
+
+    return QString::number(iconSize);
+}

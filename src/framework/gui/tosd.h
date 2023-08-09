@@ -81,9 +81,9 @@ class T_GUI_EXPORT TOsd : public QWidget
         void mousePressEvent(QMouseEvent *event);
 
     private:
+        QString htmlHeader(const QString &logo, const QString &imgWidth, const QString &fontSize) const;
         void drawPixmap(const QBrush &background, const QBrush &foreground);
 
-    private:
         static TOsd *s_osd;
         QPixmap m_pixmap;
         QTimer *m_timer;

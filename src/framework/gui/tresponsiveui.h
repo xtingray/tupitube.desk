@@ -65,6 +65,11 @@ class T_GUI_EXPORT TResponsiveUI
         static int fitSmallIconSize();       
         static int fitPlayerButtonSize();
         static int fitSmallPlayerButtonSize();
+
+        static QString fitTitleFontSize();
+        static QString fitMsgFontSize();
+        static QString fitInfoIconSize();
+        static QString fitMsgIconSize();
 };
 
 #endif

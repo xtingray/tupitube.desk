@@ -117,4 +117,16 @@
 #define SMALL_PLAYER_BUTTON_SIZE 25 // Small Player Buttons
 #define FIT_SMALL_PLAYER_BUTTON_SIZE(screenWidth) ((screenWidth*1.3)/100)
 
+#define TITLE_FONT_SIZE 12 // Title Message Font Size
+#define FIT_TITLE_FONT_SIZE(screenWidth) ((screenWidth*0.7)/100)
+
+#define MSG_FONT_SIZE 11 // Info Message Font Size
+#define FIT_MSG_FONT_SIZE(screenWidth) ((screenWidth*0.6)/100)
+
+#define INFO_ICON_SIZE 10 // Info Icon Size
+#define FIT_INFO_ICON_SIZE(screenWidth) ((screenWidth*0.5)/100)
+
+#define MSG_ICON_SIZE 20 // Info Icon Size
+#define FIT_MSG_ICON_SIZE(screenWidth) (screenWidth/100)
+
 #endif
