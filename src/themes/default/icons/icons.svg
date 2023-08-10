@@ -19,6 +19,13 @@
    xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 1000 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 1000 : 1"
+       inkscape:persp3d-origin="372.04724 : 666.66667 : 1"
+       id="perspective5191" />
     <linearGradient
        inkscape:collect="always"
        id="linearGradient8166">
@@ -2894,9 +2901,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="355.32115"
-     inkscape:cy="947.16951"
+     inkscape:zoom="2.8284272"
+     inkscape:cx="287.08535"
+     inkscape:cy="961.48842"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -6340,7 +6347,7 @@
     </g>
     <g
        id="g9378"
-       transform="rotate(57.134285,979.66082,566.23346)"
+       transform="rotate(57.134285,990.66082,586.4365)"
        inkscape:export-xdpi="81.82"
        inkscape:export-ydpi="81.82">
       <path
@@ -6355,7 +6362,7 @@
     </g>
     <g
        id="g9371"
-       transform="translate(-39.843745,-726.9677)">
+       transform="translate(-1.0373124,-728.41451)">
       <g
          transform="matrix(8.4891828,0,0,8.4891828,19.368477,452.19167)"
          inkscape:export-ydpi="469.5"
@@ -6452,10 +6459,10 @@
     </g>
     <g
        id="g9360"
-       transform="translate(-41.309773,-730.26907)"
-       inkscape:export-xdpi="44.599998"
-       inkscape:export-ydpi="44.599998"
-       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/info_message.png">
+       transform="translate(-50.107089,-730.26907)"
+       inkscape:export-xdpi="169.47"
+       inkscape:export-ydpi="169.47"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hd/info_message.png">
       <path
          inkscape:export-ydpi="354.93695"
          inkscape:export-xdpi="354.93695"
@@ -6471,7 +6478,8 @@
          sodipodi:cx="28.637825"
          id="path4400"
          style="fill:#000000;fill-opacity:1;stroke:none"
-         sodipodi:type="arc" />
+         sodipodi:type="arc"
+         sodipodi:arc-type="arc" />
       <path
          inkscape:export-ydpi="354.93695"
          inkscape:export-xdpi="354.93695"
@@ -6495,8 +6503,9 @@
          sodipodi:cy="35.38562"
          sodipodi:cx="28.867188"
          id="path3619"
-         style="fill:#ffffff;fill-opacity:0.37134507;stroke:none"
-         sodipodi:type="arc" />
+         style="fill:#ffffff;fill-opacity:0.371345;stroke:none"
+         sodipodi:type="arc"
+         sodipodi:arc-type="arc" />
       <path
          inkscape:export-ydpi="354"
          inkscape:export-xdpi="354"
@@ -6505,13 +6514,14 @@
          inkscape:connector-curvature="0"
          id="path4439"
          d="m 274.20435,781.21335 -18.99311,-0.18761 0.66267,-1.34528 17.52517,-0.23209 z"
-         style="fill:#ffffff;fill-opacity:0.37719344;stroke:none" />
+         style="fill:#ffffff;fill-opacity:0.377193;stroke:none" />
     </g>
     <g
        id="g9366"
-       transform="translate(-32.751036,-729.17361)"
+       transform="translate(-57.490709,-729.53532)"
        inkscape:export-xdpi="98.139999"
-       inkscape:export-ydpi="98.139999">
+       inkscape:export-ydpi="98.139999"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hd/warning_message.png">
       <path
          inkscape:export-ydpi="390.52463"
          inkscape:export-xdpi="390.52463"
@@ -6536,7 +6546,8 @@
          id="path4447-7"
          style="fill:#000000;fill-opacity:1;stroke:none"
          sodipodi:type="arc"
-         transform="matrix(8.4891828,0,0,8.4891828,12.962926,451.47967)" />
+         transform="matrix(8.4891828,0,0,8.4891828,12.962926,451.47967)"
+         sodipodi:arc-type="arc" />
       <path
          inkscape:export-ydpi="390.52463"
          inkscape:export-xdpi="390.52463"
@@ -8139,7 +8150,7 @@
     </g>
     <g
        id="g9381"
-       transform="translate(9.9783692,-690.50533)">
+       transform="translate(19.978369,-690.50533)">
       <path
          inkscape:export-ydpi="947.27002"
          inkscape:export-xdpi="947.27002"
@@ -8148,7 +8159,7 @@
          inkscape:connector-curvature="0"
          id="path4545-8-2-1-9"
          d="m 446.04582,721.88118 c 1.97581,5.75979 -2.44768,9.06886 -6.244,9.06886 -3.79632,0 -6.87386,-3.02581 -6.87386,-6.75832 0,-3.73253 3.07754,-6.75833 6.87386,-6.75833 2.74862,0 5.23299,1.60988 6.31686,4.09333"
-         style="fill:url(#linearGradient11123);fill-opacity:1;stroke:#000000;stroke-width:0.97990197;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:url(#linearGradient11123);fill-opacity:1;stroke:#000000;stroke-width:0.979902;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <path
          inkscape:export-ydpi="947.27002"
          inkscape:export-xdpi="947.27002"
@@ -8157,7 +8168,7 @@
          inkscape:connector-curvature="0"
          id="path7034-3-6-6"
          d="m 446.17235,723.45846 c -1.50696,4.42028 -10.95281,5.18039 -13.15419,1.02309"
-         style="fill:none;stroke:#000000;stroke-width:0.97990197;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:none;stroke:#000000;stroke-width:0.979902;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <rect
        inkscape:export-ydpi="169.77"
@@ -13368,7 +13379,7 @@
          sodipodi:nodetypes="cc" />
     </g>
     <rect
-       style="fill:#ffffff;fill-opacity:0;stroke:none;stroke-width:1.477;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#4e6d50;fill-opacity:0;stroke:none;stroke-width:1.477;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect8136"
        width="25"
        height="25"
@@ -21445,5 +21456,30 @@
          inkscape:export-xdpi="112.01"
          inkscape:export-ydpi="112.01" />
     </g>
+    <g
+       id="g5275"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hd/error_message.png"
+       inkscape:export-xdpi="98.669998"
+       inkscape:export-ydpi="98.669998"
+       transform="translate(-32.822481,-1.6879455)">
+      <circle
+         style="fill:#4e6d50;fill-opacity:0;stroke:#000002;stroke-width:4.96207;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+         id="path4694"
+         cx="328.49973"
+         cy="33.887787"
+         r="16.004969" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:5.29134;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="m 318.16248,44.796787 20.408,-22.38538"
+         id="path5161" />
+    </g>
+    <path
+       style="fill:#000000;fill-opacity:0.999885;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
+       d="m 322.57942,47.148902 11.65705,-12.22326 -7.1576,-4.897057 22.29347,-10.730194 -11.92536,11.561118 7.52363,5.312556 z"
+       id="path8436"
+       sodipodi:nodetypes="ccccccc"
+       inkscape:export-filename="/home/xtingray/tupitube/sources/tupitube.desk/src/themes/default/icons/hd/fatal_message.png"
+       inkscape:export-xdpi="131.25999"
+       inkscape:export-ydpi="131.25999" />
   </g>
 </svg>

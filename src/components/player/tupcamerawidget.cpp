@@ -61,16 +61,16 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
     int height = screen->geometry().height();
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget()] - screen height: " << height;
-        qDebug() << "[TupCameraWidget()] - project height: " << projectSize.height();
-        qDebug() << "[TupCameraWidget()] - factor: " << factor;
+        qDebug() << "[TupCameraWidget()] - Screen height ->" << height;
+        qDebug() << "[TupCameraWidget()] - Project height ->" << projectSize.height();
+        qDebug() << "[TupCameraWidget()] - Factor ->" << factor;
     #endif
 
-    if (height <= 800)
+    if (height <= 800) {
         percent = 30;
-    if (height >= 1080) {
+    } else if (height >= 1080) {
         if (factor < 1.5)
-            percent = 45;
+            percent = 40;
         else
             percent = 55;
     }

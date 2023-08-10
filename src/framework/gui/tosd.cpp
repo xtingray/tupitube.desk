@@ -95,57 +95,55 @@ void TOsd::display(Level level, const QString &message,int ms)
     if (level != None) {
         fontSize = TResponsiveUI::fitTitleFontSize();
         switch (level) {
-                case Info:
-                   {
-                        tail = tr("Information") + tail;
-                        QString logo = ICONS_DIR + "info_message.png";
-                        if (uiTheme == DARK_THEME)
-                            background = QColor(0, 80, 0);
-                        else
-                            background = QColor(0xc1e2fb);
+            case Info:
+               {
+                    tail = tr("Information") + tail;
+                    QString logo = ICONS_DIR + "info_message.png";
+                    if (uiTheme == DARK_THEME)
+                        background = QColor(0, 80, 0);
+                    else
+                        background = QColor(0xc1e2fb);
 
-                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitInfoIconSize(), fontSize) + tail);
-                   }
-                   break;
-                case Warning:
-                   {
-                        tail = tr("Warning") + tail;
-                        QString logo = ICONS_DIR + "warning_message.png";
-                        background = QColor(0xf77100);
+                    m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitInfoIconSize(), fontSize) + tail);
+               }
+               break;
+            case Warning:
+               {
+                    tail = tr("Warning") + tail;
+                    QString logo = ICONS_DIR + "warning_message.png";
+                    background = QColor(0xf77100);
 
-                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
-                   }
-                   break;
-                case Error:
-                   {
-                        tail = tr("Error") + tail;
-                        QString logo = ICONS_DIR + "error_message.png";
-                        background = Qt::red;
+                    m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
+               }
+               break;
+            case Error:
+               {
+                    tail = tr("Error") + tail;
+                    QString logo = ICONS_DIR + "error_message.png";
+                    background = Qt::red;
 
-                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
-                   }
-                   break;
-                case Fatal:
-                   {
-                        tail = tr("Fatal") + tail;
-                        QString logo = ICONS_DIR + "fatal_message.png";
-                        background = Qt::red;
+                    m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
+               }
+               break;
+            case Fatal:
+               {
+                    tail = tr("Fatal") + tail;
+                    QString logo = ICONS_DIR + "fatal_message.png";
+                    background = Qt::red;
 
-                        m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
-                   }
-                   break;
-                default:
-                   {
-                        m_document->setHtml(htmlMessage);
-                   }
-                   break;
+                    m_document->setHtml(htmlHeader(logo, TResponsiveUI::fitMsgIconSize(), fontSize) + tail);
+               }
+               break;
+            default:
+               {
+                    m_document->setHtml(htmlMessage);
+               }
+               break;
         }
     }
 
     if (ms < 0)
         ms = m_document->toPlainText().length() * 70;
-
-    ms = 8000;
 
     m_animator->level = level;
 

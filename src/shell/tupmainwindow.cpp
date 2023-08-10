@@ -383,6 +383,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
             animationTab->setZoomPercent("50");
         } else if (proportion > 1.7 && proportion < 2) {
             animationTab->setZoomPercent("75");
+        } else {
+            animationTab->setZoomPercent("85");
         }
 
         // TupCamera Widget
