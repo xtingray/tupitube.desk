@@ -148,7 +148,7 @@ _EOH_
           if RUBY_PLATFORM =~ /linux/
               quazipInclude = quazipDir + "/include"
           elsif RUBY_PLATFORM =~ /darwin/
-              quazipInclude = quazipDir + "/include/quazip"
+              quazipInclude = quazipDir + "/include"
           end
           config.addLib("-L" + quazipLib)
           config.addIncludePath(quazipInclude)

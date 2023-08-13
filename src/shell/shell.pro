@@ -6,7 +6,8 @@ TEMPLATE = app
 
 macx {
     CONFIG += console static
-    ICON = ../../launcher/icons/tupitube.desk.icns
+    # ICON = ../../launcher/icons/tupitube.desk.icns
+    ICON = tupitube.desk.icns
     QMAKE_INFO_PLIST = ./Info.plist
     QMAKE_LFLAGS += -Wl,-rpath,@loader_path/../,-rpath,@executable_path/../,-rpath,@executable_path/../Frameworks
     TARGET = ../../bin/TupiTube

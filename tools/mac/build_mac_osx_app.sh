@@ -36,9 +36,9 @@
 ###########################################################################
 
 # Usage:
-# ./tools/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
+# ./tools/mac/build_mac_osx_app.sh /Users/username/tupitube/sources/tupitube.desk /Users/username/tupitube/installer
 
-QT_PATH=/Users/xtingray/Qt
+QT_PATH=/Users/daniel/Qt
 export PATH=$QT_PATH/5.15.2/clang_64/bin:$PATH
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$QT_PATH/5.15.2/clang_64/lib
 export DYLD_FRAMEWORK_PATH=$QT_PATH/5.15.2/clang_64/lib
@@ -47,7 +47,7 @@ TUPITUBE_GIT_REPOSITORY=$1
 INSTALLATION_PATH=$2
 INSTALLER_SCRIPT=$TUPITUBE_GIT_REPOSITORY/tools/mac/update_dylib_path.rb
 FRAMEWORKS_PATH=$INSTALLATION_PATH/TupiTube.app/Contents/Frameworks
-TUPITUBE_VERSION=0.2.19
+TUPITUBE_VERSION=0.2.21
 
 # libtupinet.dylib
 declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' 'libtupistore.dylib' 'libtupi.dylib' \
@@ -59,9 +59,20 @@ declare -a LIBS=('libtupifwcore.dylib' 'libtupifwgui.dylib' 'libtupigui.dylib' '
 
 cd $TUPITUBE_GIT_REPOSITORY
 
+echo "* Starting script..."
+echo "cd $TUPITUBE_GIT_REPOSITORY"
+echo "Running -> make install"
 make install
 
+echo ""
+echo "---"
+echo ""
+mkdir -p $INSTALLATION_PATH/TupiTube.app/Contents/Resources
+mkdir -p $INSTALLATION_PATH/TupiTube.app/Contents/MacOS
+
 cp -v launcher/icons/tupitube.desk.png $INSTALLATION_PATH/TupiTube.app/Contents/Resources/tup.png
+cp -v bin/TupiTube.app/Contents/Resources/tupitube.desk.icns $INSTALLATION_PATH/TupiTube.app/Contents/Resources/tupitube.desk.icns
+cp -v bin/TupiTube.app/Contents/MacOS/TupiTube $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/
 
 cd $INSTALLATION_PATH
 cp -rv lib/tupitube/plugins TupiTube.app/Contents/MacOS
@@ -89,7 +100,7 @@ for lib in ${LIBS[@]}; do
     $INSTALLER_SCRIPT $INSTALLATION_PATH/TupiTube.app/Contents/MacOS/TupiTube $lib @executable_path/../Frameworks/$lib  \;
 done
 
-cp -rv $QT_PATH/MaintenanceTool.app/Contents/Resources/qt_menu.nib $INSTALLATION_PATH/TupiTube.app/Contents/Resources
+# cp -rv $QT_PATH/MaintenanceTool.app/Contents/Resources/qt_menu.nib $INSTALLATION_PATH/TupiTube.app/Contents/Resources
 
 cd $INSTALLATION_PATH
 mkdir -pv $FRAMEWORKS_PATH
@@ -114,9 +125,12 @@ done
 echo ""
 echo "* Copying additional lib dependencies..."
 # Libsndfile lib
-cp -av /usr/local/lib/libsndfile.1.0.33.dylib $FRAMEWORKS_PATH
+cp -av /usr/local/libsndfile/lib/libsndfile.*.dylib $FRAMEWORKS_PATH
 # Quazip lib
-cp -av /usr/local/lib/libquazip1-qt5.1.3.dylib $FRAMEWORKS_PATH
+# cp -av /usr/local/quazip/lib/libquazip1-qt5.1.3.dylib $FRAMEWORKS_PATH
+cp -av /usr/local/quazip/lib/libquazip1-qt5.*.dylib $FRAMEWORKS_PATH
 
+echo "* Creating DMG package..."
 macdeployqt TupiTube.app -dmg -libpath=/usr/local/lib
 mv TupiTube.dmg TupiTube_Desk_$TUPITUBE_VERSION.dmg
+ls -al TupiTube_Desk_$TUPITUBE_VERSION.dmg

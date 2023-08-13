@@ -103,7 +103,7 @@ class Test
                          if RUBY_PLATFORM =~ /linux/ 
                              extraInclude = quazipDir + "/include"
                          elsif RUBY_PLATFORM =~ /darwin/
-                             extraInclude = quazipDir + "/include/quazip"
+                             extraInclude = quazipDir + "/include"
                          end
                          qmakeLine = "'LIBS += #{extraLib}'"
                          qmakeLine += " 'INCLUDEPATH += #{extraInclude}'"

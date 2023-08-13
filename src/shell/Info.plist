@@ -9,7 +9,7 @@
     <key>CFBundleExecutable</key>
     <string>TupiTube</string>
     <key>CFBundleVersion</key>
-    <string>0.2.19</string>
+    <string>0.2.21</string>
     <key>CFBundleDocumentTypes</key>
         <array>
             <dict>
