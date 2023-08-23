@@ -7,3 +7,4 @@ rm log.txt
 rm tupitube.desk.pro.user.*
 rm tupitube.desk.pro.user
 rm -rf .git
+rm -rf .github
