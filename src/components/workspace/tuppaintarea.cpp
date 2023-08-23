@@ -1423,10 +1423,17 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         }
     }
 
+#ifdef Q_OS_UNIX // Zoom In
     if ((event->text().compare("+") == 0) || (event->key() == 191) || (event->key() == 61)) {
         emit zoomIn();
         return;
     }
+#else // Windows OS - Zoom In
+    if ((event->text().compare("+") == 0) || (event->key() == 191) || (event->key() == 61) || (event->key() == 161)) {
+        emit zoomIn();
+        return;
+    }
+#endif
 
     if (event->key() == Qt::Key_Plus) {
         if (event->modifiers() == Qt::NoModifier) {
@@ -1442,7 +1449,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         return;
     }
 #else // Windows OS
-    if ((event->text().compare("-") == 0) || (event->text().compare("´") == 0) || (event->text().compare("`") == 0)) {
+    if ((event->text().compare("-") == 0) || (event->text().compare("´") == 0) || (event->text().compare("`") == 0) || (event->key() == 39)) {
         emit zoomOut();
         return;
     }
