@@ -55,7 +55,7 @@ class T_GUI_EXPORT TAction : public QAction
                         ColorPalette, Right_Arrow, Left_Arrow, Down_Arrow, Up_Arrow, Right_QuickCopy,
                         Down_QuickCopy, Left_Delete, Up_Delete, Delete, EyeDropper };
 
-        enum MenuId { InvalidMenu = -1, BrushesMenu = 0, SelectionMenu, FillMenu, ZoomMenu, TweenerMenu,
+        enum MenuId { InvalidMenu = -1, BrushesMenu = 0, ShapesMenu, SelectionMenu, FillMenu, ZoomMenu, TweenerMenu,
                       Arrows, ColorMenu };
 
         TAction(QObject * parent, const QString &id = QString());

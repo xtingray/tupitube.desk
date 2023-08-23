@@ -72,7 +72,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
 
     QList<TupProjectActionBar::Action> frameActions;
     frameActions << TupProjectActionBar::InsertFrame
-                 << TupProjectActionBar::ExtendFrame
+                 << TupProjectActionBar::DuplicateFrame
                  << TupProjectActionBar::RemoveFrame;
 
     frameActions << TupProjectActionBar::Separator;
@@ -276,7 +276,7 @@ void TupExposureSheet::applyAction(int action)
         }
         break;
 
-        case TupProjectActionBar::ExtendFrame:
+        case TupProjectActionBar::DuplicateFrame:
         {
             extendFrameForward(currentTable->currentLayer(), currentTable->currentFrame());
         }

@@ -63,7 +63,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     // SQA: Pending to add the feature "Layer Opacity" as part of this action bar
 
     QList<TupProjectActionBar::Action> actions;
-    actions << TupProjectActionBar::InsertFrame << TupProjectActionBar::ExtendFrame << TupProjectActionBar::RemoveFrame; 
+    actions << TupProjectActionBar::InsertFrame << TupProjectActionBar::DuplicateFrame << TupProjectActionBar::RemoveFrame; 
 
     actions << TupProjectActionBar::MoveFrameBackward
             << TupProjectActionBar::MoveFrameForward
@@ -658,7 +658,7 @@ bool TupTimeLine::requestFrameAction(int action, int frameIndex, int layerIndex,
 
             return true;
         }
-        case TupProjectActionBar::ExtendFrame:
+        case TupProjectActionBar::DuplicateFrame:
         {
             extendFrameForward(layerIndex, currentFrame);
 

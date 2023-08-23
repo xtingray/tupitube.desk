@@ -94,12 +94,12 @@ void TupProjectActionBar::setup(QList<Action> actionsList)
             // button->setAnimated(isAnimated);
         }
 
-        if (action == ExtendFrame) {
+        if (action == DuplicateFrame) {
             TImageButton *button = new TImageButton(QIcon(ICONS_DIR + "extend_frame.png"), iconSize);
-            button->setToolTip(tr("Extend frame"));
-            // button->setShortcut(QKeySequence());
+            button->setToolTip(tr("Duplicate frame"));
+            button->setShortcut(QKeySequence(Qt::Key_8));
 
-            actions.addButton(button, ExtendFrame);
+            actions.addButton(button, DuplicateFrame);
 
             buttonLayout->addWidget(button);
             // button->setAnimated(isAnimated);

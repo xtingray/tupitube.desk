@@ -476,8 +476,8 @@ void TupDocumentView::createLateralToolBar()
     addToolBar(Qt::LeftToolBarArea, toolbar);
     connect(toolbar, SIGNAL(actionTriggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
-    // Brushes menu
-    shapesMenu = new QMenu(tr("Brushes"), toolbar);
+    // Shapes menu
+    shapesMenu = new QMenu(tr("Shapes"), toolbar);
     shapesMenu->setIcon(QPixmap(THEME_DIR + "icons/square.png"));
     connect(shapesMenu, SIGNAL(triggered(QAction*)), this, SLOT(selectToolFromMenu(QAction*)));
 
@@ -603,7 +603,10 @@ void TupDocumentView::loadPlugins()
                           connect(paintArea, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
                           connect(this, SIGNAL(closePolyLine()), tool, SLOT(initEnv()));
                       }
-
+                    }
+                    break;
+                    case TupToolInterface::Shape:
+                    {
                       if (toolId == TAction::Rectangle) {
                           geometricTools[0] = action;
                           shapesMenu->setDefaultAction(action);
@@ -853,8 +856,6 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
         break;
         case TAction::BrushesMenu:
             {
-                QList<QAction*> brushActions = shapesMenu->actions();
-
                 switch (actionID) {
                     case TAction::Pencil:
                     {
@@ -879,26 +880,6 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                         action = polyLineAction;
                     }
                     break;
-                    case TAction::Rectangle:
-                    {
-                        action = static_cast<TAction *> (brushActions[0]);
-                    }
-                    break;
-                    case TAction::Ellipse:
-                    {
-                        action = static_cast<TAction *> (brushActions[1]);
-                    }
-                    break;
-                    case TAction::Line:
-                    {
-                        action = static_cast<TAction *> (brushActions[2]);
-                    }
-                    break;
-                    case TAction::Triangle:
-                    {
-                        action = static_cast<TAction *> (brushActions[3]);
-                    }
-                    break;
                     case TAction::Text:
                     {
                         action = textAction;
@@ -908,6 +889,33 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
                     {
                         // No Action
                     }
+                }
+            }
+        break;
+        case TAction::ShapesMenu:
+            {
+                QList<QAction*> shapeActions = shapesMenu->actions();
+                switch (actionID) {
+                    case TAction::Rectangle:
+                    {
+                        action = static_cast<TAction *> (shapeActions[0]);
+                    }
+                    break;
+                    case TAction::Ellipse:
+                    {
+                        action = static_cast<TAction *> (shapeActions[1]);
+                    }
+                    break;
+                    case TAction::Line:
+                    {
+                        action = static_cast<TAction *> (shapeActions[2]);
+                    }
+                    break;
+                    case TAction::Triangle:
+                    {
+                        action = static_cast<TAction *> (shapeActions[3]);
+                    }
+                    break;
                 }
             }
         break;

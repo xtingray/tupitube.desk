@@ -1435,7 +1435,7 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
         }
     }
 
-    if (event->text().compare("-") == 0) {
+    if ((event->text().compare("-") == 0) || (event->key() == 16781905)) {
         emit zoomOut();
         return;
     }

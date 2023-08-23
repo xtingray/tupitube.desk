@@ -592,7 +592,7 @@ TAction * GeometricTool::getAction(TAction::ActionId toolId)
 
 int GeometricTool::toolType() const
 {
-    return Brush;
+    return Shape;
 }
         
 QWidget *GeometricTool::configurator()

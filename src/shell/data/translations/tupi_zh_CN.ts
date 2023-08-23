@@ -2571,10 +2571,6 @@
         <translation>绘制工具</translation>
     </message>
     <message>
-        <source>Brushes</source>
-        <translation>笔刷</translation>
-    </message>
-    <message>
         <source>Export Frame As Image</source>
         <translation>导出成帧图像</translation>
     </message>
@@ -2673,6 +2669,10 @@
     <message>
         <source>Project Canvas Size</source>
         <translation>项目画布大小</translation>
+    </message>
+    <message>
+        <source>Shapes</source>
+        <translation>形状</translation>
     </message>
 </context>
 <context>
@@ -5094,10 +5094,6 @@
         <translation>F9</translation>
     </message>
     <message>
-        <source>Extend frame</source>
-        <translation>扩展帧</translation>
-    </message>
-    <message>
         <source>Remove frame</source>
         <translation>删除帧</translation>
     </message>
@@ -5156,6 +5152,10 @@
     <message>
         <source>Confirmation</source>
         <translation>确认</translation>
+    </message>
+    <message>
+        <source>Duplicate frame</source>
+        <translation>重复帧</translation>
     </message>
 </context>
 <context>

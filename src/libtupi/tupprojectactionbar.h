@@ -60,7 +60,7 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
             
             InsertFrame = 1 << 1,
             RemoveFrame = 1 << 2,
-            ExtendFrame = 1 << 3, 
+            DuplicateFrame = 1 << 3,
             MoveFrameBackward = 1 << 4,
             MoveFrameForward = 1 << 5,
             ReverseFrameSelection = 1 << 6,
@@ -80,7 +80,7 @@ class TUPITUBE_EXPORT TupProjectActionBar : public QWidget
             LockScene = 1 << 18,
             Separator = 1 << 19,
 
-            FrameActions = InsertFrame | ExtendFrame | RemoveFrame
+            FrameActions = InsertFrame | DuplicateFrame | RemoveFrame
                            | MoveFrameBackward | MoveFrameForward | ReverseFrameSelection
                            | CopyFrame | PasteFrame,
             LayerActions = InsertLayer | RemoveLayer | MoveLayerUp | MoveLayerDown | LockLayer,
