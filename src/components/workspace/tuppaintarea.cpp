@@ -1443,17 +1443,10 @@ void TupPaintArea::keyPressEvent(QKeyEvent *event)
     }
 
     // Key is next to the + character in the keyboard
-#ifdef Q_OS_UNIX
-    if ((event->text().compare("-") == 0) || (event->key() == 16781905) || (event->key() == 39)) {
+    if ((event->text().compare("-") == 0) || (event->key() == 39)) {
         emit zoomOut();
         return;
     }
-#else // Windows OS
-    if ((event->text().compare("-") == 0) || (event->text().compare("´") == 0) || (event->text().compare("`") == 0) || (event->key() == 39)) {
-        emit zoomOut();
-        return;
-    }
-#endif
 
     if (event->key() == Qt::Key_Minus) {
         if (event->modifiers() == Qt::NoModifier) {
