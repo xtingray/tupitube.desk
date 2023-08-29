@@ -1066,6 +1066,15 @@ void TupDocumentView::selectTool()
                     }
                 }
                 break;
+                case TupToolInterface::Shape:
+                {
+                    minWidth = 0;
+                    shapesMenu->setDefaultAction(action);
+                    shapesMenu->setActiveAction(action);
+                    if (!action->icon().isNull())
+                        shapesMenu->menuAction()->setIcon(action->icon());
+                }
+                break;
                 case TupToolInterface::Tweener:
                 {
                     status->enableFullScreenFeature(false);
