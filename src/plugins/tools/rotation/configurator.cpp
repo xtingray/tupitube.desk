@@ -249,6 +249,11 @@ QString Configurator::currentTweenName() const
     return newName;
 }
 
+QString Configurator::getTweenNameFromList() const
+{
+    return tweenManager->currentTweenName();
+}
+
 void Configurator::notifySelection(bool flag)
 {
     settingsPanel->notifySelection(flag);

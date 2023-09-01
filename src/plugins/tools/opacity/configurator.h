@@ -72,6 +72,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void activateMode(TupToolPlugin::EditMode mode);
         void activeButtonsPanel(bool enable);
         void setCurrentTween(TupItemTweener *currentTween);
+        QString getTweenNameFromList() const;
         QString currentTweenName() const;
         void notifySelection(bool flag);
         int startComboSize();

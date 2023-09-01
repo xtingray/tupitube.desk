@@ -930,3 +930,10 @@ bool TupScreen::removeSoundTrack(const QString &soundKey)
 
     return false;
 }
+
+void TupScreen::setPlayAllMode()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::playAllMode()]";
+    #endif
+}

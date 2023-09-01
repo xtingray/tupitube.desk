@@ -516,6 +516,19 @@ Scenes TupProject::getScenes() const
     return scenesList;
 }
 
+QStringList TupProject::getSceneNames()
+{
+    QStringList sceneNames;
+    int scenesCount = scenesList.size();
+    for (int i = 0; i < scenesCount; i++) {
+        TupScene *scene = scenesList.at(i);
+        if (scene)
+            sceneNames << scene->getSceneName();
+    }
+
+    return sceneNames;
+}
+
 bool TupProject::createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder)
 {
     #ifdef TUP_DEBUG

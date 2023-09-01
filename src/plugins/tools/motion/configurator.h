@@ -90,6 +90,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void activateMode(TupToolPlugin::EditMode mode);
         void clearData();
         QString currentTweenName() const;
+        QString getTweenNameFromList() const;
         void notifySelection(bool flag);
         int startComboSize();
         void closeSettingsPanel();

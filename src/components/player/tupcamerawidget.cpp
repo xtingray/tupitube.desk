@@ -272,8 +272,9 @@ void TupCameraWidget::addPlayerButtonsBar()
 
 void TupCameraWidget::addStatusPanel()
 {
-    status = new TupCameraStatus();
-    status->setScenes(project);
+    status = new TupCameraStatus(project->getSceneNames().size());
+    status->setScenes(project->getSceneNames());
+    connect(status, SIGNAL(allScenesActivated()), this, SLOT(setPlayAllMode()));
     connect(status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
     connect(status, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
     connect(status, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
@@ -439,7 +440,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
         switch (sceneResponse->getAction()) {
             case TupProjectRequest::Add:
             {
-                 status->setScenes(project);
+                 status->setScenes(project->getSceneNames());
                  status->setCurrentScene(index);
                  updateFramesTotal(index);
             }
@@ -453,7 +454,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
                      index--;
 
                  if (index >= 0) {
-                     status->setScenes(project);
+                     status->setScenes(project->getSceneNames());
                      status->setCurrentScene(index);
                      updateFramesTotal(index);
                  }
@@ -461,7 +462,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             break;
             case TupProjectRequest::Reset:
             {
-                 status->setScenes(project);
+                 status->setScenes(project->getSceneNames());
             }
             break;
             case TupProjectRequest::Select:
@@ -480,7 +481,7 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
             break;
             case TupProjectRequest::Rename:
             {
-                 status->setScenes(project);
+                 status->setScenes(project->getSceneNames());
                  status->setCurrentScene(index);
             }
             break;
@@ -679,4 +680,11 @@ bool TupCameraWidget::removeSoundTrack(const QString &soundKey)
 void TupCameraWidget::releaseAudioResources()
 {
     previewScreen->releaseAudioResources();
+}
+
+void TupCameraWidget::setPlayAllMode()
+{
+    // Update camera header variables here
+
+    previewScreen->setPlayAllMode();
 }

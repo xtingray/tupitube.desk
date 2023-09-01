@@ -75,6 +75,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void activeButtonsPanel(bool enable);
         void setCurrentTween(TupItemTweener *currentTween);
         QString currentTweenName() const;
+        QString getTweenNameFromList() const;
         void notifySelection(bool flag);
         int startComboSize();
         void closeSettingsPanel();
@@ -88,6 +89,7 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
         void editTween();
         void removeTween();
         void removeTween(const QString &name);
+
         void closeTweenProperties();
         void updateTweenData(const QString &name);
         

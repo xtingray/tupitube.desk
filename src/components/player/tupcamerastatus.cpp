@@ -40,7 +40,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
+TupCameraStatus::TupCameraStatus(int scenesTotal, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraStatus()]";
@@ -49,6 +49,18 @@ TupCameraStatus::TupCameraStatus(QWidget *parent) : QFrame(parent)
     mute = false;
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
     QBoxLayout *sceneInfoLayout = new QBoxLayout(QBoxLayout::LeftToRight, parent);
+
+    playAllBox = new QCheckBox(tr("Play All"));
+    connect(playAllBox, SIGNAL(clicked()), this, SLOT(updateScenesComboStatus()));
+    sceneInfoLayout->addWidget(playAllBox);
+    spaceWidget = new QWidget;
+    spaceWidget->setFixedWidth(10);
+    sceneInfoLayout->addWidget(spaceWidget);
+
+    if (scenesTotal == 1) {
+        spaceWidget->setVisible(false);
+        playAllBox->setVisible(false);
+    }
 
     QLabel *sceneNameText = new QLabel("<B>" + tr("Scene") + ":</B> ");
     scenesCombo = new QComboBox();
@@ -146,13 +158,28 @@ void TupCameraStatus::setCurrentScene(int index)
         scenesCombo->setCurrentIndex(index);
 }
 
+void TupCameraStatus::setScenes(QStringList scenes)
+{
+    if (scenesCombo->count())
+        scenesCombo->clear();
+
+    scenesCombo->addItems(scenes);
+    scenesCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+
+    if (scenes.size() > 1) {
+        spaceWidget->setVisible(true);
+        playAllBox->setVisible(true);
+    }
+}
+
+/*
 void TupCameraStatus::setScenes(TupProject *project)
 {
     if (scenesCombo->count())
         scenesCombo->clear();
 
     QStringList scenes;
-    int scenesCount = project->getScenes().size();
+    scenesCount = project->getScenes().size();
     for (int i = 0; i < scenesCount; i++) {
          TupScene *scene = project->getScenes().at(i);
          if (scene)
@@ -162,6 +189,7 @@ void TupCameraStatus::setScenes(TupProject *project)
     scenesCombo->addItems(scenes);
     scenesCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 }
+*/
 
 bool TupCameraStatus::isLooping()
 {
@@ -194,4 +222,15 @@ void TupCameraStatus::enableButtons(bool flag)
 {
     exportButton->setEnabled(flag);
     postButton->setEnabled(flag);
+}
+
+void TupCameraStatus::updateScenesComboStatus()
+{
+    bool flag = playAllBox->isChecked();
+    scenesCombo->setEnabled(!flag);
+
+    if (flag)
+        emit allScenesActivated();
+    else
+        emit sceneIndexChanged(scenesCombo->currentIndex());
 }

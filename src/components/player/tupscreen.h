@@ -83,6 +83,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void stop();
         void nextFrame();
         void previousFrame();
+        void setPlayAllMode();
 
     private slots:
         void advance();

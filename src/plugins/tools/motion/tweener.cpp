@@ -85,7 +85,8 @@ Tweener::~Tweener()
 void Tweener::init(TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::init()] - isPathInScene -> " << isPathInScene;
+        qDebug() << "[Motion Tweener::init()] - isPathInScene ->" << isPathInScene;
+        qDebug() << "[Motion Tweener::init()] - Current scene index ->" << gScene->currentSceneIndex();
     #endif
 
     doList.clear();
@@ -405,7 +406,9 @@ QWidget *Tweener::configurator()
 
 void Tweener::aboutToChangeScene(TupGraphicsScene *scene)
 {
-    Q_UNUSED(scene)
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::aboutToChangeScene()] - Scene index ->" << scene->currentSceneIndex();
+    #endif
 }
 
 // This method is called when this plugin is off
@@ -482,20 +485,25 @@ void Tweener::setTweenPath()
         if (!isPathInScene) {
             scene->addItem(linePath);
             isPathInScene = true;
-        } 
+        }
 
         if (nodesGroup) {
-            nodesGroup->createNodes(linePath);
-        } else {
-            nodesGroup = new TNodeGroup(linePath, scene, TNodeGroup::MotionTween, baseZValue);
-            connect(nodesGroup, SIGNAL(nodeReleased()), SLOT(updatePath()));
-            nodesGroup->createNodes(linePath);
+            disconnect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+            nodesGroup = nullptr;
         }
+        nodesGroup = new TNodeGroup(linePath, scene, TNodeGroup::MotionTween, baseZValue);
+        connect(nodesGroup, SIGNAL(nodeReleased()), this, SLOT(updatePath()));
+
+        nodesGroup->createNodes(linePath);
         nodesGroup->show();
         nodesGroup->resizeNodes(realFactor);
         nodesGroup->expandAllNodes();
 
         paintTweenPoints();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[Motion Tweener::setTweenPath()] - Warning: linePath variable is NULL!";
+        #endif
     }
 
     editMode = TupToolPlugin::Properties;
@@ -611,16 +619,18 @@ void Tweener::applyReset()
         qDebug() << "[Motion Tweener::applyReset()]";
     #endif
 
+    if (mode == TupToolPlugin::Edit && editMode == TupToolPlugin::Properties) {
+        if (nodesGroup) {
+            nodesGroup->clear();
+            nodesGroup = nullptr;
+        }
+    }
+
     mode = TupToolPlugin::View;
     editMode = TupToolPlugin::None;
 
     clearSelection();
     disableSelection();
-
-    if (nodesGroup) {
-        nodesGroup->clear();
-        nodesGroup = nullptr;
-    }
 
     if (linePath) {
         removeTweenPoints();
@@ -855,11 +865,12 @@ void Tweener::saveConfig()
 
 void Tweener::updateScene(TupGraphicsScene *scene)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::updateScene()]";
-    #endif
-
     mode = configPanel->mode();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::updateScene()] - Scene index ->" << scene->currentSceneIndex();
+        qDebug() << "[Motion Tweener::updateScene()] - Current mode ->" << mode;
+    #endif
 
     if (mode == TupToolPlugin::Edit) {
         int total = initFrame + configPanel->totalSteps();
@@ -924,6 +935,10 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 
 void Tweener::removeTweenFromProject(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::removeTweenFromProject()] - name -> " << name;
+    #endif
+
     TupScene *sceneData = scene->currentScene();
     bool removed = sceneData->removeTween(name, TupItemTweener::Motion);
 
@@ -956,10 +971,18 @@ void Tweener::removeTween(const QString &name)
 {
     removeTweenFromProject(name);
     applyReset();
+
+    QString tweenName = configPanel->getTweenNameFromList();
+    if (!tweenName.isEmpty())
+        setCurrentTween(tweenName);
 }
 
 void Tweener::setCurrentTween(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::setCurrentTween()] - tween name ->" << name;
+    #endif
+
     TupScene *sceneData = scene->currentScene();
     currentTween = sceneData->tween(name, TupItemTweener::Motion);
     if (currentTween)
@@ -969,7 +992,7 @@ void Tweener::setCurrentTween(const QString &name)
 void Tweener::setEditEnv()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::setEditEnv()]";
+        qDebug() << "[Motion Tweener::setEditEnv()] - Loading tween ->" << currentTween->getTweenName();
     #endif
 
     initFrame = currentTween->getInitFrame();

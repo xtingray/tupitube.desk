@@ -101,6 +101,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         int visualIndexOf(TupScene *scene) const;
 
         Scenes getScenes() const;
+        QStringList getSceneNames();
 
         TupScene *createScene(QString name, int pos, bool loaded = false);
         void updateScene(int pos, TupScene *scene);

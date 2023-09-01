@@ -595,6 +595,10 @@ void Tweener::removeTween(const QString &name)
 {
     removeTweenFromProject(name);
     applyReset();
+
+    QString tweenName = configPanel->getTweenNameFromList();
+    if (!tweenName.isEmpty())
+        setCurrentTween(tweenName);
 }
 
 void Tweener::updateOriginPoint(const QPointF &point)

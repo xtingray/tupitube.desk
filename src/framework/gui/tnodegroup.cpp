@@ -80,7 +80,8 @@ void TNodeGroup::clear()
     }
 
     nodes.clear();
-    nodeParentItem->update();
+    if (nodeParentItem)
+        nodeParentItem->update();
 }
 
 void TNodeGroup::syncNodes(const QPainterPath &path)
@@ -201,9 +202,11 @@ void TNodeGroup::show()
 
 void TNodeGroup::saveParentProperties()
 {
-    if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)) {
-        path = qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path();
-        pos = nodeParentItem->scenePos();
+    if (nodeParentItem) {
+        if (qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)) {
+            path = qgraphicsitem_cast<QGraphicsPathItem *>(nodeParentItem)->path();
+            pos = nodeParentItem->scenePos();
+        }
     }
 }
 

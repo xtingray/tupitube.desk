@@ -144,6 +144,10 @@ void TweenManager::addTween()
 void TweenManager::editTween()
 {
     QListWidgetItem *item = tweensList->currentItem();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TweenManager::editTween()] - tween name ->" << item->text();
+    #endif
+
     emit editCurrentTween(item->text());
 }
 
@@ -162,8 +166,9 @@ void TweenManager::removeTween()
 void TweenManager::removeItemFromList()
 {
     QListWidgetItem *item = tweensList->currentItem();
-    tweensList->takeItem(tweensList->row(item));
     target = item->text();
+
+    tweensList->takeItem(tweensList->row(item));
 }
 
 void TweenManager::showMenu(const QPoint &point)
@@ -199,7 +204,10 @@ void TweenManager::resetUI()
 QString TweenManager::currentTweenName() const
 {
     QListWidgetItem *item = tweensList->currentItem();
-    return item->text();
+    if (item)
+        return item->text();
+
+    return "";
 }
 
 int TweenManager::listSize()

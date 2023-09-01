@@ -242,6 +242,10 @@ void Configurator::clearData()
 
 void Configurator::addTween(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Configurator::addTween()] - Adding tween ->" << name;
+    #endif
+
     emit clickedResetInterface();
 
     currentMode = TupToolPlugin::Add;
@@ -292,6 +296,8 @@ void Configurator::removeTween()
     QString name = tweenManager->currentTweenName();
     tweenManager->removeItemFromList();
 
+    currentTween = nullptr;
+
     removeTween(name);
 }
 
@@ -313,6 +319,11 @@ QString Configurator::currentTweenName() const
         tweenManager->updateTweenName(newName);
 
     return newName;
+}
+
+QString Configurator::getTweenNameFromList() const
+{
+    return tweenManager->currentTweenName();
 }
 
 void Configurator::notifySelection(bool flag)

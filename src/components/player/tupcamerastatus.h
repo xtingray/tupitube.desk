@@ -50,10 +50,12 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
     Q_OBJECT
 
     public:
-        TupCameraStatus(QWidget *parent = nullptr);
+        TupCameraStatus(int scenesTotal, QWidget *parent = nullptr);
         ~TupCameraStatus();
 
-        void setScenes(TupProject *project);
+        void setScenes(QStringList scenes);
+        // void setScenes(TupProject *project);
+
         void setFPS(int frames);
         int getFPS();
         void setCurrentScene(int index);
@@ -61,6 +63,7 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
         void enableButtons(bool flag);
 
     signals:
+        void allScenesActivated();
         void sceneIndexChanged(int index);
         void muteEnabled(bool muteAction);
         void fpsChanged(int fps);
@@ -70,8 +73,11 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
 
     private slots:
         void muteAction();
+        void updateScenesComboStatus();
 
     private:
+        QWidget *spaceWidget;
+        QCheckBox *playAllBox;
         QSpinBox *fpsBox;
         QComboBox *scenesCombo;
         QCheckBox *loopBox;
@@ -81,6 +87,7 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
         TImageButton *soundButton;
         QPushButton *exportButton;
         QPushButton *postButton;
+        int scenesCount;
 };
 
 #endif
