@@ -56,6 +56,7 @@ class T_CORE_EXPORT TApplicationProperties
         void setDataDir(const QString &path);
         void setThemeDir(const QString &path);
         void setIconsDir(const QString &path);
+        void setCursorsDir(const QString &path);
         void setPluginDir(const QString &path);
         void setCacheDir(const QString &path);
         void setRepositoryDir(const QString &path);
@@ -73,6 +74,7 @@ class T_CORE_EXPORT TApplicationProperties
         virtual QString dataDir() const;
         virtual QString themeDir() const;
         virtual QString iconsDir() const;
+        virtual QString cursorsDir() const;
         virtual QString rasterResourcesDir() const;
         virtual QString rasterBgDir() const;
         virtual QString vectorBgDir() const;
@@ -96,6 +98,7 @@ class T_CORE_EXPORT TApplicationProperties
         QString dataPath;
         QString themePath;
         QString iconsPath;
+        QString cursorsPath;
         QString vectorBgPath;
         QString rasterResourcesPath;
         QString repositoryPath;
@@ -114,6 +117,7 @@ class T_CORE_EXPORT TApplicationProperties
 #define DATA_DIR kAppProp->dataDir()
 #define THEME_DIR kAppProp->themeDir()
 #define ICONS_DIR kAppProp->iconsDir()
+#define CURSORS_DIR kAppProp->cursorsDir()
 #define VECTOR_BG_DIR kAppProp->vectorBgDir()
 #define RASTER_RESOURCES_DIR kAppProp->rasterResourcesDir()
 #define RASTER_BG_DIR kAppProp->rasterBgDir()

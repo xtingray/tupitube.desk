@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef FILLTOOLPLUGIN_H
-#define FILLTOOLPLUGIN_H
+#ifndef BUCKETTOOLPLUGIN_H
+#define BUCKETTOOLPLUGIN_H
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
@@ -48,14 +48,14 @@
 #include <QPaintDevice>
 #include <QGraphicsView>
 
-class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
+class TUPITUBE_PLUGIN BucketTool : public TupToolPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "filltool.json")
+    Q_PLUGIN_METADATA(IID "com.maefloresta.tupi.TupToolInterface" FILE "buckettool.json")
     
     public:
-        FillTool();
-        ~FillTool();
+        BucketTool();
+        ~BucketTool();
 
         virtual QList<TAction::ActionId> keys() const;
 
@@ -97,10 +97,10 @@ class TUPITUBE_PLUGIN FillTool : public TupToolPlugin
         void setupActions();
 
     private:
-        QMap<TAction::ActionId, TAction *> fillActions;
+        QMap<TAction::ActionId, TAction *> bucketActions;
         TupGraphicsScene *scene;
-        QCursor insideCursor;
-        QCursor contourCursor;
+        QCursor fillCursor;
+        QCursor borderCursor;
         TColorCell::FillType mode;
 };
 

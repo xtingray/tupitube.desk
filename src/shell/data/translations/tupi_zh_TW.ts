@@ -2,6 +2,25 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_TW">
 <context>
+    <name>BucketTool</name>
+    <message>
+        <source>F</source>
+        <translation>F</translation>
+    </message>
+    <message>
+        <source>Sorry, only native objects can be filled</source>
+        <translation>對不起，只能填充本地對象</translation>
+    </message>
+    <message>
+        <source>Sorry, Groups can&apos;t be filled yet</source>
+        <translation>對不起，尚未填充組。</translation>
+    </message>
+    <message>
+        <source>Paint Bucket</source>
+        <translation>油漆桶</translation>
+    </message>
+</context>
+<context>
     <name>ButtonsPanel</name>
     <message>
         <source>Remove Tween</source>
@@ -165,25 +184,6 @@
     <message>
         <source>Processing final audio track...</source>
         <translation>正在處理最終音軌...</translation>
-    </message>
-</context>
-<context>
-    <name>FillTool</name>
-    <message>
-        <source>F</source>
-        <translation>F</translation>
-    </message>
-    <message>
-        <source>Sorry, Groups can&apos;t be filled yet</source>
-        <translation>對不起，尚未填充組。</translation>
-    </message>
-    <message>
-        <source>Fill Tool</source>
-        <translation>填充工具</translation>
-    </message>
-    <message>
-        <source>Sorry, only native objects can be filled</source>
-        <translation>對不起，只能填充本地對象</translation>
     </message>
 </context>
 <context>
@@ -2175,6 +2175,10 @@
     <message>
         <source>Export Project as Video File</source>
         <translation>匯出專案為視訊檔案</translation>
+    </message>
+    <message>
+        <source>Play All</source>
+        <translation>播放所有視頻</translation>
     </message>
 </context>
 <context>
@@ -5155,7 +5159,7 @@
     </message>
     <message>
         <source>Duplicate frame</source>
-        <translation type="unfinished">重複幀</translation>
+        <translation>重複幀</translation>
     </message>
 </context>
 <context>

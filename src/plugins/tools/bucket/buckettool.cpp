@@ -33,7 +33,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "filltool.h"
+#include "buckettool.h"
 
 #include "tconfig.h"
 #include "tupsvgitem.h"
@@ -67,16 +67,16 @@ painter->setBrush(QColor(122, 163, 39));
 painter->drawPath(intersectedPath);
 */
 
-FillTool::FillTool()
+BucketTool::BucketTool()
 {
     setupActions();
 }
 
-FillTool::~FillTool()
+BucketTool::~BucketTool()
 {
 }
 
-void FillTool::init(TupGraphicsScene *gScene)
+void BucketTool::init(TupGraphicsScene *gScene)
 {
     scene = gScene;
 
@@ -85,27 +85,27 @@ void FillTool::init(TupGraphicsScene *gScene)
     mode = TColorCell::FillType(colorMode);
 }
 
-QList<TAction::ActionId> FillTool::keys() const
+QList<TAction::ActionId> BucketTool::keys() const
 {
-    return QList<TAction::ActionId>() << TAction::FillTool;
+    return QList<TAction::ActionId>() << TAction::PaintBucket;
 }
 
-void FillTool::setupActions()
+void BucketTool::setupActions()
 {
-    insideCursor = QCursor(kAppProp->themeDir() + "cursors/internal_fill.png", 0, 11);
-    contourCursor = QCursor(kAppProp->themeDir() + "cursors/line_fill.png", 0, 13);
+    fillCursor = QCursor(CURSORS_DIR + "bucket_fill.png", 0, 11);
+    borderCursor = QCursor(CURSORS_DIR + "bucket_border.png", 0, 13);
 
-    TAction *action1 = new TAction(QIcon(ICONS_DIR + "internal_fill.png"), tr("Fill Tool"), this);
+    TAction *action1 = new TAction(QIcon(ICONS_DIR + "paint_bucket.png"), tr("Paint Bucket"), this);
     action1->setShortcut(QKeySequence(tr("F")));
-    action1->setToolTip(tr("Fill Tool") + " - " + "F");
-    action1->setCursor(insideCursor);
-    fillActions.insert(TAction::FillTool, action1);
+    action1->setToolTip(tr("Paint Bucket") + " - " + "F");
+    action1->setCursor(fillCursor);
+    bucketActions.insert(TAction::PaintBucket, action1);
 }
 
-void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
+void BucketTool::press(const TupInputDeviceInformation *input, TupBrushManager *brushManager, TupGraphicsScene *gScene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[FillTool::press()]";
+        qDebug() << "[BucketTool::press()]";
     #endif
 
     if (input->buttons() == Qt::LeftButton) {
@@ -148,7 +148,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                         if (libraryItem->type() != TupLibraryObject::Item) {
                             TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
                             #ifdef TUP_DEBUG
-                                qWarning() << "[FillTool::press()] - Warning: item is a RASTER object!";
+                                qWarning() << "[BucketTool::press()] - Warning: item is a RASTER object!";
                             #endif
                             return;
                         }
@@ -159,7 +159,7 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                     if (svg) {
                         TOsd::self()->display(TOsd::Error, tr("Sorry, only native objects can be filled"));
                         #ifdef TUP_DEBUG
-                            qWarning() << "[FillTool::press()] - Warning: item is a SVG object!";
+                            qWarning() << "[BucketTool::press()] - Warning: item is a SVG object!";
                         #endif
                         return;
                     }
@@ -210,17 +210,17 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
                         return;
                     } else {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[FillTool::press()] - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
+                            qDebug() << "[BucketTool::press()] - Fatal Error: QAbstractGraphicsShapeItem cast has failed!";
                         #endif
                     }
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[FillTool::press()] - Error: item is not available at the current frame";
+                        qDebug() << "[BucketTool::press()] - Error: item is not available at the current frame";
                     #endif
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[FillTool::press()] - No item found";
+                    qDebug() << "[BucketTool::press()] - No item found";
                 #endif
                 return;
             }
@@ -228,39 +228,39 @@ void FillTool::press(const TupInputDeviceInformation *input, TupBrushManager *br
     }
 }
 
-void FillTool::move(const TupInputDeviceInformation *, TupBrushManager *, TupGraphicsScene *)
+void BucketTool::move(const TupInputDeviceInformation *, TupBrushManager *, TupGraphicsScene *)
 {
 }
 
-void FillTool::release(const TupInputDeviceInformation *, TupBrushManager *, TupGraphicsScene *)
+void BucketTool::release(const TupInputDeviceInformation *, TupBrushManager *, TupGraphicsScene *)
 {
 }
 
-QMap<TAction::ActionId, TAction *> FillTool::actions() const
+QMap<TAction::ActionId, TAction *> BucketTool::actions() const
 {
-    return fillActions;
+    return bucketActions;
 }
 
-TAction * FillTool::getAction(TAction::ActionId toolId)
+TAction * BucketTool::getAction(TAction::ActionId toolId)
 {
-    return fillActions[toolId];
+    return bucketActions[toolId];
 }
 
-int FillTool::toolType() const
+int BucketTool::toolType() const
 {
-    return TupToolInterface::Fill;
+    return TupToolInterface::Bucket;
 }
         
-QWidget *FillTool::configurator()
+QWidget *BucketTool::configurator()
 {
     return nullptr;
 }
 
-void FillTool::aboutToChangeScene(TupGraphicsScene *)
+void BucketTool::aboutToChangeScene(TupGraphicsScene *)
 {
 }
 
-void FillTool::aboutToChangeTool() 
+void BucketTool::aboutToChangeTool() 
 {
     foreach (QGraphicsItem *item, scene->items()) {
         item->setFlag(QGraphicsItem::ItemIsSelectable, false);
@@ -268,7 +268,7 @@ void FillTool::aboutToChangeTool()
     }
 }
 
-QPainterPath FillTool::mapPath(const QPainterPath &path, const QPointF &pos)
+QPainterPath BucketTool::mapPath(const QPainterPath &path, const QPointF &pos)
 {
     QTransform transform;
     transform.translate(pos.x(), pos.y());
@@ -279,16 +279,16 @@ QPainterPath FillTool::mapPath(const QPainterPath &path, const QPointF &pos)
     return painter;
 }
 
-QPainterPath FillTool::mapPath(const QGraphicsPathItem *item)
+QPainterPath BucketTool::mapPath(const QGraphicsPathItem *item)
 {
     return mapPath(item->path(), item->pos());
 }
 
-void FillTool::saveConfig()
+void BucketTool::saveConfig()
 {
 }
 
-void FillTool::keyPressEvent(QKeyEvent *event)
+void BucketTool::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_F11 || event->key() == Qt::Key_Escape) {
         emit closeHugeCanvas();
@@ -299,18 +299,18 @@ void FillTool::keyPressEvent(QKeyEvent *event)
     }
 }
 
-QCursor FillTool::toolCursor() // const
+QCursor BucketTool::toolCursor() // const
 {
     if (mode == TColorCell::Inner) {
-        return insideCursor;
+        return fillCursor;
     } else if (mode == TColorCell::Contour) {
-        return contourCursor;
+        return borderCursor;
     }
 
     return QCursor(Qt::ArrowCursor);
 }
 
-void FillTool::setColorMode(TColorCell::FillType colorMode)
+void BucketTool::setColorMode(TColorCell::FillType colorMode)
 {
     mode = colorMode;
 }

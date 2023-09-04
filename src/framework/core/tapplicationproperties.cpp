@@ -75,6 +75,11 @@ void TApplicationProperties::setIconsDir(const QString &path)
     iconsPath = path;
 }
 
+void TApplicationProperties::setCursorsDir(const QString &path)
+{
+    cursorsPath = path;
+}
+
 void TApplicationProperties::setVectorBgDir(const QString &path)
 {
     vectorBgPath = path;
@@ -169,6 +174,14 @@ QString TApplicationProperties::iconsDir() const
         return sharePath + "/themes/default/icons/";
 
     return iconsPath;
+}
+
+QString TApplicationProperties::cursorsDir() const
+{
+    if (themePath.isEmpty())
+        return sharePath + "/themes/default/cursors/";
+
+    return cursorsPath;
 }
 
 QString TApplicationProperties::rasterResourcesDir() const

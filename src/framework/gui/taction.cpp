@@ -236,7 +236,7 @@ QPair<int, int> TAction::setKeyAction(int key, Qt::KeyboardModifiers modifiers)
             case Qt::Key_F:
             {
                 menu = TAction::FillMenu;
-                tool = TAction::FillTool;
+                tool = TAction::PaintBucket;
             }
             break;
 

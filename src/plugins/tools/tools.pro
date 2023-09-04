@@ -7,7 +7,7 @@ SUBDIRS += common \
            text \
            geometric \
            # shift \
-           fill \
+           bucket \
            # eraser \
            polyline \
            motion \

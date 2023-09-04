@@ -1,7 +1,7 @@
 QT += opengl core gui svg xml network
 CONFIG += plugin warn_on
 TEMPLATE = lib
-TARGET = tupifilltool
+TARGET = tupibuckettool
 
 unix {
     !include(../../../../tupiglobal.pri){
@@ -16,9 +16,9 @@ win32 {
 INSTALLS += target 
 target.path = /plugins/
 
-HEADERS += filltool.h 
+HEADERS += buckettool.h 
 
-SOURCES += filltool.cpp
+SOURCES += buckettool.cpp
 
 FRAMEWORK_DIR = "../../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

@@ -96,7 +96,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void updatePerspective();
         QColor currentBGColor() const;
         void updateWorkspace();
-        void setFillTool(TColorCell::FillType type);
+        void setBucketTool(TColorCell::FillType type);
         void updateColorOnSelection(TupProjectRequest::Action action, const QColor &color);
         void updatePenOnSelection(const QPen &pen);
         void getWebAsset(const QString &assetPath);
@@ -280,7 +280,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         TAction *textAction;
         TAction *selectionAction;
         TAction *nodesAction;
-        TAction *fillAction;
+        TAction *bucketAction;
         TAction *papagayoAction;
         TAction *eyedropperAction;
 

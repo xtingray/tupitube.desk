@@ -203,7 +203,7 @@ class TupMainWindow : public TabbedMainWindow
         void setUpdateFlag(bool flag);
         void checkTimeLineVisibility(bool visible);
         void checkExposureVisibility(bool visible);
-        void updateFillTool(TColorCell::FillType type);
+        void updateBucketTool(TColorCell::FillType type);
         void openTupiTubeNetwork();
         void updateColorPanelStatus(bool flag);
         void updatePenPanelStatus(bool flag);

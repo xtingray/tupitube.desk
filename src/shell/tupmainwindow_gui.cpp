@@ -54,7 +54,7 @@ void TupMainWindow::createGUI()
 
     // Adding the color palette to the left side of the interface 
     m_colorPalette = new TupColorPaletteWidget;
-    connect(m_colorPalette, SIGNAL(colorSpaceChanged(TColorCell::FillType)), this, SLOT(updateFillTool(TColorCell::FillType)));
+    connect(m_colorPalette, SIGNAL(colorSpaceChanged(TColorCell::FillType)), this, SLOT(updateBucketTool(TColorCell::FillType)));
 
     colorView = addToolView(m_colorPalette, Qt::LeftDockWidgetArea, Animation, "Color Palette", QKeySequence(tr("Shift+P")));
     connect(colorView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateColorPanelStatus(bool)));
@@ -612,10 +612,10 @@ void TupMainWindow::checkExposureVisibility(bool visible)
     }
 }
 
-void TupMainWindow::updateFillTool(TColorCell::FillType type)
+void TupMainWindow::updateBucketTool(TColorCell::FillType type)
 {
     if (animationTab)
-        animationTab->setFillTool(type);
+        animationTab->setBucketTool(type);
 }
 
 void TupMainWindow::updateColorPanelStatus(bool flag)

@@ -668,10 +668,10 @@ void TupDocumentView::loadPlugins()
                           textAction = action;
                     }
                     break;
-                    case TupToolInterface::Fill:
+                    case TupToolInterface::Bucket:
                     {
-                      if (toolId == TAction::FillTool)
-                          fillAction = action;
+                      if (toolId == TAction::PaintBucket)
+                          bucketAction = action;
                     }
                     break;
                     case TupToolInterface::LipSync:
@@ -747,7 +747,7 @@ void TupDocumentView::loadPlugins()
     toolbar->addSeparator();
     toolbar->addAction(textAction);
     toolbar->addSeparator();
-    toolbar->addAction(fillAction);
+    toolbar->addAction(bucketAction);
     toolbar->addSeparator();
     toolbar->addAction(motionMenu->menuAction());
 
@@ -946,8 +946,8 @@ void TupDocumentView::loadPlugin(int menu, int actionID)
         break;
         case TAction::FillMenu:
             {
-                if (actionID == TAction::FillTool)
-                    action = fillAction;
+                if (actionID == TAction::PaintBucket)
+                    action = bucketAction;
                     // fillMode = TColorCell::Inner;
 
                 /*
@@ -1086,24 +1086,28 @@ void TupDocumentView::selectTool()
                         motionMenu->menuAction()->setIcon(action->icon());
                 }
                 break;
-                case TupToolInterface::Fill:
+                case TupToolInterface::Bucket:
                 {
                     minWidth = 0;
-                    QString cursorIcon = "line_fill.png";
+                    QString cursorImg = "bucket_border.png";
+                    QCursor cursor;
                     if (colorSpace == TColorCell::Background) {
                         TCONFIG->beginGroup("ColorPalette");
                         TCONFIG->setValue("CurrentColorMode", TColorCell::Contour);
 
                         emit colorModeChanged(TColorCell::Contour);
                     } else {
-                        if (colorSpace == TColorCell::Inner)
-                            cursorIcon = "internal_fill.png";
+                        if (colorSpace == TColorCell::Inner) {
+                            cursorImg = "bucket_fill.png";
+                            cursor = QCursor(CURSORS_DIR + cursorImg, 0, 11);
+                        } else {
+                            cursor = QCursor(CURSORS_DIR + "bucket_border.png", 0, 13);
+                        }
                     }
-                    QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + cursorIcon, 0, 11);
+
                     paintArea->viewport()->setCursor(cursor);
                     status->enableFullScreenFeature(true);
-
-                    fillAction->trigger();
+                    bucketAction->trigger();
                 }
                 break;
                 case TupToolInterface::Selection:
@@ -1151,7 +1155,7 @@ void TupDocumentView::selectTool()
 
             paintArea->setTool(tool);
 
-            if (tool->toolType() != TupToolInterface::Fill)
+            if (tool->toolType() != TupToolInterface::Bucket)
                 paintArea->viewport()->setCursor(action->cursor());
 
             if (toolId == TAction::ObjectSelection || toolId == TAction::NodesEditor || toolId == TAction::Polyline
@@ -2567,7 +2571,7 @@ void TupDocumentView::updateCameraMode()
     cameraMode = false;
 }
 
-void TupDocumentView::setFillTool(TColorCell::FillType type)
+void TupDocumentView::setBucketTool(TColorCell::FillType type)
 {
     if (currentTool) {
         colorSpace = type;
@@ -2576,16 +2580,21 @@ void TupDocumentView::setFillTool(TColorCell::FillType type)
 
         if (colorSpace == TColorCell::Background) {
             // Call Pencil plugin here
-            if (currentTool->toolType() == TupToolInterface::Fill)
+            if (currentTool->toolType() == TupToolInterface::Bucket)
                 pencilAction->trigger();
         } else {
-            if (currentTool->toolType() == TupToolInterface::Fill) {
+            if (currentTool->toolType() == TupToolInterface::Bucket) {
                 currentTool->setColorMode(type);
-                QString icon = "internal_fill.png";
-                if (type == TColorCell::Contour)
-                    icon = "line_fill.png";
+                QCursor cursor;
+                QString cursorImg;
+                if (type == TColorCell::Contour) {
+                    cursorImg = "bucket_border.png";
+                    cursor = QCursor(CURSORS_DIR + cursorImg, 0, 13);
+                } else {
+                    cursorImg = "bucket_fill.png";
+                    cursor = QCursor(CURSORS_DIR + cursorImg, 0, 11);
+                }
 
-                QCursor cursor = QCursor(kAppProp->themeDir() + "cursors/" + icon, 0, 11);
                 paintArea->viewport()->setCursor(cursor);
             }
         }

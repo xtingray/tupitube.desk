@@ -270,7 +270,7 @@ QPair<int, int> TupToolPlugin::setKeyAction(int key, Qt::KeyboardModifiers modif
             case Qt::Key_F:
             {
                 menu = TAction::FillMenu;
-                tool = TAction::FillTool;
+                tool = TAction::BucketTool;
             }
             break;
 

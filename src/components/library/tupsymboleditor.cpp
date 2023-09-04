@@ -111,7 +111,7 @@ void TupSymbolEditor::loadTools()
                                    selectionTools->addAction(act);
                               }
                               break;
-                              case TupToolInterface::Fill:
+                              case TupToolInterface::Bucket:
                               {
                                    fillTools->addAction(act);
                               }
