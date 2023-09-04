@@ -427,8 +427,8 @@ void TupMainWindow::openTupiTubeNetwork()
 
 void TupMainWindow::setPreferenceActions()
 {
-    TAction *preferences = new TAction(QPixmap(THEME_DIR + "icons/properties.png"), tr("Pr&eferences..."), 
-                                        QKeySequence(tr("Ctrl+P")), this, SLOT(preferences()),
+    TAction *preferences = new TAction(QPixmap(THEME_DIR + "icons/properties.png"), tr("Pr&eferences..."),
+                                        QKeySequence(), this, SLOT(preferences()),
                                         m_actionManager, "preferences");
     preferences->setStatusTip(tr("Open the preferences dialog box"));
 

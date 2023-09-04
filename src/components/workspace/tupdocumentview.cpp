@@ -434,7 +434,7 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(ICONS_DIR + "layer.png"), tr("Onion Skin"), QKeySequence(Qt::Key_U),
                 this, SLOT(enableOnionFeature()), actionManager, "onion");
 
-    new TAction(QPixmap(ICONS_DIR + "onion.png"), tr("Onion Skin Factor"), QKeySequence(tr("Ctrl+Shift+S")),
+    new TAction(QPixmap(ICONS_DIR + "onion.png"), tr("Onion Skin Factor"), QKeySequence(),
                 this, SLOT(setDefaultOnionFactor()), actionManager, "onion_factor");
 
     new TAction(QPixmap(ICONS_DIR + "export_frame.png"), tr("Export Frame As Image"), QKeySequence(tr("@")),
@@ -457,7 +457,7 @@ void TupDocumentView::setupDrawActions()
     }
     */
 
-    new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Storyboard Settings"), QKeySequence(tr("Ctrl+Shift+S")),
+    new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Storyboard Settings"), QKeySequence(),
                 this, SLOT(storyboardSettings()), actionManager, "storyboard");
 
     new TAction(QPixmap(ICONS_DIR + "camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
