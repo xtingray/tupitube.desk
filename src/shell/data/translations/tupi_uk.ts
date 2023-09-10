@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk">
+<TS version="2.1" language="uk_UA">
 <context>
     <name>BucketTool</name>
     <message>
@@ -2080,7 +2080,7 @@
     <message>
         <location filename="../../../framework/gui/tmsgdialog.cpp" line="63"/>
         <source>Breaking News!</source>
-        <translation>Останні новини!</translation>
+        <translation>Найсвіжіші новини!</translation>
     </message>
     <message>
         <location filename="../../../framework/gui/tmsgdialog.cpp" line="105"/>
@@ -4671,7 +4671,7 @@
     <message>
         <location filename="../../tupmainwindow.cpp" line="944"/>
         <source>Gimp Palette (*.gpl *.txt *.css)</source>
-        <translation>Колірна палітра GIMP (*.gpl *.txt *.css)</translation>
+        <translation>Палітра GIMP (*.gpl *.txt *.css)</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="515"/>
@@ -4691,17 +4691,17 @@
     <message>
         <location filename="../../tupmainwindow.cpp" line="943"/>
         <source>Import Gimp Palettes</source>
-        <translation>Імпорт колірних палітр GIMP</translation>
+        <translation>Імпорт палітр GIMP</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="979"/>
         <source>Gimp palette import was successful</source>
-        <translation>Колірну палітру GIMP імпортовано успішно</translation>
+        <translation>Палітру GIMP імпортовано успішно</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="981"/>
         <source>Gimp palette import was unsuccessful</source>
-        <translation>Не вдалось імпортувати колірну палітру GIMP</translation>
+        <translation>Не вдалось імпортувати палітру GIMP</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow.cpp" line="1032"/>
@@ -4847,7 +4847,7 @@
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="374"/>
         <source>&amp;Import GIMP Palettes</source>
-        <translation>&amp;Імпорт колірних палітр GIMP</translation>
+        <translation>&amp;Імпорт палітр GIMP</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="186"/>
@@ -5017,7 +5017,7 @@
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="376"/>
         <source>Import palettes</source>
-        <translation>Імпортувати колірні палітри</translation>
+        <translation>Імпортувати палітри</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="379"/>
