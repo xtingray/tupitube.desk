@@ -166,30 +166,13 @@ void TupCameraStatus::setScenes(QStringList scenes)
     scenesCombo->addItems(scenes);
     scenesCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
 
-    if (scenes.size() > 1) {
-        spaceWidget->setVisible(true);
-        playAllBox->setVisible(true);
-    }
+    bool enable = false;
+    if (scenes.size() > 1)
+        enable = true;
+
+    spaceWidget->setVisible(enable);
+    playAllBox->setVisible(enable);
 }
-
-/*
-void TupCameraStatus::setScenes(TupProject *project)
-{
-    if (scenesCombo->count())
-        scenesCombo->clear();
-
-    QStringList scenes;
-    scenesCount = project->getScenes().size();
-    for (int i = 0; i < scenesCount; i++) {
-         TupScene *scene = project->getScenes().at(i);
-         if (scene)
-             scenes << scene->getSceneName();
-    }
-
-    scenesCombo->addItems(scenes);
-    scenesCombo->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-}
-*/
 
 bool TupCameraStatus::isLooping()
 {
@@ -226,11 +209,15 @@ void TupCameraStatus::enableButtons(bool flag)
 
 void TupCameraStatus::updateScenesComboStatus()
 {
-    bool flag = playAllBox->isChecked();
-    scenesCombo->setEnabled(!flag);
+    bool checked = playAllBox->isChecked();
+    scenesCombo->setEnabled(!checked);
 
-    if (flag)
-        emit allScenesActivated();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraStatus::updateScenesComboStatus()] - checked ->" << checked;
+    #endif
+
+    if (checked)
+        emit playModeChanged(PlayAll, 0);
     else
-        emit sceneIndexChanged(scenesCombo->currentIndex());
+        emit playModeChanged(OneScene, scenesCombo->currentIndex());
 }

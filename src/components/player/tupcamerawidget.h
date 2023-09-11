@@ -87,7 +87,8 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void setDuration(int fps);
         void infoDialog();
         void saveProjectInfo(const QString &author, const QString &description);
-        void setPlayAllMode();
+        void updatePlayMode(PlayMode mode, int sceneIndex);
+        void updatePlayButton();
 
     public slots:
         bool handleProjectResponse(TupProjectResponse *event);
@@ -121,7 +122,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         QSize screenDimension;
         TupCameraBar *cameraBar;
         QProgressBar *progressBar;
-        TupCameraStatus *status;
+        TupCameraStatus *cameraStatus;
         TupProject *project;
         QLabel *projectLabel;
         int currentSceneIndex;
@@ -135,6 +136,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         QLabel *duration;
         int framesTotal;
         double fpsDelta;
+        PlayMode playMode;
 };
 
 #endif

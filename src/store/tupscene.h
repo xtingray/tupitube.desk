@@ -168,7 +168,7 @@ class TUPITUBE_EXPORT TupScene : public QObject, public TupAbstractSerializable
         bool removeLipSync(const QString &name);
         int lipSyncTotal();
         Mouths getLipSyncList();
-        int totalPhotograms();
+        int photogramsTotal();
 
         void updateRasterBackground(TupProject::Mode spaceContext, const QString &imgPath);
 

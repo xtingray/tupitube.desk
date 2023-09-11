@@ -62,7 +62,7 @@ void TupAnimationRenderer::setScene(TupScene *scene, QSize dimension, const QCol
     gScene->setSceneRect(QRectF(QPointF(0, 0), dimension));
 
     currentPhotogram = -1;
-    totalPhotograms = scene->totalPhotograms();
+    totalPhotograms = scene->photogramsTotal();
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupAnimationRenderer::setScene()] - Photograms Total -> " << totalPhotograms;

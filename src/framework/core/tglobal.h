@@ -81,7 +81,8 @@
 
 #define DEFAULT_FONT_SIZE 36
 
-enum PlayMode { Forward = 0, Backward };
+enum PlayMode { PlayAll = 0, OneScene };
+enum PlayDirection { Forward = 0, Backward };
 enum MediaType {Video = 0, Audio};
 enum SoundType {NoSound = 0, Lipsync = 1, Effect = 2};
 struct SoundResource {

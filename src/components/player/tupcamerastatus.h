@@ -63,7 +63,7 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
         void enableButtons(bool flag);
 
     signals:
-        void allScenesActivated();
+        void playModeChanged(PlayMode mode, int sceneIndex);
         void sceneIndexChanged(int index);
         void muteEnabled(bool muteAction);
         void fpsChanged(int fps);

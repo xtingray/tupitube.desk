@@ -61,29 +61,30 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QSize sizeHint() const;
         void setLoop(bool l);
         void updateSceneIndex(int index);
-        TupScene *currentScene();
-        int currentSceneIndex();
+        TupScene *getCurrentScene();
+        int getCurrentSceneIndex();
         int sceneTotalFrames();
         void setFPS(int fps);
         void resetSceneFromList(int sceneIndex);
-        void updateAnimationArea();
+        void initPlayerScreen();
         void loadSoundRecords();
         bool isPlaying();
         void clearPhotograms();
-        void clearScenesArrays();
+        void clearAllScenesPhotograms();
         void releaseAudioResources();
-        PlayMode getPlaymode();
+
+        void setPlayMode(PlayMode mode, int sceneIndex);
+        PlayDirection getPlayDirection();
         bool removeSoundTrack(const QString &soundKey);
 
     public slots:
-        void render();
+        void renderScene(int index);
         void play();
         void playBack();
         void pause();
         void stop();
         void nextFrame();
         void previousFrame();
-        void setPlayAllMode();
 
     private slots:
         void advance();
@@ -107,6 +108,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void isRendering(int advance);
         void frameChanged(int frame);
         void activePause();
+        void playerStopped();
 
     protected:
         void paintEvent(QPaintEvent *event);
@@ -114,14 +116,21 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
 
     private:
         void stopAnimation();
-        void initPhotogramsArray();
+        void initAllPhotograms();
         void addPhotogramsArray(int index);
         void updateFirstFrame();
         void playSoundAt(int frame);
         void stopSounds();
+        void renderAllScenes();
+        void calculateFramesTotal();
 
         TupProject *project;
         int currentFramePosition;
+
+        int projectFramePosition;
+        int projectFramesTotal;
+        int projectSceneIndex;
+
         int sceneIndex;
         int fps;
 
@@ -130,12 +139,12 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
 
         TupAnimationRenderer *renderer;
         QList<QImage> photograms;
-        QList<QImage> newList;
+        QList<QImage> blankImagesList;
 
         typedef QList<QImage> photoArray;
         QList<photoArray> animationList;
 
-        QList<bool> renderControl;
+        QList<bool> sceneIsRendered;
         bool renderOn;
         QSize screenDimension;
 
@@ -144,6 +153,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QList<QMediaPlayer *> soundPlayer;
 
         bool playerIsActive;
+        PlayDirection playDirection;
         PlayMode playMode;
 
         bool mute;

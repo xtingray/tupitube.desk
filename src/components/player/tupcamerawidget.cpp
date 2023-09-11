@@ -54,6 +54,7 @@ TupCameraWidget::TupCameraWidget(TupProject *work, QWidget *parent) : QFrame(par
     TCONFIG->beginGroup("Theme");
     uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
 
+    playMode = OneScene;
     currentSceneIndex = 0;
     QSize projectSize = work->getDimension();
     double factor = static_cast<double>(projectSize.width()) / static_cast<double>(projectSize.height());
@@ -110,9 +111,9 @@ TupCameraWidget::~TupCameraWidget()
        delete progressBar;
     }
 
-    if (status) {
-        status = nullptr;
-        delete status;
+    if (cameraStatus) {
+        cameraStatus = nullptr;
+        delete cameraStatus;
     }
 
     if (previewScreen) {
@@ -266,30 +267,31 @@ void TupCameraWidget::addPlayerButtonsBar()
     connect(cameraBar, SIGNAL(stop()), this, SLOT(doStop()));
     connect(cameraBar, SIGNAL(ff()), previewScreen, SLOT(nextFrame()));
     connect(cameraBar, SIGNAL(rew()), previewScreen, SLOT(previousFrame()));
+    connect(previewScreen, SIGNAL(playerStopped()), this, SLOT(updatePlayButton()));
 
     layout->addWidget(cameraBar, 0, Qt::AlignCenter);
 }
 
 void TupCameraWidget::addStatusPanel()
 {
-    status = new TupCameraStatus(project->getSceneNames().size());
-    status->setScenes(project->getSceneNames());
-    connect(status, SIGNAL(allScenesActivated()), this, SLOT(setPlayAllMode()));
-    connect(status, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
-    connect(status, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
-    connect(status, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
-    connect(status, SIGNAL(loopChanged()), this, SLOT(setLoop()));
-    connect(status, SIGNAL(exportClicked()), this, SLOT(exportDialog()));
-    connect(status, SIGNAL(postClicked()), this, SLOT(postDialog()));
+    cameraStatus = new TupCameraStatus(project->getSceneNames().size());
+    cameraStatus->setScenes(project->getSceneNames());
+    connect(cameraStatus, SIGNAL(playModeChanged(PlayMode, int)), this, SLOT(updatePlayMode(PlayMode, int)));
+    connect(cameraStatus, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
+    connect(cameraStatus, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
+    connect(cameraStatus, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
+    connect(cameraStatus, SIGNAL(loopChanged()), this, SLOT(setLoop()));
+    connect(cameraStatus, SIGNAL(exportClicked()), this, SLOT(exportDialog()));
+    connect(cameraStatus, SIGNAL(postClicked()), this, SLOT(postDialog()));
 
     updateFramesTotal(0);
 
     int fps = project->getFPS(currentSceneIndex);
     fpsDelta = 1.0 / fps;
-    status->setFPS(fps);
+    cameraStatus->setFPS(fps);
 
     setLoop();
-    layout->addWidget(status, 0, Qt::AlignCenter|Qt::AlignTop);
+    layout->addWidget(cameraStatus, 0, Qt::AlignCenter|Qt::AlignTop);
 }
 
 void TupCameraWidget::setDimensionLabel(const QSize dimension)
@@ -339,7 +341,7 @@ void TupCameraWidget::setDimensionLabel(const QSize dimension)
 
 void TupCameraWidget::setLoop()
 {
-    previewScreen->setLoop(status->isLooping());
+    previewScreen->setLoop(cameraStatus->isLooping());
 }
 
 QSize TupCameraWidget::sizeHint() const
@@ -362,7 +364,7 @@ void TupCameraWidget::doPlay()
     if (frames > 1)
         flag = true;
 
-    status->enableButtons(flag);
+    cameraStatus->enableButtons(flag);
     cameraBar->updatePlaybackButton(false);
     cameraBar->updatePlayButton(flag);
 }
@@ -390,14 +392,14 @@ void TupCameraWidget::doPause()
 
     if (frames > 1) {
         bool playOn = previewScreen->isPlaying();
-        if (previewScreen->getPlaymode() == Forward)
+        if (previewScreen->getPlayDirection() == Forward)
             cameraBar->updatePlayButton(!playOn);
         else
             cameraBar->updatePlaybackButton(!playOn);
 
         previewScreen->pause();
     } else {
-        if (previewScreen->getPlaymode() == Forward)
+        if (previewScreen->getPlayDirection() == Forward)
             cameraBar->updatePlayButton(false);
         else
             cameraBar->updatePlaybackButton(false);
@@ -410,7 +412,7 @@ void TupCameraWidget::doStop()
         qDebug() << "[TupCameraWidget::doStop()]";
     #endif
 
-    if (previewScreen->getPlaymode() == Forward)
+    if (previewScreen->getPlayDirection() == Forward)
         cameraBar->updatePlayButton(false);
     else
         cameraBar->updatePlaybackButton(false);
@@ -440,8 +442,8 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
         switch (sceneResponse->getAction()) {
             case TupProjectRequest::Add:
             {
-                 status->setScenes(project->getSceneNames());
-                 status->setCurrentScene(index);
+                 cameraStatus->setScenes(project->getSceneNames());
+                 cameraStatus->setCurrentScene(index);
                  updateFramesTotal(index);
             }
             break;
@@ -454,15 +456,15 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
                      index--;
 
                  if (index >= 0) {
-                     status->setScenes(project->getSceneNames());
-                     status->setCurrentScene(index);
+                     cameraStatus->setScenes(project->getSceneNames());
+                     cameraStatus->setCurrentScene(index);
                      updateFramesTotal(index);
                  }
             }
             break;
             case TupProjectRequest::Reset:
             {
-                 status->setScenes(project->getSceneNames());
+                 cameraStatus->setScenes(project->getSceneNames());
             }
             break;
             case TupProjectRequest::Select:
@@ -472,17 +474,17 @@ bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
 
                      int fps = project->getFPS(currentSceneIndex);
                      fpsDelta = 1.0 / fps;
-                     status->setFPS(fps);
+                     cameraStatus->setFPS(fps);
 
                      updateFramesTotal(index);
-                     status->setCurrentScene(index);
+                     cameraStatus->setCurrentScene(index);
                  }
             }
             break;
             case TupProjectRequest::Rename:
             {
-                 status->setScenes(project->getSceneNames());
-                 status->setCurrentScene(index);
+                 cameraStatus->setScenes(project->getSceneNames());
+                 cameraStatus->setCurrentScene(index);
             }
             break;
             default:
@@ -540,9 +542,9 @@ void TupCameraWidget::setFpsStatus(int fps)
         qDebug() << "[TupCameraWidget::setStatusFPS()] - fps -> " << fps;
     #endif
 
-    status->blockSignals(true);
-    status->setFPS(fps);
-    status->blockSignals(false);
+    cameraStatus->blockSignals(true);
+    cameraStatus->setFPS(fps);
+    cameraStatus->blockSignals(false);
 
     project->setFPS(fps);
     previewScreen->setFPS(fps);
@@ -551,9 +553,20 @@ void TupCameraWidget::setFpsStatus(int fps)
 
 void TupCameraWidget::updateFramesTotal(int sceneIndex)
 {
-    TupScene *scene = project->sceneAt(sceneIndex);
-    if (scene) {
-        framesTotal = scene->framesCount();
+    if (playMode == OneScene) {
+        TupScene *scene = project->sceneAt(sceneIndex);
+        if (scene) {
+            framesTotal = scene->framesCount();
+            framesCount->setText("/ " + QString::number(framesTotal));
+            progressBar->setRange(0, framesTotal);
+            setDuration(project->getFPS());
+        }
+    } else {
+        framesTotal = 0;
+        int scenesTotal = project->scenesCount();
+        for(int i=0; i<scenesTotal; i++)
+            framesTotal += project->sceneAt(i)->framesCount();
+
         framesCount->setText("/ " + QString::number(framesTotal));
         progressBar->setRange(0, framesTotal);
         setDuration(project->getFPS());
@@ -582,15 +595,27 @@ void TupCameraWidget::selectScene(int index)
         qDebug() << "[TupCameraWidget::selectScene()] - index -> " << index;
     #endif
 
-    if (index != previewScreen->currentSceneIndex()) {
+    if (index != previewScreen->getCurrentSceneIndex()) {
         TupProjectRequest event = TupRequestBuilder::createSceneRequest(index, TupProjectRequest::Select);
         emit requestTriggered(&event);
 
         doStop();
         previewScreen->updateSceneIndex(index);
-        previewScreen->updateAnimationArea();
+        previewScreen->initPlayerScreen();
         doPlay();
     }
+}
+
+void TupCameraWidget::updatePlayMode(PlayMode mode, int sceneIndex)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::updatePlayMode()] - mode ->" << mode;
+        qDebug() << "[TupCameraWidget::updatePlayMode()] - sceneIndex ->" << sceneIndex;
+    #endif
+
+    // SQA: Update camera header variables here (frames, duration, etc)
+    playMode = mode;
+    previewScreen->setPlayMode(mode, sceneIndex);
 }
 
 void TupCameraWidget::updateScenes(int sceneIndex)
@@ -600,7 +625,7 @@ void TupCameraWidget::updateScenes(int sceneIndex)
 
 void TupCameraWidget::updateFirstFrame()
 {
-    previewScreen->updateAnimationArea();
+    previewScreen->initPlayerScreen();
     currentFrameBox->setText("1");
 }
 
@@ -662,7 +687,7 @@ void TupCameraWidget::resetPlayerInterface()
     #endif
 
     previewScreen->releaseAudioResources();
-    previewScreen->clearScenesArrays();
+    previewScreen->clearAllScenesPhotograms();
     previewScreen = nullptr;
     delete previewScreen;
 }
@@ -682,9 +707,7 @@ void TupCameraWidget::releaseAudioResources()
     previewScreen->releaseAudioResources();
 }
 
-void TupCameraWidget::setPlayAllMode()
+void TupCameraWidget::updatePlayButton()
 {
-    // Update camera header variables here
-
-    previewScreen->setPlayAllMode();
+    cameraBar->updatePlayButton(false);
 }

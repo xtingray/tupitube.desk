@@ -43,7 +43,7 @@
 TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, QWidget *parent) : QFrame(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen()] - viewSize -> " << viewSize;
+        qDebug() << "[TupScreen()] - viewSize ->" << viewSize;
     #endif
 
     project = work;
@@ -52,13 +52,18 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
     isScaled = sizeChanged;
     screenDimension = viewSize;
 
+    playMode = OneScene;
     cyclicAnimation = false;
     fps = 24;
     sceneIndex = 0;
     currentFramePosition = 0;
 
+    // PlayAll mode
+    projectSceneIndex = 0;
+    projectFramePosition = 0;
+
     playerIsActive = false;
-    playMode = Forward;
+    playDirection = Forward;
     mute = false;
     renderOn = false;
 
@@ -68,7 +73,7 @@ TupScreen::TupScreen(TupProject *work, const QSize viewSize, bool sizeChanged, Q
     connect(timer, SIGNAL(timeout()), this, SLOT(advance()));
     connect(playBackTimer, SIGNAL(timeout()), this, SLOT(back()));
 
-    initPhotogramsArray();
+    initAllPhotograms();
 
     updateSceneIndex(0);
     updateFirstFrame();
@@ -83,12 +88,12 @@ TupScreen::~TupScreen()
     timer->stop();
     playBackTimer->stop();
 
-    newList.clear();
+    blankImagesList.clear();
 
     clearPhotograms();
-    clearScenesArrays();
+    clearAllScenesPhotograms();
 
-    renderControl.clear();
+    sceneIsRendered.clear();
 
     delete timer;
     timer = nullptr;
@@ -96,6 +101,38 @@ TupScreen::~TupScreen()
     playBackTimer = nullptr;
     delete renderer;
     renderer = nullptr;
+}
+
+void TupScreen::setPlayMode(PlayMode mode, int scene)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::setPlayMode()] - playMode ->" << mode;
+        qDebug() << "[TupScreen::setPlayMode()] - scene index ->" << scene;
+    #endif
+
+    playMode = mode;
+    if (isPlaying())
+        stop();
+
+    updateSceneIndex(scene);
+    initPlayerScreen();
+
+    if (playMode == PlayAll) {
+        calculateFramesTotal();
+        renderAllScenes();
+    }
+}
+
+void TupScreen::calculateFramesTotal()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::calculateFramesTotal()]";
+    #endif
+
+    projectFramesTotal = 0;
+    int scenesTotal = animationList.count();
+    for (int i=0; i<scenesTotal; i++)
+        projectFramesTotal += project->sceneAt(i)->framesCount();
 }
 
 // Clean a photogram array if the scene has changed
@@ -106,12 +143,12 @@ void TupScreen::resetSceneFromList(int scene)
     #endif
 
     if (scene > -1) {
-        if (renderControl.at(scene)) {
-            renderControl.replace(scene, false);
-            animationList.replace(scene, newList);
+        if (sceneIsRendered.at(scene)) {
+            sceneIsRendered.replace(scene, false);
+            animationList.replace(scene, blankImagesList);
         }
     } else {
-        initPhotogramsArray();
+        initAllPhotograms();
     }
 
     resize(screenDimension);
@@ -124,14 +161,15 @@ void TupScreen::clearPhotograms()
     photograms.clear();
 }
 
-void TupScreen::clearScenesArrays()
+void TupScreen::clearAllScenesPhotograms()
 {
-    renderControl.clear();
+    sceneIsRendered.clear();
     for (int i=0; i<animationList.count(); i++) {
         for (int j=0; j<animationList[i].count(); j++)
             animationList[i][j] = QImage();
     }
     animationList.clear();
+    projectFramesTotal = 0;
 }
 
 void TupScreen::releaseAudioResources()
@@ -150,18 +188,18 @@ void TupScreen::releaseAudioResources()
     }
 }
 
-void TupScreen::initPhotogramsArray()
+void TupScreen::initAllPhotograms()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::initPhotogramsArray()]";
+        qDebug() << "[TupScreen::initAllPhotograms()]";
     #endif
 
-    renderControl.clear();
+    sceneIsRendered.clear();
     animationList.clear();
 
     for (int i=0; i < project->scenesCount(); i++) {
-         renderControl.insert(i, false);
-         animationList.insert(i, newList);
+         sceneIsRendered.insert(i, false);
+         animationList.insert(i, blankImagesList);
     }
 }
 
@@ -173,7 +211,7 @@ void TupScreen::setFPS(int speed)
 
     fps = speed;
 
-    if (playMode == Forward) {
+    if (playDirection == Forward) {
         if (timer->isActive()) {
             timer->stop();
             play();
@@ -194,18 +232,38 @@ void TupScreen::paintEvent(QPaintEvent *)
     #endif
     */
 
-    if (!mute && !renderOn) {
-        if (photograms.count() > 1) {
-            if (playerIsActive && (playMode == Forward))
-                playSoundAt(currentFramePosition);
+    if (playMode == OneScene) {
+        if (!mute && !renderOn) {
+            if (photograms.count() > 1) {
+                if (playerIsActive && (playDirection == Forward))
+                    playSoundAt(currentFramePosition);
+            }
         }
-    }
 
-    if (!firstShoot) {
-        if (currentFramePosition > -1 && currentFramePosition < photograms.count())
-            currentPhotogram = photograms[currentFramePosition];
-    } else {
-        firstShoot = false;
+        if (!firstShoot) {
+            if (currentFramePosition > -1 && currentFramePosition < photograms.count())
+                currentPhotogram = photograms[currentFramePosition];
+        } else {
+            firstShoot = false;
+        }
+    } else { // PlayAll mode
+        if (!firstShoot) {
+            if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
+                int sceneFramesTotal = photograms.count();
+                if (currentFramePosition < sceneFramesTotal) {
+                   currentPhotogram = photograms[currentFramePosition];
+                } else { // Moving to next scene
+                   if (projectSceneIndex < (animationList.size() - 1)) {
+                       projectSceneIndex++;
+                       photograms = animationList.at(projectSceneIndex);
+                       currentFramePosition = 0;
+                       currentPhotogram = photograms[0];
+                   }
+                }
+            }
+        } else {
+            firstShoot = false;
+        }
     }
 
     QPainter painter;
@@ -231,28 +289,35 @@ void TupScreen::play()
 {
     #ifdef TUP_DEBUG
         qWarning() << "[TupScreen::play()] - Playing at " << fps << " FPS";
+        qWarning() << "[TupScreen::play()] - playMode ->" << playMode;
     #endif
 
-    if (playMode == Backward) {
-        playMode = Forward;
+    if (playDirection == Backward) {
+        playDirection = Forward;
         if (playBackTimer->isActive())
-            playBackTimer->stop();
+                playBackTimer->stop();
     }
 
     playerIsActive = true;
     currentFramePosition = 0;
 
-    if (!timer->isActive()) {
-        if (!renderControl.at(sceneIndex))
-            render();
+    if (playMode == OneScene) {
+        if (!timer->isActive()) {
+            if (!sceneIsRendered.at(sceneIndex))
+                renderScene(sceneIndex);
 
-        // No frames to play
-        if (photograms.count() == 1)
-            return;
-
-        if (renderControl.at(sceneIndex))
-            timer->start(1000 / fps);
+            // No frames to play
+            if (photograms.count() == 1)
+                return;
+        }
+    } else { // PlayAll mode
+        renderAllScenes();
+        projectSceneIndex = 0;
+        photograms = animationList.at(0);
     }
+
+    if (!timer->isActive())
+        timer->start(1000 / fps);
 }
 
 void TupScreen::playBack()
@@ -261,30 +326,37 @@ void TupScreen::playBack()
         qWarning() << "[TupScreen::playBack()] - Starting procedure...";
     #endif
 
-    if (photograms.count() == 1)
-        return;
-
-    if (playMode == Forward) {
+    if (playDirection == Forward) {
         stopSounds();
 
-        playMode = Backward;
+        playDirection = Backward;
         if (timer->isActive())
             timer->stop();
     }
 
     playerIsActive = true;
-    currentFramePosition = photograms.count() - 1;
 
-    if (!playBackTimer->isActive()) {
-        if (!renderControl.at(sceneIndex)) {
-            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-            render();
-            QApplication::restoreOverrideCursor();
+    if (playMode == OneScene) {
+        if (photograms.count() == 1)
+            return;
+
+        currentFramePosition = photograms.count() - 1;
+
+        if (!playBackTimer->isActive()) {
+            if (!sceneIsRendered.at(sceneIndex)) {
+                QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+                renderScene(sceneIndex);
+                QApplication::restoreOverrideCursor();
+            }
         }
-
-        if (renderControl.at(sceneIndex))
-            playBackTimer->start(1000 / fps);
+    } else { // PlayAll mode
+        renderAllScenes();
+        projectSceneIndex = animationList.count() - 1;
+        photograms = animationList.at(projectSceneIndex);
+        currentFramePosition = photograms.count() - 1;
     }
+
+    playBackTimer->start(1000 / fps);
 }
 
 bool TupScreen::isPlaying()
@@ -292,32 +364,42 @@ bool TupScreen::isPlaying()
     return playerIsActive;
 }
 
-PlayMode TupScreen::getPlaymode()
+PlayDirection TupScreen::getPlayDirection()
 {
-    return playMode;
+    return playDirection;
 }
 
 void TupScreen::pause()
 {
-    #ifdef TUP_DEBUG
-        qWarning() << "[TupScreen::pause()] - Pausing player!";
-    #endif
-
     if (playerIsActive) {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupScreen::pause()] - Pausing player!";
+        #endif
         stopAnimation();
     } else {
-        if (photograms.isEmpty())
-            render();
+        if (playMode == OneScene) {
+            if (photograms.isEmpty())
+                renderScene(sceneIndex);
 
-        // No frames to play
-        if (photograms.count() == 1)
-            return;
+            // No frames to play
+            if (photograms.count() == 1)
+                return;
 
-        playerIsActive = true;
-        if (playMode == Forward)
-            timer->start(1000 / fps);
-        else
-            playBackTimer->start(1000 / fps);
+            playerIsActive = true;
+            if (playDirection == Forward)
+                timer->start(1000 / fps);
+            else
+                playBackTimer->start(1000 / fps);
+        } else { // Play All
+            playerIsActive = true;
+            if (playDirection == Forward)
+                timer->start(1000 / fps);
+            else
+                playBackTimer->start(1000 / fps);
+        }        
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupScreen::pause()] - Playing animation!";
+        #endif
     }
 }
 
@@ -325,20 +407,32 @@ void TupScreen::stop()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::stop()] - Stopping player!";
-        qDebug() << "[TupScreen::stop()] - playMode -> " << playMode;
+        qDebug() << "[TupScreen::stop()] - playMode -> " << playDirection;
     #endif
 
     stopAnimation();
 
-    if (playMode == Forward)
-        currentFramePosition = 0;
-    else
-        currentFramePosition = photograms.count() - 1;
+    if (playMode == OneScene) {
+        if (playDirection == Forward)
+            currentFramePosition = 0;
+        else
+            currentFramePosition = photograms.count() - 1;
 
-    if (currentFramePosition == 0)
-        emit frameChanged(1);
-    else
-        emit frameChanged(currentFramePosition);
+        if (currentFramePosition == 0)
+            emit frameChanged(1);
+        else
+            emit frameChanged(currentFramePosition);
+    } else { // Play All
+        if (playDirection == Forward)
+            projectFramePosition = 0;
+        else
+            projectFramePosition = projectFramesTotal - 1;
+
+        if (projectFramePosition == 0)
+            emit frameChanged(1);
+        else
+            emit frameChanged(projectFramePosition);
+    }
 
     repaint();
 }
@@ -346,12 +440,12 @@ void TupScreen::stop()
 void TupScreen::stopAnimation()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::stopAnimation()] - playMode -> " << playMode;
+        qDebug() << "[TupScreen::stopAnimation()] - playMode -> " << playDirection;
     #endif
 
     playerIsActive = false;
 
-    if (playMode == Forward) {
+    if (playDirection == Forward) {
         stopSounds();
 
         if (timer) {
@@ -364,6 +458,8 @@ void TupScreen::stopAnimation()
                 playBackTimer->stop();
         }
     }
+
+    emit playerStopped();
 }
 
 void TupScreen::nextFrame()
@@ -372,44 +468,50 @@ void TupScreen::nextFrame()
         qDebug() << "[TupScreen::nextFrame()]";
     #endif
 
-    if (playerIsActive)
-        stopAnimation();
+    if (playMode == OneScene) {
+        if (playerIsActive)
+            stopAnimation();
 
-    if (!renderControl.at(sceneIndex))
-        render();
+        if (!sceneIsRendered.at(sceneIndex))
+            renderScene(sceneIndex);
 
-    currentFramePosition += 1;
+        currentFramePosition += 1;
 
-    if (currentFramePosition == photograms.count())
-        currentFramePosition = 0;
+        if (currentFramePosition == photograms.count())
+            currentFramePosition = 0;
 
-    emit frameChanged(currentFramePosition + 1);
+        emit frameChanged(currentFramePosition + 1);
 
-    repaint();
+        repaint();
+    } else { // Play All
+
+    }
 }
 
 void TupScreen::previousFrame()
 {
-    /* 
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::previousFrame()]";
     #endif
-    */
 
-    if (playerIsActive)
-        stopAnimation();
+    if (playMode == OneScene) {
+        if (playerIsActive)
+            stopAnimation();
 
-    if (!renderControl.at(sceneIndex))
-        render();
+        if (!sceneIsRendered.at(sceneIndex))
+            renderScene(sceneIndex);
 
-    currentFramePosition -= 1;
+        currentFramePosition -= 1;
 
-    if (currentFramePosition < 0)
-        currentFramePosition = photograms.count() - 1;
+        if (currentFramePosition < 0)
+            currentFramePosition = photograms.count() - 1;
 
-    emit frameChanged(currentFramePosition + 1);
+        emit frameChanged(currentFramePosition + 1);
 
-    repaint();
+        repaint();
+    } else { // Play All
+
+    }
 }
 
 void TupScreen::advance()
@@ -420,17 +522,37 @@ void TupScreen::advance()
     #endif
     */
 
-    if (cyclicAnimation && currentFramePosition >= photograms.count()) {
-        currentFramePosition = -1;
-        stopSounds();
-    }
+    if (playMode == OneScene) {
+        if (cyclicAnimation && currentFramePosition >= photograms.count()) {
+            currentFramePosition = -1;
+            stopSounds();
+        }
 
-    if (currentFramePosition < photograms.count()) {
-        repaint();
-        currentFramePosition++;
-        emit frameChanged(currentFramePosition);
-    } else if (!cyclicAnimation) {
-        stop();
+        if (currentFramePosition < photograms.count()) {
+            repaint();
+            currentFramePosition++;
+            emit frameChanged(currentFramePosition);
+        } else if (!cyclicAnimation) {
+            stop();
+        }
+    } else { // Play All
+        if (cyclicAnimation && projectFramePosition >= projectFramesTotal) {
+            projectFramePosition = -1;
+            currentFramePosition = -1;
+            projectSceneIndex = 0;
+            photograms = animationList.at(0);
+
+            stopSounds();
+        }
+
+        if (projectFramePosition < projectFramesTotal) {
+            repaint();
+            currentFramePosition++;
+            projectFramePosition++;
+            emit frameChanged(projectFramePosition);
+        } else if (!cyclicAnimation) {
+            stop();
+        }
     }
 }
 
@@ -440,14 +562,26 @@ void TupScreen::back()
         qDebug() << "[TupScreen::back()]";
     #endif
 
-    if (cyclicAnimation && currentFramePosition < 0)
-        currentFramePosition = photograms.count() - 1;
+    if (playMode == OneScene) {
+        if (cyclicAnimation && currentFramePosition < 0)
+            currentFramePosition = photograms.count() - 1;
 
-    if (currentFramePosition >= 0) {
-        repaint();
-        currentFramePosition--;
-    } else if (!cyclicAnimation) {
-        stop();
+        if (currentFramePosition >= 0) {
+            repaint();
+            currentFramePosition--;
+        } else if (!cyclicAnimation) {
+            stop();
+        }
+    } else { // PlayAll mode
+        if (cyclicAnimation && projectFramePosition < 0)
+            projectFramePosition = projectFramesTotal - 1;
+
+        if (projectFramePosition >= 0) {
+            repaint();
+            projectFramePosition--;
+        } else if (!cyclicAnimation) {
+            stop();
+        }
     }
 }
 
@@ -486,6 +620,7 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
         case TupProjectRequest::Add:
           {
               addPhotogramsArray(index);
+              calculateFramesTotal();
           }
         break;
         case TupProjectRequest::Remove:
@@ -493,8 +628,9 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
               if (index < 0)
                   break;
 
-              renderControl.removeAt(index);
+              sceneIsRendered.removeAt(index);
               animationList.removeAt(index);
+              calculateFramesTotal();
 
               if (index == project->scenesCount())
                   index--;
@@ -504,11 +640,11 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
         break;
         case TupProjectRequest::Reset:
           {
-              renderControl.replace(index, false);
-              animationList.replace(index, newList);
+              sceneIsRendered.replace(index, false);
+              animationList.replace(index, blankImagesList);
 
               clearPhotograms();
-              photograms = newList;
+              photograms = blankImagesList;
           }
         break;
         case TupProjectRequest::Select:
@@ -536,43 +672,26 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
     #endif
 
     Q_UNUSED(response)
-
-    /*
-    QString id = response->getArg().toString();
-    #ifdef TUP_DEBUG
-       qDebug() << "[TupScreen::libraryResponse()] - id -> " << id;
-    #endif
-
-    switch (response->getAction()) {
-       case TupProjectRequest::Remove:
-       {
-           if (response->symbolType() == TupLibraryObject::Audio) {
-               qDebug() << "[TupScreen::libraryResponse()] - Removing item -> " << id;
-               int size = soundRecords.count();
-               qDebug() << "[TupScreen::libraryResponse()] - size -> " << size;
-               for (int i=0; i<size; i++) {
-                   SoundResource soundRecord = soundRecords.at(i);
-                   qDebug() << "[TupScreen::libraryResponse()] - Sound resource key ->" << soundRecord.path;
-               }
-           }
-       }
-       break;
-       default:
-       break;
-    }
-    */
 }
 
-void TupScreen::render()
+void TupScreen::renderAllScenes()
+{
+    for (int i=0; i < project->scenesCount(); i++) {
+        if (!sceneIsRendered.at(i))
+            renderScene(i);
+    }
+}
+
+void TupScreen::renderScene(int index)
 {
     #ifdef TUP_DEBUG
-       qDebug() << "[TupScreen::render()]";
+        qDebug() << "[TupScreen::renderScene(index)] - scene index ->" << index;
     #endif
 
     renderOn = true;
     emit isRendering(0);
 
-    TupScene *scene = project->sceneAt(sceneIndex);
+    TupScene *scene = project->sceneAt(index);
     if (scene) {
         clearPhotograms();
 
@@ -598,15 +717,14 @@ void TupScreen::render()
             i++;
         }
 
-        animationList.replace(sceneIndex, photograms);
-        renderControl.replace(sceneIndex, true);
+        animationList.replace(index, photograms);
+        sceneIsRendered.replace(index, true);
 
         renderer = nullptr;
         delete renderer;
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::render()] - Fatal Error: Scene is NULL! -> index: "
-                       << sceneIndex;
+            qWarning() << "[TupScreen::renderScene()] - Fatal Error: Scene is NULL! - index ->" << index;
         #endif
     }
 
@@ -632,7 +750,10 @@ void TupScreen::resizeEvent(QResizeEvent *event)
     if (sceneIndex > -1) {
         currentFramePosition = 0;
         clearPhotograms();
-        photograms = animationList.at(sceneIndex);
+        if (playMode == OneScene)
+            photograms = animationList.at(sceneIndex);
+        else
+            qDebug() << "PlayAll mode...";
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::resizeEvent()] - "
@@ -671,12 +792,12 @@ void TupScreen::updateSceneIndex(int index)
     }
 }
 
-int TupScreen::currentSceneIndex()
+int TupScreen::getCurrentSceneIndex()
 {
     return sceneIndex;
 }
 
-TupScene *TupScreen::currentScene()
+TupScene *TupScreen::getCurrentScene()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::currentScene()]";
@@ -704,12 +825,12 @@ int TupScreen::sceneTotalFrames()
     if (sceneIndex > -1) {
         scene = project->sceneAt(sceneIndex);
         if (scene)
-            return scene->totalPhotograms();
+            return scene->photogramsTotal();
     } else {
         if (project->scenesCount() == 1) {
             sceneIndex = 0;
             scene = project->sceneAt(0);
-            return scene->totalPhotograms();
+            return scene->photogramsTotal();
         }
     }
 
@@ -717,23 +838,35 @@ int TupScreen::sceneTotalFrames()
 }
 
 // Update and paint the first image of the current scene
-void TupScreen::updateAnimationArea()
+void TupScreen::initPlayerScreen()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::updateAnimationArea()]";
+        qDebug() << "[TupScreen::initPlayerScreen()]";
     #endif
 
-    if (sceneIndex > -1 && sceneIndex < animationList.count()) {
+    if (playMode == OneScene) {
+        if (sceneIndex > -1 && sceneIndex < animationList.count()) {
+            currentFramePosition = 0;
+            clearPhotograms();
+            photograms = animationList.at(sceneIndex);
+            updateFirstFrame();
+            update();
+        } else {
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupScreen::initPlayerScreen()] - "
+                              "Fatal Error: Can't access to scene index ->" << sceneIndex;
+            #endif
+        }
+    } else { // PlayAll mode
+        sceneIndex = 0;
         currentFramePosition = 0;
+        projectFramePosition = 0;
+        projectSceneIndex = 0;
+
         clearPhotograms();
         photograms = animationList.at(sceneIndex);
         updateFirstFrame();
         update();
-    } else {
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupScreen::updateAnimationArea()] - "
-                          "Fatal Error: Can't access to scene index: " << sceneIndex;
-        #endif
     }
 }
 
@@ -746,7 +879,7 @@ void TupScreen::updateFirstFrame()
 
     if (sceneIndex > -1 && sceneIndex < animationList.count()) {
         TupScene *scene = project->sceneAt(sceneIndex);
-        if (scene) { 
+        if (scene) {
             loadSoundRecords();
 
             renderer = new TupAnimationRenderer(library);
@@ -797,8 +930,8 @@ void TupScreen::addPhotogramsArray(int scene)
     #endif
 
     if (scene > -1) {
-        renderControl.insert(scene, false);
-        animationList.insert(scene, newList);
+        sceneIsRendered.insert(scene, false);
+        animationList.insert(scene, blankImagesList);
     }
 }
 
@@ -843,33 +976,37 @@ void TupScreen::playSoundAt(int frame)
     #endif
     */
 
-    int size = soundRecords.count();
-    for (int i=0; i<size; i++) {
-        SoundResource soundRecord = soundRecords.at(i);
-        if (!soundRecord.muted) {
-            if (frame == (soundRecord.frame - 1)) {
-                if (i < soundPlayer.count()) {
-                    if (soundPlayer.at(i)->state() != QMediaPlayer::PlayingState) {
+    if (playMode) {
+        int size = soundRecords.count();
+        for (int i=0; i<size; i++) {
+            SoundResource soundRecord = soundRecords.at(i);
+            if (!soundRecord.muted) {
+                if (frame == (soundRecord.frame - 1)) {
+                    if (i < soundPlayer.count()) {
+                        if (soundPlayer.at(i)->state() != QMediaPlayer::PlayingState) {
+                            #ifdef TUP_DEBUG
+                                qWarning() << "[TupScreen::playSoundAt()] - Playing file -> " << soundRecord.path;
+                                qWarning() << "[TupScreen::playSoundAt()] - frame -> " << frame;
+                            #endif
+                            soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.path));
+                            soundPlayer.at(i)->play();
+                        }
+                    } else {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupScreen::playSoundAt()] - Playing file -> " << soundRecord.path;
-                            qWarning() << "[TupScreen::playSoundAt()] - frame -> " << frame;
+                            qWarning() << "[TupScreen::playSoundAt()] - Fatal Error: "
+                            "No sound file was found at -> " << soundRecord.path;
                         #endif
-                        soundPlayer.at(i)->setMedia(QUrl::fromLocalFile(soundRecord.path));
-                        soundPlayer.at(i)->play();
                     }
-                } else {
-                    #ifdef TUP_DEBUG
-                        qWarning() << "[TupScreen::playSoundAt()] - Fatal Error: "
-                        "No sound file was found at -> " << soundRecord.path;
-                    #endif
                 }
+            } else {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupScreen::playSoundAt()] - "
+                                  "Sound file is muted -> " << soundRecord.path;
+                #endif
             }
-        } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupScreen::playSoundAt()] - "
-                              "Sound file is muted -> " << soundRecord.path;
-            #endif
         }
+    } else { // PlayAll mode
+
     }
 }
 
@@ -929,11 +1066,4 @@ bool TupScreen::removeSoundTrack(const QString &soundKey)
     }
 
     return false;
-}
-
-void TupScreen::setPlayAllMode()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::playAllMode()]";
-    #endif
 }

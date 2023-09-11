@@ -945,7 +945,7 @@ Mouths TupScene::getLipSyncList()
     return list;
 }
 
-int TupScene::totalPhotograms()
+int TupScene::photogramsTotal()
 {
     int total = 0;
     int totalLayers = layers.size();
