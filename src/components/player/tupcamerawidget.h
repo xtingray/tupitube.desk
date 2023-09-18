@@ -88,7 +88,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void infoDialog();
         void saveProjectInfo(const QString &author, const QString &description);
         void updatePlayMode(PlayMode mode, int sceneIndex);
-        void updatePlayButton();
+        void disablePlayButtons();
 
     public slots:
         bool handleProjectResponse(TupProjectResponse *event);
@@ -114,6 +114,7 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void addPlayerButtonsBar();
         void addStatusPanel();
         void setDimensionLabel(const QSize dimension);
+        void updateHeaderParameters(PlayMode mode, int sceneIndex);
 
         int uiTheme;
         QBoxLayout *layout;

@@ -267,7 +267,7 @@ void TupCameraWidget::addPlayerButtonsBar()
     connect(cameraBar, SIGNAL(stop()), this, SLOT(doStop()));
     connect(cameraBar, SIGNAL(ff()), previewScreen, SLOT(nextFrame()));
     connect(cameraBar, SIGNAL(rew()), previewScreen, SLOT(previousFrame()));
-    connect(previewScreen, SIGNAL(playerStopped()), this, SLOT(updatePlayButton()));
+    connect(previewScreen, SIGNAL(playerStopped()), this, SLOT(disablePlayButtons()));
 
     layout->addWidget(cameraBar, 0, Qt::AlignCenter);
 }
@@ -561,7 +561,7 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
             progressBar->setRange(0, framesTotal);
             setDuration(project->getFPS());
         }
-    } else {
+    } else { // Play All mode
         framesTotal = 0;
         int scenesTotal = project->scenesCount();
         for(int i=0; i<scenesTotal; i++)
@@ -606,6 +606,23 @@ void TupCameraWidget::selectScene(int index)
     }
 }
 
+void TupCameraWidget::updateHeaderParameters(PlayMode mode, int sceneIndex)
+{
+    if (mode == OneScene) {
+        framesTotal = project->sceneAt(sceneIndex)->framesCount();
+        framesCount->setText("/ " + QString::number(framesTotal));
+        setDuration(project->getFPS());
+    } else { // Play All mode
+        framesTotal = 0;
+        for (int i=0; i < project->scenesCount(); i++) {
+            TupScene *scene = project->sceneAt(i);
+            framesTotal += scene->framesCount();
+        }
+        framesCount->setText("/ " + QString::number(framesTotal));
+        setDuration(project->getFPS());
+    }
+}
+
 void TupCameraWidget::updatePlayMode(PlayMode mode, int sceneIndex)
 {
     #ifdef TUP_DEBUG
@@ -613,9 +630,14 @@ void TupCameraWidget::updatePlayMode(PlayMode mode, int sceneIndex)
         qDebug() << "[TupCameraWidget::updatePlayMode()] - sceneIndex ->" << sceneIndex;
     #endif
 
-    // SQA: Update camera header variables here (frames, duration, etc)
+    updateHeaderParameters(mode, sceneIndex);
+
     playMode = mode;
+
+    cameraBar->updatePlaybackButton(false);
+    cameraBar->updatePlayButton(true);
     previewScreen->setPlayMode(mode, sceneIndex);
+    cameraBar->setFocus();
 }
 
 void TupCameraWidget::updateScenes(int sceneIndex)
@@ -707,7 +729,8 @@ void TupCameraWidget::releaseAudioResources()
     previewScreen->releaseAudioResources();
 }
 
-void TupCameraWidget::updatePlayButton()
+void TupCameraWidget::disablePlayButtons()
 {
     cameraBar->updatePlayButton(false);
+    cameraBar->updatePlaybackButton(false);
 }

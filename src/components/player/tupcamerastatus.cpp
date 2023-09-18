@@ -211,6 +211,7 @@ void TupCameraStatus::updateScenesComboStatus()
 {
     bool checked = playAllBox->isChecked();
     scenesCombo->setEnabled(!checked);
+    playAllBox->clearFocus();
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraStatus::updateScenesComboStatus()] - checked ->" << checked;

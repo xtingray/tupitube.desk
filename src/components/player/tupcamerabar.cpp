@@ -100,6 +100,10 @@ TupCameraBar::~TupCameraBar()
 
 void TupCameraBar::updatePlayButton(bool playOn)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraBar::updatePlayButton()] - playOn ->" << playOn;
+    #endif
+
     QString pic = "";
     if (playOn)
         pic = "_on";

@@ -111,8 +111,6 @@ void TupScreen::setPlayMode(PlayMode mode, int scene)
     #endif
 
     playMode = mode;
-    if (isPlaying())
-        stop();
 
     updateSceneIndex(scene);
     initPlayerScreen();
@@ -121,6 +119,8 @@ void TupScreen::setPlayMode(PlayMode mode, int scene)
         calculateFramesTotal();
         renderAllScenes();
     }
+
+    play();
 }
 
 void TupScreen::calculateFramesTotal()
@@ -249,16 +249,29 @@ void TupScreen::paintEvent(QPaintEvent *)
     } else { // PlayAll mode
         if (!firstShoot) {
             if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
-                int sceneFramesTotal = photograms.count();
-                if (currentFramePosition < sceneFramesTotal) {
-                   currentPhotogram = photograms[currentFramePosition];
-                } else { // Moving to next scene
-                   if (projectSceneIndex < (animationList.size() - 1)) {
-                       projectSceneIndex++;
-                       photograms = animationList.at(projectSceneIndex);
-                       currentFramePosition = 0;
-                       currentPhotogram = photograms[0];
-                   }
+                if (playDirection == Forward) {
+                    int sceneFramesTotal = photograms.count();
+                    if (currentFramePosition < sceneFramesTotal) {
+                       currentPhotogram = photograms[currentFramePosition];
+                    } else { // Moving to next scene
+                       if (projectSceneIndex < (animationList.size() - 1)) {
+                           projectSceneIndex++;
+                           photograms = animationList.at(projectSceneIndex);
+                           currentFramePosition = 0;
+                           currentPhotogram = photograms[0];
+                       }
+                    }
+                } else { // Backward
+                    if (currentFramePosition > -1) {
+                        currentPhotogram = photograms[currentFramePosition];
+                    } else { // Moving to previous scene
+                        if (projectSceneIndex > 0) {
+                           projectSceneIndex--;
+                           photograms = animationList.at(projectSceneIndex);
+                           currentFramePosition = photograms.count() - 1;
+                           currentPhotogram = photograms[currentFramePosition];
+                        }
+                    }
                 }
             }
         } else {
@@ -295,7 +308,7 @@ void TupScreen::play()
     if (playDirection == Backward) {
         playDirection = Forward;
         if (playBackTimer->isActive())
-                playBackTimer->stop();
+            playBackTimer->stop();
     }
 
     playerIsActive = true;
@@ -351,9 +364,11 @@ void TupScreen::playBack()
         }
     } else { // PlayAll mode
         renderAllScenes();
+
         projectSceneIndex = animationList.count() - 1;
         photograms = animationList.at(projectSceneIndex);
         currentFramePosition = photograms.count() - 1;
+        projectFramePosition = projectFramesTotal - 1;
     }
 
     playBackTimer->start(1000 / fps);
@@ -558,9 +573,11 @@ void TupScreen::advance()
 
 void TupScreen::back()
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::back()]";
     #endif
+    */
 
     if (playMode == OneScene) {
         if (cyclicAnimation && currentFramePosition < 0)
@@ -568,19 +585,45 @@ void TupScreen::back()
 
         if (currentFramePosition >= 0) {
             repaint();
+            emit frameChanged(currentFramePosition);
             currentFramePosition--;
         } else if (!cyclicAnimation) {
             stop();
         }
     } else { // PlayAll mode
-        if (cyclicAnimation && projectFramePosition < 0)
-            projectFramePosition = projectFramesTotal - 1;
+        if (cyclicAnimation && projectFramePosition < 0) { // Loop must be restarted
+            if (projectSceneIndex == 0) { // Start again from the last scene
+                projectSceneIndex = animationList.size() - 1;
+                photograms = animationList.at(projectSceneIndex);
+                currentFramePosition = photograms.count() - 1;
+                projectFramePosition = projectFramesTotal - 1;
+            }
+        }
 
-        if (projectFramePosition >= 0) {
+        if (currentFramePosition < 0) { // Move to the previous scene
+            if (!cyclicAnimation) {
+                stop();
+            } else {
+                if (projectSceneIndex > 0)
+                    projectSceneIndex--;
+                else
+                    projectSceneIndex = animationList.size() - 1;
+
+                currentFramePosition = animationList.at(projectSceneIndex).count() - 1;
+
+                photograms = animationList.at(projectSceneIndex);
+                currentFramePosition = photograms.size() - 1;
+                currentPhotogram = photograms[currentFramePosition];
+
+                repaint();
+                currentFramePosition--;
+                projectFramePosition--;
+            }
+        } else {
+            emit frameChanged(projectFramePosition);
             repaint();
+            currentFramePosition--;
             projectFramePosition--;
-        } else if (!cyclicAnimation) {
-            stop();
         }
     }
 }
@@ -830,6 +873,7 @@ int TupScreen::sceneTotalFrames()
         if (project->scenesCount() == 1) {
             sceneIndex = 0;
             scene = project->sceneAt(0);
+
             return scene->photogramsTotal();
         }
     }
