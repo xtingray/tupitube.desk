@@ -88,7 +88,7 @@
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="173"/>
         <source>Fill Type</source>
-        <translation>Тип заповнення</translation>
+        <translation>Тип заповн.</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="177"/>
@@ -108,12 +108,12 @@
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="186"/>
         <source>Initial Color</source>
-        <translation>Початковий колір</translation>
+        <translation>Початк. колір</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="202"/>
         <source>Ending Color</source>
-        <translation>Кінцевий колір</translation>
+        <translation>Кінц. колір</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="216"/>
@@ -345,7 +345,7 @@
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="196"/>
         <source>Close the line path</source>
-        <translation>Замикання шляху лінії</translation>
+        <translation>Закінчення шляху лінії</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="197"/>
@@ -469,12 +469,12 @@
     <message>
         <location filename="../../../plugins/tools/ink/inksettings.cpp" line="94"/>
         <source>Enable Border</source>
-        <translation>Увімкнути межу</translation>
+        <translation>Увімкн. межу</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/ink/inksettings.cpp" line="99"/>
         <source>Enable Fill</source>
-        <translation>Увімкнути заповнення</translation>
+        <translation>Увімкн. заповнення</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/ink/inksettings.cpp" line="105"/>
@@ -838,12 +838,12 @@
     <message>
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="148"/>
         <source>Initial Opacity</source>
-        <translation>Початкова непрозорість</translation>
+        <translation>Початк. щільність</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="164"/>
         <source>Ending Opacity</source>
-        <translation>Кінцева непрозорість</translation>
+        <translation>Кінц. щільність</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/opacity/opacitysettings.cpp" line="178"/>
@@ -1500,7 +1500,7 @@
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="146"/>
         <source>Only Height</source>
-        <translation>Лише за высотою</translation>
+        <translation>Лише за висотою</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="147"/>
@@ -1510,7 +1510,7 @@
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="163"/>
         <source>Scaling Factor</source>
-        <translation>Коефіцієнт масштабування</translation>
+        <translation>Коеф. масшт.</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="177"/>
@@ -1838,7 +1838,7 @@
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="144"/>
         <source>Only Height</source>
-        <translation>Лише за высотою</translation>
+        <translation>Лише за висотою</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="145"/>
@@ -1848,7 +1848,7 @@
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="161"/>
         <source>Scaling Factor</source>
-        <translation>Коефіцієнт масштабування</translation>
+        <translation>Коеф. масшт.</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="175"/>
@@ -2595,7 +2595,7 @@
     <message>
         <location filename="../../../components/workspace/tupcameradialog.cpp" line="106"/>
         <source>Use the basic camera interface (low resources)</source>
-        <translation>Використовувати стандартний інтерфейс камери (нестача ресурсів)</translation>
+        <translation>Використовувати стандартний інтерфейс камери (менше ресурсів)</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupcameradialog.cpp" line="118"/>
@@ -4515,7 +4515,7 @@
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1357"/>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1620"/>
         <source>ERROR: Can&apos;t open file %1. Please, check file permissions and try again.</source>
-        <translation>ПОМИЛКА: Не вдалося відкрыти файл %1. Перевірте дозволи файлу і повторіть спробу.</translation>
+        <translation>ПОМИЛКА: Не вдалося відкрити файл %1. Перевірте дозволи файлу і повторіть спробу.</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="1399"/>
@@ -4832,7 +4832,7 @@
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="196"/>
         <source>Open Recent</source>
-        <translation>Відкрити останні</translation>
+        <translation>Відкрити попередні</translation>
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="358"/>
@@ -5645,7 +5645,7 @@
     <message>
         <location filename="../../../components/news/tupnewscollector.cpp" line="354"/>
         <source>Latest Version</source>
-        <translation>Остання версія</translation>
+        <translation>Найсвіжіша версія</translation>
     </message>
     <message>
         <location filename="../../../components/news/tupnewscollector.cpp" line="355"/>
@@ -8029,3 +8029,4 @@ Cover</source>
     </message>
 </context>
 </TS>
+    
