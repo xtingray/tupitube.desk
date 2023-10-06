@@ -1187,7 +1187,7 @@
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="316"/>
         <source>Color Mixer</source>
-        <translation>Налаштування кольорів</translation>
+        <translation>Властивості кольору</translation>
     </message>
 </context>
 <context>
@@ -1919,7 +1919,7 @@
     <message>
         <location filename="../../../plugins/tools/common/stepsviewer.cpp" line="54"/>
         <source>Interval</source>
-        <translation>Інтервал</translation>
+        <translation>Крок</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/common/stepsviewer.cpp" line="54"/>
@@ -3048,7 +3048,7 @@
     <message>
         <location filename="../../../components/colorpalette/tupcolorpalettewidget.cpp" line="393"/>
         <source>Color Mixer</source>
-        <translation>Налаштування кольорів</translation>
+        <translation>Властивості кольору</translation>
     </message>
     <message>
         <location filename="../../../components/colorpalette/tupcolorpalettewidget.cpp" line="401"/>
@@ -6493,7 +6493,7 @@
     <message>
         <location filename="../../../libtupi/tupprojectactionbar.cpp" line="99"/>
         <source>Duplicate frame</source>
-        <translation>Дубльований кадр</translation>
+        <translation>Дублювати кадр</translation>
     </message>
     <message>
         <location filename="../../../libtupi/tupprojectactionbar.cpp" line="110"/>
