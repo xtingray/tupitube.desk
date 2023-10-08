@@ -93,17 +93,17 @@
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="177"/>
         <source>Line Fill</source>
-        <translation>Заповнення контуру</translation>
+        <translation>Штрих</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="176"/>
         <source>Internal Fill</source>
-        <translation>Заповнення фігури</translation>
+        <translation>Заповнення</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="178"/>
         <source>Line &amp; Internal Fill</source>
-        <translation>Заповнення контуру й фігури</translation>
+        <translation>Штрих і заповнення</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="186"/>
@@ -345,7 +345,7 @@
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="196"/>
         <source>Close the line path</source>
-        <translation>Закінчення шляху лінії</translation>
+        <translation>Закінчення контуру лінії</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="197"/>
@@ -717,7 +717,7 @@
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="121"/>
         <source>Append a line segment to the last node of the path or add a new line node between two nodes</source>
-        <translation>Додати відрізок лінії до останньої вершини шляху або додати новий вузол лінії між двома ввузлами</translation>
+        <translation>Додати відрізок лінії до останньої вершини контуру або додати новий вузол між двома вузлами</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="122"/>
@@ -1166,7 +1166,7 @@
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="128"/>
         <source>Contour</source>
-        <translation>Контур</translation>
+        <translation>Штрих</translation>
     </message>
     <message>
         <location filename="../../../mypaint/raster/color/rastercolorwidget.cpp" line="145"/>
@@ -2478,7 +2478,7 @@
     <message>
         <location filename="../../../components/brush/tupbrushwidget.cpp" line="42"/>
         <source>Brush Properties</source>
-        <translation>Властивості лінії</translation>
+        <translation>Властивості штриха</translation>
     </message>
     <message>
         <location filename="../../../components/brush/tupbrushwidget.cpp" line="55"/>
@@ -2488,7 +2488,7 @@
     <message>
         <location filename="../../../components/brush/tupbrushwidget.cpp" line="64"/>
         <source>Dashes</source>
-        <translation>Пунктири</translation>
+        <translation>Пунктир</translation>
     </message>
     <message>
         <location filename="../../../components/brush/tupbrushwidget.cpp" line="90"/>
@@ -2529,7 +2529,7 @@
     <message>
         <location filename="../../../components/brush/tupbrushwidget.cpp" line="158"/>
         <source>Border Brush</source>
-        <translation>Текстура лінії</translation>
+        <translation>Текстура штриха</translation>
     </message>
 </context>
 <context>
@@ -3011,7 +3011,7 @@
     <message>
         <location filename="../../../components/colorpalette/tupcolorpalettewidget.cpp" line="152"/>
         <source>Contour</source>
-        <translation>Контур</translation>
+        <translation>Штрих</translation>
     </message>
     <message>
         <location filename="../../../components/colorpalette/tupcolorpalettewidget.cpp" line="153"/>
@@ -6050,7 +6050,7 @@
         <location filename="../../../libtupi/tuppaintareastatus.cpp" line="168"/>
         <location filename="../../../libtupi/tuppaintareastatus.cpp" line="171"/>
         <source>Contour Color</source>
-        <translation>Колір контуру</translation>
+        <translation>Колір штриха</translation>
     </message>
     <message>
         <location filename="../../../libtupi/tuppaintareastatus.cpp" line="174"/>
@@ -7335,7 +7335,7 @@ Cover</source>
     <message>
         <location filename="../../../components/library/tupsymboleditor.cpp" line="59"/>
         <source>Brushes</source>
-        <translation>Лінії</translation>
+        <translation>Пензлі</translation>
     </message>
     <message>
         <location filename="../../../components/library/tupsymboleditor.cpp" line="62"/>
