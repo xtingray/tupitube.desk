@@ -1369,10 +1369,14 @@ void TupMainWindow::addPage(QWidget *widget)
 void TupMainWindow::updateCurrentTab(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::updateCurrentTab()]";
+        qDebug() << "[TupMainWindow::updateCurrentTab()] - index -> " << index;
     #endif
 
-    if (index == 1) {  // Player mode 
+    if (index == 1) {  // Player mode
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::updateCurrentTab()] - Setting player mode...";
+        #endif
+
         lastTab = 1;
         updatePlayer();
         cameraWidget->setVisible(true);
@@ -1671,7 +1675,7 @@ void TupMainWindow::netProjectSaved()
 void TupMainWindow::updatePlayer(bool removeAction)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::updatePlayer()]";
+        qDebug() << "[TupMainWindow::updatePlayer()] - removeAction -> " << removeAction;
     #endif
 
     if (!removeAction)
@@ -1682,6 +1686,10 @@ void TupMainWindow::updatePlayer()
 {
     if (animationTab) {
         int sceneIndex = animationTab->currentSceneIndex();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::updatePlayer()] - sceneIndex -> " << sceneIndex;
+        #endif
+
         cameraWidget->updateScenes(sceneIndex);
     }
 }

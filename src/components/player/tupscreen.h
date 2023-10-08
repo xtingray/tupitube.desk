@@ -63,7 +63,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void updateSceneIndex(int index);
         TupScene *getCurrentScene();
         int getCurrentSceneIndex();
-        int sceneTotalFrames();
+        int sceneFramesTotal();
         void setFPS(int fps);
         void resetSceneFromList(int sceneIndex);
         void initPlayerScreen();
@@ -117,7 +117,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
     private:
         void stopAnimation();
         void initAllPhotograms();
-        void addPhotogramsArray(int index);
+        void addPhotogramsEmptyArray(int index);
         void updateFirstFrame();
         void playSoundAt(int frame);
         void stopSounds();

@@ -116,30 +116,69 @@ void TupScreen::setPlayMode(PlayMode mode, int scene)
     initPlayerScreen();
 
     if (playMode == PlayAll) {
-        calculateFramesTotal();
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::setPlayMode()] - Enabling PlayAll mode..";
+        #endif
         renderAllScenes();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::setPlayMode()] - Enabling OneScene mode..";
+        #endif
     }
 
     play();
 }
 
-void TupScreen::calculateFramesTotal()
+// Update and paint the first image of the current scene
+void TupScreen::initPlayerScreen()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::calculateFramesTotal()]";
+        qDebug() << "[TupScreen::initPlayerScreen()]";
     #endif
 
+    if (playMode == OneScene) {
+        if (sceneIndex > -1 && sceneIndex < animationList.count()) {
+            currentFramePosition = 0;
+            clearPhotograms();
+            photograms = animationList.at(sceneIndex);
+            updateFirstFrame();
+            update();
+        } else {
+            #ifdef TUP_DEBUG
+                        qWarning() << "[TupScreen::initPlayerScreen()] - "
+                                      "Fatal Error: Can't access to scene index ->" << sceneIndex;
+            #endif
+        }
+    } else { // PlayAll mode
+        sceneIndex = 0;
+        currentFramePosition = 0;
+        projectFramePosition = 0;
+        projectSceneIndex = 0;
+
+        clearPhotograms();
+        photograms = animationList.at(sceneIndex);
+        updateFirstFrame();
+        update();
+    }
+}
+
+void TupScreen::calculateFramesTotal()
+{
     projectFramesTotal = 0;
     int scenesTotal = animationList.count();
     for (int i=0; i<scenesTotal; i++)
         projectFramesTotal += project->sceneAt(i)->framesCount();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::calculateFramesTotal()] - projectFramesTotal ->" << projectFramesTotal;
+    #endif
 }
 
 // Clean a photogram array if the scene has changed
 void TupScreen::resetSceneFromList(int scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::resetSceneFromList()]";
+        qDebug() << "[TupScreen::resetSceneFromList()] - Resetting scene at index -> " << scene;
     #endif
 
     if (scene > -1) {
@@ -301,6 +340,7 @@ void TupScreen::paintEvent(QPaintEvent *)
 void TupScreen::play()
 {
     #ifdef TUP_DEBUG
+        qWarning() << "---";
         qWarning() << "[TupScreen::play()] - Playing at " << fps << " FPS";
         qWarning() << "[TupScreen::play()] - playMode ->" << playMode;
     #endif
@@ -662,7 +702,7 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
     switch (event->getAction()) {
         case TupProjectRequest::Add:
           {
-              addPhotogramsArray(index);
+              addPhotogramsEmptyArray(index);
               calculateFramesTotal();
           }
         break;
@@ -719,6 +759,12 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
 
 void TupScreen::renderAllScenes()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::renderAllScenes()]";
+    #endif
+
+    calculateFramesTotal();
+
     for (int i=0; i < project->scenesCount(); i++) {
         if (!sceneIsRendered.at(i))
             renderScene(i);
@@ -760,8 +806,20 @@ void TupScreen::renderScene(int index)
             i++;
         }
 
-        animationList.replace(index, photograms);
-        sceneIsRendered.replace(index, true);
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::renderScene(index)] - Replacing scene at index ->" << index;
+            qDebug() << "[TupScreen::renderScene(index)] - animationList size ->" << animationList.count();
+        #endif
+
+        if (index < animationList.count()) {
+            animationList.replace(index, photograms);
+            sceneIsRendered.replace(index, true);
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupScreen::renderScene(index)] - "
+                            "Fatal Error: Can't replace scene at animationList - Invalid index! ->" << index;
+            #endif
+        }
 
         renderer = nullptr;
         delete renderer;
@@ -793,10 +851,13 @@ void TupScreen::resizeEvent(QResizeEvent *event)
     if (sceneIndex > -1) {
         currentFramePosition = 0;
         clearPhotograms();
-        if (playMode == OneScene)
+        if (playMode == OneScene) {
             photograms = animationList.at(sceneIndex);
-        else
-            qDebug() << "PlayAll mode...";
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupScreen::resizeEvent()] - Tracing PlayAll mode...";
+            #endif
+        }
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::resizeEvent()] - "
@@ -819,7 +880,7 @@ void TupScreen::setLoop(bool loop)
 void TupScreen::updateSceneIndex(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::updateSceneIndex()]";
+        qDebug() << "[TupScreen::updateSceneIndex()] - index ->" << index;
     #endif
 
     sceneIndex = index;
@@ -858,60 +919,35 @@ TupScene *TupScreen::getCurrentScene()
     return nullptr;
 }
 
-int TupScreen::sceneTotalFrames()
+int TupScreen::sceneFramesTotal()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::sceneTotalFrames()]";
-    #endif
-
-    TupScene *scene;
-    if (sceneIndex > -1) {
-        scene = project->sceneAt(sceneIndex);
-        if (scene)
-            return scene->photogramsTotal();
-    } else {
-        if (project->scenesCount() == 1) {
-            sceneIndex = 0;
-            scene = project->sceneAt(0);
-
-            return scene->photogramsTotal();
-        }
-    }
-
-    return 0;
-}
-
-// Update and paint the first image of the current scene
-void TupScreen::initPlayerScreen()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::initPlayerScreen()]";
+        qDebug() << "[TupScreen::sceneFramesTotal()]";
     #endif
 
     if (playMode == OneScene) {
-        if (sceneIndex > -1 && sceneIndex < animationList.count()) {
-            currentFramePosition = 0;
-            clearPhotograms();
-            photograms = animationList.at(sceneIndex);
-            updateFirstFrame();
-            update();
+        TupScene *scene;
+        if (sceneIndex > -1) {
+            scene = project->sceneAt(sceneIndex);
+            if (scene)
+                return scene->photogramsTotal();
         } else {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupScreen::initPlayerScreen()] - "
-                              "Fatal Error: Can't access to scene index ->" << sceneIndex;
-            #endif
+            if (project->scenesCount() == 1) {
+                sceneIndex = 0;
+                scene = project->sceneAt(0);
+
+                return scene->photogramsTotal();
+            }
         }
     } else { // PlayAll mode
-        sceneIndex = 0;
-        currentFramePosition = 0;
-        projectFramePosition = 0;
-        projectSceneIndex = 0;
+        int framesTotal = 0;
+        foreach(TupScene *scene, project->getScenes())
+            framesTotal += scene->photogramsTotal();
 
-        clearPhotograms();
-        photograms = animationList.at(sceneIndex);
-        updateFirstFrame();
-        update();
+        return framesTotal;
     }
+
+    return 0;
 }
 
 // Prepare the first photogram of the current scene to be painted
@@ -967,10 +1003,10 @@ void TupScreen::updateFirstFrame()
     }
 }
 
-void TupScreen::addPhotogramsArray(int scene)
+void TupScreen::addPhotogramsEmptyArray(int scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::addPhotogramsArray()]";
+        qDebug() << "[TupScreen::addPhotogramsEmptyArray()] - Adding empty scene at index -> " << scene;
     #endif
 
     if (scene > -1) {

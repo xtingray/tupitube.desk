@@ -742,9 +742,9 @@ void TupGraphicsScene::addTweeningObjects(int layerIndex, int photogram, double 
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     qWarning() << "Tween -> " << tween->getTweenName();
-                     qWarning() << "Type -> " << tween->getType();
-                     qWarning() << "Adding FIRST tween transformation - photogram -> " << photogram;
+                     qWarning() << "  Tween -> " << tween->getTweenName();
+                     qWarning() << "  Type -> " << tween->getType();
+                     qWarning() << "  Adding FIRST tween transformation - photogram -> " << photogram;
                  #endif
 
                  stepItem = tween->stepAt(0);
@@ -977,9 +977,9 @@ void TupGraphicsScene::addSvgTweeningObjects(int layerIndex, int photogram, doub
 
              if (origin == photogram) {
                  #ifdef TUP_DEBUG
-                     qWarning() << "Tween -> " << tween->getTweenName();
-                     qWarning() << "Type -> " << tween->getType();
-                     qWarning() << "Adding FIRST SVG tween transformation - photogram -> " << photogram;
+                     qWarning() << "  Tween -> " << tween->getTweenName();
+                     qWarning() << "  Type -> " << tween->getType();
+                     qWarning() << "  Adding FIRST SVG tween transformation - photogram -> " << photogram;
                  #endif
 
                  stepItem = tween->stepAt(0);

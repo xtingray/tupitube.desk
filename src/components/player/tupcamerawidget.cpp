@@ -352,10 +352,11 @@ QSize TupCameraWidget::sizeHint() const
 
 void TupCameraWidget::doPlay()
 {
-    int frames = previewScreen->sceneTotalFrames();
+    int frames = previewScreen->sceneFramesTotal();
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraWidget::doPlay()] - frames -> " << frames;
+        qDebug() << "[TupCameraWidget::doPlay()] - Starting player...";
     #endif
 
     previewScreen->play();
@@ -371,7 +372,7 @@ void TupCameraWidget::doPlay()
 
 void TupCameraWidget::doPlayBack()
 {
-    int frames = previewScreen->sceneTotalFrames();
+    int frames = previewScreen->sceneFramesTotal();
 
     bool flag = false;
     if (frames > 1)
@@ -384,7 +385,7 @@ void TupCameraWidget::doPlayBack()
 
 void TupCameraWidget::doPause()
 {
-    int frames = previewScreen->sceneTotalFrames();
+    int frames = previewScreen->sceneFramesTotal();
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraWidget::doPause()] - frames -> " << frames;
@@ -642,11 +643,19 @@ void TupCameraWidget::updatePlayMode(PlayMode mode, int sceneIndex)
 
 void TupCameraWidget::updateScenes(int sceneIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::updateScenes()] - sceneIndex ->" << sceneIndex;
+    #endif
+
     previewScreen->resetSceneFromList(sceneIndex);
 }
 
 void TupCameraWidget::updateFirstFrame()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::updateFirstFrame()]";
+    #endif
+
     previewScreen->initPlayerScreen();
     currentFrameBox->setText("1");
 }

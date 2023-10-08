@@ -112,6 +112,11 @@ void TupAnimationSpace::keyPressEvent(QKeyEvent *event)
         break;
         case Qt::Key_Return:
           {
+              #ifdef TUP_DEBUG
+                  qDebug() << "[TupAnimationspace::keyPressEvent(QKeyEvent)]"
+                              " - Returning to Animation workspace...";
+              #endif
+
               playOn = false;
               playerInterface->doStop();
               playerInterface->clearMemory();

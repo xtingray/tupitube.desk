@@ -519,10 +519,15 @@ void TupMainWindow::changePerspective(QAction *action)
 void TupMainWindow::changePerspective(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::changePerspective(int)] - Updating QMainWindow interface...";
+        qDebug() << "---";
+        qDebug() << "[PLAYER VIEW]";
+        qDebug() << "[TupMainWindow::changePerspective(int)]";
     #endif
 
     if (index == 4) { // Player
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupMainWindow::changePerspective(int)] - Opening the player interface...";
+        #endif
         m_libraryWidget->stopSoundPlayer();
         setCurrentTab(1);
     } else {
@@ -532,6 +537,11 @@ void TupMainWindow::changePerspective(int index)
 
 void TupMainWindow::doPlay()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupMainWindow::doPlay()] - Calling player...";
+    #endif
+
     cameraWidget->doPlay();
 }
 
