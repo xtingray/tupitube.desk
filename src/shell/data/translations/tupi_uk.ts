@@ -31,7 +31,7 @@
     <message>
         <location filename="../../../plugins/tools/common/buttonspanel.cpp" line="41"/>
         <source>Edit Tween</source>
-        <translation>Змінитм анімацію</translation>
+        <translation>Змінити анімацію</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/common/buttonspanel.cpp" line="45"/>
@@ -565,7 +565,7 @@
     <message>
         <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="66"/>
         <source>Set Path Properties</source>
-        <translation>Задати властивості шляху</translation>
+        <translation>Задати шлях</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/motion/motionsettings.cpp" line="104"/>
@@ -1692,7 +1692,7 @@
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="431"/>
         <source>Proportion</source>
-        <translation>Співвідношення сторін</translation>
+        <translation>Пропорц.</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="451"/>
