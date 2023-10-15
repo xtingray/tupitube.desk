@@ -189,7 +189,6 @@ void TupCameraWidget::setProgressBar()
     progressBar->setStyleSheet(style1 + style2);
     progressBar->setMaximumHeight(5);
     progressBar->setTextVisible(false);
-    progressBar->setRange(1, 100);
     progressBar->setVisible(false);
 }
 
@@ -561,6 +560,11 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
             framesCount->setText("/ " + QString::number(framesTotal));
             progressBar->setRange(0, framesTotal);
             setDuration(project->getFPS());
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupCameraWidget::updateFramesTotal()] - "
+                            "Fatal Error: Scene index invalid ->" << sceneIndex;
+            #endif
         }
     } else { // Play All mode
         framesTotal = 0;
@@ -572,6 +576,8 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
         progressBar->setRange(0, framesTotal);
         setDuration(project->getFPS());
     }
+
+    progressBar->setRange(1, framesTotal);
 }
 
 void TupCameraWidget::exportDialog()

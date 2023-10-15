@@ -78,7 +78,6 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         bool removeSoundTrack(const QString &soundKey);
 
     public slots:
-        void renderScene(int index);
         void play();
         void playBack();
         void pause();
@@ -87,6 +86,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void previousFrame();
 
     private slots:
+        void renderOneScene(int index);
+        void renderScene(int index);
         void advance();
         void back();
         void enableMute(bool flag);
@@ -146,6 +147,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
 
         QList<bool> sceneIsRendered;
         bool renderOn;
+        int progressCounter;
         QSize screenDimension;
 
         TupLibrary *library;
@@ -159,11 +161,11 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         bool mute;
         bool cyclicAnimation;
         bool isScaled;
-        bool firstShoot;
+        bool firstFrameRendered;
 
         QPoint imagePos;
         QPainter *painter;
-        QImage renderized;
+        QImage renderedImg;
         QImage currentPhotogram;
 };
 

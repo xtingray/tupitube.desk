@@ -111,7 +111,6 @@ void TupScreen::setPlayMode(PlayMode mode, int scene)
     #endif
 
     playMode = mode;
-
     updateSceneIndex(scene);
     initPlayerScreen();
 
@@ -125,7 +124,6 @@ void TupScreen::setPlayMode(PlayMode mode, int scene)
             qDebug() << "[TupScreen::setPlayMode()] - Enabling OneScene mode..";
         #endif
     }
-
     play();
 }
 
@@ -157,7 +155,9 @@ void TupScreen::initPlayerScreen()
 
         clearPhotograms();
         photograms = animationList.at(sceneIndex);
+        qDebug() << "TRACING ISSUE 1";
         updateFirstFrame();
+        qDebug() << "TRACING ISSUE 2";
         update();
     }
 }
@@ -265,11 +265,9 @@ void TupScreen::setFPS(int speed)
 
 void TupScreen::paintEvent(QPaintEvent *)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::paintEvent()]";
     #endif
-    */
 
     if (playMode == OneScene) {
         if (!mute && !renderOn) {
@@ -279,14 +277,18 @@ void TupScreen::paintEvent(QPaintEvent *)
             }
         }
 
-        if (!firstShoot) {
-            if (currentFramePosition > -1 && currentFramePosition < photograms.count())
+        if (!firstFrameRendered) {
+            if (currentFramePosition > -1 && currentFramePosition < photograms.count()) {
+                // Assign photogram from array to currentPhotogram
                 currentPhotogram = photograms[currentFramePosition];
+            }
         } else {
-            firstShoot = false;
+            // First photogram was already rendered and stored in currentPhotogram.
+            // It's ready for drawing
+            firstFrameRendered = false;
         }
     } else { // PlayAll mode
-        if (!firstShoot) {
+        if (!firstFrameRendered) {
             if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
                 if (playDirection == Forward) {
                     int sceneFramesTotal = photograms.count();
@@ -314,7 +316,7 @@ void TupScreen::paintEvent(QPaintEvent *)
                 }
             }
         } else {
-            firstShoot = false;
+            firstFrameRendered = false;
         }
     }
 
@@ -357,11 +359,16 @@ void TupScreen::play()
     if (playMode == OneScene) {
         if (!timer->isActive()) {
             if (!sceneIsRendered.at(sceneIndex))
-                renderScene(sceneIndex);
+                renderOneScene(sceneIndex);
 
             // No frames to play
-            if (photograms.count() == 1)
+            if (photograms.count() == 1) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupScreen::play()] - Scene only has one scene. Leaving!";
+                #endif
+
                 return;
+            }
         }
     } else { // PlayAll mode
         renderAllScenes();
@@ -398,7 +405,7 @@ void TupScreen::playBack()
         if (!playBackTimer->isActive()) {
             if (!sceneIsRendered.at(sceneIndex)) {
                 QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-                renderScene(sceneIndex);
+                renderOneScene(sceneIndex);
                 QApplication::restoreOverrideCursor();
             }
         }
@@ -434,7 +441,7 @@ void TupScreen::pause()
     } else {
         if (playMode == OneScene) {
             if (photograms.isEmpty())
-                renderScene(sceneIndex);
+                renderOneScene(sceneIndex);
 
             // No frames to play
             if (photograms.count() == 1)
@@ -528,7 +535,7 @@ void TupScreen::nextFrame()
             stopAnimation();
 
         if (!sceneIsRendered.at(sceneIndex))
-            renderScene(sceneIndex);
+            renderOneScene(sceneIndex);
 
         currentFramePosition += 1;
 
@@ -554,7 +561,7 @@ void TupScreen::previousFrame()
             stopAnimation();
 
         if (!sceneIsRendered.at(sceneIndex))
-            renderScene(sceneIndex);
+            renderOneScene(sceneIndex);
 
         currentFramePosition -= 1;
 
@@ -765,11 +772,31 @@ void TupScreen::renderAllScenes()
 
     calculateFramesTotal();
 
+    renderOn = true;
+    emit isRendering(0);
+
+    progressCounter = 1;
     for (int i=0; i < project->scenesCount(); i++) {
         if (!sceneIsRendered.at(i))
             renderScene(i);
     }
+
+    emit isRendering(0);
+    renderOn = false;
 }
+
+void TupScreen::renderOneScene(int index) {
+    renderOn = true;
+    emit isRendering(0);
+
+    progressCounter = 1;
+    renderScene(index);
+
+    emit isRendering(0);
+    renderOn = false;
+}
+
+// projectFramesTotal
 
 void TupScreen::renderScene(int index)
 {
@@ -777,19 +804,15 @@ void TupScreen::renderScene(int index)
         qDebug() << "[TupScreen::renderScene(index)] - scene index ->" << index;
     #endif
 
-    renderOn = true;
-    emit isRendering(0);
-
     TupScene *scene = project->sceneAt(index);
     if (scene) {
         clearPhotograms();
 
         renderer = new TupAnimationRenderer(library);
         renderer->setScene(scene, project->getDimension(), scene->getBgColor());
-        int i = 1;
         while (renderer->nextPhotogram()) {
-            renderized = QImage(project->getDimension(), QImage::Format_RGB32);
-            painter = new QPainter(&renderized);
+            renderedImg = QImage(project->getDimension(), QImage::Format_RGB32);
+            painter = new QPainter(&renderedImg);
             painter->setRenderHint(QPainter::Antialiasing);
 
             renderer->render(painter);
@@ -798,12 +821,12 @@ void TupScreen::renderScene(int index)
             delete painter;
 
             if (isScaled)
-                photograms << renderized.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
+                photograms << renderedImg.scaledToWidth(screenDimension.width(), Qt::SmoothTransformation);
             else
-                photograms << renderized;
+                photograms << renderedImg;
 
-            emit isRendering(i);
-            i++;
+            emit isRendering(progressCounter);
+            progressCounter++;
         }
 
         #ifdef TUP_DEBUG
@@ -828,9 +851,6 @@ void TupScreen::renderScene(int index)
             qWarning() << "[TupScreen::renderScene()] - Fatal Error: Scene is NULL! - index ->" << index;
         #endif
     }
-
-    emit isRendering(0); 
-    renderOn = false;
 }
 
 QSize TupScreen::sizeHint() const
@@ -851,13 +871,7 @@ void TupScreen::resizeEvent(QResizeEvent *event)
     if (sceneIndex > -1) {
         currentFramePosition = 0;
         clearPhotograms();
-        if (playMode == OneScene) {
-            photograms = animationList.at(sceneIndex);
-        } else {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupScreen::resizeEvent()] - Tracing PlayAll mode...";
-            #endif
-        }
+        photograms = animationList.at(sceneIndex);
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::resizeEvent()] - "
@@ -954,7 +968,7 @@ int TupScreen::sceneFramesTotal()
 void TupScreen::updateFirstFrame()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::updateFirstFrame()]";
+        qDebug() << "[TupScreen::updateFirstFrame()] - sceneIndex ->" << sceneIndex;
     #endif
 
     if (sceneIndex > -1 && sceneIndex < animationList.count()) {
@@ -966,23 +980,23 @@ void TupScreen::updateFirstFrame()
             renderer->setScene(scene, project->getDimension(), scene->getBgColor());
             renderer->renderPhotogram(0);
 
-            renderized = QImage(project->getDimension(), QImage::Format_RGB32);
+            renderedImg = QImage(project->getDimension(), QImage::Format_RGB32);
 
-            QPainter *painter = new QPainter(&renderized);
+            QPainter *painter = new QPainter(&renderedImg);
             painter->setRenderHint(QPainter::Antialiasing);
             renderer->render(painter);
 
             if (isScaled)
-                currentPhotogram = renderized.scaledToWidth(screenDimension.width(),
-                                                            Qt::SmoothTransformation);
+                currentPhotogram = renderedImg.scaledToWidth(screenDimension.width(),
+                                                             Qt::SmoothTransformation);
             else
-                currentPhotogram = renderized;
+                currentPhotogram = renderedImg;
 
             int x = (frameSize().width() - currentPhotogram.size().width()) / 2;
             int y = (frameSize().height() - currentPhotogram.size().height()) / 2;
             imagePos = QPoint(x, y);
 
-            firstShoot = true;
+            firstFrameRendered = true;
 
             delete painter;
             painter = nullptr;
