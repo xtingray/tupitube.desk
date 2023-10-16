@@ -685,6 +685,10 @@ void TupCameraWidget::updateProgressBar(int advance)
 
 void TupCameraWidget::updateTimerPanel(int currentFrame)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::updateTimerPanel()] - currentFrame ->" << currentFrame;
+    #endif
+
     currentFrameBox->setText(QString::number(currentFrame));
     double time = fpsDelta * currentFrame;
     timerSecsLabel->setText(QString::number(time, 'f', 2));
