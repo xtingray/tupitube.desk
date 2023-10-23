@@ -155,9 +155,7 @@ void TupScreen::initPlayerScreen()
 
         clearPhotograms();
         photograms = animationList.at(sceneIndex);
-        qDebug() << "TRACING ISSUE 1";
         updateFirstFrame();
-        qDebug() << "TRACING ISSUE 2";
         update();
     }
 }
@@ -263,89 +261,6 @@ void TupScreen::setFPS(int speed)
     }
 }
 
-void TupScreen::paintEvent(QPaintEvent *)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::paintEvent()]";
-    #endif
-
-    if (playMode == OneScene) {
-        if (!mute && !renderOn) {
-            if (photograms.count() > 1) {
-                if (playerIsActive && (playDirection == Forward))
-                    playSoundAt(currentFramePosition);
-            }
-        }
-
-        if (!firstFrameRendered) {
-            if (currentFramePosition > -1 && currentFramePosition < photograms.count()) {
-                // Assign photogram from array to currentPhotogram
-                currentPhotogram = photograms[currentFramePosition];
-            }
-        } else {
-            // First photogram was already rendered and stored in currentPhotogram.
-            // It's ready for drawing
-            firstFrameRendered = false;
-        }
-    } else { // PlayAll mode
-        if (!firstFrameRendered) {
-            qDebug() << "FLAG 1";
-            if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
-                if (playDirection == Forward) {
-                    int sceneFramesTotal = photograms.count();
-                    if (currentFramePosition < sceneFramesTotal) {
-                       currentPhotogram = photograms[currentFramePosition];
-                    } else { // Moving to next scene
-                       if (projectSceneIndex < (animationList.size() - 1)) {
-                           projectSceneIndex++;
-                           photograms = animationList.at(projectSceneIndex);
-                           currentFramePosition = 0;
-                           currentPhotogram = photograms[0];
-                       }
-                    }
-                } else { // Backward
-                    qDebug() << "FLAG 2";
-                    if (currentFramePosition > -1) {
-                        qDebug() << "FLAG 3";
-                        qDebug() << "currentFramePosition ->" << currentFramePosition;
-                        qDebug() << "photograms.size() ->" << photograms.size();
-                        currentPhotogram = photograms[currentFramePosition];
-                    } else { // Moving to previous scene
-                        qDebug() << "FLAG 4";
-                        if (projectSceneIndex > 0) {
-                           qDebug() << "FLAG 5";
-                           projectSceneIndex--;
-                           photograms = animationList.at(projectSceneIndex);
-                           currentFramePosition = photograms.count() - 1;
-                           currentPhotogram = photograms[currentFramePosition];
-                        }
-                    }
-                }
-            }
-        } else {
-            firstFrameRendered = false;
-        }
-    }
-
-    QPainter painter;
-    if (painter.begin(this)) {
-        if (!currentPhotogram.isNull()) {
-            painter.drawImage(imagePos, currentPhotogram);
-        } else {
-            #ifdef TUP_DEBUG
-                QString msg = "[TupScreen::paintEvent()] - Photogram is NULL (index: "
-                              + QString::number(currentFramePosition) + "/"
-                              + QString::number(photograms.count()) + ")";
-                qWarning() << msg;
-            #endif
-        }
-    }
-
-    // SQA: Border for the player. Useful for some tests
-    // painter.setPen(QPen(Qt::gray, 0.5, Qt::SolidLine));
-    // painter.drawRect(x, y, currentPhotogram.size().width()-1, k->renderCamera.size().height()-1);
-}
-
 void TupScreen::play()
 {
     #ifdef TUP_DEBUG
@@ -384,7 +299,7 @@ void TupScreen::play()
     }
 
     if (!timer->isActive())
-        timer->start(1000 / fps);
+        timer->start(1000 / fps); // Timer frequence: 1 second divided by the frame rate
 }
 
 void TupScreen::playBack()
@@ -482,10 +397,12 @@ void TupScreen::stop()
     stopAnimation();
 
     if (playMode == OneScene) {
-        if (playDirection == Forward)
+        if (playDirection == Forward) {
             currentFramePosition = 0;
-        else
-            currentFramePosition = photograms.count() - 1;
+        } else { // Backward
+            currentFramePosition = photograms.count();
+            currentPhotogram = photograms.last();
+        }
 
         if (currentFramePosition == 0)
             emit frameChanged(1);
@@ -634,17 +551,19 @@ void TupScreen::advance()
     */
 
     if (playMode == OneScene) {
-        if (cyclicAnimation && currentFramePosition >= photograms.count()) {
-            currentFramePosition = -1;
+        // If the animation is done and the loop is on, restart the frame position
+        if (cyclicAnimation && currentFramePosition == photograms.count() - 1) {
+            currentFramePosition = -1; // -1 ensures to repaint last photogram
             stopSounds();
         }
 
+        // If current frame is part of the animation array, paint it
         if (currentFramePosition < photograms.count()) {
+            emit frameChanged(currentFramePosition + 2);
             repaint();
             currentFramePosition++;
-            emit frameChanged(currentFramePosition);
         } else if (!cyclicAnimation) {
-            stop();
+            stop(); // If loop is off, then stop the player
         }
     } else { // Play All
         if (cyclicAnimation && projectFramePosition >= projectFramesTotal) {
@@ -676,12 +595,12 @@ void TupScreen::back()
     */
 
     if (playMode == OneScene) {
-        if (cyclicAnimation && currentFramePosition < 0)
-            currentFramePosition = photograms.count() - 1;
+        if (cyclicAnimation && currentFramePosition <= 0)
+            currentFramePosition = photograms.count();
 
         if (currentFramePosition >= 0) {
-            repaint();
             emit frameChanged(currentFramePosition);
+            repaint();
             currentFramePosition--;
         } else if (!cyclicAnimation) {
             stop();
@@ -722,6 +641,91 @@ void TupScreen::back()
             projectFramePosition--;
         }
     }
+}
+
+void TupScreen::paintEvent(QPaintEvent *)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::paintEvent()] - currentFramePosition ->" << currentFramePosition;
+    #endif
+
+    if (playMode == OneScene) {
+        if (!mute && !renderOn) {
+            if (photograms.count() > 1) {
+                if (playerIsActive && (playDirection == Forward))
+                    playSoundAt(currentFramePosition);
+            }
+        }
+
+        if (!firstFrameRendered) {
+            if (currentFramePosition > -1 && currentFramePosition < photograms.count()) {
+                // Assign photogram from array to currentPhotogram
+                currentPhotogram = photograms[currentFramePosition];
+            }
+            // If currentFramePosition == -1 then paint the last photogram once again
+        } else {
+            // Case 1: First photogram was already rendered and stored in currentPhotogram.
+            // It's ready for drawing
+            firstFrameRendered = false;
+        }
+    } else { // PlayAll mode
+        if (!firstFrameRendered) {
+            qDebug() << "FLAG 1";
+            if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
+                if (playDirection == Forward) {
+                    int sceneFramesTotal = photograms.count();
+                    if (currentFramePosition < sceneFramesTotal) {
+                        currentPhotogram = photograms[currentFramePosition];
+                    } else { // Moving to next scene
+                        if (projectSceneIndex < (animationList.size() - 1)) {
+                            projectSceneIndex++;
+                            photograms = animationList.at(projectSceneIndex);
+                            currentFramePosition = 0;
+                            currentPhotogram = photograms[0];
+                        }
+                    }
+                } else { // Backward
+                    qDebug() << "FLAG 2";
+                    if (currentFramePosition > -1) {
+                        qDebug() << "FLAG 3";
+                        qDebug() << "currentFramePosition ->" << currentFramePosition;
+                        qDebug() << "photograms.size() ->" << photograms.size();
+                        currentPhotogram = photograms[currentFramePosition];
+                    } else { // Moving to previous scene
+                        qDebug() << "FLAG 4";
+                        if (projectSceneIndex > 0) {
+                            qDebug() << "FLAG 5";
+                            projectSceneIndex--;
+                            photograms = animationList.at(projectSceneIndex);
+                            currentFramePosition = photograms.count() - 1;
+                            currentPhotogram = photograms[currentFramePosition];
+                        }
+                    }
+                }
+            }
+        } else {
+            firstFrameRendered = false;
+        }
+    }
+
+    QPainter painter;
+    if (painter.begin(this)) {
+        if (!currentPhotogram.isNull()) {
+            qDebug() << "[TupScreen::paintEvent()] - currentFramePosition ->" << currentFramePosition;
+            painter.drawImage(imagePos, currentPhotogram);
+        } else {
+            #ifdef TUP_DEBUG
+                QString msg = "[TupScreen::paintEvent()] - Photogram is NULL (index: "
+                              + QString::number(currentFramePosition) + "/"
+                              + QString::number(photograms.count()) + ")";
+                qWarning() << msg;
+            #endif
+        }
+    }
+
+    // SQA: Border for the player. Useful for some tests
+    // painter.setPen(QPen(Qt::gray, 0.5, Qt::SolidLine));
+    // painter.drawRect(x, y, currentPhotogram.size().width()-1, k->renderCamera.size().height()-1);
 }
 
 void TupScreen::frameResponse(TupFrameResponse *)
