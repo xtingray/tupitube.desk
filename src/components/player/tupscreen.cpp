@@ -409,10 +409,19 @@ void TupScreen::stop()
         else
             emit frameChanged(currentFramePosition);
     } else { // Play All
-        if (playDirection == Forward)
+        if (playDirection == Forward) {
             projectFramePosition = 0;
-        else
-            projectFramePosition = projectFramesTotal - 1;
+            currentFramePosition = 0;
+            projectSceneIndex = 0;
+            photograms = animationList.at(projectSceneIndex);
+            currentPhotogram = photograms.last();
+        } else { // Backward
+            projectFramePosition = projectFramesTotal;
+            currentFramePosition = projectFramesTotal;
+            projectSceneIndex = animationList.count() - 1;
+            photograms = animationList.at(projectSceneIndex);
+            currentPhotogram = photograms.last();
+        }
 
         if (projectFramePosition == 0)
             emit frameChanged(1);
@@ -521,19 +530,11 @@ void TupScreen::previousFrame()
         currentFramePosition--;
         projectFramePosition--;
 
-        qDebug() << "*** currentFramePosition ->" << currentFramePosition;
-        qDebug() << "*** projectFramePosition ->" << projectFramePosition;
-
         if (projectFramePosition == -1) {
-            qDebug() << "*** Updating photograms...";
-            qDebug() << "*** projectFramesTotal ->" << projectFramesTotal;
             photograms = animationList.last();
             currentFramePosition = photograms.size() - 1;
             projectFramePosition = projectFramesTotal - 1;
             projectSceneIndex = animationList.count() - 1;
-
-            qDebug() << "*** projectSceneIndex ->" << projectSceneIndex;
-            qDebug() << "*** photograms.size() ->" << photograms.size();
         }
 
         emit frameChanged(projectFramePosition + 1);
@@ -566,7 +567,7 @@ void TupScreen::advance()
             stop(); // If loop is off, then stop the player
         }
     } else { // Play All
-        if (cyclicAnimation && projectFramePosition >= projectFramesTotal) {
+        if (cyclicAnimation && projectFramePosition == projectFramesTotal - 1) {
             projectFramePosition = -1;
             currentFramePosition = -1;
             projectSceneIndex = 0;
@@ -576,10 +577,10 @@ void TupScreen::advance()
         }
 
         if (projectFramePosition < projectFramesTotal) {
+            emit frameChanged(projectFramePosition + 2);
             repaint();
             currentFramePosition++;
             projectFramePosition++;
-            emit frameChanged(projectFramePosition);
         } else if (!cyclicAnimation) {
             stop();
         }
@@ -670,7 +671,6 @@ void TupScreen::paintEvent(QPaintEvent *)
         }
     } else { // PlayAll mode
         if (!firstFrameRendered) {
-            qDebug() << "FLAG 1";
             if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
                 if (playDirection == Forward) {
                     int sceneFramesTotal = photograms.count();
@@ -685,16 +685,10 @@ void TupScreen::paintEvent(QPaintEvent *)
                         }
                     }
                 } else { // Backward
-                    qDebug() << "FLAG 2";
                     if (currentFramePosition > -1) {
-                        qDebug() << "FLAG 3";
-                        qDebug() << "currentFramePosition ->" << currentFramePosition;
-                        qDebug() << "photograms.size() ->" << photograms.size();
                         currentPhotogram = photograms[currentFramePosition];
                     } else { // Moving to previous scene
-                        qDebug() << "FLAG 4";
                         if (projectSceneIndex > 0) {
-                            qDebug() << "FLAG 5";
                             projectSceneIndex--;
                             photograms = animationList.at(projectSceneIndex);
                             currentFramePosition = photograms.count() - 1;
@@ -711,7 +705,6 @@ void TupScreen::paintEvent(QPaintEvent *)
     QPainter painter;
     if (painter.begin(this)) {
         if (!currentPhotogram.isNull()) {
-            qDebug() << "[TupScreen::paintEvent()] - currentFramePosition ->" << currentFramePosition;
             painter.drawImage(imagePos, currentPhotogram);
         } else {
             #ifdef TUP_DEBUG
