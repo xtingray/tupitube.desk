@@ -88,7 +88,7 @@
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="173"/>
         <source>Fill Type</source>
-        <translation>Тип заповн.</translation>
+        <translation>Змінювати</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="177"/>
@@ -1848,7 +1848,7 @@
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="161"/>
         <source>Scaling Factor</source>
-        <translation>Коеф. масшт.</translation>
+        <translation>Коефіцієнт</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="175"/>
