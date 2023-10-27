@@ -410,8 +410,8 @@ QString ShearSettings::tweenToXml(int currentScene, int currentLayer, int curren
     else
         root.setAttribute("shearReverseLoop", "0");
 
-    double factorX = 1.0;
-    double factorY = 1.0;
+    double factorX = 0;
+    double factorY = 0;
     double shearX = 1.0;
     double shearY = 1.0;
     double lastShearX = 1.0;
