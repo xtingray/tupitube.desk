@@ -93,17 +93,17 @@
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="177"/>
         <source>Line Fill</source>
-        <translation>Штрих</translation>
+        <translation>штрих</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="176"/>
         <source>Internal Fill</source>
-        <translation>Заповнення</translation>
+        <translation>заповнення</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="178"/>
         <source>Line &amp; Internal Fill</source>
-        <translation>Штрих і заповнення</translation>
+        <translation>штрих і заповнення</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="186"/>
@@ -1344,12 +1344,12 @@
     <message>
         <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="145"/>
         <source>Continuous</source>
-        <translation>Неперервний</translation>
+        <translation>неперервне</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="146"/>
         <source>Partial</source>
-        <translation>Частковий</translation>
+        <translation>часткове</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="150"/>
@@ -1369,12 +1369,12 @@
     <message>
         <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="201"/>
         <source>Clockwise</source>
-        <translation>За стрілкою годинника</translation>
+        <translation>за стрілкою годинника</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="202"/>
         <source>Counterclockwise</source>
-        <translation>Проти стрілки годинника</translation>
+        <translation>проти стрілки годинника</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="242"/>
@@ -1490,22 +1490,22 @@
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="144"/>
         <source>Width &amp; Height</source>
-        <translation>За шириною й висотою</translation>
+        <translation>ширину й висоту</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="145"/>
         <source>Only Width</source>
-        <translation>Лише за шириною</translation>
+        <translation>лише ширину</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="146"/>
         <source>Only Height</source>
-        <translation>Лише за висотою</translation>
+        <translation>лише висоту</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="147"/>
         <source>Scale in</source>
-        <translation>Масштабувати</translation>
+        <translation>Змінювати</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/scale/scalesettings.cpp" line="163"/>
@@ -1828,17 +1828,17 @@
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="142"/>
         <source>Width &amp; Height</source>
-        <translation>За шириною й висотою</translation>
+        <translation>за шириною й висотою</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="143"/>
         <source>Only Width</source>
-        <translation>Лише за шириною</translation>
+        <translation>лише за шириною</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="144"/>
         <source>Only Height</source>
-        <translation>Лише за висотою</translation>
+        <translation>лише за висотою</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/shear/shearsettings.cpp" line="145"/>
@@ -8029,4 +8029,4 @@ Cover</source>
     </message>
 </context>
 </TS>
-    
+            
