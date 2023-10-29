@@ -3553,7 +3553,7 @@
         <location filename="../../../components/export/tupexportwidget.cpp" line="111"/>
         <location filename="../../../components/export/tupexportwidget.cpp" line="113"/>
         <source>Post Animation</source>
-        <translation>Опублікування анімаційних роликів</translation>
+        <translation>Опублікування анімаційного ролика</translation>
     </message>
     <message>
         <location filename="../../../components/export/tupexportwidget.cpp" line="111"/>
