@@ -369,22 +369,17 @@ void TupScreen::pause()
             // No frames to play
             if (photograms.count() == 1)
                 return;
+        }
 
-            playerIsActive = true;
-            if (playDirection == Forward)
-                timer->start(1000 / fps);
-            else
-                playBackTimer->start(1000 / fps);
-        } else { // Play All
-            playerIsActive = true;
-            if (playDirection == Forward)
-                timer->start(1000 / fps);
-            else
-                playBackTimer->start(1000 / fps);
-        }        
         #ifdef TUP_DEBUG
             qWarning() << "[TupScreen::pause()] - Playing animation!";
         #endif
+
+        playerIsActive = true;
+        if (playDirection == Forward)
+            timer->start(1000 / fps);
+        else
+            playBackTimer->start(1000 / fps);
     }
 }
 
@@ -482,7 +477,7 @@ void TupScreen::nextFrame()
     } else { // Play All
         projectFramePosition++;
 
-        if (projectFramePosition == projectFramesTotal) {
+        if (projectFramePosition >= projectFramesTotal) {
             currentFramePosition = 0;
             projectFramePosition = 0;
             projectSceneIndex = 0;
@@ -521,7 +516,7 @@ void TupScreen::previousFrame()
         currentFramePosition--;
         projectFramePosition--;
 
-        if (projectFramePosition == -1) {
+        if (projectFramePosition <= -1) {
             photograms = animationList.last();
             currentFramePosition = photograms.size() - 1;
             projectFramePosition = projectFramesTotal - 1;
@@ -607,7 +602,7 @@ void TupScreen::back()
             }
         }
 
-        if (currentFramePosition < 0) { // Move to the previous scene
+        if (projectFramePosition < 0) { // Move to the previous scene
             if (!cyclicAnimation) {
                 stop();
             } else {
@@ -627,7 +622,7 @@ void TupScreen::back()
                 projectFramePosition--;
             }
         } else {
-            emit frameChanged(projectFramePosition);
+            emit frameChanged(projectFramePosition + 1);
             repaint();
             currentFramePosition--;
             projectFramePosition--;
@@ -666,8 +661,6 @@ void TupScreen::paintEvent(QPaintEvent *)
                 if (playDirection == Forward) {
                     int sceneFramesTotal = photograms.count();
                     if (currentFramePosition < sceneFramesTotal) {
-                        qDebug() << "currentFramePosition -> " << currentFramePosition;
-                        qDebug() << "photograms.count() -> " << photograms.count();
                         currentPhotogram = photograms[currentFramePosition];
                     } else { // Moving to next scene
                         if (projectSceneIndex < (animationList.size() - 1)) {
@@ -675,8 +668,6 @@ void TupScreen::paintEvent(QPaintEvent *)
                             photograms = animationList.at(projectSceneIndex);
                             currentFramePosition = 0;
                             currentPhotogram = photograms[0];
-                        } else {
-                            qDebug() << "[TupScreen::paintEvent()] - Forward block - projectSceneIndex -> " << projectSceneIndex;
                         }
                     }
                 } else { // Backward
@@ -690,8 +681,6 @@ void TupScreen::paintEvent(QPaintEvent *)
                             photograms = animationList.at(projectSceneIndex);
                             currentFramePosition = photograms.count() - 1;
                             currentPhotogram = photograms[currentFramePosition];
-                        } else {
-                            qDebug() << "[TupScreen::paintEvent()] - Backward block - projectSceneIndex -> " << projectSceneIndex;
                         }
                     }
                 }
