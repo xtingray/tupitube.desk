@@ -5755,7 +5755,7 @@
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="209"/>
         <source>Paste in...</source>
-        <translation>Вставити в…</translation>
+        <translation>Вставити на…</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tuppaintarea.cpp" line="210"/>
