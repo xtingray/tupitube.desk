@@ -632,9 +632,11 @@ void TupScreen::back()
 
 void TupScreen::paintEvent(QPaintEvent *)
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::paintEvent()] - currentFramePosition ->" << currentFramePosition;
     #endif
+    */
 
     if (playMode == OneScene) {
         if (!mute && !renderOn) {
@@ -656,6 +658,13 @@ void TupScreen::paintEvent(QPaintEvent *)
             firstFrameRendered = false;
         }
     } else { // PlayAll mode
+        if (!mute && !renderOn) {
+            if (photograms.count() > 1) {
+                if (playerIsActive && (playDirection == Forward))
+                    playSoundAt(currentFramePosition);
+            }
+        }
+
         if (!firstFrameRendered) {
             if (projectFramePosition > -1 && projectFramePosition < projectFramesTotal) {
                 if (playDirection == Forward) {
@@ -1083,7 +1092,7 @@ void TupScreen::loadSoundRecords()
         soundRecords << sound;
         #ifdef TUP_DEBUG
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio loaded! -> " << sound.path;
-            qDebug() << "[TupScreen::loadSoundRecords()] - Audio frame -> " << sound.frame;
+            qDebug() << "[TupScreen::loadSoundRecords()] - Audio frame index -> " << sound.frameIndex;
         #endif
         soundPlayer << new QMediaPlayer();
     }
@@ -1096,18 +1105,16 @@ void TupScreen::loadSoundRecords()
 
 void TupScreen::playSoundAt(int frame)
 {
-    /*
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::playSoundAt()] - frame -> " << frame;
     #endif
-    */
 
     if (playMode) {
         int size = soundRecords.count();
         for (int i=0; i<size; i++) {
             SoundResource soundRecord = soundRecords.at(i);
             if (!soundRecord.muted) {
-                if (frame == (soundRecord.frame - 1)) {
+                if (frame == (soundRecord.frameIndex - 1)) {
                     if (i < soundPlayer.count()) {
                         if (soundPlayer.at(i)->state() != QMediaPlayer::PlayingState) {
                             #ifdef TUP_DEBUG

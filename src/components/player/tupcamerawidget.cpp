@@ -599,7 +599,7 @@ void TupCameraWidget::postDialog()
 void TupCameraWidget::selectScene(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget::selectScene()] - index -> " << index;
+        qDebug() << "[TupCameraWidget::selectScene()] - index ->" << index;
     #endif
 
     if (index != previewScreen->getCurrentSceneIndex()) {
@@ -615,6 +615,11 @@ void TupCameraWidget::selectScene(int index)
 
 void TupCameraWidget::updateHeaderParameters(PlayMode mode, int sceneIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::updateHeaderParameters()] - mode ->" << mode;
+        qDebug() << "[TupCameraWidget::updateHeaderParameters()] - sceneIndex ->" << sceneIndex;
+    #endif
+
     if (mode == OneScene) {
         framesTotal = project->sceneAt(sceneIndex)->framesCount();
         framesCount->setText("/ " + QString::number(framesTotal));

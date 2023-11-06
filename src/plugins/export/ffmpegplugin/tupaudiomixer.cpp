@@ -265,7 +265,7 @@ int TupAudioMixer::initFilterGraph()
             return AVERROR_FILTER_NOT_FOUND;
         }
 
-        int frameAt = sounds.at(i).frame - 1;
+        int frameAt = sounds.at(i).frameIndex - 1;
         float millisecs = ((float) frameAt / (float) fps);
         millisecs *= 1000;
         int delayTime = millisecs;

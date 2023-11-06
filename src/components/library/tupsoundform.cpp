@@ -33,92 +33,67 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSOUNDPLAYER_H
-#define TUPSOUNDPLAYER_H
-
-#include "tglobal.h"
-#include "timagebutton.h"
-#include "tapplicationproperties.h"
-#include "tuplibraryobject.h"
 #include "tupsoundform.h"
+#include "tseparator.h"
 
-#include <QFrame>
-#include <QBoxLayout>
-#include <QSlider>
-#include <QLabel>
-// #include <QSpinBox>
-#include <QMediaPlayer>
-#include <QUrl>
-#include <QTime>
-#include <QCheckBox>
-// #include <QComboBox>
-// #include <QListWidget>
-
-/**
- * @author Gustav Gonzalez
-**/
-
-class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
+TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
 {
-    Q_OBJECT
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundForm()]";
+    #endif
 
-    public:
-        TupSoundPlayer(QWidget *parent = nullptr);
-        ~TupSoundPlayer();
+    playAtLabel = new QLabel(tr("Play audio at:"));
+    playAtLabel->setAlignment(Qt::AlignHCenter);
 
-        QSize sizeHint() const;
-        void setSoundParams(SoundResource params);
-        void stopFile();
-        bool isPlaying();
-        void reset();
-        void resetMediaPlayer();
-        QString getSoundID() const;
-        void updateInitFrame(int frame);
-        void enableLipSyncInterface(SoundType type, int frame);
+    scenesCombo = new QComboBox();
+    scenesCombo->addItem(tr("Scene 1"));
+    scenesCombo->addItem(tr("Scene 2"));
+    scenesCombo->addItem(tr("Scene 3"));
 
-    signals:
-        void frameUpdated(int frame);
-        void muteEnabled(bool mute);
+    QHBoxLayout *scenesLayout = new QHBoxLayout;
+    scenesLayout->addWidget(scenesCombo, Qt::AlignHCenter);
 
-    private slots:
-        void playFile();
-        void startPlayer();
-        void positionChanged(qint64 value);
-        void durationChanged(qint64 value);
-        void stateChanged(QMediaPlayer::State state);
-        void updateSoundPos(int pos);
-        void updateLoopState();
-        void muteAction();
+    framesListWidget = new QListWidget;
+    framesListWidget->addItem(tr("Frame 1"));
+    framesListWidget->addItem(tr("Frame 2"));
+    framesListWidget->addItem(tr("Frame 3"));
 
-    private:
-        QList<QMediaPlayer *> soundPlayer;
+    QHBoxLayout *framesLayout = new QHBoxLayout;
+    framesLayout->addWidget(framesListWidget, Qt::AlignHCenter);
 
-        // QLabel *frameLabel;
-        QSlider *slider;
-        QLabel *timer;
-        TImageButton *playButton;
-        TImageButton *muteButton;
-        bool playing;
-        qint64 duration;
-        QTime soundTotalTime;
-        QString totalTime;
-        QCheckBox *loopBox;
-        bool loop;
-        bool mute;
-        // QSpinBox *frameBox;
-        // QWidget *frameWidget;
-        QString soundID;
-        QString url;
+    addFrameButton = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign.png"), 22, this);
+    addFrameButton->setToolTip(tr("Add Frame"));
+    // QLabel *frameLabel = new QLabel(tr("Add Frame"));
+    removeFrameButton = new TImageButton(QPixmap(THEME_DIR + "icons/minus_sign.png"), 22, this);
+    removeFrameButton->setToolTip(tr("Remove Frame"));
 
-        /*
-        QWidget *paramsWidget;
-        QComboBox *scenesCombo;
-        QLabel *playAtLabel;
-        QListWidget *framesListWidget;
-        TImageButton *addFrameButton;
-        */
+    QHBoxLayout *framesControlLayout = new QHBoxLayout;
+    framesControlLayout->addStretch();
+    framesControlLayout->addWidget(addFrameButton);
+    // framesControlLayout->addWidget(frameLabel);
+    framesControlLayout->addWidget(new TSeparator(Qt::Vertical));
+    framesControlLayout->addWidget(removeFrameButton);
+    framesControlLayout->addStretch();
+    framesControlLayout->setContentsMargins(0, 0, 0, 0);
 
-        TupSoundForm *soundForm;
-};
+    QVBoxLayout *blockLayout = new QVBoxLayout;
+    blockLayout->addWidget(playAtLabel);
+    blockLayout->addLayout(scenesLayout);
+    blockLayout->addLayout(framesLayout);
+    blockLayout->addLayout(framesControlLayout);
 
-#endif
+    QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->addLayout(blockLayout);
+}
+
+TupSoundForm::~TupSoundForm()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[~TupSoundForm()]";
+    #endif
+}
+
+QSize TupSoundForm::sizeHint() const
+{
+    return QWidget::sizeHint().expandedTo(QSize(100, 100));
+}

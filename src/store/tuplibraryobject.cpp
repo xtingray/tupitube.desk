@@ -54,7 +54,8 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     objectType = type;
     soundType = NoSound;
     mute = false;
-    playAt = 1;
+    playAtFrame = 1;
+    playAtScene = 0;
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -113,7 +114,7 @@ bool TupLibraryObject::isMuted()
 
 int TupLibraryObject::frameToPlay()
 {
-    return playAt;
+    return playAtFrame;
 }
 
 void TupLibraryObject::updateFrameToPlay(int frame)
@@ -122,7 +123,21 @@ void TupLibraryObject::updateFrameToPlay(int frame)
         qDebug() << "[TupLibraryObject::updateFrameToPlay()] - frame -> " << frame;
     #endif
 
-    playAt = frame;
+    playAtFrame = frame;
+}
+
+int TupLibraryObject::sceneToPlay()
+{
+    return playAtScene;
+}
+
+void TupLibraryObject::updateSceneToPlay(int scene)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::updateSceneToPlay()] - scene -> " << scene;
+    #endif
+
+    playAtScene = scene;
 }
 
 SoundType TupLibraryObject::getSoundType()
@@ -139,7 +154,8 @@ SoundResource TupLibraryObject::getSoundResourceParams()
 {
     SoundResource params;
     params.key = symbolName;
-    params.frame = playAt;
+    params.frameIndex = playAtFrame;
+    params.sceneIndex = playAtScene;
     params.path = dataPath;
     params.muted = mute;
     params.type = soundType;
@@ -365,9 +381,9 @@ void TupLibraryObject::fromXml(const QString &xml)
                  // <object id="audio.mp3" path="audio.mp3" type="3" soundType="1" playAt="30" />
                  soundType = SoundType(objectTag.attribute("soundType").toInt());
                  mute = objectTag.attribute("mute", "true").toInt() ? true : false;
-                 playAt = objectTag.attribute("playAt", "1").toInt();
-                 if (playAt == 0)
-                     playAt = 1;
+                 playAtFrame = objectTag.attribute("playAt", "1").toInt();
+                 if (playAtFrame == 0)
+                     playAtFrame = 1;
                  dataPath = objectTag.attribute("path");
                  int index = dataPath.lastIndexOf("/");
                  if (index > 0)
@@ -435,7 +451,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             {
                 object.setAttribute("soundType", soundType);
                 object.setAttribute("mute", mute);
-                object.setAttribute("playAt", playAt);
+                object.setAttribute("playAt", playAtFrame);
                 object.setAttribute("path", path);
             }
             break;

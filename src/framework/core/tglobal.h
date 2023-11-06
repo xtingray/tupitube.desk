@@ -87,7 +87,8 @@ enum MediaType {Video = 0, Audio};
 enum SoundType {NoSound = 0, Lipsync = 1, Effect = 2};
 struct SoundResource {
     QString key;
-    int frame;
+    int sceneIndex;
+    int frameIndex;
     QString path;
     bool muted;
     SoundType type;

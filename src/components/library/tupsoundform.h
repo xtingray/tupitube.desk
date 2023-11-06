@@ -33,92 +33,41 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPSOUNDPLAYER_H
-#define TUPSOUNDPLAYER_H
+#ifndef TUPSOUNDFORM_H
+#define TUPSOUNDFORM_H
 
 #include "tglobal.h"
 #include "timagebutton.h"
 #include "tapplicationproperties.h"
 #include "tuplibraryobject.h"
-#include "tupsoundform.h"
 
-#include <QFrame>
+#include <QWidget>
 #include <QBoxLayout>
-#include <QSlider>
 #include <QLabel>
 // #include <QSpinBox>
-#include <QMediaPlayer>
-#include <QUrl>
-#include <QTime>
-#include <QCheckBox>
-// #include <QComboBox>
-// #include <QListWidget>
+#include <QComboBox>
+#include <QListWidget>
 
 /**
  * @author Gustav Gonzalez
 **/
 
-class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
+class TUPITUBE_EXPORT TupSoundForm : public QWidget
 {
     Q_OBJECT
 
     public:
-        TupSoundPlayer(QWidget *parent = nullptr);
-        ~TupSoundPlayer();
+        TupSoundForm(QWidget *parent = nullptr);
+        ~TupSoundForm();
 
         QSize sizeHint() const;
-        void setSoundParams(SoundResource params);
-        void stopFile();
-        bool isPlaying();
-        void reset();
-        void resetMediaPlayer();
-        QString getSoundID() const;
-        void updateInitFrame(int frame);
-        void enableLipSyncInterface(SoundType type, int frame);
-
-    signals:
-        void frameUpdated(int frame);
-        void muteEnabled(bool mute);
-
-    private slots:
-        void playFile();
-        void startPlayer();
-        void positionChanged(qint64 value);
-        void durationChanged(qint64 value);
-        void stateChanged(QMediaPlayer::State state);
-        void updateSoundPos(int pos);
-        void updateLoopState();
-        void muteAction();
 
     private:
-        QList<QMediaPlayer *> soundPlayer;
-
-        // QLabel *frameLabel;
-        QSlider *slider;
-        QLabel *timer;
-        TImageButton *playButton;
-        TImageButton *muteButton;
-        bool playing;
-        qint64 duration;
-        QTime soundTotalTime;
-        QString totalTime;
-        QCheckBox *loopBox;
-        bool loop;
-        bool mute;
-        // QSpinBox *frameBox;
-        // QWidget *frameWidget;
-        QString soundID;
-        QString url;
-
-        /*
-        QWidget *paramsWidget;
         QComboBox *scenesCombo;
         QLabel *playAtLabel;
         QListWidget *framesListWidget;
         TImageButton *addFrameButton;
-        */
-
-        TupSoundForm *soundForm;
+        TImageButton *removeFrameButton;
 };
 
 #endif

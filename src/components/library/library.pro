@@ -14,6 +14,7 @@ HEADERS += tupsounddialog.h \
            tuptreedelegate.h \
            tupnewitemdialog.h \
            tuplibrarydisplay.h \
+           tupsoundform.h \
            tupsoundplayer.h \
            tupsearchdialog.h \
            tupvideocutter.h \
@@ -26,6 +27,7 @@ SOURCES += tupsounddialog.cpp \
            tuptreedelegate.cpp \
            tupnewitemdialog.cpp \
            tuplibrarydisplay.cpp \
+           tupsoundform.cpp \
            tupsoundplayer.cpp \
            tupsearchdialog.cpp \
            tupvideocutter.cpp \

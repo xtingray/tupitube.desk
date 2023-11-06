@@ -1063,7 +1063,8 @@ void TupProject::addSoundResource(TupLibraryObject *object)
 
     SoundResource record;
     record.key = object->getSymbolName();
-    record.frame = object->frameToPlay();
+    record.frameIndex = object->frameToPlay();
+    record.sceneIndex = object->sceneToPlay();
     record.path = object->getDataPath();
     record.muted = object->isMuted();
     record.type = object->getSoundType();
@@ -1122,7 +1123,8 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
         #endif
         if (item->getDataPath().compare(record.path) == 0) {
             record.key = item->getSymbolName();
-            record.frame = item->frameToPlay();
+            record.frameIndex = item->frameToPlay();
+            record.sceneIndex = item->sceneToPlay();
             record.muted = item->isMuted();
             record.type = item->getSoundType();
             soundRecords.replace(i, record);
@@ -1203,7 +1205,7 @@ bool TupProject::updateSoundFrame(const QString audioId, int frame)
         SoundResource item = soundRecords.at(i);
         if (item.key.compare(audioId) == 0) {
             library->updateSoundFrameToPlay(audioId, frame);
-            item.frame = frame + 1;
+            item.frameIndex = frame + 1;
             soundRecords[i] = item;
 
             return true;

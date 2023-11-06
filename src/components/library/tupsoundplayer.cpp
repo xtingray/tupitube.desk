@@ -44,28 +44,21 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
         qDebug() << "[TupSoundPlayer()]";
     #endif
 
+    // setStyleSheet("border: 1px solid blue");
+
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
-    setMidLineWidth(2);
-    setLineWidth(1);
 
     totalTime = "00:00";
     playing = false;
     loop = false;
 
-    frameWidget = new QWidget;
+    QLabel *widgetLabel = new QLabel("<b>" + tr("Audio Properties") + "</b>");
+    widgetLabel->setAlignment(Qt::AlignHCenter);
 
-    frameLabel = new QLabel("");
-    frameBox = new QSpinBox();
-    frameBox->setMinimum(1);
-    frameBox->setMaximum(999);
-    frameBox->setValue(1);
-    connect(frameBox, SIGNAL(valueChanged(int)), this, SIGNAL(frameUpdated(int)));
+    QHBoxLayout *labelLayout = new QHBoxLayout();
+    labelLayout->addWidget(widgetLabel);
 
-    QBoxLayout *effectLayout = new QBoxLayout(QBoxLayout::LeftToRight, frameWidget);
-    effectLayout->addStretch();
-    effectLayout->addWidget(frameLabel);
-    effectLayout->addWidget(frameBox);
-    effectLayout->addStretch();
+    soundForm = new TupSoundForm();
 
     timer = new QLabel("");
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -109,12 +102,15 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     buttonLayout->setContentsMargins(0, 0, 0, 0);
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->addStretch();
+    layout->addLayout(labelLayout);
+    layout->addWidget(soundForm);
+    layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addSpacing(5);
-    layout->addWidget(frameWidget);
     layout->addLayout(timerLayout);
     layout->addLayout(sliderLayout);
     layout->addLayout(buttonLayout);
-    layout->addSpacing(5);
+    layout->addStretch();
     layout->setContentsMargins(5, 5, 5, 5);
 }
 
@@ -140,7 +136,7 @@ void TupSoundPlayer::setSoundParams(SoundResource params)
     #ifdef TUP_DEBUG
         qDebug() << "---";
         qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << params.type;
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << params.frame;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << params.frameIndex;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << params.muted;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url -> " << url;
         qDebug() << "---";
@@ -167,7 +163,7 @@ void TupSoundPlayer::setSoundParams(SoundResource params)
     connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
-    enableLipSyncInterface(params.type, params.frame);
+    enableLipSyncInterface(params.type, params.frameIndex);
 
     mute = params.muted;
     if (mute) {
@@ -185,14 +181,18 @@ void TupSoundPlayer::enableLipSyncInterface(SoundType type, int frame)
     #endif
 
     if (type != Lipsync) {
+        /*
         frameBox->setVisible(true);
         frameLabel->setText(tr("Play at frame:") + " ");
         frameBox->blockSignals(true);
         frameBox->setValue(frame);
         frameBox->blockSignals(false);
+        */
     } else {
+        /*
         frameBox->setVisible(false);
         frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
+        */
     }
 }
 
@@ -396,5 +396,5 @@ void TupSoundPlayer::updateInitFrame(int frame)
         qDebug() << "[TupSoundPlayer::updateInitFrame()] - frame -> " << frame;
     #endif
 
-    frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
+    // frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
 }

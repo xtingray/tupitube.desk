@@ -99,6 +99,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         int frameToPlay();
         void updateFrameToPlay(int frame);
 
+        int sceneToPlay();
+        void updateSceneToPlay(int scene);
+
         SoundType getSoundType();
         void setSoundType(SoundType type);
         SoundResource getSoundResourceParams();
@@ -138,7 +141,8 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
 
         SoundType soundType;
         bool mute;
-        int playAt;
+        int playAtFrame;
+        int playAtScene;
 };
 
 #endif

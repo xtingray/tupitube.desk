@@ -217,8 +217,14 @@ void TupCameraStatus::updateScenesComboStatus()
         qDebug() << "[TupCameraStatus::updateScenesComboStatus()] - checked ->" << checked;
     #endif
 
-    if (checked)
+    if (checked) {
         emit playModeChanged(PlayAll, 0);
-    else
-        emit playModeChanged(OneScene, scenesCombo->currentIndex());
+    } else { // One Scene mode
+        int sceneIndex = scenesCombo->currentIndex();
+        qDebug() << "[TupCameraStatus::updateScenesComboStatus()] - sceneIndex ->" << sceneIndex;
+        if (sceneIndex < 0)
+            sceneIndex = 0;
+
+        emit playModeChanged(OneScene, sceneIndex);
+    }
 }

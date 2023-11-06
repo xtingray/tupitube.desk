@@ -1051,6 +1051,12 @@ void TupPaintArea::multipasteObject(int pasteTotal)
     #endif
 
     TupGraphicsScene* currentScene = graphicsScene();
+    if (!currentScene) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPaintArea::multipasteObject()] - Fatal Error: graphicsScene() is NULL!";
+        #endif
+        return;
+    }
 
     if (!menuOn)
         position = viewPosition();
@@ -1069,97 +1075,115 @@ void TupPaintArea::multipasteObject(int pasteTotal)
         foreach (QString xml, copiesXml) {
             TupLibraryObject::ObjectType type = TupLibraryObject::Item;
             int total = currentScene->currentFrame()->graphicsCount();
+            if (project) {
+                TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
+                if (scene) {
+                    TupLayer *layer = scene->layerAt(currentScene->currentLayerIndex());
+                    if (layer) {
+                        int framesCount = layer->framesCount();
+                        int newFrameIndex = currentFrame + pasteTotal;
+                        int distance = framesCount - (newFrameIndex + 1);
 
-            TupScene *scene = project->sceneAt(currentScene->currentSceneIndex());
-            if (scene) {
-                TupLayer *layer = scene->layerAt(currentScene->currentLayerIndex());
-                if (layer) {
-                    int framesCount = layer->framesCount();
-                    int newFrameIndex = currentFrame + pasteTotal;
-                    int distance = framesCount - (newFrameIndex + 1);
-
-                    if (distance < 0) {
-                        for (int i=framesCount; i<=newFrameIndex; i++) {
-                            TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
-                                                        layerIndex, i, TupProjectRequest::Add,
-                                                        tr("Frame"));
-                            emit requestTriggered(&request);
-                        }
-                    }
-
-                    if (xml.startsWith("<svg")) {
-                        type = TupLibraryObject::Svg;
-                        total = currentScene->currentFrame()->svgItemsCount();
-                    }
-
-
-                    QPointF pos = QPointF(0, 0);
-                    if (itemsCount == 1) { // One item selection
-                        if (onMouse) {
-                            double x = currentPos.x() - (copyCoords.at(i).x() + centerCoord.x());
-                            if (currentPos.x() >= copyCoords.at(i).x())
-                                x = fabs(x);
-
-                            double y = currentPos.y() - (copyCoords.at(i).y() + centerCoord.y());
-                            if (currentPos.y() >= copyCoords.at(i).y())
-                                y = fabs(y);
-
-                            pos = QPointF(x, y);
-                        } else {
-                            // Path - Image - SVG
-                            if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
-                                QDomDocument dom;
-                                dom.setContent(xml);
-                                QDomElement root = dom.documentElement();
-                                QDomElement properties = root.firstChild().toElement();
-                                QPointF shift;
-                                TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
-                                if (shift != QPointF(0,0))
-                                    pos = shift;
-                            } else if (xml.startsWith("<group")) {
-                                QDomDocument dom;
-                                dom.setContent(xml);
-                                QDomElement root = dom.documentElement();
-                                QPointF shift;
-                                TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
-                                if (shift != QPointF(0,0))
-                                    pos = shift;
+                        if (distance < 0) {
+                            for (int i=framesCount; i<=newFrameIndex; i++) {
+                                TupProjectRequest request = TupRequestBuilder::createFrameRequest(globalSceneIndex,
+                                                            layerIndex, i, TupProjectRequest::Add,
+                                                            tr("Frame"));
+                                emit requestTriggered(&request);
                             }
                         }
-                    } else { // Several items selection
-                        if (onMouse) {
-                            double x = currentPos.x() - centerCoord.x();
-                            double y = currentPos.y() - centerCoord.y();
 
-                            pos = QPointF(x, y);
-                        } else {
-                            if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
-                                QDomDocument dom;
-                                dom.setContent(xml);
-                                QDomElement root = dom.documentElement();
-                                QDomElement properties = root.firstChild().toElement();
-                                QPointF shift;
-                                TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
-                                if (shift != QPointF(0,0))
-                                    pos = shift;
-                            } else if (xml.startsWith("<group")) {
-                                QDomDocument dom;
-                                dom.setContent(xml);
-                                QDomElement root = dom.documentElement();
-                                QPointF shift;
-                                TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
-                                if (shift != QPointF(0,0))
-                                    pos = shift;
+                        if (xml.startsWith("<svg")) {
+                            type = TupLibraryObject::Svg;
+                            total = currentScene->currentFrame()->svgItemsCount();
+                        }
+
+                        QPointF pos = QPointF(0, 0);
+                        if (itemsCount == 1) { // One item selection
+                            if (onMouse) {
+                                QPointF cursorPos = QPointF();
+                                if (i < copyCoords.size())
+                                    cursorPos = copyCoords.at(i);
+                                else
+                                    cursorPos = copyCoords.last();
+
+                                double x = currentPos.x() - (cursorPos.x() + centerCoord.x());
+                                if (currentPos.x() >= cursorPos.x())
+                                    x = fabs(x);
+
+                                double y = currentPos.y() - (cursorPos.y() + centerCoord.y());
+                                if (currentPos.y() >= cursorPos.y())
+                                    y = fabs(y);
+
+                                pos = QPointF(x, y);
+                            } else {
+                                // Path - Image - SVG
+                                if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                                    QDomDocument dom;
+                                    dom.setContent(xml);
+                                    QDomElement root = dom.documentElement();
+                                    QDomElement properties = root.firstChild().toElement();
+                                    QPointF shift;
+                                    TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                                    if (shift != QPointF(0,0))
+                                        pos = shift;
+                                } else if (xml.startsWith("<group")) {
+                                    QDomDocument dom;
+                                    dom.setContent(xml);
+                                    QDomElement root = dom.documentElement();
+                                    QPointF shift;
+                                    TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
+                                    if (shift != QPointF(0,0))
+                                        pos = shift;
+                                }
+                            }
+                        } else { // Several items selection
+                            if (onMouse) {
+                                double x = currentPos.x() - centerCoord.x();
+                                double y = currentPos.y() - centerCoord.y();
+
+                                pos = QPointF(x, y);
+                            } else {
+                                if (xml.startsWith("<path") || xml.startsWith("<symbol") || xml.startsWith("<svg")) {
+                                    QDomDocument dom;
+                                    dom.setContent(xml);
+                                    QDomElement root = dom.documentElement();
+                                    QDomElement properties = root.firstChild().toElement();
+                                    QPointF shift;
+                                    TupSvg2Qt::parsePointF(properties.attribute("pos"), shift);
+                                    if (shift != QPointF(0,0))
+                                        pos = shift;
+                                } else if (xml.startsWith("<group")) {
+                                    QDomDocument dom;
+                                    dom.setContent(xml);
+                                    QDomElement root = dom.documentElement();
+                                    QPointF shift;
+                                    TupSvg2Qt::parsePointF(root.attribute("pos"), shift);
+                                    if (shift != QPointF(0,0))
+                                        pos = shift;
+                                }
                             }
                         }
-                    }
 
-                    TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
-                                                                 layerIndex, i, total, pos, spaceMode, type,
-                                                                 TupProjectRequest::Add, xml);
-                    emit requestTriggered(&event);
+                        TupProjectRequest event = TupRequestBuilder::createItemRequest(globalSceneIndex,
+                                                                     layerIndex, i, total, pos, spaceMode, type,
+                                                                     TupProjectRequest::Add, xml);
+                        emit requestTriggered(&event);
+                    } else {
+                        #ifdef TUP_DEBUG
+                           qDebug() << "[TupPaintArea::multipasteObject()] - Fatal Error: layer variable is NULL!";
+                        #endif
+                    }
+                } else {
+                    #ifdef TUP_DEBUG
+                        qDebug() << "[TupPaintArea::multipasteObject()] - Fatal Error: scene variable is NULL!";
+                    #endif
                 }
-             }
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupPaintArea::multipasteObject()] - Fatal Error: project variable is NULL!";
+                #endif
+            }
          }
      }
 
