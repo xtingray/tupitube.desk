@@ -37,9 +37,14 @@
  ***************************************************************************/
 
 #include "tweenmanager.h"
+#include "talgorithm.h"
 
 TweenManager::TweenManager(QWidget *parent) : QWidget(parent)
 {
+
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenHeight = dimension.second;
+
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
@@ -66,7 +71,7 @@ TweenManager::TweenManager(QWidget *parent) : QWidget(parent)
     tweensList->setViewMode(QListView::ListMode);
     tweensList->setFlow(QListView::TopToBottom);
     tweensList->setMovement(QListView::Static);
-    tweensList->setFixedHeight(68);
+    tweensList->setFixedHeight((screenHeight * 8)/100);
     connect(tweensList, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showMenu(const QPoint &)));
     connect(tweensList, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateTweenData(QListWidgetItem *)));
     connect(tweensList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(editTween(QListWidgetItem *)));

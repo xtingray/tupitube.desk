@@ -226,8 +226,8 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     buttons->setLayout(buttonLayout);
 
-    addChild(display);
-    addChild(buttons);
+    addChild(display, Qt::AlignTop);
+    addChild(buttons, Qt::AlignTop);
     addChild(libraryTree);
 
     watcher = new QFileSystemWatcher(this);

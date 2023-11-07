@@ -55,8 +55,8 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     QLabel *widgetLabel = new QLabel("<b>" + tr("Audio Properties") + "</b>");
     widgetLabel->setAlignment(Qt::AlignHCenter);
 
-    QHBoxLayout *labelLayout = new QHBoxLayout();
-    labelLayout->addWidget(widgetLabel);
+    // QHBoxLayout *labelLayout = new QHBoxLayout();
+    // labelLayout->addWidget(widgetLabel);
 
     soundForm = new TupSoundForm();
 
@@ -102,8 +102,9 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     buttonLayout->setContentsMargins(0, 0, 0, 0);
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-    layout->addStretch();
-    layout->addLayout(labelLayout);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    // layout->addStretch();
+    layout->addWidget(widgetLabel);
     layout->addWidget(soundForm);
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addSpacing(5);

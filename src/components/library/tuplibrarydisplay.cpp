@@ -52,6 +52,7 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget()
     connect(soundPlayer, SIGNAL(muteEnabled(bool)), this, SIGNAL(muteEnabled(bool)));
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     layout->addWidget(previewPanel);
     layout->addWidget(soundPlayer);
     layout->setContentsMargins(0, 0, 0, 0);

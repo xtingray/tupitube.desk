@@ -44,7 +44,7 @@
 #include <QWidget>
 #include <QBoxLayout>
 #include <QLabel>
-// #include <QSpinBox>
+#include <QSpinBox>
 #include <QComboBox>
 #include <QListWidget>
 
@@ -66,6 +66,7 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         QComboBox *scenesCombo;
         QLabel *playAtLabel;
         QListWidget *framesListWidget;
+        QSpinBox *framesBox;
         TImageButton *addFrameButton;
         TImageButton *removeFrameButton;
 };

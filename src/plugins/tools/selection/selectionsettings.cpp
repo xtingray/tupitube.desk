@@ -65,27 +65,31 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     formPanel = new QWidget;
 
+    int helpHeight = 0;
+
 #if defined(Q_OS_MAC)
     if (screenHeight >= 900)
         setLargetInterface();
     else
         setCompactInterface();
 #else
-    if (screenHeight >= HD_HEIGHT)
+    if (screenHeight >= HD_HEIGHT) {
+        helpHeight = (screenHeight * 32)/100;
         setLargetInterface();
-    else
-        setCompactInterface();
+    } else {
+        helpHeight = (screenHeight * 52)/100;
+        setCompactInterface(); 
+    }
 #endif
 
     mainLayout->addWidget(formPanel);
 
     tips = new QPushButton(tr("Show Tips"));
     tips->setToolTip(tr("A little help for the Selection tool"));
-    if (screenHeight < 1080) {
-        QFont font = this->font();
-        font.setPointSize(8);
+    QFont font = this->font();
+    font.setPointSize(8);
+    if (screenHeight < HD_HEIGHT)
         tips->setFont(font);
-    }
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
     layout->addWidget(tips);
@@ -93,24 +97,21 @@ SelectionSettings::SelectionSettings(QWidget *parent) : QWidget(parent)
 
     mainLayout->addLayout(layout);
 
-    help = new QWidget(this);
-    help->hide();
-    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
-
-    int h = height();
-    textArea = new QTextEdit;
+    helpComponent = new QTextEdit;
+    helpComponent->hide();
+    if (screenHeight < HD_HEIGHT)
+        helpComponent->setFont(font);
 
     // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
-    textArea->setHtml("<p><b>" + tr("Double Click on any node or Shortcut Alt + R") + ":</b> " + tr("Rotation mode") + "</p>");
-    textArea->append("<p><b>" + tr("Arrows") + ":</b> " +  tr("Movement on selection") + "</p>");
-    textArea->append("<p><b>" + tr("Shift + Arrows") + ":</b> " +  tr("Slow movement on selection") + "</p>");
-    textArea->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
-    textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
+    helpComponent->setHtml("<p><b>" + tr("Double Click on any node or Shortcut Alt + R") + ":</b> " + tr("Rotation mode") + "</p>");
+    helpComponent->append("<p><b>" + tr("Arrows") + ":</b> " +  tr("Movement on selection") + "</p>");
+    helpComponent->append("<p><b>" + tr("Shift + Arrows") + ":</b> " +  tr("Slow movement on selection") + "</p>");
+    helpComponent->append("<p><b>" + tr("Ctrl + Arrows") + ":</b> " +  tr("Fast movement on selection") + "</p>");
+    helpComponent->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Proportional scaling on selection") + "</p>");
 
-    help->setFixedHeight(h);
-    helpLayout->addWidget(textArea);
+    helpComponent->setFixedHeight(helpHeight);
 
-    mainLayout->addWidget(help);
+    mainLayout->addWidget(helpComponent);
     mainLayout->addStretch();
     isVisible = false;
 }
@@ -512,24 +513,24 @@ void SelectionSettings::ungroupItems()
 
 void SelectionSettings::openTipPanel()
 {
-    if (help->isVisible()) {
-       help->hide();
-       if (isVisible) {
-           if (!formPanel->isVisible())
-               formPanel->show();
-       }
+    if (helpComponent->isVisible()) {
+        helpComponent->hide();
+        if (isVisible) {
+            if (!formPanel->isVisible())
+                formPanel->show();
+        }
     } else {
-       if (formPanel->isVisible())
-           formPanel->hide();
-       help->show();
+        if (formPanel->isVisible())
+            formPanel->hide();
+        helpComponent->show();
     }
 }
 
 void SelectionSettings::enableFormControls(bool flag)
 {
     if (flag) {
-        if (help->isVisible())
-           help->hide();
+        if (helpComponent->isVisible())
+            helpComponent->hide();
     }
     isVisible = flag;
     formPanel->setVisible(flag);

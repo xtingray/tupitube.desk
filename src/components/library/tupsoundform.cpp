@@ -35,6 +35,7 @@
 
 #include "tupsoundform.h"
 #include "tseparator.h"
+#include "talgorithm.h"
 
 TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
 {
@@ -42,25 +43,39 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
         qDebug() << "[TupSoundForm()]";
     #endif
 
+    // setStyleSheet("border: 1px solid red;");
+
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenHeight = dimension.second;
+
     playAtLabel = new QLabel(tr("Play audio at:"));
     playAtLabel->setAlignment(Qt::AlignHCenter);
+    // playAtLabel->setFixedHeight(20);
 
     scenesCombo = new QComboBox();
     scenesCombo->addItem(tr("Scene 1"));
     scenesCombo->addItem(tr("Scene 2"));
     scenesCombo->addItem(tr("Scene 3"));
+    scenesCombo->addItem(tr("All Scenes (Background Track)"));
 
     QHBoxLayout *scenesLayout = new QHBoxLayout;
     scenesLayout->addWidget(scenesCombo, Qt::AlignHCenter);
 
     framesListWidget = new QListWidget;
+    framesListWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    framesListWidget->setViewMode(QListView::ListMode);
+    framesListWidget->setFlow(QListView::TopToBottom);
+    framesListWidget->setMovement(QListView::Static);
+    framesListWidget->setFixedHeight((screenHeight * 6)/100);
     framesListWidget->addItem(tr("Frame 1"));
     framesListWidget->addItem(tr("Frame 2"));
     framesListWidget->addItem(tr("Frame 3"));
+    // framesListWidget->setFixedHeight(60);
 
     QHBoxLayout *framesLayout = new QHBoxLayout;
     framesLayout->addWidget(framesListWidget, Qt::AlignHCenter);
 
+    framesBox = new QSpinBox();
     addFrameButton = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign.png"), 22, this);
     addFrameButton->setToolTip(tr("Add Frame"));
     // QLabel *frameLabel = new QLabel(tr("Add Frame"));
@@ -69,6 +84,7 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *framesControlLayout = new QHBoxLayout;
     framesControlLayout->addStretch();
+    framesControlLayout->addWidget(framesBox);
     framesControlLayout->addWidget(addFrameButton);
     // framesControlLayout->addWidget(frameLabel);
     framesControlLayout->addWidget(new TSeparator(Qt::Vertical));
@@ -76,14 +92,18 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
     framesControlLayout->addStretch();
     framesControlLayout->setContentsMargins(0, 0, 0, 0);
 
-    QVBoxLayout *blockLayout = new QVBoxLayout;
+    QVBoxLayout *blockLayout = new QVBoxLayout(this);
+    blockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     blockLayout->addWidget(playAtLabel);
     blockLayout->addLayout(scenesLayout);
     blockLayout->addLayout(framesLayout);
     blockLayout->addLayout(framesControlLayout);
+    // blockLayout->addStretch();
 
+    /*
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->addLayout(blockLayout);
+    */
 }
 
 TupSoundForm::~TupSoundForm()

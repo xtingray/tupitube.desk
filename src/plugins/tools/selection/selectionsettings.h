@@ -129,7 +129,6 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         QWidget * actionWidget[7];
         QBoxLayout *actionLayout[7];
 
-        QWidget *help;
         QSpinBox *xPosField;
         QSpinBox *yPosField;
         QSpinBox *angleField;
@@ -145,7 +144,7 @@ class TUPITUBE_PLUGIN SelectionSettings : public QWidget
         int currentAngle;
         double currentXFactor;
         double currentYFactor;
-        QTextEdit *textArea;
+        QTextEdit *helpComponent;
         bool isVisible;
 
         int iconSize;

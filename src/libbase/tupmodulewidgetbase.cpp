@@ -40,6 +40,7 @@ TupModuleWidgetBase::TupModuleWidgetBase(QWidget *parent, const char *name) :
 {
     setObjectName(name);
     container = new QVBoxLayout(this);
+    container->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
 }
 
 TupModuleWidgetBase::~TupModuleWidgetBase()
