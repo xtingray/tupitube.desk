@@ -49,12 +49,12 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     #endif
 
     QPair<int, int> dimension = TAlgorithm::screenDimension();
-    int screenHeight = dimension.second;
+    screenHeight = dimension.second;
     int helpHeight = 0;
     if (screenHeight >= HD_HEIGHT)
         helpHeight = (screenHeight * 32)/100;
     else
-        helpHeight = (screenHeight * 52)/100;
+        helpHeight = (screenHeight * 53)/100;
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     clearWidget = new QWidget;
@@ -156,6 +156,7 @@ void NodeSettings::showClearPanel(bool show)
         qDebug() << "[NodeSettings::showClearPanel()] - show ->" << show;
     #endif
 
+    int percent;
     if (!show) {
         clearSlider->blockSignals(true);
         clearSpinBox->blockSignals(true);
@@ -166,7 +167,16 @@ void NodeSettings::showClearPanel(bool show)
 
         clearSlider->blockSignals(false);
         clearSpinBox->blockSignals(false);
+
+        if (screenHeight < HD_HEIGHT)
+            percent = 53;
+    } else {
+        if (screenHeight < HD_HEIGHT)
+            percent = 38;
     }
+
+    int helpHeight = (screenHeight * percent)/100;
+    helpComponent->setFixedHeight(helpHeight);
 
     clearWidget->setVisible(show);
 }
@@ -202,7 +212,7 @@ void NodeSettings::setNodesTotal(int value)
     #endif
 
     if (!clearWidget->isVisible())
-        clearWidget->setVisible(true);
+        showClearPanel(true);
 
     clearSpinBox->blockSignals(true);
     clearSpinBox->setMinimum(2);
@@ -298,6 +308,15 @@ void NodeSettings::openTipPanel()
         tips->setText(tr("Show Tips"));
         helpComponent->hide();
     } else {
+        if (screenHeight < HD_HEIGHT) { 
+            int percent = 53;
+            if (clearWidget->isVisible())
+                percent = 38;
+
+            int helpHeight = (screenHeight * percent)/100;
+            helpComponent->setFixedHeight(helpHeight);
+        }
+
         tips->setText(tr("Hide Tips"));
         helpComponent->show();
     }

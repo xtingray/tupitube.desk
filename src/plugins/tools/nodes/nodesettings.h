@@ -73,6 +73,7 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         void openTipPanel();
 
     private:
+        int screenHeight;
         QWidget *clearWidget;
         QSpinBox *clearSpinBox;
         QSlider *clearSlider;

@@ -531,8 +531,10 @@ void SelectionSettings::openTipPanel()
 void SelectionSettings::enableFormControls(bool flag)
 {
     if (flag) {
-        if (helpComponent->isVisible())
+        if (helpComponent->isVisible()) {
+            tips->setText(tr("Show Tips"));
             helpComponent->hide();
+         }
     }
     isVisible = flag;
     formPanel->setVisible(flag);

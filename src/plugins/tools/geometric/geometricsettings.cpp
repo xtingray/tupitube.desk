@@ -74,12 +74,18 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     } else if (type == GeometricSettings::Line) {
         pic = QPixmap(THEME_DIR + "icons/line.png");
         toolTitle->setToolTip(tr("Line Properties"));
+        if (screenHeight < HD_HEIGHT)
+            helpHeight = (screenHeight * 39)/100;
     } else if (type == GeometricSettings::Triangle) {
         pic = QPixmap(THEME_DIR + "icons/triangle.png");
         toolTitle->setToolTip(tr("Triangle Properties"));
+        if (screenHeight < HD_HEIGHT)
+            helpHeight = (screenHeight * 28)/100;
     } else if (type == GeometricSettings::Hexagon) {
         pic = QPixmap(THEME_DIR + "icons/hexagon.png");
         toolTitle->setToolTip(tr("Hexagon Properties"));
+        if (screenHeight < HD_HEIGHT)
+            helpHeight = (screenHeight * 32)/100;
     }
 
     toolTitle->setPixmap(pic.scaledToWidth(TResponsiveUI::fitTitleIconSize(), Qt::SmoothTransformation));
