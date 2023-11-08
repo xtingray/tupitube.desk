@@ -43,6 +43,7 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QButtonGroup>
+#include <QPushButton>
 
 GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *parent) : QWidget(parent)
 {

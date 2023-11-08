@@ -42,7 +42,6 @@
 #include <QBoxLayout>
 #include <QTextEdit>
 #include <QRadioButton>
-#include <QPushButton>
 
 /**
  * @author Gustav Gonzalez 

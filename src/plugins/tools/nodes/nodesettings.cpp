@@ -156,7 +156,7 @@ void NodeSettings::showClearPanel(bool show)
         qDebug() << "[NodeSettings::showClearPanel()] - show ->" << show;
     #endif
 
-    int percent;
+    int percent = 32;
     if (!show) {
         clearSlider->blockSignals(true);
         clearSpinBox->blockSignals(true);
@@ -169,7 +169,7 @@ void NodeSettings::showClearPanel(bool show)
         clearSpinBox->blockSignals(false);
 
         if (screenHeight < HD_HEIGHT)
-            percent = 53;
+            percent = 53;        
     } else {
         if (screenHeight < HD_HEIGHT)
             percent = 38;
@@ -179,6 +179,26 @@ void NodeSettings::showClearPanel(bool show)
     helpComponent->setFixedHeight(helpHeight);
 
     clearWidget->setVisible(show);
+}
+
+void NodeSettings::openTipPanel()
+{
+    if (helpComponent->isVisible()) {
+        tips->setText(tr("Show Tips"));
+        helpComponent->hide();
+    } else {
+        if (screenHeight < HD_HEIGHT) {
+            int percent = 53;
+            if (clearWidget->isVisible())
+                percent = 38;
+
+            int helpHeight = (screenHeight * percent)/100;
+            helpComponent->setFixedHeight(helpHeight);
+        }
+
+        tips->setText(tr("Hide Tips"));
+        helpComponent->show();
+    }
 }
 
 void NodeSettings::updateNodesFromBox(int value)
@@ -300,26 +320,6 @@ void NodeSettings::updatePolicyParam(int index)
 NodeLocation NodeSettings::policyParam()
 {
     return policy;
-}
-
-void NodeSettings::openTipPanel()
-{
-    if (helpComponent->isVisible()) {
-        tips->setText(tr("Show Tips"));
-        helpComponent->hide();
-    } else {
-        if (screenHeight < HD_HEIGHT) { 
-            int percent = 53;
-            if (clearWidget->isVisible())
-                percent = 38;
-
-            int helpHeight = (screenHeight * percent)/100;
-            helpComponent->setFixedHeight(helpHeight);
-        }
-
-        tips->setText(tr("Hide Tips"));
-        helpComponent->show();
-    }
 }
 
 void NodeSettings::resetHistory()
