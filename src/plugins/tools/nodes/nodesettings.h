@@ -84,8 +84,8 @@ class TUPITUBE_PLUGIN NodeSettings : public QWidget
         NodeLocation policy;
 
         QPushButton *tips;
-        QWidget *help;
-        QTextEdit *textArea;
+        // QWidget *help;
+        QTextEdit *helpComponent;
 };
 
 #endif

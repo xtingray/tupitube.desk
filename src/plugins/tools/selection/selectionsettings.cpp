@@ -515,6 +515,7 @@ void SelectionSettings::openTipPanel()
 {
     if (helpComponent->isVisible()) {
         helpComponent->hide();
+        tips->setText(tr("Show Tips"));
         if (isVisible) {
             if (!formPanel->isVisible())
                 formPanel->show();
@@ -523,6 +524,7 @@ void SelectionSettings::openTipPanel()
         if (formPanel->isVisible())
             formPanel->hide();
         helpComponent->show();
+        tips->setText(tr("Hide Tips"));
     }
 }
 

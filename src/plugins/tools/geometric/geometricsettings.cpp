@@ -38,6 +38,7 @@
 #include "tconfig.h"
 #include "tseparator.h"
 #include "tresponsiveui.h"
+#include "talgorithm.h"
 
 #include <QVBoxLayout>
 #include <QGroupBox>
@@ -48,6 +49,14 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     #ifdef TUP_DEBUG
         qDebug() << "[GeometricSettings()]";
     #endif
+
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenHeight = dimension.second;
+    int helpHeight = 0;
+    if (screenHeight >= HD_HEIGHT)
+        helpHeight = (screenHeight * 15)/100;
+    else
+        helpHeight = (screenHeight * 52)/100;
 
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -178,35 +187,26 @@ GeometricSettings::GeometricSettings(GeometricSettings::ToolType type, QWidget *
     mainLayout->addLayout(layout);
 
     int minWidth = TResponsiveUI::fitRightPanelWidth();
-    QTextEdit *textArea = new QTextEdit;
-    textArea->setMinimumWidth(minWidth);
-    textArea->setMaximumWidth(minWidth*2);
-    textArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    QTextEdit *helpComponent = new QTextEdit;
+    helpComponent->setMinimumWidth(minWidth);
+    helpComponent->setMaximumWidth(minWidth*2);
+    helpComponent->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
-    if (type == GeometricSettings::Line)
-        textArea->setMinimumHeight(150);
-
-    // SQA: Check this code with several screen resolutions. It must looks good with everyone! 
-    // QFont font = this->font();
-    // font.setPointSize(8);
-    // textArea->setFont(font);
-    // textArea->setFont(QFont("Arial", 8, QFont::Normal, false));
+    QFont font = this->font();
+    font.setPointSize(8);
+    if (screenHeight < HD_HEIGHT)
+        helpComponent->setFont(font);
 
     if (type == GeometricSettings::Line) {
-        textArea->append("<p><b>" + tr("Mouse Right Click or X Key") + ":</b> " +  tr("Close the line path") + "</p>");
-        textArea->append("<p><b>" + tr("Shift") + ":</b> " +  tr("Align line to horizontal/vertical axis") + "</p>"); 
+        helpComponent->append("<p><b>" + tr("Mouse Right Click or X Key") + ":</b> " +  tr("Close the line path") + "</p>");
+        helpComponent->append("<p><b>" + tr("Shift") + ":</b> " +  tr("Align line to horizontal/vertical axis") + "</p>");
     } else {
-        textArea->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Set width/height proportional dimensions") + "</p>");
+        helpComponent->append("<p><b>" + tr("Ctrl + Left Mouse Button") + ":</b> " +  tr("Set width/height proportional dimensions") + "</p>");
     }
 
-    // QString text = textArea->document()->toPlainText();
-    // textArea->setFixedHeight(100);
-    // textArea->setFixedHeight(150);
+    helpComponent->setFixedHeight(helpHeight);
 
-    QVBoxLayout *textLayout = new QVBoxLayout;
-    textLayout->addWidget(textArea, Qt::AlignHCenter);
-
-    mainLayout->addLayout(textLayout);
+    mainLayout->addWidget(helpComponent);
     mainLayout->addStretch(2);
 }
 

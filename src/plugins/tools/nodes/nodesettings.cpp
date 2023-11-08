@@ -48,6 +48,14 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
         qDebug() << "[NodeSettings()]";
     #endif
 
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    int screenHeight = dimension.second;
+    int helpHeight = 0;
+    if (screenHeight >= HD_HEIGHT)
+        helpHeight = (screenHeight * 32)/100;
+    else
+        helpHeight = (screenHeight * 52)/100;
+
     QBoxLayout *mainLayout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     clearWidget = new QWidget;
     QBoxLayout *clearLayout = new QBoxLayout(QBoxLayout::TopToBottom, clearWidget);
@@ -98,39 +106,40 @@ NodeSettings::NodeSettings(QWidget *parent) : QWidget(parent)
     clearLayout->addWidget(policyCombo);
     clearWidget->setVisible(false);
 
-    tips = new QPushButton(tr("Show Tips"));
+    QFont font = this->font();
+    font.setPointSize(8);
+
+    tips = new QPushButton(tr("Hide Tips"));
+    if (screenHeight < HD_HEIGHT)
+        tips->setFont(font);
     tips->setToolTip(tr("A little help for the Nodes tool"));
 
     QBoxLayout *smallLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     smallLayout->addWidget(tips);
     connect(tips, SIGNAL(clicked()), this, SLOT(openTipPanel()));
 
-    int h = height();
-    help = new QWidget(this);
-    help->hide();
-    QBoxLayout *helpLayout = new QBoxLayout(QBoxLayout::TopToBottom,help);
-
     int minWidth = TResponsiveUI::fitRightPanelWidth();
-    textArea = new QTextEdit;
-    textArea->setMinimumWidth(minWidth);
-    textArea->setMaximumWidth(minWidth*2);
-    textArea->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
-    textArea->setFixedHeight(h);
+    helpComponent = new QTextEdit;
+    if (screenHeight < HD_HEIGHT)
+        helpComponent->setFont(font);
+    helpComponent->setMinimumWidth(minWidth);
+    helpComponent->setMaximumWidth(minWidth*2);
+    helpComponent->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
 
-    textArea->append("<p><b>" + tr("Ctrl Key + Left Mouse Button") + ":</b> "
+    helpComponent->append("<p><b>" + tr("Ctrl Key + Left Mouse Button") + ":</b> "
                      + tr("Append a line segment to the last node of the path or add a new line node between two nodes") + "</p>");
-    textArea->append("<p><b>" + tr("Shift Key + Left Mouse Button") + ":</b> "
+    helpComponent->append("<p><b>" + tr("Shift Key + Left Mouse Button") + ":</b> "
                      + tr("Append a curve to the last node of the path or add a new curve between two nodes") + "</p>");
-    textArea->append("<p><b>" + tr("X Key") + ":</b> " +  tr("Remove selected node") + "</p>");
-    textArea->append("<p><b>" + tr("M Key") + ":</b> " +  tr("Switch selected node to line/curve") + "</p>");
+    helpComponent->append("<p><b>" + tr("X Key") + ":</b> " +  tr("Remove selected node") + "</p>");
+    helpComponent->append("<p><b>" + tr("M Key") + ":</b> " +  tr("Switch selected node to line/curve") + "</p>");
 
-    helpLayout->addWidget(textArea);
+    helpComponent->setFixedHeight(helpHeight);
 
     mainLayout->addWidget(nodesTitle);
     mainLayout->addWidget(new TSeparator(Qt::Horizontal));
     mainLayout->addWidget(clearWidget);
     mainLayout->addLayout(smallLayout);
-    mainLayout->addWidget(help);
+    mainLayout->addWidget(helpComponent);
     mainLayout->addStretch(2);
 }
 
@@ -285,10 +294,13 @@ NodeLocation NodeSettings::policyParam()
 
 void NodeSettings::openTipPanel()
 {
-    if (help->isVisible())
-        help->hide();
-    else
-        help->show();
+    if (helpComponent->isVisible()) {
+        tips->setText(tr("Show Tips"));
+        helpComponent->hide();
+    } else {
+        tips->setText(tr("Hide Tips"));
+        helpComponent->show();
+    }
 }
 
 void NodeSettings::resetHistory()
