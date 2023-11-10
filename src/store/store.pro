@@ -58,6 +58,7 @@ HEADERS += tuplayer.h \
            tupcommandexecutor.h \
            tupgraphicobject.h \
            tuplibrary.h \
+           tupsoundobject.h \
            tuplibraryobject.h \
            tuplibraryfolder.h \
            tuprequestbuilder.h \
@@ -105,6 +106,7 @@ SOURCES += tuplayer.cpp \
            tupcommandexecutor_items.cpp \
            tupcommandexecutor_layers.cpp \
            tupgraphicobject.cpp \
+           tupsoundobject.cpp \
            tuplibrary.cpp \
            tuplibraryobject.cpp \
            tuplibraryfolder.cpp \

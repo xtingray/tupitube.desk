@@ -52,10 +52,7 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     setSymbolName(name);
     folder = dir;
     objectType = type;
-    soundType = NoSound;
-    mute = false;
-    playAtFrame = 1;
-    playAtScene = 0;
+    soundObject = new TupSoundObject();
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -104,64 +101,42 @@ TupLibraryObject::ItemType TupLibraryObject::getItemType() const
 
 void TupLibraryObject::enableMute(bool flag)
 {
-    mute = flag;
+    soundObject->enableMute(flag);
 }
 
 bool TupLibraryObject::isMuted()
 {
-    return mute;
-}
-
-int TupLibraryObject::frameToPlay()
-{
-    return playAtFrame;
-}
-
-void TupLibraryObject::updateFrameToPlay(int frame)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryObject::updateFrameToPlay()] - frame -> " << frame;
-    #endif
-
-    playAtFrame = frame;
-}
-
-int TupLibraryObject::sceneToPlay()
-{
-    return playAtScene;
-}
-
-void TupLibraryObject::updateSceneToPlay(int scene)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryObject::updateSceneToPlay()] - scene -> " << scene;
-    #endif
-
-    playAtScene = scene;
+    return soundObject->isMuted();
 }
 
 SoundType TupLibraryObject::getSoundType()
 {
-    return soundType;
+    return soundObject->getSoundType();
 }
 
 void TupLibraryObject::setSoundType(SoundType type)
 {
-    soundType = type;
+    soundObject->setSoundType(type);
 }
 
 SoundResource TupLibraryObject::getSoundResourceParams()
 {
     SoundResource params;
     params.key = symbolName;
-    params.frameIndex = playAtFrame;
-    params.sceneIndex = playAtScene;
+    params.scenes = soundObject->getAudioScenes();
     params.path = dataPath;
-    params.muted = mute;
-    params.type = soundType;
+    params.muted = soundObject->isMuted();
+    params.type = soundObject->getSoundType();
 
     return params;
 }
+
+QList<SoundScene> TupLibraryObject::getAudioScenes()
+{
+    return soundObject->getAudioScenes();
+}
+
+
 
 void TupLibraryObject::setSymbolName(const QString &name)
 {
@@ -243,7 +218,7 @@ void TupLibraryObject::updateFolder(const QString &projectPath, const QString &n
         }
     } else {
         if (objectType == Audio) {
-            if (soundType == Lipsync) {
+            if (soundObject->getSoundType() == Lipsync) {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupLibraryObject::updateFolder()] - "
                                 "Fatal Error: New lipsync audio folder can't be empty!";
@@ -332,8 +307,8 @@ void TupLibraryObject::fromXml(const QString &xml)
              {
                  if (xml.startsWith("<text")) {
                      itemType = Text;
-                     QDomElement objectData = objectTag.firstChild().toElement();
                      if (!objectTag.isNull()) {
+                         QDomElement objectData = objectTag.firstChild().toElement();
                          QString data;
                          {
                              QTextStream ts(&data);
@@ -378,16 +353,30 @@ void TupLibraryObject::fromXml(const QString &xml)
             break;
             case TupLibraryObject::Audio:
              {
-                 // <object id="audio.mp3" path="audio.mp3" type="3" soundType="1" playAt="30" />
-                 soundType = SoundType(objectTag.attribute("soundType").toInt());
-                 mute = objectTag.attribute("mute", "true").toInt() ? true : false;
-                 playAtFrame = objectTag.attribute("playAt", "1").toInt();
-                 if (playAtFrame == 0)
-                     playAtFrame = 1;
+                 /*
+                 <object path="audio.mp3" id="audio.mp3" type="3">
+                   <sound mute="0" soundType="2">
+                     <scene index="0" frames="0,20,50" />
+                     <scene index="1" frames="0,10,32" />
+                     <scene index="2" frames="0,15,27" />
+                   </sound>
+                 </object>
+                 */
+
                  dataPath = objectTag.attribute("path");
                  int index = dataPath.lastIndexOf("/");
                  if (index > 0)
                      folder = dataPath.left(index);
+
+                 if (!objectTag.isNull()) {
+                     QDomElement objectData = objectTag.firstChild().toElement();
+                     QString data;
+                     {
+                         QTextStream ts(&data);
+                         ts << objectData;
+                     }
+                     soundObject->fromXml(data);
+                 }
              }
             break;
             default:
@@ -414,7 +403,7 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
         path = folder + "/" + finfo.fileName();
     } else {
         if (objectType == Audio) {
-            if (soundType == Lipsync) {
+            if (soundObject->getSoundType() == Lipsync) {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupLibraryObject::toXml()] - "
                                 "Fatal Error: Lipsync audio folder can't be empty!";
@@ -449,10 +438,14 @@ QDomElement TupLibraryObject::toXml(QDomDocument &doc) const
             break;
             case Audio:
             {
+                object.setAttribute("path", path);
+                object.appendChild(soundObject->toXml(doc));
+
+                /*
                 object.setAttribute("soundType", soundType);
                 object.setAttribute("mute", mute);
                 object.setAttribute("playAt", playAtFrame);
-                object.setAttribute("path", path);
+                */
             }
             break;
             default:
@@ -665,7 +658,7 @@ bool TupLibraryObject::saveData(const QString &projectDir)
                  if (!folder.isEmpty()) {
                      path += folder + "/";
                  } else {
-                     if (soundType == Lipsync) {
+                     if (soundObject->getSoundType() == Lipsync) {
                          #ifdef TUP_DEBUG
                              qDebug() << "[TupLibraryObject::saveData()] - "
                                          "Fatal Error: Lipsync audio folder can't be empty!";
@@ -904,10 +897,13 @@ TupLibraryObject * TupLibraryObject::clone()
     copy->setDataPath(getDataPath());
     copy->setData(getData());
 
+    SoundType soundType = soundObject->getSoundType();
     if (soundType == Effect) {
+        /*
         copy->setSoundType(soundType);
-        copy->updateFrameToPlay(frameToPlay());
+        copy->updateFramesToPlay(frameToPlay());
         copy->enableMute(isMuted());
+        */
     }
 
     return copy;

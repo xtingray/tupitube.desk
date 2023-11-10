@@ -1061,13 +1061,16 @@ void TupProject::addSoundResource(TupLibraryObject *object)
         qDebug() << "[TupProject::addSoundResource()] - Symbol name -> " << object->getSymbolName();
     #endif
 
+    /*
     SoundResource record;
     record.key = object->getSymbolName();
-    record.frameIndex = object->frameToPlay();
-    record.sceneIndex = object->sceneToPlay();
+    record.scenes = object->getAudioScenes();
     record.path = object->getDataPath();
     record.muted = object->isMuted();
     record.type = object->getSoundType();
+    */
+
+    SoundResource record = object->getSoundResourceParams();
 
     soundRecords << record;
 }
@@ -1122,11 +1125,16 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
                      << record.path;
         #endif
         if (item->getDataPath().compare(record.path) == 0) {
+            /*
             record.key = item->getSymbolName();
             record.frameIndex = item->frameToPlay();
             record.sceneIndex = item->sceneToPlay();
             record.muted = item->isMuted();
             record.type = item->getSoundType();
+            */
+
+            record = item->getSoundResourceParams();
+
             soundRecords.replace(i, record);
 
             #ifdef TUP_DEBUG
@@ -1195,17 +1203,19 @@ bool TupProject::updateSoundType(const QString audioId, SoundType type)
     return false;
 }
 
-bool TupProject::updateSoundFrame(const QString audioId, int frame)
+bool TupProject::updateSoundFrames(const QString audioId, int sceneIndex, QList<int> frames)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::updateSoundFrame()] - audioId -> " << audioId;
+        qDebug() << "[TupProject::updateSoundFrames()] - audioId ->" << audioId;
+        qDebug() << "[TupProject::updateSoundFrames()] - sceneIndex ->" << sceneIndex;
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
         SoundResource item = soundRecords.at(i);
         if (item.key.compare(audioId) == 0) {
-            library->updateSoundFrameToPlay(audioId, frame);
-            item.frameIndex = frame + 1;
+            library->updateSoundFramesToPlay(audioId, sceneIndex, frames);
+            // item.frameIndex = frame + 1;
+            item.scenes[sceneIndex].frames = frames;
             soundRecords[i] = item;
 
             return true;

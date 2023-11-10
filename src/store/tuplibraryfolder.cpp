@@ -865,11 +865,11 @@ void TupLibraryFolder::updateObjectSoundType(const QString &id, SoundType type)
         object->setSoundType(type);
 }
 
-void TupLibraryFolder::updateSoundFrameToPlay(const QString &id, int frame)
+void TupLibraryFolder::updateSoundFramesToPlay(const QString &id, int sceneIndex, QList<int> frames)
 {
     TupLibraryObject *object = getObject(id);
     if (object)
-        object->updateFrameToPlay(frame);
+        object->updateFramesToPlay(sceneIndex, frames);
 }
 
 void TupLibraryFolder::registerSoundResource(const QString &id)

@@ -76,6 +76,11 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
     framesLayout->addWidget(framesListWidget, Qt::AlignHCenter);
 
     framesBox = new QSpinBox();
+    framesBox->setRange(1, 100);
+    framesBox->setSingleStep(1);
+    framesBox->setValue(1);
+    framesBox->setToolTip(tr("Add Frame"));
+
     addFrameButton = new TImageButton(QPixmap(THEME_DIR + "icons/plus_sign.png"), 22, this);
     addFrameButton->setToolTip(tr("Add Frame"));
     // QLabel *frameLabel = new QLabel(tr("Add Frame"));

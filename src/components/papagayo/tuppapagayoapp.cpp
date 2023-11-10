@@ -1496,7 +1496,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
                             }
 
                             // Updating lipsync sound frame param
-                            if (!tupProject->updateSoundFrame(soundKey, frameIndex)) {
+                            if (!tupProject->updateSoundFrames(soundKey, frameIndex)) {
                                 #ifdef TUP_DEBUG
                                     qDebug() << "[TupPapagayoApp::saveLipsyncRecord()] - "
                                                 "Fatal Error: Can't update lipsync sound  item -> " << soundKey;

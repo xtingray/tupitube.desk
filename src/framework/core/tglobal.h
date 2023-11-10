@@ -85,10 +85,15 @@ enum PlayMode { PlayAll = 0, OneScene };
 enum PlayDirection { Forward = 0, Backward };
 enum MediaType {Video = 0, Audio};
 enum SoundType {NoSound = 0, Lipsync = 1, Effect = 2};
+
+struct SoundScene {
+    int sceneIndex;
+    QList<int> frames;
+};
+
 struct SoundResource {
     QString key;
-    int sceneIndex;
-    int frameIndex;
+    QList<SoundScene> scenes;
     QString path;
     bool muted;
     SoundType type;

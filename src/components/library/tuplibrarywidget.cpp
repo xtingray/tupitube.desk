@@ -1935,7 +1935,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (isEffectSound) {
                                  library->updateObjectSoundType(id, Effect);
                                  isEffectSound = false;
-                                 library->updateSoundFrameToPlay(id, currentFrame.frame + 1);
+                                 library->updateSoundFramesToPlay(id, currentFrame.frame + 1);
                              } else {
                                  library->updateObjectSoundType(id, Lipsync);
                              }

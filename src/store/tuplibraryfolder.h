@@ -114,7 +114,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         void releaseLipSyncVoices(const QString &soundFile);
         TupLibraryObject * findSoundFile(const QString &folder);
         void updateObjectSoundType(const QString &id, SoundType type);
-        void updateSoundFrameToPlay(const QString &id, int frame);
+        void updateSoundFramesToPlay(const QString &id, int sceneIndex, QList<int> frames);
         void registerSoundResource(const QString &id);
         bool folderHasAudioObjects(const QString &folderName);
 

@@ -33,121 +33,41 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TUPLIBRARYOBJECT_H
-#define TUPLIBRARYOBJECT_H
+#ifndef TUPSOUNDOBJECT_H
+#define TUPSOUNDOBJECT_H
 
 #include "tglobal.h"
 #include "tupabstractserializable.h"
-#include "tupsoundobject.h"
 
-#include <QVariant>
-#include <QGraphicsItem>
-#include <QTemporaryFile>
-
-class TupLibraryObject;
-
-class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSerializable
+class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSerializable
 {
     public:
-        enum ObjectType
-        {
-            None = -1,
-            Item = 1,
-            Image,
-            Audio,
-            Svg,
-            Video,
-            Folder
-        };
-
-        enum ItemType
-        {
-            Path = 0x01,
-            Rect,
-            Ellipse,
-            Text,
-            Group
-        };
-
-        TupLibraryObject(QObject *parent = nullptr);
-        TupLibraryObject(const QString &name, const QString &folder,
-                         TupLibraryObject::ObjectType type, QObject *parent = nullptr);
-        ~TupLibraryObject();
-
-        void setObjectType(TupLibraryObject::ObjectType type);
-        TupLibraryObject::ObjectType getObjectType() const;
-
-        void setItemType(TupLibraryObject::ItemType type);
-        TupLibraryObject::ItemType getItemType() const;
-
-        void setData(const QVariant &data);
-        QVariant getData() const;
-
-        void setDataPath(const QString &path);
-        QString getDataPath() const;
-
-        void setSymbolName(const QString &name);
-        QString getSymbolName() const;
-
-        void setFolder(const QString &folder);
-        QString getFolder() const;
+        TupSoundObject(QObject *parent = nullptr);
+        ~TupSoundObject();
 
         void enableMute(bool flag);
         bool isMuted();
 
-        void updateFolder(const QString &projectPath, const QString &folder = QString());
-
-        QList<int> framesToPlay(int sceneIndex);
+        QList<SoundScene> getAudioScenes();
+        SoundScene getAudioSceneAt(int sceneIndex);
+        QList<int> getAudioFrames(int sceneIndex);
         void updateFramesToPlay(int sceneIndex, QList<int> frames);
 
-        int sceneToPlay();
-        void updateSceneToPlay(int scene);
+        void addSceneToPlay(SoundScene scene);
+        void updateScene(int sceneIndex, SoundScene scene);
+        void removeSceneToPlay(int sceneIndex);
 
         SoundType getSoundType();
         void setSoundType(SoundType type);
-        SoundResource getSoundResourceParams();
-        QList<SoundScene> getAudioScenes();
-
-        QString getShortId() const;
-        QString getExtension() const;
-        
-        bool loadRawData(const QByteArray &data);
-        bool loadDataFromPath(const QString &dataDir);
-        bool loadData(const QString &path);
-        
-        bool saveData(const QString &dataDir);
-
-        QString toString() const;
-
-        static QPixmap renderImage(const QString &xml, int width);
-        static QPixmap generateImage(QGraphicsItem *item, int width);
-        static QPixmap generateImage(const QString &xml, int width);
-
-        TupLibraryObject * clone();
 
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
-        
+
     private:
-        TupLibraryObject::ObjectType objectType;
-        TupLibraryObject::ItemType itemType;
-        QVariant data;
-        QString dataPath;
-        QString symbolName;
-        QString folder;
-        QString shortId;
-        QString extension;
-        QByteArray rawData;
-        QString xmlString;
-
-        // SoundType soundType;
-        // bool mute;
-        // int playAtFrame;
-        // int playAtScene;
-        // QList<SoundScene> audioScenes;
-
-        TupSoundObject *soundObject;
+        SoundType soundType;
+        bool mute;
+        QList<SoundScene> audioScenes;
 };
 
 #endif
