@@ -106,6 +106,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         SoundType getSoundType();
         void setSoundType(SoundType type);
         SoundResource getSoundResourceParams();
+        void setAudioScenes(QList<SoundScene> audioScenes);
         QList<SoundScene> getAudioScenes();
 
         QString getShortId() const;
@@ -140,12 +141,6 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QString extension;
         QByteArray rawData;
         QString xmlString;
-
-        // SoundType soundType;
-        // bool mute;
-        // int playAtFrame;
-        // int playAtScene;
-        // QList<SoundScene> audioScenes;
 
         TupSoundObject *soundObject;
 };

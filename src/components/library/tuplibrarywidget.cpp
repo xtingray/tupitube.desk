@@ -1808,7 +1808,9 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
             int frameIndex = lipSync->getInitFrame();
             TupLibraryObject *sound = library->getObject(soundID);
             if (sound) {
-                sound->updateFrameToPlay(frameIndex);
+                QList<int> frames;
+                frames << frameIndex;
+                sound->updateFramesToPlay(currentFrame.scene, frames);
                 if (display->getSoundID().compare(soundID) == 0)
                     display->updateSoundInitFrame(frameIndex + 1);
             } else {

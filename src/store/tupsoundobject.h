@@ -48,13 +48,15 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         void enableMute(bool flag);
         bool isMuted();
 
+        void setAudioScenes(QList<SoundScene> scenes);
         QList<SoundScene> getAudioScenes();
+
         SoundScene getAudioSceneAt(int sceneIndex);
         QList<int> getAudioFrames(int sceneIndex);
         void updateFramesToPlay(int sceneIndex, QList<int> frames);
 
         void addSceneToPlay(SoundScene scene);
-        void updateScene(int sceneIndex, SoundScene scene);
+        void updateSoundScene(int sceneIndex, SoundScene scene);
         void removeSceneToPlay(int sceneIndex);
 
         SoundType getSoundType();

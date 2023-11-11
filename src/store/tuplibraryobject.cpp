@@ -131,12 +131,15 @@ SoundResource TupLibraryObject::getSoundResourceParams()
     return params;
 }
 
+void TupLibraryObject::setAudioScenes(QList<SoundScene> audioScenes)
+{
+    soundObject->setAudioScenes(audioScenes);
+}
+
 QList<SoundScene> TupLibraryObject::getAudioScenes()
 {
     return soundObject->getAudioScenes();
 }
-
-
 
 void TupLibraryObject::setSymbolName(const QString &name)
 {
@@ -899,11 +902,9 @@ TupLibraryObject * TupLibraryObject::clone()
 
     SoundType soundType = soundObject->getSoundType();
     if (soundType == Effect) {
-        /*
         copy->setSoundType(soundType);
-        copy->updateFramesToPlay(frameToPlay());
         copy->enableMute(isMuted());
-        */
+        copy->setAudioScenes(getAudioScenes());
     }
 
     return copy;

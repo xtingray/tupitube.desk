@@ -67,6 +67,11 @@ bool TupSoundObject::isMuted()
     return mute;
 }
 
+void TupSoundObject::setAudioScenes(QList<SoundScene> scenes)
+{
+    audioScenes = scenes;
+}
+
 QList<SoundScene> TupSoundObject::getAudioScenes()
 {
     return audioScenes;
@@ -109,10 +114,10 @@ void TupSoundObject::addSceneToPlay(SoundScene scene)
     audioScenes << scene;
 }
 
-void TupSoundObject::updateScene(int sceneIndex, SoundScene scene)
+void TupSoundObject::updateSoundScene(int sceneIndex, SoundScene scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundObject::updateScene()] - scene -> " << sceneIndex;
+        qDebug() << "[TupSoundObject::updateSoundScene()] - scene -> " << sceneIndex;
     #endif
 
     if (sceneIndex < audioScenes.count())
