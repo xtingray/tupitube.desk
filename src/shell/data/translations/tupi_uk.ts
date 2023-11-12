@@ -7850,12 +7850,12 @@ Cover</source>
     <message>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="198"/>
         <source>Coloring Tween can&apos;t be applied to raster images</source>
-        <translation>Анімацію розмальовування не застосовна до растрових зображень</translation>
+        <translation>Анімація розмальовування не застосовна до растрових зображень</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="205"/>
         <source>Coloring Tween can&apos;t be applied to SVG files</source>
-        <translation>Анімацію розмальовування не застосовна до файлів SVG</translation>
+        <translation>Анімація розмальовування не застосовна до файлів SVG</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/color/tweener.cpp" line="293"/>
