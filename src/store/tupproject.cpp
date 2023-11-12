@@ -1203,11 +1203,11 @@ bool TupProject::updateSoundType(const QString audioId, SoundType type)
     return false;
 }
 
-bool TupProject::updateSoundFrames(const QString audioId, int sceneIndex, QList<int> frames)
+bool TupProject::updateSoundFramesToPlay(const QString audioId, int sceneIndex, QList<int> frames)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::updateSoundFrames()] - audioId ->" << audioId;
-        qDebug() << "[TupProject::updateSoundFrames()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupProject::updateSoundFramesToPlay()] - audioId ->" << audioId;
+        qDebug() << "[TupProject::updateSoundFramesToPlay()] - sceneIndex ->" << sceneIndex;
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {

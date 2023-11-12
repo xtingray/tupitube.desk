@@ -1828,8 +1828,10 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
                 TupLibraryObject *sound = library->findSoundFile(id);
                 if (sound) {
                     QString currentId = display->getSoundID();
-                    if (currentId.compare(sound->getSymbolName()) == 0)
-                        display->enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay() + 1);
+                    if (currentId.compare(sound->getSymbolName()) == 0) {
+                        // display->enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay() + 1);
+                        display->enableLipSyncInterface(sound->getSoundType(), sound->getAudioScenes());
+                    }
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupLibraryWidget::layerResponse()] - "
@@ -1937,7 +1939,8 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (isEffectSound) {
                                  library->updateObjectSoundType(id, Effect);
                                  isEffectSound = false;
-                                 library->updateSoundFramesToPlay(id, currentFrame.frame + 1);
+                                 library->updateSoundFramesToPlay(id, currentFrame.scene,
+                                                                  object->framesToPlayAt(currentFrame.scene));
                              } else {
                                  library->updateObjectSoundType(id, Lipsync);
                              }
@@ -2505,6 +2508,7 @@ void TupLibraryWidget::callLipsyncEditor(QTreeWidgetItem *item)
     emit lipsyncModuleCalled(AudioFromLibrary, audioPath);
 }
 
+/*
 void TupLibraryWidget::updateSoundTiming(int frame)
 {
     #ifdef TUP_DEBUG
@@ -2522,6 +2526,7 @@ void TupLibraryWidget::updateSoundTiming(int frame)
         emit soundUpdated();
     }
 }
+*/
 
 void TupLibraryWidget::updateSoundMuteStatus(bool mute)
 {

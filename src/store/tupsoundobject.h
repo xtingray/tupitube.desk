@@ -52,7 +52,7 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         QList<SoundScene> getAudioScenes();
 
         SoundScene getAudioSceneAt(int sceneIndex);
-        QList<int> getAudioFrames(int sceneIndex);
+        QList<int> getFramesToPlayAt(int sceneIndex);
         void updateFramesToPlay(int sceneIndex, QList<int> frames);
 
         void addSceneToPlay(SoundScene scene);

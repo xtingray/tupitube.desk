@@ -97,7 +97,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
 
         void updateFolder(const QString &projectPath, const QString &folder = QString());
 
-        QList<int> framesToPlay(int sceneIndex);
+        QList<int>framesToPlayAt(int sceneIndex);
         void updateFramesToPlay(int sceneIndex, QList<int> frames);
 
         int sceneToPlay();

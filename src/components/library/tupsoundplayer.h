@@ -74,7 +74,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void resetMediaPlayer();
         QString getSoundID() const;
         void updateInitFrame(int frame);
-        void enableLipSyncInterface(SoundType type, int frame);
+        void enableLipSyncInterface(SoundType type, QList<SoundScene> scenes);
 
     signals:
         void frameUpdated(int frame);

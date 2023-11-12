@@ -86,7 +86,7 @@ SoundScene TupSoundObject::getAudioSceneAt(int sceneIndex)
     return scene;
 }
 
-QList<int> TupSoundObject::getAudioFrames(int sceneIndex)
+QList<int> TupSoundObject::getFramesToPlayAt(int sceneIndex)
 {
     if (sceneIndex < audioScenes.size()) {
         SoundScene scene = audioScenes.at(sceneIndex);
@@ -99,7 +99,7 @@ QList<int> TupSoundObject::getAudioFrames(int sceneIndex)
 void TupSoundObject::updateFramesToPlay(int sceneIndex, QList<int> frames)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundObject::updateFramesToPlay()]";
+        qDebug() << "[TupSoundObject::updateFramesToPlay()] - sceneIndex ->" << sceneIndex;
     #endif
 
     if (sceneIndex < audioScenes.size()) {

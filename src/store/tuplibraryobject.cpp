@@ -141,6 +141,16 @@ QList<SoundScene> TupLibraryObject::getAudioScenes()
     return soundObject->getAudioScenes();
 }
 
+QList<int> TupLibraryObject::framesToPlayAt(int sceneIndex)
+{
+    return soundObject->getFramesToPlayAt(sceneIndex);
+}
+
+void TupLibraryObject::updateFramesToPlay(int sceneIndex, QList<int> frames)
+{
+    soundObject->updateFramesToPlay(sceneIndex, frames);
+}
+
 void TupLibraryObject::setSymbolName(const QString &name)
 {
     symbolName = name;

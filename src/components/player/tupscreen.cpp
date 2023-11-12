@@ -1092,7 +1092,7 @@ void TupScreen::loadSoundRecords()
         soundRecords << sound;
         #ifdef TUP_DEBUG
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio loaded! -> " << sound.path;
-            qDebug() << "[TupScreen::loadSoundRecords()] - Audio frame index -> " << sound.frameIndex;
+            // qDebug() << "[TupScreen::loadSoundRecords()] - Audio frame index -> " << sound.frameIndex;
         #endif
         soundPlayer << new QMediaPlayer();
     }
@@ -1114,6 +1114,7 @@ void TupScreen::playSoundAt(int frame)
         for (int i=0; i<size; i++) {
             SoundResource soundRecord = soundRecords.at(i);
             if (!soundRecord.muted) {
+                /*
                 if (frame == (soundRecord.frameIndex - 1)) {
                     if (i < soundPlayer.count()) {
                         if (soundPlayer.at(i)->state() != QMediaPlayer::PlayingState) {
@@ -1131,6 +1132,7 @@ void TupScreen::playSoundAt(int frame)
                         #endif
                     }
                 }
+                */
             } else {
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupScreen::playSoundAt()] - "

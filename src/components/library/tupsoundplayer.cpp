@@ -136,10 +136,10 @@ void TupSoundPlayer::setSoundParams(SoundResource params)
 
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() -> " << params.type;
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - frameToPlay() -> " << params.frameIndex;
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() -> " << params.muted;
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url -> " << url;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() ->" << params.type;
+        // qDebug() << "[TupSoundPlayer::setSoundParams()] - scenes ->" << params.scenes;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() ->" << params.muted;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url ->" << url;
         qDebug() << "---";
     #endif
 
@@ -164,7 +164,8 @@ void TupSoundPlayer::setSoundParams(SoundResource params)
     connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
-    enableLipSyncInterface(params.type, params.frameIndex);
+    // enableLipSyncInterface(params.type, params.frameIndex);
+    enableLipSyncInterface(params.type, params.scenes);
 
     mute = params.muted;
     if (mute) {
@@ -174,11 +175,11 @@ void TupSoundPlayer::setSoundParams(SoundResource params)
     }
 }
 
-void TupSoundPlayer::enableLipSyncInterface(SoundType type, int frame)
+void TupSoundPlayer::enableLipSyncInterface(SoundType type, QList<SoundScene> scenes)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - type -> " << type;
-        qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - frame -> " << frame;
+        // qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - frame -> " << frame;
     #endif
 
     if (type != Lipsync) {

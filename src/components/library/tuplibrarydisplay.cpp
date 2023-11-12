@@ -155,9 +155,9 @@ void TupLibraryDisplay::updateSoundInitFrame(int frame)
     soundPlayer->updateInitFrame(frame);
 }
 
-void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, int frame)
+void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, QList<SoundScene> scenes)
 {
-    soundPlayer->enableLipSyncInterface(soundType, frame);
+    soundPlayer->enableLipSyncInterface(soundType, scenes);
 }
 
 void TupLibraryDisplay::mousePressEvent(QMouseEvent *event)
