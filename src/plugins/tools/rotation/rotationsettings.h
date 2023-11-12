@@ -103,11 +103,14 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
         void setEditMode();
         void checkFramesRange();
 
-        QWidget *innerPanel;
+        QWidget *basicPanel;
+        QWidget *advancedPanel;
         QWidget *rangePanel;
 
         QBoxLayout *layout;
         TupToolPlugin::Mode mode;
+
+        QTabWidget *tabWidget;
 
         QLineEdit *input;
         TRadioButtonGroup *options;

@@ -97,10 +97,12 @@ RotationSettings::~RotationSettings()
 
 void RotationSettings::setInnerForm()
 {
-    innerPanel = new QWidget;
+    tabWidget = new QTabWidget();
 
-    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, innerPanel);
-    innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    basicPanel = new QWidget;
+
+    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, basicPanel);
+    innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
@@ -140,6 +142,8 @@ void RotationSettings::setInnerForm()
     totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
+
+    advancedPanel = new QWidget;
 
     rotationTypeCombo = new QComboBox();
     rotationTypeCombo->addItem(tr("Continuous"));
@@ -183,13 +187,11 @@ void RotationSettings::setInnerForm()
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
 
-    innerLayout->addSpacing(15);
-    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
-    innerLayout->addLayout(typeLayout);
+    QBoxLayout *advancedLayout = new QBoxLayout(QBoxLayout::TopToBottom, advancedPanel);
+    advancedLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    advancedLayout->addLayout(typeLayout);
 
-    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
-
-    QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom); // , clockPanel);
+    QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     clockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     clockLayout->setMargin(0);
     clockLayout->setSpacing(0);
@@ -201,33 +203,34 @@ void RotationSettings::setInnerForm()
     clockCombo->addItem(tr("Clockwise"));
     clockCombo->addItem(tr("Counterclockwise"));
 
+    clockLayout->addSpacing(5);
     clockLayout->addWidget(directionLabel);
     clockLayout->addWidget(clockCombo);
     clockLayout->addSpacing(5);
 
-    innerLayout->addLayout(clockLayout);
+    advancedLayout->addLayout(clockLayout);
 
     setRangeForm();
-    innerLayout->addWidget(rangePanel);
+    advancedLayout->addWidget(rangePanel);
 
-    innerLayout->addLayout(speedLayout);
-    innerLayout->addLayout(speedLayout2);
+    advancedLayout->addLayout(speedLayout);
+    advancedLayout->addLayout(speedLayout2);
 
-    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
-
-    layout->addWidget(innerPanel);
+    tabWidget->addTab(basicPanel, tr("Range"));
+    tabWidget->addTab(advancedPanel, tr("Settings"));
+    layout->addWidget(tabWidget);
 
     activeInnerForm(false);
 }
 
 void RotationSettings::activeInnerForm(bool enable)
 {
-    if (enable && !innerPanel->isVisible()) {
+    if (enable && !tabWidget->isVisible()) {
         propertiesDone = true;
-        innerPanel->show();
+        tabWidget->show();
     } else {
         propertiesDone = false;
-        innerPanel->hide();
+        tabWidget->hide();
     }
 }
 
@@ -432,6 +435,7 @@ void RotationSettings::applyTween()
         #ifdef TUP_DEBUG
             qDebug() << "Settings::applyTween() - You must set Tween properties first!";
         #endif
+
         return;
     }
 
@@ -443,6 +447,7 @@ void RotationSettings::applyTween()
             #ifdef TUP_DEBUG
                 qDebug() << "Settings::applyTween() - Angle range must be greater than 0!";
             #endif
+
             return;
         }
 
@@ -452,6 +457,7 @@ void RotationSettings::applyTween()
             #ifdef TUP_DEBUG
                 qDebug() << "Settings::applyTween() - Angle range must be greater than Speed!";
             #endif
+
             return;
         }
     }
@@ -535,9 +541,9 @@ QString RotationSettings::tweenToXml(int currentScene, int currentLayer, int cur
 
             root.appendChild(step->toXml(doc));
             if (direction == TupItemTweener::Clockwise)
-         angle += speed;
+                angle += speed;
             else
-         angle -= speed;
+                angle -= speed;
         }
     } else if (rotationType == TupItemTweener::Partial) {
         bool loop = rangeLoopBox->isChecked();

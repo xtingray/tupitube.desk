@@ -196,13 +196,10 @@ void Configurator::addTween(const QString &name)
 
     activeTweenManagerPanel(false);
 
-    // mode = TupToolPlugin::Add;
     state = Properties;
 
     settingsPanel->setParameters(name, framesCount, currentFrame);
     activePropertiesPanel(true);
-
-    // emit setMode(mode);
 }
 
 void Configurator::editTween()
@@ -212,14 +209,11 @@ void Configurator::editTween()
 
     activeTweenManagerPanel(false);
 
-    // mode = TupToolPlugin::Edit;
     state = Properties;
 
     settingsPanel->notifySelection(true);
     settingsPanel->setParameters(currentTween);
     activePropertiesPanel(true);
-
-    // emit setMode(mode);
 }
 
 void Configurator::removeTween()
@@ -277,11 +271,6 @@ void Configurator::closeSettingsPanel()
         currentMode = TupToolPlugin::View;
         state = Manager;
     } 
-    /*
-    else {
-        settingsPanel->activateMode(TupToolPlugin::Properties);
-    }
-    */
 }
 
 TupToolPlugin::Mode Configurator::mode()
