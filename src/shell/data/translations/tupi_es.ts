@@ -42,22 +42,22 @@
 <context>
     <name>ColorSettings</name>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="61"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="60"/>
         <source>Name</source>
         <translation>Nombre</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="71"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="70"/>
         <source>Options</source>
         <translation>Opciones</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="72"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="71"/>
         <source>Select object</source>
         <translation>Escoger objeto</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="73"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="72"/>
         <source>Set Properties</source>
         <translation>Propiedades</translation>
     </message>
@@ -73,95 +73,105 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="158"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="588"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="634"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="641"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="587"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="633"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="640"/>
         <source>Frames Total</source>
         <translation>Total de Marcos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="168"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="197"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="170"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="199"/>
         <source>White</source>
         <translation>Blanco</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="173"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="175"/>
         <source>Fill Type</source>
         <translation>Tipo de Relleno</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="177"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="179"/>
         <source>Line Fill</source>
         <translation>Relleno de Línea</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="176"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="178"/>
         <source>Internal Fill</source>
         <translation>Relleno Interno</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="178"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="180"/>
         <source>Line &amp; Internal Fill</source>
         <translation>Relleno Total</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="186"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="188"/>
         <source>Initial Color</source>
         <translation>Color Inicial</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="202"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="204"/>
         <source>Ending Color</source>
         <translation>Color Final</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="216"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="218"/>
         <source>Iterations</source>
         <translation>Iteraciones</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="225"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="227"/>
         <source>Loop</source>
         <translation>Repetir</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="234"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="236"/>
         <source>Loop with Reverse</source>
         <translation>Repetir con Retorno</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="284"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="261"/>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="262"/>
+        <source>Colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="287"/>
         <source>Save Tween</source>
         <translation>Guardar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="286"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="289"/>
         <source>Cancel Tween</source>
         <translation>Cancelar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="359"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="362"/>
         <source>Update Tween</source>
         <translation>Actualizar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="361"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="364"/>
         <source>Close Tween Properties</source>
         <translation>Cerrar Propiedades De Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="367"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="370"/>
         <source>You must select at least one object!</source>
         <translation>Debes seleccionar al menos un objeto!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="372"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="375"/>
         <source>You must set Tween properties first!</source>
         <translation>Debes definir las propiedades para este Tween!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="429"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="432"/>
         <source>Select objects for Tweening first!</source>
         <translation>Selecciona los objetos para el Tween primero!</translation>
     </message>
@@ -1330,135 +1340,135 @@
         <translation>Propiedades</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="107"/>
         <source>Starting at frame</source>
         <translation>Empezar en marco</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="116"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="115"/>
         <source>Ending at frame</source>
         <translation>Terminar en marco</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="139"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="687"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="725"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="732"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="138"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="686"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="724"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="731"/>
         <source>Frames Total</source>
         <translation>Total de Marcos</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="190"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="189"/>
         <source>Continuous</source>
         <translation>Continuo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="191"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="190"/>
         <source>Partial</source>
         <translation>Parcial</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="195"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="194"/>
         <source>Type</source>
         <translation>Tipo</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="147"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="146"/>
         <source>Speed (Degrees/Frame)</source>
         <translation>Velocidad (Grados/Marco)</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="175"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="174"/>
         <source>Direction</source>
         <translation>Dirección</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="179"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="178"/>
         <source>Clockwise</source>
         <translation>Sentido Horario</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="180"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="179"/>
         <source>Counterclockwise</source>
         <translation>Sentido Antihorario</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="219"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="218"/>
         <source>Basic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="220"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="219"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="245"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="244"/>
         <source>Degrees Range</source>
         <translation>Grados de Rotación</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="248"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="247"/>
         <source>Start at</source>
         <translation>Empezar en</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="264"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="263"/>
         <source>Finish at</source>
         <translation>Terminar en</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="280"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="279"/>
         <source>Loop</source>
         <translation>Repetir</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="289"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="288"/>
         <source>Loop with Reverse</source>
         <translation>Repetir con Retorno</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="338"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="337"/>
         <source>Save Tween</source>
         <translation>Guardar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="340"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="339"/>
         <source>Cancel Tween</source>
         <translation>Cancelar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="417"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="416"/>
         <source>Update Tween</source>
         <translation>Actualizar Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="419"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="418"/>
         <source>Close Tween Properties</source>
         <translation>Cerrar Propiedades De Tween</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="425"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="424"/>
         <source>You must select at least one object!</source>
         <translation>Debes seleccionar al menos un objeto!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="434"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="433"/>
         <source>You must set Tween properties first!</source>
         <translation>Debes definir las propiedades para este Tween!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="446"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="445"/>
         <source>Angle range must be greater than 0!</source>
         <translation>Rango de rotación debe ser mayor a 0!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="456"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="455"/>
         <source>Angle range must be greater than Speed!</source>
         <translation>Rango de rotación debe ser mayor a la Velocidad!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="505"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="504"/>
         <source>Select objects for Tweening first!</source>
         <translation>Selecciona los objetos para el Tween primero!</translation>
     </message>
@@ -7161,53 +7171,38 @@
 <context>
     <name>TupSoundForm</name>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="51"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="49"/>
         <source>Play audio at:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="56"/>
-        <source>Scene 1</source>
-        <translation type="unfinished">Escena 1</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="57"/>
-        <source>Scene 2</source>
-        <translation type="unfinished">Escena 2</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="58"/>
-        <source>Scene 3</source>
-        <translation type="unfinished">Escena 3</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="59"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="124"/>
         <source>All Scenes (Background Track)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="70"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="64"/>
         <source>Frame 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="71"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="65"/>
         <source>Frame 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="72"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="66"/>
         <source>Frame 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="82"/>
-        <location filename="../../../components/library/tupsoundform.cpp" line="85"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="75"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="78"/>
         <source>Add Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="88"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="81"/>
         <source>Remove Frame</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7220,29 +7215,29 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="78"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="75"/>
         <source>Play</source>
         <translation>Reproducir</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="82"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="79"/>
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="83"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="372"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="80"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="369"/>
         <source>Mute</source>
         <translation>Silenciar</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="87"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="84"/>
         <source>Loop</source>
         <translation>Repetir</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="172"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="376"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="169"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="373"/>
         <source>Unmute</source>
         <translation>Habilitar Sonido</translation>
     </message>

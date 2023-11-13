@@ -55,9 +55,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     QLabel *widgetLabel = new QLabel("<b>" + tr("Audio Properties") + "</b>");
     widgetLabel->setAlignment(Qt::AlignHCenter);
 
-    // QHBoxLayout *labelLayout = new QHBoxLayout();
-    // labelLayout->addWidget(widgetLabel);
-
     soundForm = new TupSoundForm();
 
     timer = new QLabel("");

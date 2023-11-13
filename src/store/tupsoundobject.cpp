@@ -49,7 +49,8 @@ TupSoundObject::TupSoundObject(QObject *parent) : QObject(parent)
 
     SoundScene initRecord;
     initRecord.sceneIndex = 0;
-    initRecord.frames[0] = 0;
+    initRecord.frames.append(0);
+
     audioScenes << initRecord;
 }
 

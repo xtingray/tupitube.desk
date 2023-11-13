@@ -43,20 +43,14 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
         qDebug() << "[TupSoundForm()]";
     #endif
 
-    // setStyleSheet("border: 1px solid red;");
-
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenHeight = dimension.second;
 
     playAtLabel = new QLabel(tr("Play audio at:"));
     playAtLabel->setAlignment(Qt::AlignHCenter);
-    // playAtLabel->setFixedHeight(20);
 
     scenesCombo = new QComboBox();
-    scenesCombo->addItem(tr("Scene 1"));
-    scenesCombo->addItem(tr("Scene 2"));
-    scenesCombo->addItem(tr("Scene 3"));
-    scenesCombo->addItem(tr("All Scenes (Background Track)"));
+    connect(scenesCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFramesList(int)));
 
     QHBoxLayout *scenesLayout = new QHBoxLayout;
     scenesLayout->addWidget(scenesCombo, Qt::AlignHCenter);
@@ -70,7 +64,6 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
     framesListWidget->addItem(tr("Frame 1"));
     framesListWidget->addItem(tr("Frame 2"));
     framesListWidget->addItem(tr("Frame 3"));
-    // framesListWidget->setFixedHeight(60);
 
     QHBoxLayout *framesLayout = new QHBoxLayout;
     framesLayout->addWidget(framesListWidget, Qt::AlignHCenter);
@@ -121,4 +114,17 @@ TupSoundForm::~TupSoundForm()
 QSize TupSoundForm::sizeHint() const
 {
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
+}
+
+void TupSoundForm::loadScenesCombo(QList<QString> scenes)
+{
+    foreach(QString scene, scenes)
+        scenesCombo->addItem(scene);
+
+    scenesCombo->addItem(tr("All Scenes (Background Track)"));
+}
+
+void TupSoundForm::updateFramesList(int index)
+{
+
 }

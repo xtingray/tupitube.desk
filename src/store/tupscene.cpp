@@ -532,9 +532,10 @@ bool TupScene::tweenExists(const QString &name, TupItemTweener::Type type)
 bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
 {
     #ifdef TUP_DEBUG
-       qDebug() << "[TupScene::removeTween()]";
+        qDebug() << "[TupScene::removeTween()] - name ->" << name;
     #endif
 
+    bool found = false;
     if (layers.count()) {
         foreach(TupLayer *layer, layers) {
             QList<TupGraphicObject *> objectList = layer->getTweeningGraphicObjects();
@@ -547,7 +548,7 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
                          object->removeTween(i);
                          if (total == 1)
                              removeTweenObject(layer->layerIndex(), object);
-                         return true;
+                         found = true;
                      }
                 }
             }
@@ -562,15 +563,14 @@ bool TupScene::removeTween(const QString &name, TupItemTweener::Type type)
                          object->removeTween(i);
                          if (total == 1)
                              removeTweenObject(layer->layerIndex(), object);
-
-                         return true;
+                         found = true;
                      }
                 }
             }
         }
     }
 
-    return false;
+    return found;
 }
 
 void TupScene::removeTweensFromLayer(int layerIndex)

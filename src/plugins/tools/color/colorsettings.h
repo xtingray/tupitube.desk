@@ -104,7 +104,11 @@ class TUPITUBE_PLUGIN ColorSettings : public QWidget
         void updateColor(QColor color, QPushButton *colorButton);
         QString labelColor(QColor color) const;
 
-        QWidget *innerPanel;
+        QTabWidget *tabWidget;
+
+        QWidget *basicPanel;
+        QWidget *colorsPanel;
+
         QBoxLayout *layout;
         TupToolPlugin::Mode mode;
 

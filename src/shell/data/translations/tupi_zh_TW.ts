@@ -129,6 +129,14 @@
         <source>Select objects for Tweening first!</source>
         <translation>先為補間動畫選擇對象!</translation>
     </message>
+    <message>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Configurator</name>
@@ -5625,18 +5633,6 @@
     <message>
         <source>Play audio at:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scene 1</source>
-        <translation type="unfinished">場景1</translation>
-    </message>
-    <message>
-        <source>Scene 2</source>
-        <translation type="unfinished">場景2</translation>
-    </message>
-    <message>
-        <source>Scene 3</source>
-        <translation type="unfinished">場景3</translation>
     </message>
     <message>
         <source>All Scenes (Background Track)</source>

@@ -61,6 +61,10 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         ~TupSoundForm();
 
         QSize sizeHint() const;
+        void loadScenesCombo(QList<QString> scenes);
+
+    public slots:
+        void updateFramesList(int index);
 
     private:
         QComboBox *scenesCombo;

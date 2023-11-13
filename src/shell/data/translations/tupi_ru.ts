@@ -42,22 +42,22 @@
 <context>
     <name>ColorSettings</name>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="61"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="60"/>
         <source>Name</source>
         <translation>Имя</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="71"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="70"/>
         <source>Options</source>
         <translation>Параметры</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="72"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="71"/>
         <source>Select object</source>
         <translation>Выбрать объект</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="73"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="72"/>
         <source>Set Properties</source>
         <translation>Задать свойства</translation>
     </message>
@@ -73,95 +73,105 @@
     </message>
     <message>
         <location filename="../../../plugins/tools/color/colorsettings.cpp" line="158"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="588"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="634"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="641"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="587"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="633"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="640"/>
         <source>Frames Total</source>
         <translation>Всего кадров</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="168"/>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="197"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="170"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="199"/>
         <source>White</source>
         <translation>Белый</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="173"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="175"/>
         <source>Fill Type</source>
         <translation>Тип заливки</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="177"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="179"/>
         <source>Line Fill</source>
         <translation>Заливка контура</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="176"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="178"/>
         <source>Internal Fill</source>
         <translation>Заливка фигуры</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="178"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="180"/>
         <source>Line &amp; Internal Fill</source>
         <translation>Заливка контура и фигуры</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="186"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="188"/>
         <source>Initial Color</source>
         <translation>Начальный цвет</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="202"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="204"/>
         <source>Ending Color</source>
         <translation>Конечный цвет</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="216"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="218"/>
         <source>Iterations</source>
         <translation>Итераций</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="225"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="227"/>
         <source>Loop</source>
         <translation>Зациклить</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="234"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="236"/>
         <source>Loop with Reverse</source>
         <translation>Зациклить с реверсом</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="284"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="261"/>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="262"/>
+        <source>Colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="287"/>
         <source>Save Tween</source>
         <translation>Сохранить анимацию</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="286"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="289"/>
         <source>Cancel Tween</source>
         <translation>Отменить анимацию</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="359"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="362"/>
         <source>Update Tween</source>
         <translation>Обновить анимацию</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="361"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="364"/>
         <source>Close Tween Properties</source>
         <translation>Закрыть свойства анимации</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="367"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="370"/>
         <source>You must select at least one object!</source>
         <translation>Необходимо выбрать хотя бы один объект!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="372"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="375"/>
         <source>You must set Tween properties first!</source>
         <translation>Сначала необходимо задать свойства анимации!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="429"/>
+        <location filename="../../../plugins/tools/color/colorsettings.cpp" line="432"/>
         <source>Select objects for Tweening first!</source>
         <translation>Сначала выберите объект для анимации!</translation>
     </message>
@@ -1330,135 +1340,135 @@
         <translation>Задать свойства</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="107"/>
         <source>Starting at frame</source>
         <translation>Начальный кадр</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="116"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="115"/>
         <source>Ending at frame</source>
         <translation>Конечный кадр</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="139"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="687"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="725"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="732"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="138"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="686"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="724"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="731"/>
         <source>Frames Total</source>
         <translation>Всего кадров</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="190"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="189"/>
         <source>Continuous</source>
         <translation>Непрерывный</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="191"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="190"/>
         <source>Partial</source>
         <translation>Частичный</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="195"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="194"/>
         <source>Type</source>
         <translation>Тип вращения</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="147"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="146"/>
         <source>Speed (Degrees/Frame)</source>
         <translation>Скорость (Градусов/кадр)</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="175"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="174"/>
         <source>Direction</source>
         <translation>Направление</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="179"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="178"/>
         <source>Clockwise</source>
         <translation>По часовой стрелке</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="180"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="179"/>
         <source>Counterclockwise</source>
         <translation>Против часовой стрелки</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="219"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="218"/>
         <source>Basic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="220"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="219"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="245"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="244"/>
         <source>Degrees Range</source>
         <translation>Диапазон градусов</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="248"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="247"/>
         <source>Start at</source>
         <translation>Начинается с</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="264"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="263"/>
         <source>Finish at</source>
         <translation>Заканчивается на</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="280"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="279"/>
         <source>Loop</source>
         <translation>Закциклить</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="289"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="288"/>
         <source>Loop with Reverse</source>
         <translation>Зациклить с реверсом</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="338"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="337"/>
         <source>Save Tween</source>
         <translation>Сохранить анимацию</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="340"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="339"/>
         <source>Cancel Tween</source>
         <translation>Отменить анимацию</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="417"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="416"/>
         <source>Update Tween</source>
         <translation>Обновить анимацию</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="419"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="418"/>
         <source>Close Tween Properties</source>
         <translation>Закрыть свойства анимации</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="425"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="424"/>
         <source>You must select at least one object!</source>
         <translation>Необходимо выбрать хотя бы один объект!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="434"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="433"/>
         <source>You must set Tween properties first!</source>
         <translation>Сначала необходимо выбрать свойства анимации!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="446"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="445"/>
         <source>Angle range must be greater than 0!</source>
         <translation>Размер угла должен быть больше 0!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="456"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="455"/>
         <source>Angle range must be greater than Speed!</source>
         <translation>Размер угла должен быть больше скорости вращения!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="505"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="504"/>
         <source>Select objects for Tweening first!</source>
         <translation>Сначала выберите объекты для анимации!</translation>
     </message>
@@ -7161,53 +7171,38 @@
 <context>
     <name>TupSoundForm</name>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="51"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="49"/>
         <source>Play audio at:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="56"/>
-        <source>Scene 1</source>
-        <translation type="unfinished">Сцена 1</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="57"/>
-        <source>Scene 2</source>
-        <translation type="unfinished">Сцена 2</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="58"/>
-        <source>Scene 3</source>
-        <translation type="unfinished">Сцена 3</translation>
-    </message>
-    <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="59"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="124"/>
         <source>All Scenes (Background Track)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="70"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="64"/>
         <source>Frame 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="71"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="65"/>
         <source>Frame 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="72"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="66"/>
         <source>Frame 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="82"/>
-        <location filename="../../../components/library/tupsoundform.cpp" line="85"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="75"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="78"/>
         <source>Add Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundform.cpp" line="88"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="81"/>
         <source>Remove Frame</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7220,29 +7215,29 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="78"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="75"/>
         <source>Play</source>
         <translation>Воспроизвести</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="82"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="79"/>
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="83"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="372"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="80"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="369"/>
         <source>Mute</source>
         <translation>Отключить звук</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="87"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="84"/>
         <source>Loop</source>
         <translation>Зациклить</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="172"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="376"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="169"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="373"/>
         <source>Unmute</source>
         <translation>Включить звук</translation>
     </message>

@@ -101,7 +101,6 @@ void RotationSettings::setInnerForm()
     tabWidget = new QTabWidget();
 
     basicPanel = new QWidget;
-
     QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, basicPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 

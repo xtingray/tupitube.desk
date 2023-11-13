@@ -38,7 +38,6 @@
 
 #include "colorsettings.h"
 #include "tradiobuttongroup.h"
-// #include "tuptweenerstep.h"
 #include "tupitemtweener.h"
 #include "timagebutton.h"
 #include "tseparator.h"
@@ -100,7 +99,7 @@ ColorSettings::ColorSettings(QWidget *parent) : QWidget(parent)
 
 ColorSettings::~ColorSettings()
 {
-    delete innerPanel;
+    delete basicPanel;
     delete layout;
     delete input;
     delete initFrame;
@@ -119,9 +118,10 @@ ColorSettings::~ColorSettings()
 
 void ColorSettings::setInnerForm()
 {
-    innerPanel = new QWidget;
+    tabWidget = new QTabWidget();
 
-    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, innerPanel);
+    basicPanel = new QWidget;
+    QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, basicPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
     QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
@@ -162,6 +162,8 @@ void ColorSettings::setInnerForm()
     totalLayout->setMargin(0);
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
+
+    colorsPanel = new QWidget;
 
     initialColor = QColor(255, 255, 255);
     initColorButton = new QPushButton();
@@ -222,7 +224,7 @@ void ColorSettings::setInnerForm()
     iterationsLayout->addWidget(iterationsLabel);
     iterationsLayout->addWidget(iterationsCombo);
 
-    loopBox = new QCheckBox(tr("Loop"), innerPanel);
+    loopBox = new QCheckBox(tr("Loop"), basicPanel);
     connect(loopBox, SIGNAL(stateChanged(int)), this, SLOT(updateReverseCheckbox(int)));
 
     QVBoxLayout *loopLayout = new QVBoxLayout;
@@ -231,7 +233,7 @@ void ColorSettings::setInnerForm()
     loopLayout->setSpacing(0);
     loopLayout->addWidget(loopBox);
 
-    reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), innerPanel);
+    reverseLoopBox = new QCheckBox(tr("Loop with Reverse"), basicPanel);
     connect(reverseLoopBox, SIGNAL(stateChanged(int)), this, SLOT(updateLoopCheckbox(int)));
 
     QVBoxLayout *reverseLayout = new QVBoxLayout;
@@ -244,32 +246,33 @@ void ColorSettings::setInnerForm()
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
 
-    innerLayout->addSpacing(10);
-    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
-    innerLayout->addLayout(fillLayout);
-
-    innerLayout->addLayout(coloringInitLayout);
-    innerLayout->addLayout(coloringEndLayout);
-
     innerLayout->addLayout(iterationsLayout);
     innerLayout->addLayout(loopLayout);
     innerLayout->addLayout(reverseLayout);
 
-    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
+    QBoxLayout *colorsLayout = new QBoxLayout(QBoxLayout::TopToBottom, colorsPanel);
+    colorsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-    layout->addWidget(innerPanel);
+    colorsLayout->addLayout(fillLayout);
+
+    colorsLayout->addLayout(coloringInitLayout);
+    colorsLayout->addLayout(coloringEndLayout);
+
+    tabWidget->addTab(basicPanel, tr("Basic"));
+    tabWidget->addTab(colorsPanel, tr("Colors"));
+    layout->addWidget(tabWidget);
 
     activeInnerForm(false);
 }
 
 void ColorSettings::activeInnerForm(bool enable)
 {
-    if (enable && !innerPanel->isVisible()) {
+    if (enable && !tabWidget->isVisible()) {
        propertiesDone = true;
-       innerPanel->show();
+       tabWidget->show();
     } else {
        propertiesDone = false;
-       innerPanel->hide();
+       tabWidget->hide();
     }
 }
 
@@ -443,16 +446,12 @@ QString ColorSettings::tweenToXml(int currentScene, int currentLayer, int curren
     root.setAttribute("initLayer", currentLayer);
     root.setAttribute("initScene", currentScene);
 
-    // QString type = fillTypeCombo->currentText();
     int index = fillTypeCombo->currentIndex();
     TupItemTweener::FillType fillType = TupItemTweener::Internal;
-    // if (type.compare(tr("Internal Fill")) == 0)
     if (index == InternalFill) // Internal Fill
         fillType = TupItemTweener::Internal;
-    // if (type.compare(tr("Line Fill")) == 0)
     if (index == LineFill) // Line Fill
         fillType = TupItemTweener::Line;
-    // if (type.compare(tr("Line & Internal Fill")) == 0)
     if (index == AllFill) // Internal and Line Fill
         fillType = TupItemTweener::FillAll;
 
