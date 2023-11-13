@@ -97,11 +97,14 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
         
     private:
         void setInnerForm();
+        void setSmallFont();
         void activeInnerForm(bool enable);
         void setRangeForm();
         void activeRangeForm(bool enable);
         void setEditMode();
         void checkFramesRange();
+
+        int screenHeight;
 
         QWidget *basicPanel;
         QWidget *advancedPanel;
@@ -112,17 +115,23 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
 
         QTabWidget *tabWidget;
 
+        QLabel *nameLabel;
         QLineEdit *input;
         TRadioButtonGroup *options;
+        QLabel *startingLabel;
         QSpinBox *initFrame;
+        QLabel *endingLabel;
         QSpinBox *endFrame;
 
+        QLabel *typeLabel;
         QComboBox *rotationTypeCombo;
         TupItemTweener::RotationType rotationType;
 
+        QLabel *speedLabel;
         QSpinBox *rangeStart;
         QSpinBox *rangeEnd;
 
+        QLabel *directionLabel;
         QDoubleSpinBox *degreesPerFrame;
 
         QCheckBox *rangeLoopBox;
@@ -136,6 +145,8 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
 
         TImageButton *apply;
         TImageButton *remove;
+
+        QFont smallFont;
 };
 
 #endif

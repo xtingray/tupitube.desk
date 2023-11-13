@@ -34,10 +34,12 @@
  ***************************************************************************/
 
 #include "rotationsettings.h"
+#include "tuivalues.h"
 #include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "tseparator.h"
 #include "tosd.h"
+#include "talgorithm.h"
 
 #include <math.h>
 
@@ -48,10 +50,13 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
     rotationType = TupItemTweener::Continuos;
     stepsCounter = 0;
 
+    QPair<int, int> dimension = TAlgorithm::screenDimension();
+    screenHeight = dimension.second;
+
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
 
-    QLabel *nameLabel = new QLabel(tr("Name") + ": ");
+    nameLabel = new QLabel(tr("Name") + ": ");
     input = new QLineEdit;
 
     QHBoxLayout *nameLayout = new QHBoxLayout;
@@ -84,6 +89,12 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
 
     setInnerForm();
 
+    if (screenHeight < HD_HEIGHT) {
+        smallFont = this->font();
+        smallFont.setPointSize(8);
+        setSmallFont();
+    }
+
     layout->addSpacing(10);
     layout->addLayout(buttonsLayout);
     layout->setSpacing(5);
@@ -104,7 +115,7 @@ void RotationSettings::setInnerForm()
     QBoxLayout *innerLayout = new QBoxLayout(QBoxLayout::TopToBottom, basicPanel);
     innerLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-    QLabel *startingLabel = new QLabel(tr("Starting at frame") + ": ");
+    startingLabel = new QLabel(tr("Starting at frame") + ": ");
     startingLabel->setAlignment(Qt::AlignVCenter);
 
     initFrame = new QSpinBox();
@@ -112,7 +123,7 @@ void RotationSettings::setInnerForm()
     initFrame->setMaximum(999);
     connect(initFrame, SIGNAL(valueChanged(int)), this, SLOT(updateRangeFromInit(int)));
  
-    QLabel *endingLabel = new QLabel(tr("Ending at frame") + ": ");
+    endingLabel = new QLabel(tr("Ending at frame") + ": ");
     endingLabel->setAlignment(Qt::AlignVCenter);
 
     endFrame = new QSpinBox();
@@ -151,7 +162,7 @@ void RotationSettings::setInnerForm()
 
     connect(rotationTypeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(refreshForm(int)));
 
-    QLabel *typeLabel = new QLabel(tr("Type") + ": ");
+    typeLabel = new QLabel(tr("Type") + ": ");
     typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     QHBoxLayout *typeLayout = new QHBoxLayout;
     typeLayout->setAlignment(Qt::AlignHCenter);
@@ -160,7 +171,7 @@ void RotationSettings::setInnerForm()
     typeLayout->addWidget(typeLabel);
     typeLayout->addWidget(rotationTypeCombo);
 
-    QLabel *speedLabel = new QLabel(tr("Speed (Degrees/Frame)") + ": ");
+    speedLabel = new QLabel(tr("Speed (Degrees/Frame)") + ": ");
     speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     degreesPerFrame = new QDoubleSpinBox;
@@ -196,7 +207,7 @@ void RotationSettings::setInnerForm()
     clockLayout->setMargin(0);
     clockLayout->setSpacing(0);
 
-    QLabel *directionLabel = new QLabel(tr("Direction") + ": ");
+    directionLabel = new QLabel(tr("Direction") + ": ");
     directionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     clockCombo = new QComboBox();
@@ -221,6 +232,20 @@ void RotationSettings::setInnerForm()
     layout->addWidget(tabWidget);
 
     activeInnerForm(false);
+}
+
+void RotationSettings::setSmallFont()
+{
+    nameLabel->setFont(smallFont);
+    options->setFont(smallFont);
+    tabWidget->setFont(smallFont);
+    startingLabel->setFont(smallFont);
+    endingLabel->setFont(smallFont);
+    totalLabel->setFont(smallFont);
+    typeLabel->setFont(smallFont);
+    speedLabel->setFont(smallFont);
+    directionLabel->setFont(smallFont);
+    clockCombo->setFont(smallFont);
 }
 
 void RotationSettings::activeInnerForm(bool enable)
