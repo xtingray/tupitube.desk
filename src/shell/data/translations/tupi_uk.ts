@@ -186,7 +186,7 @@
     <message>
         <location filename="../../../plugins/tools/opacity/configurator.cpp" line="55"/>
         <source>Opacity Tween Properties</source>
-        <translation>Властивості анімації непрозорості</translation>
+        <translation>Властивості анімації щільності</translation>
     </message>
     <message>
         <location filename="../../../plugins/tools/rotation/configurator.cpp" line="56"/>
