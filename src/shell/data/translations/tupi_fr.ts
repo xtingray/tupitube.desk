@@ -237,133 +237,133 @@
 <context>
     <name>GeometricSettings</name>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="61"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="71"/>
         <source>Rectangle Properties</source>
         <translation>Propriétés du Rectangle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="64"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="74"/>
         <source>Ellipse Properties</source>
         <translation>Propriétés de l&apos;ellipse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="67"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="77"/>
         <source>Line Properties</source>
         <translation>Propriétés de la ligne</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="70"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="82"/>
         <source>Triangle Properties</source>
         <translation>Propriétés des Triangles</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="73"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="87"/>
         <source>Hexagon Properties</source>
         <translation>Propriétés de l&apos;hexagone</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="81"/>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="118"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="97"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="134"/>
         <source>Direction</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
         <source>Top</source>
         <translation>Haut</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
         <source>Bottom</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
         <source>Left</source>
         <translation>Gauche</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="93"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="109"/>
         <source>Right</source>
         <translation>Droite</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="110"/>
         <source>Top Left</source>
         <translation>En Haut à Gauche</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="110"/>
         <source>Top Right</source>
         <translation>En Haut à Droite</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="110"/>
         <source>Bottom Left</source>
         <translation>En Bas à Gauche</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="94"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="110"/>
         <source>Bottom Right</source>
         <translation>En Bas à Droite</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="129"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="145"/>
         <source>Horizontal</source>
         <translation>Horizontal</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="129"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="145"/>
         <source>Vertical</source>
         <translation>Vertical</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="153"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="169"/>
         <source>Line Options</source>
         <translation>Options de Ligne</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="155"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="171"/>
         <source>Bendable</source>
         <translation>Pliable</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="156"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="172"/>
         <source>Straight</source>
         <translation>Droit</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="173"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="189"/>
         <source>Tips</source>
         <translation>Astuces</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="196"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="208"/>
         <source>Mouse Right Click or X Key</source>
         <translation>Clic Droit ou Touche X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="196"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="208"/>
         <source>Close the line path</source>
         <translation>Fermer le chemin de la ligne</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="197"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="209"/>
         <source>Shift</source>
         <translation>Décalage</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="197"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="209"/>
         <source>Align line to horizontal/vertical axis</source>
         <translation>Aligner la ligne sur l&apos;axe horizontal/vertical</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="199"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="211"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + Clic gauche</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="199"/>
+        <location filename="../../../plugins/tools/geometric/geometricsettings.cpp" line="211"/>
         <source>Set width/height proportional dimensions</source>
         <translation>Définir les dimensions proportionnelles largeur/hauteur</translation>
     </message>
@@ -670,82 +670,88 @@
 <context>
     <name>NodeSettings</name>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="60"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="68"/>
         <source>Nodes Properties</source>
         <translation>Propriétés des Nœuds</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="87"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="95"/>
         <source>First Node</source>
         <translation>Premier Nœud</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="88"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="96"/>
         <source>Middle Node</source>
         <translation>Noeud Central</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="89"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="97"/>
         <source>Random Node</source>
         <translation>Nœud Aléatoire</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="90"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="98"/>
         <source>Last Node</source>
         <translation>Dernier Nœud</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="101"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="112"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="199"/>
+        <source>Hide Tips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="187"/>
         <source>Show Tips</source>
         <translation>Montrer les Astuces</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="102"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="115"/>
         <source>A little help for the Nodes tool</source>
         <translation>Un peu d&apos;aide pour l&apos;outil Nœuds</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="120"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="129"/>
         <source>Ctrl Key + Left Mouse Button</source>
         <translation>Touche Ctrl + Bouton Gauche de la Souris</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="122"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="131"/>
         <source>Shift Key + Left Mouse Button</source>
         <translation>Touche Shift + Bouton Gauche de la Souris</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="123"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="132"/>
         <source>Append a curve to the last node of the path or add a new curve between two nodes</source>
         <translation>Ajouter une courbe au dernier nœud du chemin ou ajouter une nouvelle courbe entre deux nœuds</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="121"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="130"/>
         <source>Append a line segment to the last node of the path or add a new line node between two nodes</source>
         <translation>Ajouter un segment de ligne au dernier nœud du chemin ou ajouter un nouveau nœud de ligne entre deux nœuds</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="62"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="70"/>
         <source>Nodes Editor</source>
         <translation>Éditeur de Nœuds</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="124"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="133"/>
         <source>X Key</source>
         <translation>Touche X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="124"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="133"/>
         <source>Remove selected node</source>
         <translation>Supprimer le nœud sélectionné</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="125"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="134"/>
         <source>M Key</source>
         <translation>Touche M</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="125"/>
+        <location filename="../../../plugins/tools/nodes/nodesettings.cpp" line="134"/>
         <source>Switch selected node to line/curve</source>
         <translation>Changer le nœud sélectionné en ligne/courbe</translation>
     </message>
@@ -1304,145 +1310,155 @@
 <context>
     <name>RotationSettings</name>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="54"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="55"/>
         <source>Name</source>
         <translation>Nom</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="64"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="65"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="65"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="66"/>
         <source>Select object</source>
         <translation>Sélectionner l&apos;objet</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="66"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="67"/>
         <source>Set Properties</source>
         <translation>Définir les propriétés</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="105"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="108"/>
         <source>Starting at frame</source>
         <translation>Commencer à l&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="113"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="116"/>
         <source>Ending at frame</source>
         <translation>Terminer à l&apos;image</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="136"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="681"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="719"/>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="726"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="139"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="687"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="725"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="732"/>
         <source>Frames Total</source>
         <translation>Total des Cadres</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="145"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="190"/>
         <source>Continuous</source>
         <translation>Continu</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="146"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="191"/>
         <source>Partial</source>
         <translation>Partiel</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="150"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="195"/>
         <source>Type</source>
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="159"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="147"/>
         <source>Speed (Degrees/Frame)</source>
         <translation>Vitesse (Degrés/Image)</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="197"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="175"/>
         <source>Direction</source>
         <translation>Direction</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="201"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="179"/>
         <source>Clockwise</source>
         <translation>Rotation horaire</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="202"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="180"/>
         <source>Counterclockwise</source>
         <translation>Rotation antihoraire</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="242"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="219"/>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="220"/>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="245"/>
         <source>Degrees Range</source>
         <translation>Gamme des degrés</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="245"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="248"/>
         <source>Start at</source>
         <translation>Commence à</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="261"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="264"/>
         <source>Finish at</source>
         <translation>Fini à</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="277"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="280"/>
         <source>Loop</source>
         <translation>Boucle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="286"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="289"/>
         <source>Loop with Reverse</source>
         <translation>Boucle avec retour</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="335"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="338"/>
         <source>Save Tween</source>
         <translation>Sauvegarder l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="337"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="340"/>
         <source>Cancel Tween</source>
         <translation>Annuler l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="414"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="417"/>
         <source>Update Tween</source>
         <translation>Mettre à jour l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="416"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="419"/>
         <source>Close Tween Properties</source>
         <translation>Fermer les propriétés de l&apos;interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="422"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="425"/>
         <source>You must select at least one object!</source>
         <translation>Vous devez sélectionner au moins un objet!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="431"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="434"/>
         <source>You must set Tween properties first!</source>
         <translation>Vous devez d&apos;abord définir les propriétés d&apos;interpolation!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="442"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="446"/>
         <source>Angle range must be greater than 0!</source>
         <translation>L&apos;amplitude angulaire doit être supérieure à 0!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="451"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="456"/>
         <source>Angle range must be greater than Speed!</source>
         <translation>L&apos;amplitude angulaire doit être supérieure à la vitesse!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="499"/>
+        <location filename="../../../plugins/tools/rotation/rotationsettings.cpp" line="505"/>
         <source>Select objects for Tweening first!</source>
         <translation>Sélectionner les objets pour l&apos;interpolation d&apos;abord!</translation>
     </message>
@@ -1571,198 +1587,205 @@
         <translation>Sélection des propriétés</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="126"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="183"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="127"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
         <source>Alignment</source>
         <translation>Alignement</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="248"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="249"/>
         <source>Horizontal Center</source>
         <translation>Centre Horizontal</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="250"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="251"/>
         <source>Vertical Center</source>
         <translation>Centre Vertical</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="252"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="253"/>
         <source>Absolute Center</source>
         <translation>Centrer</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="133"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="183"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="134"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
         <source>Flips</source>
         <translation>Basculements</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="271"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="272"/>
         <source>Horizontal Flip</source>
         <translation>Basculement horizontal</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="273"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="274"/>
         <source>Vertical Flip</source>
         <translation>Basculement vertical</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="275"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="276"/>
         <source>Crossed Flip</source>
         <translation>Inversion croisée</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="140"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="183"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="141"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
         <source>Order</source>
         <translation>Commander</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="294"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="295"/>
         <source>Send object to back</source>
         <translation>Envoyer l&apos;objet en arrière-plan</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="297"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="298"/>
         <source>Send object to back one level</source>
         <translation>Envoyer l&apos;objet un niveau en arrière</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="300"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="301"/>
         <source>Send object to front</source>
         <translation>Envoyer l&apos;objet au premier plan</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="303"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="304"/>
         <source>Send object to front one level</source>
         <translation>Envoyer l&apos;objet un niveau en avant</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="149"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="183"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="150"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
         <source>Group</source>
         <translation>Grouper</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="325"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="326"/>
         <source>Group Objects</source>
         <translation>Grouper les objets</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="328"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="329"/>
         <source>Ungroup Objects</source>
         <translation>Dégrouper les objets</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="158"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="159"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="185"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="343"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="399"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="344"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="400"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="351"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="415"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="352"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="416"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="164"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="165"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="185"/>
         <source>Rotation</source>
         <translation>Rotation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="379"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="380"/>
         <source>Angle</source>
         <translation>Angle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="170"/>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="184"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="171"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="185"/>
         <source>Scale</source>
         <translation>Échelle</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="431"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="432"/>
         <source>Proportion</source>
         <translation>Proportion</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="451"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="452"/>
         <source>Paste objects over mouse position</source>
         <translation>Colar objetos sobre a posição do mouse</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="82"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="87"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="518"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="535"/>
         <source>Show Tips</source>
         <translation>Montrer les astuces</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="83"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="88"/>
         <source>A little help for the Selection tool</source>
         <translation>Un peu d&apos;aide pour l&apos;outil de sélection</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="104"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="106"/>
         <source>Double Click on any node or Shortcut Alt + R</source>
         <translation>Double-cliquer sur n&apos;importe quel noeud ou raccourci Alt + R</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="104"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="106"/>
         <source>Rotation mode</source>
         <translation>Mode de rotation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="105"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="107"/>
         <source>Arrows</source>
         <translation>Flèches</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="105"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="107"/>
         <source>Movement on selection</source>
         <translation>Mouvement sur la sélection</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="106"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="108"/>
         <source>Shift + Arrows</source>
         <translation>Shift + Flèches</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="106"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="108"/>
         <source>Slow movement on selection</source>
         <translation>Mouvement lent sur la sélection</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="107"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="109"/>
         <source>Ctrl + Arrows</source>
         <translation>Ctrl + Flèches</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="107"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="109"/>
         <source>Fast movement on selection</source>
         <translation>Mouvement rapide sur la sélection</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="110"/>
         <source>Ctrl + Left Mouse Button</source>
         <translation>Ctrl + Clic gauche</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="108"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="110"/>
         <source>Proportional scaling on selection</source>
         <translation>Mise à l&apos;échelle proportionnelle de la sélection</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="455"/>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="456"/>
         <source>Reset Item</source>
         <translation>Réinitialiser l&apos;élément</translation>
+    </message>
+    <message>
+        <location filename="../../../plugins/tools/selection/selectionsettings.cpp" line="527"/>
+        <source>Hide Tips</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2375,7 +2398,7 @@
 <context>
     <name>TupAudioMixer</name>
     <message>
-        <location filename="../../../plugins/export/ffmpegplugin/tupaudiomixer.cpp" line="767"/>
+        <location filename="../../../plugins/export/ffmpegplugin/tupaudiomixer.cpp" line="773"/>
         <source>Merging audio files...</source>
         <translation>Fusionner les fichiers audio...</translation>
     </message>
@@ -2735,7 +2758,7 @@
     </message>
     <message>
         <location filename="../../../components/player/tupcamerastatus.cpp" line="106"/>
-        <location filename="../../../components/player/tupcamerastatus.cpp" line="210"/>
+        <location filename="../../../components/player/tupcamerastatus.cpp" line="193"/>
         <source>Mute</source>
         <translation>Désactiver le son</translation>
     </message>
@@ -2755,7 +2778,7 @@
         <translation>Publier</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerastatus.cpp" line="213"/>
+        <location filename="../../../components/player/tupcamerastatus.cpp" line="196"/>
         <source>Unmute</source>
         <translation>Réactiver le son</translation>
     </message>
@@ -2763,12 +2786,12 @@
 <context>
     <name>TupCameraWidget</name>
     <message>
-        <location filename="../../../components/player/tupcamerawidget.cpp" line="133"/>
+        <location filename="../../../components/player/tupcamerawidget.cpp" line="134"/>
         <source>Scene Preview</source>
         <translation>Aperçu de la scène</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerawidget.cpp" line="164"/>
+        <location filename="../../../components/player/tupcamerawidget.cpp" line="165"/>
         <source>Edit Project Information</source>
         <translation>Modifier les Informations du Projet</translation>
     </message>
@@ -2789,17 +2812,17 @@
     </message>
     <message>
         <location filename="../../../components/player/tupcamerawidget.cpp" line="239"/>
-        <location filename="../../../components/player/tupcamerawidget.cpp" line="521"/>
+        <location filename="../../../components/player/tupcamerawidget.cpp" line="523"/>
         <source>secs</source>
         <translation>secondes</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerawidget.cpp" line="308"/>
+        <location filename="../../../components/player/tupcamerawidget.cpp" line="309"/>
         <source>Scale</source>
         <translation>Échelle</translation>
     </message>
     <message>
-        <location filename="../../../components/player/tupcamerawidget.cpp" line="333"/>
+        <location filename="../../../components/player/tupcamerawidget.cpp" line="334"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
@@ -3148,12 +3171,6 @@
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="1358"/>
         <source>Onion Skin Factor</source>
         <translation>Paramètres de pelure d&apos;oignon</translation>
-    </message>
-    <message>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="437"/>
-        <location filename="../../../components/workspace/tupdocumentview.cpp" line="460"/>
-        <source>Ctrl+Shift+S</source>
-        <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
         <location filename="../../../components/workspace/tupdocumentview.cpp" line="440"/>
@@ -4287,37 +4304,37 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="196"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2061"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2066"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="197"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2071"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2076"/>
         <source>Svg File</source>
         <translation>Fichier Svg</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="198"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2081"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2086"/>
         <source>Native Object</source>
         <translation>Objet natif</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="199"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2066"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2071"/>
         <source>Image Sequence</source>
         <translation>Séquence d&apos;Images</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="200"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2076"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2081"/>
         <source>Svg Sequence</source>
         <translation>Séquence Svg</translation>
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="202"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2091"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2096"/>
         <source>Video File</source>
         <translation>Fichier vidéo</translation>
     </message>
@@ -4338,7 +4355,7 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="328"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2127"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2132"/>
         <source>Directory</source>
         <translation>Répertoire</translation>
     </message>
@@ -4376,7 +4393,7 @@
     </message>
     <message>
         <location filename="../../../components/library/tuplibrarywidget.cpp" line="201"/>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2086"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="2091"/>
         <source>Audio File</source>
         <translation>Fichier Audio</translation>
     </message>
@@ -4573,7 +4590,7 @@
         <translation>Erreur lors de l&apos;ouverture du fichier: %1</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1919"/>
+        <location filename="../../../components/library/tuplibrarywidget.cpp" line="1923"/>
         <source>Raster Objects</source>
         <translation>Objets Raster</translation>
     </message>
@@ -4641,7 +4658,7 @@
         <location filename="../../tupmainwindow.cpp" line="826"/>
         <location filename="../../tupmainwindow.cpp" line="1073"/>
         <location filename="../../tupmainwindow.cpp" line="1140"/>
-        <location filename="../../tupmainwindow.cpp" line="1805"/>
+        <location filename="../../tupmainwindow.cpp" line="1813"/>
         <source>by</source>
         <translation>par</translation>
     </message>
@@ -4664,7 +4681,7 @@
         <translation>Vous ne pouvez pas ouvrir le projet!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1656"/>
+        <location filename="../../tupmainwindow.cpp" line="1660"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
@@ -4729,38 +4746,38 @@
         <translation>Nouvelle caméra</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1440"/>
+        <location filename="../../tupmainwindow.cpp" line="1444"/>
         <source>To post video add more frames!</source>
         <translation>Pour publier une vidéo, ajoutez plus d&apos;images!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1473"/>
-        <location filename="../../tupmainwindow.cpp" line="1525"/>
+        <location filename="../../tupmainwindow.cpp" line="1477"/>
+        <location filename="../../tupmainwindow.cpp" line="1529"/>
         <source>Post canceled by user!</source>
         <translation>Post annulé!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1492"/>
+        <location filename="../../tupmainwindow.cpp" line="1496"/>
         <source>Project is larger than 10 MB. Too big!</source>
         <translation>Le projet fait plus de 10 MB. Trop grand!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1552"/>
+        <location filename="../../tupmainwindow.cpp" line="1556"/>
         <source>Error while posting image. File is too big!</source>
         <translation>Erreur lors de la publication de l&apos;image. Le fichier est trop gros!</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1652"/>
+        <location filename="../../tupmainwindow.cpp" line="1656"/>
         <source>Fatal Error</source>
         <translation>Erreur fatale</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1654"/>
+        <location filename="../../tupmainwindow.cpp" line="1658"/>
         <source>The connection to the server has been lost.</source>
         <translation>La connexion au serveur a été perdue.</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow.cpp" line="1655"/>
+        <location filename="../../tupmainwindow.cpp" line="1659"/>
         <source>Please, try to connect again in a while</source>
         <translation>SVP, essayez de vous connecter à nouveau dans un moment</translation>
     </message>
@@ -5081,7 +5098,6 @@
     </message>
     <message>
         <location filename="../../tupmainwindow_gui.cpp" line="397"/>
-        <location filename="../../tupmainwindow_gui.cpp" line="431"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
@@ -5161,22 +5177,22 @@
         <translation>Barre des actions</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="540"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="550"/>
         <source>Undo</source>
         <translation>Annuler</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="542"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="552"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="545"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="555"/>
         <source>Redo</source>
         <translation>Rétablir</translation>
     </message>
     <message>
-        <location filename="../../tupmainwindow_gui.cpp" line="547"/>
+        <location filename="../../tupmainwindow_gui.cpp" line="557"/>
         <source>Ctrl+Y</source>
         <translation>Ctrl+Y</translation>
     </message>
@@ -5813,43 +5829,43 @@
         <translation>Un niveau en avant</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1861"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1885"/>
         <source>Sorry, no library was found!</source>
         <translation>Désolé, aucune bibliothèque n&apos;a été trouvée!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1888"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1912"/>
         <source>Project Dimension Conflict</source>
         <translation>Conflit de Dimension de Projet</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1890"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1914"/>
         <source>Imported scenes require a different dimension than the current to fit accurately.</source>
         <translation>Les scènes importées nécessitent une dimension différente de celle actuelle pour s&apos;adapter avec précision.</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1891"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1915"/>
         <source>Do you want to resize your current project?</source>
         <translation>Voulez-vous redimensionner votre projet actuel?</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1959"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1983"/>
         <source>Project assets imported successfully!</source>
         <translation>Les actifs du projet ont été importés avec succès!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1978"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2002"/>
         <source>Sorry, TUP source file is invalid!</source>
         <translation>Désolé, le fichier source TUP n&apos;est pas valide!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2017"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2109"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2041"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2133"/>
         <source>Sorry, file format not supported!</source>
         <translation>Désolé, format de fichier non pris en charge!</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2123"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="2147"/>
         <source>Network Fatal Error. Please, contact us!</source>
         <translation>Erreur fatale du réseau. Contactez nous s&apos;il vous plait!</translation>
     </message>
@@ -5860,28 +5876,28 @@
         <translation>Ajouter à la bibliothèque...</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1085"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1493"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1546"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1561"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1681"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1708"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1091"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1517"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1570"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1585"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1705"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1732"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1238"/>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1271"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1262"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1295"/>
         <source>No items selected</source>
         <translation>Aucuns éléments sélectionnés</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1617"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1641"/>
         <source>Do you want to remove this frame?</source>
         <translation>Voulez-vous supprimer cette image?</translation>
     </message>
     <message>
-        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1617"/>
+        <location filename="../../../components/workspace/tuppaintarea.cpp" line="1641"/>
         <source>Confirmation</source>
         <translation>Confirmation</translation>
     </message>
@@ -6248,7 +6264,7 @@
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="613"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1744"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1746"/>
         <source>Lip-sync item updated!</source>
         <translation>Élément de lip-sync mis à jour!</translation>
     </message>
@@ -6297,13 +6313,13 @@
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1209"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1562"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1564"/>
         <source>Mouth images are incomplete!</source>
         <translation>Les images de la bouche sont incomplètes!</translation>
     </message>
     <message>
         <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1216"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1571"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1573"/>
         <source>Images directory is empty!</source>
         <translation>Le répertoire des images est vide!</translation>
     </message>
@@ -6343,38 +6359,38 @@
         <translation>Impossible de charger le son de la voix!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1504"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1506"/>
         <source>Can&apos;t set lip-sync voice item!</source>
         <translation>Impossible de définir l&apos;élément vocal de lip-sync!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1538"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1540"/>
         <source>Frame</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1551"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1553"/>
         <source>Papagayo file has been imported successfully</source>
         <translation>Le fichier Papagayo a été importé avec succès</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1553"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1555"/>
         <source>Papagayo file is invalid!</source>
         <translation>Le fichier Papagayo est invalide!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1580"/>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1589"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1582"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1591"/>
         <source>Papagayo project is invalid!</source>
         <translation>Le projet Papagayo est invalide!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1602"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1604"/>
         <source>Error while saving lip-sync record!</source>
         <translation>Erreur lors de l&apos;enregistrement de la synchronisation labiale!</translation>
     </message>
     <message>
-        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1751"/>
+        <location filename="../../../components/papagayo/tuppapagayoapp.cpp" line="1753"/>
         <source>Error while updating lip-sync!</source>
         <translation>Erreur lors de la mise à jour de la lip-sync!</translation>
     </message>
@@ -7143,38 +7159,90 @@
     </message>
 </context>
 <context>
-    <name>TupSoundPlayer</name>
+    <name>TupSoundForm</name>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="189"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="195"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="399"/>
-        <source>Play at frame:</source>
-        <translation>Jouer à l&apos;image:</translation>
+        <location filename="../../../components/library/tupsoundform.cpp" line="51"/>
+        <source>Play audio at:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="85"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="56"/>
+        <source>Scene 1</source>
+        <translation type="unfinished">Scène 1</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="57"/>
+        <source>Scene 2</source>
+        <translation type="unfinished">Scène 2</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="58"/>
+        <source>Scene 3</source>
+        <translation type="unfinished">Scène 3</translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="59"/>
+        <source>All Scenes (Background Track)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="70"/>
+        <source>Frame 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="71"/>
+        <source>Frame 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="72"/>
+        <source>Frame 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="82"/>
+        <location filename="../../../components/library/tupsoundform.cpp" line="85"/>
+        <source>Add Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundform.cpp" line="88"/>
+        <source>Remove Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TupSoundPlayer</name>
+    <message>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="55"/>
+        <source>Audio Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="78"/>
         <source>Play</source>
         <translation>Lecture</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="89"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="82"/>
         <source>M</source>
         <translation>M</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="90"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="370"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="83"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="372"/>
         <source>Mute</source>
         <translation>Désactiver le son</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="94"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="87"/>
         <source>Loop</source>
         <translation>Boucle</translation>
     </message>
     <message>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="174"/>
-        <location filename="../../../components/library/tupsoundplayer.cpp" line="374"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="172"/>
+        <location filename="../../../components/library/tupsoundplayer.cpp" line="376"/>
         <source>Unmute</source>
         <translation>Réactiver le son</translation>
     </message>
@@ -7806,27 +7874,27 @@ Couverture</translation>
 <context>
     <name>TweenManager</name>
     <message>
-        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="48"/>
+        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="53"/>
         <source>Create a new Tween</source>
         <translation>Créer une nouvelle interpolation</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="124"/>
+        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="129"/>
         <source>Tween name already exists!</source>
         <translation>Le nom de l&apos;interpolation existe déjà!</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="177"/>
+        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="182"/>
         <source>Edit</source>
         <translation>Éditer</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="179"/>
+        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="184"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="182"/>
+        <location filename="../../../plugins/tools/common/tweenmanager.cpp" line="187"/>
         <source>Options</source>
         <translation>Options</translation>
     </message>

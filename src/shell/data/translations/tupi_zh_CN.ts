@@ -588,6 +588,10 @@
         <source>Nodes Editor</source>
         <translation>节点编辑器</translation>
     </message>
+    <message>
+        <source>Hide Tips</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>NodesTool</name>
@@ -1134,6 +1138,14 @@
         <source>Select objects for Tweening first!</source>
         <translation>首先为补间动画选择对象</translation>
     </message>
+    <message>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScaleSettings</name>
@@ -1379,6 +1391,10 @@
     <message>
         <source>Reset Item</source>
         <translation>重置项目</translation>
+    </message>
+    <message>
+        <source>Hide Tips</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2589,10 +2605,6 @@
     <message>
         <source>Ctrl+Shift+P</source>
         <translation>Ctrl+Shift+P</translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+S</source>
-        <translation>Ctrl+Shift+S</translation>
     </message>
     <message>
         <source>Tweening</source>
@@ -5609,14 +5621,53 @@
     </message>
 </context>
 <context>
+    <name>TupSoundForm</name>
+    <message>
+        <source>Play audio at:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scene 1</source>
+        <translation type="unfinished">场景1</translation>
+    </message>
+    <message>
+        <source>Scene 2</source>
+        <translation type="unfinished">场景2</translation>
+    </message>
+    <message>
+        <source>Scene 3</source>
+        <translation type="unfinished">场景3</translation>
+    </message>
+    <message>
+        <source>All Scenes (Background Track)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>TupSoundPlayer</name>
     <message>
         <source>Play</source>
         <translation>播放</translation>
-    </message>
-    <message>
-        <source>Play at frame:</source>
-        <translation>在帧上播放：</translation>
     </message>
     <message>
         <source>Loop</source>
@@ -5633,6 +5684,10 @@
     <message>
         <source>Unmute</source>
         <translation>取消静音</translation>
+    </message>
+    <message>
+        <source>Audio Properties</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
