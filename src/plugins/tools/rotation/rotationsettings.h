@@ -97,14 +97,14 @@ class TUPITUBE_PLUGIN RotationSettings : public QWidget
         
     private:
         void setInnerForm();
-        void setSmallFont();
+        // void setSmallFont();
         void activeInnerForm(bool enable);
         void setRangeForm();
         void activeRangeForm(bool enable);
         void setEditMode();
         void checkFramesRange();
 
-        int screenHeight;
+        // int screenHeight;
 
         QWidget *basicPanel;
         QWidget *advancedPanel;

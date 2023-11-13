@@ -34,7 +34,6 @@
  ***************************************************************************/
 
 #include "rotationsettings.h"
-#include "tuivalues.h"
 #include "tupitemtweener.h"
 #include "tuptweenerstep.h"
 #include "tseparator.h"
@@ -49,9 +48,6 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
     propertiesDone = false;
     rotationType = TupItemTweener::Continuos;
     stepsCounter = 0;
-
-    QPair<int, int> dimension = TAlgorithm::screenDimension();
-    screenHeight = dimension.second;
 
     layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
@@ -88,12 +84,6 @@ RotationSettings::RotationSettings(QWidget *parent) : QWidget(parent)
     layout->addWidget(options);
 
     setInnerForm();
-
-    if (screenHeight < HD_HEIGHT) {
-        smallFont = this->font();
-        smallFont.setPointSize(8);
-        setSmallFont();
-    }
 
     layout->addSpacing(10);
     layout->addLayout(buttonsLayout);
@@ -231,20 +221,6 @@ void RotationSettings::setInnerForm()
     layout->addWidget(tabWidget);
 
     activeInnerForm(false);
-}
-
-void RotationSettings::setSmallFont()
-{
-    nameLabel->setFont(smallFont);
-    options->setFont(smallFont);
-    tabWidget->setFont(smallFont);
-    startingLabel->setFont(smallFont);
-    endingLabel->setFont(smallFont);
-    totalLabel->setFont(smallFont);
-    typeLabel->setFont(smallFont);
-    speedLabel->setFont(smallFont);
-    directionLabel->setFont(smallFont);
-    clockCombo->setFont(smallFont);
 }
 
 void RotationSettings::activeInnerForm(bool enable)
