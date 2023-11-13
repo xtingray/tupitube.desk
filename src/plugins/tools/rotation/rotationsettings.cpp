@@ -177,6 +177,23 @@ void RotationSettings::setInnerForm()
     speedLayout2->setSpacing(0);
     speedLayout2->addWidget(degreesPerFrame);
 
+    QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    clockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    clockLayout->setMargin(0);
+    clockLayout->setSpacing(0);
+
+    directionLabel = new QLabel(tr("Direction") + ": ");
+    directionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+    clockCombo = new QComboBox();
+    clockCombo->addItem(tr("Clockwise"));
+    clockCombo->addItem(tr("Counterclockwise"));
+
+    clockLayout->addSpacing(5);
+    clockLayout->addWidget(directionLabel);
+    clockLayout->addWidget(clockCombo);
+    clockLayout->addSpacing(5);
+
     advancedPanel = new QWidget;
 
     rotationTypeCombo = new QComboBox();
@@ -200,29 +217,11 @@ void RotationSettings::setInnerForm()
     innerLayout->addWidget(new TSeparator(Qt::Horizontal));
     innerLayout->addLayout(speedLayout);
     innerLayout->addLayout(speedLayout2);
+    innerLayout->addLayout(clockLayout);
 
     QBoxLayout *advancedLayout = new QBoxLayout(QBoxLayout::TopToBottom, advancedPanel);
     advancedLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     advancedLayout->addLayout(typeLayout);
-
-    QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom);
-    clockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
-    clockLayout->setMargin(0);
-    clockLayout->setSpacing(0);
-
-    directionLabel = new QLabel(tr("Direction") + ": ");
-    directionLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-    clockCombo = new QComboBox();
-    clockCombo->addItem(tr("Clockwise"));
-    clockCombo->addItem(tr("Counterclockwise"));
-
-    clockLayout->addSpacing(5);
-    clockLayout->addWidget(directionLabel);
-    clockLayout->addWidget(clockCombo);
-    clockLayout->addSpacing(5);
-
-    advancedLayout->addLayout(clockLayout);
 
     setRangeForm();
     advancedLayout->addWidget(rangePanel);
