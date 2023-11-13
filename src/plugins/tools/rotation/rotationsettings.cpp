@@ -154,23 +154,6 @@ void RotationSettings::setInnerForm()
     totalLayout->setSpacing(0);
     totalLayout->addWidget(totalLabel);
 
-    advancedPanel = new QWidget;
-
-    rotationTypeCombo = new QComboBox();
-    rotationTypeCombo->addItem(tr("Continuous"));
-    rotationTypeCombo->addItem(tr("Partial"));
-
-    connect(rotationTypeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(refreshForm(int)));
-
-    typeLabel = new QLabel(tr("Type") + ": ");
-    typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    QHBoxLayout *typeLayout = new QHBoxLayout;
-    typeLayout->setAlignment(Qt::AlignHCenter);
-    typeLayout->setMargin(0);
-    typeLayout->setSpacing(0);
-    typeLayout->addWidget(typeLabel);
-    typeLayout->addWidget(rotationTypeCombo);
-
     speedLabel = new QLabel(tr("Speed (Degrees/Frame)") + ": ");
     speedLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
@@ -194,12 +177,32 @@ void RotationSettings::setInnerForm()
     speedLayout2->setSpacing(0);
     speedLayout2->addWidget(degreesPerFrame);
 
+    advancedPanel = new QWidget;
+
+    rotationTypeCombo = new QComboBox();
+    rotationTypeCombo->addItem(tr("Continuous"));
+    rotationTypeCombo->addItem(tr("Partial"));
+
+    connect(rotationTypeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(refreshForm(int)));
+
+    typeLabel = new QLabel(tr("Type") + ": ");
+    typeLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    QHBoxLayout *typeLayout = new QHBoxLayout;
+    typeLayout->setAlignment(Qt::AlignHCenter);
+    typeLayout->setMargin(0);
+    typeLayout->setSpacing(0);
+    typeLayout->addWidget(typeLabel);
+    typeLayout->addWidget(rotationTypeCombo);
+
     innerLayout->addLayout(startLayout);
     innerLayout->addLayout(endLayout);
     innerLayout->addLayout(totalLayout);
+    innerLayout->addWidget(new TSeparator(Qt::Horizontal));
+    innerLayout->addLayout(speedLayout);
+    innerLayout->addLayout(speedLayout2);
 
     QBoxLayout *advancedLayout = new QBoxLayout(QBoxLayout::TopToBottom, advancedPanel);
-    advancedLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    advancedLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     advancedLayout->addLayout(typeLayout);
 
     QBoxLayout *clockLayout = new QBoxLayout(QBoxLayout::TopToBottom);
@@ -224,11 +227,8 @@ void RotationSettings::setInnerForm()
     setRangeForm();
     advancedLayout->addWidget(rangePanel);
 
-    advancedLayout->addLayout(speedLayout);
-    advancedLayout->addLayout(speedLayout2);
-
-    tabWidget->addTab(basicPanel, tr("Range"));
-    tabWidget->addTab(advancedPanel, tr("Settings"));
+    tabWidget->addTab(basicPanel, tr("Basic"));
+    tabWidget->addTab(advancedPanel, tr("Advanced"));
     layout->addWidget(tabWidget);
 
     activeInnerForm(false);
