@@ -54,6 +54,7 @@ class QGraphicsItem;
 class TupLibrary;
 
 typedef QList<TupScene *> Scenes;
+typedef QList<SoundResource> Sounds;
 
 class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializable
 {
@@ -183,6 +184,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         bool isOpen;
         TupProject::Mode spaceMode;
 
-        QList<SoundResource> soundRecords;
+        Sounds soundRecords;
+        QList<Sounds> undoSoundRecords;
 };
 #endif

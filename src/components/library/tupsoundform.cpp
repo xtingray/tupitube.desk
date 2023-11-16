@@ -43,6 +43,8 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
         qDebug() << "[TupSoundForm()]";
     #endif
 
+    currentSceneIndex = 0;
+
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenHeight = dimension.second;
 
@@ -61,9 +63,6 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
     framesListWidget->setFlow(QListView::TopToBottom);
     framesListWidget->setMovement(QListView::Static);
     framesListWidget->setFixedHeight((screenHeight * 6)/100);
-    framesListWidget->addItem(tr("Frame 1"));
-    framesListWidget->addItem(tr("Frame 2"));
-    framesListWidget->addItem(tr("Frame 3"));
 
     QHBoxLayout *framesLayout = new QHBoxLayout;
     framesLayout->addWidget(framesListWidget, Qt::AlignHCenter);
@@ -116,7 +115,14 @@ QSize TupSoundForm::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundForm::loadScenesCombo(QList<QString> scenes)
+void TupSoundForm::setSoundParams(QStringList scenes, SoundResource params)
+{
+    soundParams = params;
+    loadScenesCombo(scenes);
+    // updateFramesList(int sceneInde);
+}
+
+void TupSoundForm::loadScenesCombo(QStringList scenes)
 {
     foreach(QString scene, scenes)
         scenesCombo->addItem(scene);
@@ -124,7 +130,29 @@ void TupSoundForm::loadScenesCombo(QList<QString> scenes)
     scenesCombo->addItem(tr("All Scenes (Background Track)"));
 }
 
-void TupSoundForm::updateFramesList(int index)
+void TupSoundForm::updateFramesList(int sceneIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundForm::updateFramesList()] - sceneIndex ->" << sceneIndex;
+    #endif
 
+    if (sceneIndex != currentSceneIndex) {
+        currentSceneIndex = sceneIndex;
+        framesListWidget->clear();
+        QList<SoundScene> scenes = soundParams.scenes;
+        int scenesTotal = scenes.size();
+        for(int i=0; i<scenesTotal; i++) {
+            SoundScene scene = scenes.at(i);
+            int soundSceneIndex = scene.sceneIndex;
+            if (soundSceneIndex == sceneIndex) {
+                QList<int> frames = scene.frames;
+                int framesTotal = frames.size();
+                for(int j=0; j<framesTotal; j++) {
+                    QString frameIndex = QString::number(frames.at(j));
+                    framesListWidget->addItem(frameIndex);
+                }
+                return;
+            }
+        }
+    }
 }

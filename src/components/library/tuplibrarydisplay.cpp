@@ -119,9 +119,9 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(SoundResource params)
+void TupLibraryDisplay::setSoundParams(QStringList scenes, SoundResource params)
 {
-    soundPlayer->setSoundParams(params);
+    soundPlayer->setSoundParams(scenes, params);
 }
 
 void TupLibraryDisplay::showSoundPlayer()

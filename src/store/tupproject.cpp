@@ -267,6 +267,7 @@ bool TupProject::restoreScene(int position)
         if (scene) {
             scenesList.insert(position, scene);
             sceneCounter++;
+            soundRecords = undoSoundRecords.takeLast();
 
             return true;
         }
@@ -306,6 +307,7 @@ bool TupProject::removeScene(int pos)
         }
 
         undoScenes << scenesList.takeAt(pos);
+        undoSoundRecords << soundRecords;
         sceneCounter--;
 
         return true;
@@ -323,6 +325,7 @@ bool TupProject::resetScene(int pos, const QString &newName)
     TupScene *scene = sceneAt(pos);
     if (scene) {
         undoScenes << scenesList.takeAt(pos);
+        undoSoundRecords << soundRecords;
 
         TupScene *basic = new TupScene(this, pos, dimension, Qt::white);
         basic->setSceneName(newName);
@@ -344,6 +347,7 @@ QString TupProject::recoverScene(int pos)
     TupScene *scene = undoScenes.takeLast();
     if (scene) {
         scenesList[pos] = scene;
+        soundRecords = undoSoundRecords.takeLast();
 
         return scene->getSceneName();
     }

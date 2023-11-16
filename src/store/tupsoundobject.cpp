@@ -47,11 +47,13 @@ TupSoundObject::TupSoundObject(QObject *parent) : QObject(parent)
     soundType = NoSound;
     mute = false;
 
+    /*
     SoundScene initRecord;
     initRecord.sceneIndex = 0;
     initRecord.frames.append(0);
 
     audioScenes << initRecord;
+    */
 }
 
 TupSoundObject::~TupSoundObject()

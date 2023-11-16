@@ -61,7 +61,8 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         ~TupSoundForm();
 
         QSize sizeHint() const;
-        void loadScenesCombo(QList<QString> scenes);
+        void setSoundParams(QStringList scenes, SoundResource params);
+        void loadScenesCombo(QStringList scenes);
 
     public slots:
         void updateFramesList(int index);
@@ -73,6 +74,9 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         QSpinBox *framesBox;
         TImageButton *addFrameButton;
         TImageButton *removeFrameButton;
+
+        SoundResource soundParams;
+        int currentSceneIndex;
 };
 
 #endif

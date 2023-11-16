@@ -381,7 +381,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
-                     display->setSoundParams(object->getSoundResourceParams());
+                     display->setSoundParams(project->getSceneNames(), object->getSoundResourceParams());
                      display->showSoundPlayer();
                    }
                    break;
@@ -2647,7 +2647,7 @@ void TupLibraryWidget::updateSoundPlayer()
 
         if (display) {
             if (display->isSoundPanelVisible())
-                display->setSoundParams(currentSound->getSoundResourceParams());
+                display->setSoundParams(project->getSceneNames(), currentSound->getSoundResourceParams());
         }
     }
 
