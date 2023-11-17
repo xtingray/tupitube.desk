@@ -124,6 +124,7 @@ void TupSoundForm::setSoundParams(QStringList scenes, SoundResource params)
 
 void TupSoundForm::loadScenesCombo(QStringList scenes)
 {
+    scenesCombo->clear();
     foreach(QString scene, scenes)
         scenesCombo->addItem(scene);
 

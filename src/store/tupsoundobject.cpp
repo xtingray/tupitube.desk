@@ -46,14 +46,7 @@ TupSoundObject::TupSoundObject(QObject *parent) : QObject(parent)
 {
     soundType = NoSound;
     mute = false;
-
-    /*
-    SoundScene initRecord;
-    initRecord.sceneIndex = 0;
-    initRecord.frames.append(0);
-
-    audioScenes << initRecord;
-    */
+    backgroundTrack = false;
 }
 
 TupSoundObject::~TupSoundObject()
@@ -68,6 +61,16 @@ void TupSoundObject::enableMute(bool flag)
 bool TupSoundObject::isMuted()
 {
     return mute;
+}
+
+void TupSoundObject::enableBackgroundTrack(bool flag)
+{
+    backgroundTrack = flag;
+}
+
+bool TupSoundObject::isBackgroundTrack()
+{
+    return backgroundTrack;
 }
 
 void TupSoundObject::setAudioScenes(QList<SoundScene> scenes)
@@ -162,6 +165,7 @@ void TupSoundObject::fromXml(const QString &xml)
     if (root.tagName() == "sound") {
         soundType = SoundType(root.attribute("soundType").toInt());
         mute = root.attribute("mute", "true").toInt() ? true : false;
+        backgroundTrack = root.attribute("backgroundTrack", "false").toInt() ? true : false;
 
         QDomNode n = root.firstChild();
         while (!n.isNull()) {
@@ -192,7 +196,7 @@ void TupSoundObject::fromXml(const QString &xml)
 }
 
 /*
-   <sound soundType="2" mute="0">
+   <sound soundType="2" mute="0" backgroundTrack="0">
      <scene index="0" frames="0,20,50" />
      <scene index="1" frames="0,10,32" />
      <scene index="2" frames="0,15,27" />
@@ -204,11 +208,13 @@ QDomElement TupSoundObject::toXml(QDomDocument &doc) const
         qDebug() << "---";
         qDebug() << "[TupSoundObject::toXml()] - soundType -> " << soundType;
         qDebug() << "[TupSoundObject::toXml()] - mute -> " << mute;
+        qDebug() << "[TupSoundObject::toXml()] - backgroundTrack -> " << backgroundTrack;
     #endif
 
     QDomElement root = doc.createElement("sound");
     root.setAttribute("soundType", soundType);
     root.setAttribute("mute", mute);
+    root.setAttribute("backgroundTrack", backgroundTrack);
 
     QString framesString = "";
     for (int i = 0; i < audioScenes.count(); i++) {

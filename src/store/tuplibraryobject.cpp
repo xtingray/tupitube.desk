@@ -109,6 +109,16 @@ bool TupLibraryObject::isMuted()
     return soundObject->isMuted();
 }
 
+void TupLibraryObject::enableBackgroundTrack(bool flag)
+{
+    soundObject->enableBackgroundTrack(flag);
+}
+
+bool TupLibraryObject::isBackgroundTrack()
+{
+    return soundObject->isBackgroundTrack();
+}
+
 SoundType TupLibraryObject::getSoundType()
 {
     return soundObject->getSoundType();
@@ -127,6 +137,7 @@ SoundResource TupLibraryObject::getSoundResourceParams()
     params.path = dataPath;
     params.muted = soundObject->isMuted();
     params.type = soundObject->getSoundType();
+    params.isBackgroundTrack = soundObject->isBackgroundTrack();
 
     return params;
 }

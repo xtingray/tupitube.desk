@@ -96,6 +96,7 @@ struct SoundResource {
     QList<SoundScene> scenes;
     QString path;
     bool muted;
+    bool isBackgroundTrack;
     SoundType type;
 };
 

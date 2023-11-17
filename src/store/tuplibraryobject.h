@@ -95,6 +95,9 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         void enableMute(bool flag);
         bool isMuted();
 
+        void enableBackgroundTrack(bool flag);
+        bool isBackgroundTrack();
+
         void updateFolder(const QString &projectPath, const QString &folder = QString());
 
         QList<int>framesToPlayAt(int sceneIndex);

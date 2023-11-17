@@ -1788,6 +1788,13 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
             currentFrame.scene = response->getSceneIndex();
         }
         break;
+        case TupProjectRequest::Add:
+        case TupProjectRequest::Remove:
+        {
+            if (display->isSoundPanelVisible())
+                display->setSoundParams(project->getSceneNames(), currentSound->getSoundResourceParams());
+        }
+        break;
     }
 }
 
