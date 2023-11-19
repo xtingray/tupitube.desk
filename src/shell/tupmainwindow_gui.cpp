@@ -168,10 +168,10 @@ void TupMainWindow::createGUI()
 
     /* SQA: Define if scripting support should be enabled
     // Adding the script editor to the bottom side, if kinas was enabled
-#ifdef ENABLE_KINAS
-    KinasWidget *m_scriptEditor = new KinasWidget;
-    addToolView(m_scriptEditor, Qt::BottomDockWidgetArea, Animation, "TupiTube Script", QKeySequence(tr("Shift+K"));
-#endif
+    #ifdef ENABLE_KINAS
+        KinasWidget *m_scriptEditor = new KinasWidget;
+        addToolView(m_scriptEditor, Qt::BottomDockWidgetArea, Animation, "TupiTube Script", QKeySequence(tr("Shift+K"));
+    #endif
     */
 
     enableToolViews(false);
@@ -244,6 +244,7 @@ void TupMainWindow::setupMenu()
         exportMenu = menuBar()->addMenu(tr("&Export"));
         exportMenu->addAction(m_actionManager->find("export"));
         exportMenu->addAction(m_actionManager->find("export_image"));
+        exportMenu->addAction(m_actionManager->find("export_storyboard"));
     #endif
 
     postMenu = menuBar()->addMenu(tr("&Post"));
@@ -389,8 +390,13 @@ void TupMainWindow::setupFileActions()
 
     // Export Frame action
     TAction *exportFrame = new TAction(QPixmap(THEME_DIR + "icons/export_frame.png"), tr("Export Frame As Image"),
-                                       QKeySequence(tr("@")), this, SIGNAL(imageExported()), m_actionManager);
+                                       QKeySequence(tr("X")), this, SIGNAL(imageExported()), m_actionManager);
     m_actionManager->insert(exportFrame, "export_image", "file");
+
+    // Export Project as Storyboard
+    TAction *storyboard = new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Storyboard Settings"), QKeySequence(tr("W")),
+                                      this, SIGNAL(storyboardCalled()), m_actionManager, "export_storyboard");
+    m_actionManager->insert(storyboard, "export_storyboard", "file");
 
     // Post Animation action
     TAction *postProject = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("&Post Animation"),
@@ -400,7 +406,7 @@ void TupMainWindow::setupFileActions()
 
     // Post Frame action
     TAction *postFrame = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("Post Frame"),
-                                     QKeySequence(tr("Ctrl+@")), this, SIGNAL(imagePosted()), m_actionManager);
+                                     QKeySequence(tr("Ctrl+X")), this, SIGNAL(imagePosted()), m_actionManager);
     m_actionManager->insert(postFrame, "post_image", "file");
 
     // Visit TupiTube Network action

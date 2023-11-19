@@ -291,6 +291,7 @@ class TupMainWindow : public TabbedMainWindow
         void activeDockChanged(TupDocumentView::DockType);
         void imagePosted();
         void imageExported();
+        void storyboardCalled();
 };
 
 #endif

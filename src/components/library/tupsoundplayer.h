@@ -46,13 +46,10 @@
 #include <QBoxLayout>
 #include <QSlider>
 #include <QLabel>
-// #include <QSpinBox>
 #include <QMediaPlayer>
 #include <QUrl>
 #include <QTime>
 #include <QCheckBox>
-// #include <QComboBox>
-// #include <QListWidget>
 
 /**
  * @author Gustav Gonzalez
@@ -67,18 +64,20 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         ~TupSoundPlayer();
 
         QSize sizeHint() const;
-        void setSoundParams(QStringList scenes, SoundResource params);
+
+        void setSoundParams(SoundResource params, TupProject *project);
+        void updateFrameLimits();
+
         void stopFile();
         bool isPlaying();
         void reset();
         void resetMediaPlayer();
         QString getSoundID() const;
-        void updateInitFrame(int frame);
         void enableLipSyncInterface(SoundType type, QList<SoundScene> scenes);
 
     signals:
-        void frameUpdated(int frame);
         void muteEnabled(bool mute);
+        void soundResourceModified(SoundResource params);
 
     private slots:
         void playFile();
@@ -93,7 +92,6 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
     private:
         QList<QMediaPlayer *> soundPlayer;
 
-        // QLabel *frameLabel;
         QSlider *slider;
         QLabel *timer;
         TImageButton *playButton;
@@ -105,18 +103,8 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         QCheckBox *loopBox;
         bool loop;
         bool mute;
-        // QSpinBox *frameBox;
-        // QWidget *frameWidget;
         QString soundID;
         QString url;
-
-        /*
-        QWidget *paramsWidget;
-        QComboBox *scenesCombo;
-        QLabel *playAtLabel;
-        QListWidget *framesListWidget;
-        TImageButton *addFrameButton;
-        */
 
         TupSoundForm *soundForm;
 };

@@ -44,8 +44,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
         qDebug() << "[TupSoundPlayer()]";
     #endif
 
-    // setStyleSheet("border: 1px solid blue");
-
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 
     totalTime = "00:00";
@@ -56,6 +54,8 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     widgetLabel->setAlignment(Qt::AlignHCenter);
 
     soundForm = new TupSoundForm();
+    connect(soundForm, SIGNAL(soundResourceModified(SoundResource)),
+            this, SIGNAL(soundResourceModified(SoundResource)));
 
     timer = new QLabel("");
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -100,7 +100,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    // layout->addStretch();
     layout->addWidget(widgetLabel);
     layout->addWidget(soundForm);
     layout->addWidget(new TSeparator(Qt::Horizontal));
@@ -126,7 +125,7 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundParams(QStringList scenes, SoundResource params)
+void TupSoundPlayer::setSoundParams(SoundResource params, TupProject *project)
 {
     soundID = params.key;
     url = params.path;
@@ -134,7 +133,6 @@ void TupSoundPlayer::setSoundParams(QStringList scenes, SoundResource params)
     #ifdef TUP_DEBUG
         qDebug() << "---";
         qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() ->" << params.type;
-        // qDebug() << "[TupSoundPlayer::setSoundParams()] - scenes ->" << params.scenes;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() ->" << params.muted;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url ->" << url;
         qDebug() << "---";
@@ -161,7 +159,6 @@ void TupSoundPlayer::setSoundParams(QStringList scenes, SoundResource params)
     connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
-    // enableLipSyncInterface(params.type, params.frameIndex);
     enableLipSyncInterface(params.type, params.scenes);
 
     mute = params.muted;
@@ -171,14 +168,18 @@ void TupSoundPlayer::setSoundParams(QStringList scenes, SoundResource params)
         muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
     }
 
-    soundForm->setSoundParams(scenes, params);
+    soundForm->setSoundParams(params, project);
+}
+
+void TupSoundPlayer::updateFrameLimits()
+{
+    soundForm->updateFrameLimits();
 }
 
 void TupSoundPlayer::enableLipSyncInterface(SoundType type, QList<SoundScene> scenes)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - type -> " << type;
-        // qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - frame -> " << frame;
     #endif
 
     if (type != Lipsync) {
@@ -391,6 +392,7 @@ QString TupSoundPlayer::getSoundID() const
     return soundID;
 }
 
+/*
 void TupSoundPlayer::updateInitFrame(int frame)
 {
     #ifdef TUP_DEBUG
@@ -399,3 +401,4 @@ void TupSoundPlayer::updateInitFrame(int frame)
 
     // frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
 }
+*/

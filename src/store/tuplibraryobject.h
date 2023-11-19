@@ -109,6 +109,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         SoundType getSoundType();
         void setSoundType(SoundType type);
         SoundResource getSoundResourceParams();
+        void updateSoundResourceParams(SoundResource params);
         void setAudioScenes(QList<SoundScene> audioScenes);
         QList<SoundScene> getAudioScenes();
 

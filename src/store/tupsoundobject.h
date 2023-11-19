@@ -45,10 +45,10 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         TupSoundObject(QObject *parent = nullptr);
         ~TupSoundObject();
 
-        void enableMute(bool flag);
+        void setMute(bool flag);
         bool isMuted();
 
-        void enableBackgroundTrack(bool flag);
+        void setBackgroundTrack(bool flag);
         bool isBackgroundTrack();
 
         void setAudioScenes(QList<SoundScene> scenes);

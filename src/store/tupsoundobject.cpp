@@ -53,7 +53,7 @@ TupSoundObject::~TupSoundObject()
 {
 }
 
-void TupSoundObject::enableMute(bool flag)
+void TupSoundObject::setMute(bool flag)
 {
     mute = flag;
 }
@@ -63,7 +63,7 @@ bool TupSoundObject::isMuted()
     return mute;
 }
 
-void TupSoundObject::enableBackgroundTrack(bool flag)
+void TupSoundObject::setBackgroundTrack(bool flag)
 {
     backgroundTrack = flag;
 }

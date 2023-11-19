@@ -103,6 +103,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
 
         Scenes getScenes() const;
         QStringList getSceneNames();
+        QList<int> getFrameLimits();
 
         TupScene *createScene(QString name, int pos, bool loaded = false);
         void updateScene(int pos, TupScene *scene);

@@ -533,6 +533,19 @@ QStringList TupProject::getSceneNames()
     return sceneNames;
 }
 
+QList<int> TupProject::getFrameLimits()
+{
+    QList<int> limits;
+    int scenesCount = scenesList.size();
+    for (int i = 0; i < scenesCount; i++) {
+        TupScene *scene = scenesList.at(i);
+        if (scene)
+            limits << scene->framesCount();
+    }
+
+    return limits;
+}
+
 bool TupProject::createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder)
 {
     #ifdef TUP_DEBUG

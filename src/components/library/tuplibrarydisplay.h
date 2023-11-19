@@ -37,6 +37,7 @@
 #define TUPLIBRARYDISPLAY_H
 
 #include "tglobal.h"
+#include "tupproject.h"
 #include "tupitempreview.h"
 #include "tupsoundplayer.h"
 
@@ -65,16 +66,20 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void showDisplay();
         void showSoundPlayer();
         bool isSoundPanelVisible();
-        void setSoundParams(QStringList scenes, SoundResource params);
+        // void setSoundParams(SoundResource params, QStringList scenes);
+        void setSoundParams(SoundResource params, TupProject *project);
+        void updateFrameLimits();
+
         void stopSoundPlayer();     
         QString getSoundID() const;
-        void updateSoundInitFrame(int frame);
+        // void updateSoundInitFrame(int frame);
 
         void enableLipSyncInterface(SoundType soundType, QList<SoundScene> scenes);
 
     signals:
-        void frameUpdated(int frame);
+        // void frameUpdated(int frame);
         void muteEnabled(bool mute);
+        void soundResourceModified(SoundResource params);
 
     protected:
         void mousePressEvent(QMouseEvent *event);

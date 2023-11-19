@@ -162,6 +162,7 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
 
     public slots:
         void updateSoundPlayer();
+        void updateSoundResource(SoundResource params);
 
     signals:
         void requestCurrentGraphic();
@@ -196,8 +197,11 @@ class TUPITUBE_EXPORT TupLibraryWidget : public TupModuleWidgetBase
         bool fileIsImage(const QString &extension);
         bool importImageRecord(const QString &photogram, const QString &extension, const QSize imageSize, const QSize projectSize,
                                bool resize, const QString &directory);
+        void updateCurrentFrameIndex(int sceneIndex, int layerIndex, int frameIndex);
+
         QScreen *screen;
         TupLibrary *library;
+        bool libraryIsLoaded;
         TupProject *project;
         TupProject::Mode currentMode;
         TupProject::Mode previousMode;

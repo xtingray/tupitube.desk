@@ -561,7 +561,7 @@ void TextTool::setupActions()
     activeSelection = false;
     nodesManager = nullptr;
 
-    TAction *text = new TAction(QIcon(ICONS_DIR + "text.png"), tr("Text"), this);
+    TAction *text = new TAction(QIcon(ICONS_DIR + "text.png"), tr("Text") + QString(" - T"), this);
     text->setShortcut(QKeySequence(tr("T")));
     text->setCursor(QCursor(Qt::ArrowCursor));
     text->setActionId(TAction::Text);

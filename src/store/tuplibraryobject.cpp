@@ -101,7 +101,7 @@ TupLibraryObject::ItemType TupLibraryObject::getItemType() const
 
 void TupLibraryObject::enableMute(bool flag)
 {
-    soundObject->enableMute(flag);
+    soundObject->setMute(flag);
 }
 
 bool TupLibraryObject::isMuted()
@@ -111,7 +111,7 @@ bool TupLibraryObject::isMuted()
 
 void TupLibraryObject::enableBackgroundTrack(bool flag)
 {
-    soundObject->enableBackgroundTrack(flag);
+    soundObject->setBackgroundTrack(flag);
 }
 
 bool TupLibraryObject::isBackgroundTrack()
@@ -140,6 +140,18 @@ SoundResource TupLibraryObject::getSoundResourceParams()
     params.isBackgroundTrack = soundObject->isBackgroundTrack();
 
     return params;
+}
+
+void TupLibraryObject::updateSoundResourceParams(SoundResource params)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::updateSoundResourceParams()] - params ->" << params.isBackgroundTrack;
+    #endif
+
+    soundObject->setMute(params.muted);
+    soundObject->setSoundType(params.type);
+    soundObject->setBackgroundTrack(params.isBackgroundTrack);
+    soundObject->setAudioScenes(params.scenes);
 }
 
 void TupLibraryObject::setAudioScenes(QList<SoundScene> audioScenes)

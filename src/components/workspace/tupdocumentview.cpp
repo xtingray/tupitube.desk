@@ -408,9 +408,6 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(ICONS_DIR + "cut.png"), tr("Cut"), QKeySequence(),
                 paintArea, SLOT(cutItems()), actionManager, "cut");
 
-    // new TAction(QPixmap(ICONS_DIR + "delete.png"), tr("Delete"), QKeySequence(Qt::Key_Delete),
-    //             paintArea, SLOT(deleteItems()), actionManager, "delete");
-
     new TAction(QPixmap(ICONS_DIR + "delete.png"), tr("Delete"), QKeySequence(),
                 paintArea, SLOT(deleteItems()), actionManager, "delete");
 
@@ -418,49 +415,22 @@ void TupDocumentView::setupDrawActions()
                         QKeySequence(tr("")), this, SLOT(editProjectSize()),
                         actionManager, "edit_project_size");
 
-    /* 
-    TAction *group = new TAction(QPixmap(ICONS_DIR + "group.png"), tr("&Group"), QKeySequence(tr("Ctrl+G")),
-                                 paintArea, SLOT(groupItems()), actionManager, "group");
-    // SQA: Enabled just for initial development
-    group->setDisabled(true);
-
-    TAction *ungroup = new TAction(QPixmap(ICONS_DIR + "ungroup.png"), tr("&Ungroup"),
-                                    QKeySequence(tr("Ctrl+Shift+G")) , paintArea, SLOT(ungroupItems()),
-                                    actionManager, "ungroup");
-    // SQA: Enabled just for initial development
-    ungroup->setDisabled(true);
-    */
-
     new TAction(QPixmap(ICONS_DIR + "layer.png"), tr("Onion Skin"), QKeySequence(Qt::Key_U),
                 this, SLOT(enableOnionFeature()), actionManager, "onion");
 
     new TAction(QPixmap(ICONS_DIR + "onion.png"), tr("Onion Skin Factor"), QKeySequence(),
                 this, SLOT(setDefaultOnionFactor()), actionManager, "onion_factor");
 
-    new TAction(QPixmap(ICONS_DIR + "export_frame.png"), tr("Export Frame As Image"), QKeySequence(tr("@")),
+    new TAction(QPixmap(ICONS_DIR + "export_frame.png"), tr("Export Frame As Image"), QKeySequence(/*tr("X")*/),
                 this, SLOT(exportImage()), actionManager, "export_image");
 
-    new TAction(QPixmap(ICONS_DIR + "share.png"), tr("Post Frame On TupiTube"), QKeySequence(tr("Ctrl+@")),
+    new TAction(QPixmap(ICONS_DIR + "share.png"), tr("Post Frame On TupiTube"), QKeySequence(/*tr("Ctrl+X")*/),
                 this, SLOT(postImage()), actionManager, "post_image");
 
-    /*
-    new TAction(QPixmap(ICONS_DIR + "onion_color.png"), tr("Onion Color"), QKeySequence(),
-                          this, SLOT(activeOnionColorScheme()), actionManager, "onion_color");
-    */
+    new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Export Storyboard"), QKeySequence(),
+                this, SLOT(storyboardSettings()), actionManager, "export_storyboard");
 
-    /*
-    TCONFIG->beginGroup("Network");
-    QString server = TCONFIG->value("Server").toString();
-    if (isNetworked && server.compare("tupitu.be") == 0) {
-        new TAction(QPixmap(ICONS_DIR + "import_project.png"), tr("Export Frame To Gallery"), QKeySequence(tr("@")),
-                    this, SLOT(postImage()), actionManager, "post_image");
-    }
-    */
-
-    new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Storyboard Settings"), QKeySequence(),
-                this, SLOT(storyboardSettings()), actionManager, "storyboard");
-
-    new TAction(QPixmap(ICONS_DIR + "camera.png"), tr("Camera"), QKeySequence(tr("Ctrl+Shift+C")),
+    new TAction(QPixmap(ICONS_DIR + "camera.png"), tr("Camera") + QString(" - Ctrl+Shift+C"), QKeySequence(tr("Ctrl+Shift+C")),
                 this, SLOT(cameraInterface()), actionManager, "camera");
 
     new TAction(QPixmap(ICONS_DIR + "papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(tr("Ctrl+Shift+P")),
@@ -704,15 +674,8 @@ void TupDocumentView::loadPlugins()
          motionMenu->addAction(tweenTools.at(i));
 
     miscMenu->addAction(actionManager->find("export_image"));
-
-    // TCONFIG->beginGroup("Network");
-    // QString server = TCONFIG->value("Server").toString();
-    // if (isNetworked && server.compare("tupitu.be") == 0)
-    //     miscMenu->addAction(actionManager->find("post_image"));
-
     miscMenu->addAction(actionManager->find("post_image"));
-    miscMenu->addAction(actionManager->find("storyboard"));
-    // miscMenu->addAction(actionManager->find("papagayo"));
+    miscMenu->addAction(actionManager->find("export_storyboard"));
 
     foreach (QObject *plugin, TupPluginManager::instance()->getFilters()) {
         AFilterInterface *filterInterface = qobject_cast<AFilterInterface *>(plugin);

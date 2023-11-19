@@ -52,6 +52,7 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
         qDebug() << "[TupLibraryWidget()]";
     #endif
 
+    libraryIsLoaded = false;
     childCount = 0;
     renaming = false;
     mkdir = false;
@@ -69,9 +70,11 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
 
     libraryDir = QDir(CONFIG_DIR + "libraries");
 
-    display = new TupLibraryDisplay;
-    connect(display, SIGNAL(frameUpdated(int)), this, SLOT(updateSoundTiming(int)));
+    display = new TupLibraryDisplay();
+    // connect(display, SIGNAL(frameUpdated(int)), this, SLOT(updateSoundTiming(int)));
     connect(display, SIGNAL(muteEnabled(bool)), this, SLOT(updateSoundMuteStatus(bool)));
+    connect(display, SIGNAL(soundResourceModified(SoundResource)),
+            this, SLOT(updateSoundResource(SoundResource)));
 
     libraryTree = new TupItemManager;
 
@@ -249,6 +252,8 @@ void TupLibraryWidget::resetGUI()
         qDebug() << "[TupLibraryWidget::resetGUI()]";
     #endif
 
+    libraryIsLoaded = false;
+
     if (display)
         display->reset();
 
@@ -270,6 +275,7 @@ void TupLibraryWidget::setLibrary(TupLibrary *assets)
 
     library = assets;
     project = library->getProject();
+    // libraryIsLoaded = true;
 }
 
 void TupLibraryWidget::initCurrentFrame()
@@ -381,7 +387,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
-                     display->setSoundParams(project->getSceneNames(), object->getSoundResourceParams());
+                     display->setSoundParams(object->getSoundResourceParams(), project);
                      display->showSoundPlayer();
                    }
                    break;
@@ -1792,7 +1798,7 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
         case TupProjectRequest::Remove:
         {
             if (display->isSoundPanelVisible())
-                display->setSoundParams(project->getSceneNames(), currentSound->getSoundResourceParams());
+                display->setSoundParams(currentSound->getSoundResourceParams(), project);
         }
         break;
     }
@@ -1818,8 +1824,8 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
                 QList<int> frames;
                 frames << frameIndex;
                 sound->updateFramesToPlay(currentFrame.scene, frames);
-                if (display->getSoundID().compare(soundID) == 0)
-                    display->updateSoundInitFrame(frameIndex + 1);
+                // if (display->getSoundID().compare(soundID) == 0)
+                //     display->updateSoundInitFrame(frameIndex + 1);
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupLibraryWidget::layerResponse()] - "
@@ -2047,6 +2053,13 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
     }
 }
 
+void TupLibraryWidget::updateCurrentFrameIndex(int sceneIndex, int layerIndex, int frameIndex)
+{
+    currentFrame.scene = sceneIndex;
+    currentFrame.layer = layerIndex;
+    currentFrame.frame = frameIndex;
+}
+
 void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
@@ -2054,12 +2067,38 @@ void TupLibraryWidget::frameResponse(TupFrameResponse *response)
                  << response->getFrameIndex() << " - action -> " << response->getAction();
     #endif
 
-    if (response->getAction() == TupProjectRequest::Add
-        || response->getAction() == TupProjectRequest::Select) {
-        currentFrame.frame = response->getFrameIndex();
-        currentFrame.layer = response->getLayerIndex();
-        currentFrame.scene = response->getSceneIndex();
+    int sceneIndex = response->getSceneIndex();
+    int layerIndex = response->getLayerIndex();
+    int frameIndex = response->getFrameIndex();
+
+    updateCurrentFrameIndex(sceneIndex, layerIndex, frameIndex);
+
+    qDebug() << "[TupLibraryWidget::frameResponse()] - Tracing remove action...";
+
+    switch (response->getAction()) {
+        case TupProjectRequest::Add:
+        {
+            if (sceneIndex == 0 && layerIndex == 0 && frameIndex == 0) {
+                libraryIsLoaded = true;
+            } else {
+                display->updateFrameLimits();
+            }
+        }
+        break;
+        case TupProjectRequest::Remove:
+        case TupProjectRequest::RemoveSelection:
+        {
+            qDebug() << "*** scene index ->" << sceneIndex;
+            qDebug() << "*** layer index ->" << layerIndex;
+            qDebug() << "*** frame index ->" << frameIndex;
+            qDebug() << "*** project scenes size ->" << project->scenesCount();
+
+            display->updateFrameLimits();
+        }
+        break;
     }
+
+    qDebug() << "[TupLibraryWidget::frameResponse()] - END!";
 }
 
 void TupLibraryWidget::importLibraryObject()
@@ -2544,6 +2583,15 @@ void TupLibraryWidget::updateSoundMuteStatus(bool mute)
     }
 }
 
+void TupLibraryWidget::updateSoundResource(SoundResource params)
+{
+    if (currentSound) {
+        currentSound->updateSoundResourceParams(params);
+        project->updateSoundResourcesItem(currentSound);
+        emit soundUpdated();
+    }
+}
+
 void TupLibraryWidget::stopSoundPlayer()
 {
     if (display)
@@ -2654,7 +2702,7 @@ void TupLibraryWidget::updateSoundPlayer()
 
         if (display) {
             if (display->isSoundPanelVisible())
-                display->setSoundParams(project->getSceneNames(), currentSound->getSoundResourceParams());
+                display->setSoundParams(currentSound->getSoundResourceParams(), project);
         }
     }
 

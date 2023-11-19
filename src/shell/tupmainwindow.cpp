@@ -348,6 +348,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
                 animationTab, SLOT(launchLipsyncModule(PapagayoAppMode, const QString&)));
         connect(this, SIGNAL(imageExported()), animationTab, SLOT(exportImage()));
         connect(this, SIGNAL(imagePosted()), animationTab, SLOT(postImage()));
+        connect(this, SIGNAL(storyboardCalled()), animationTab, SLOT(storyboardSettings()));
 
         connect(animationTab, SIGNAL(localAssetDropped(const QString &, TupLibraryObject::ObjectType)),
                 m_libraryWidget, SLOT(importLocalDroppedAsset(const QString &, TupLibraryObject::ObjectType)));

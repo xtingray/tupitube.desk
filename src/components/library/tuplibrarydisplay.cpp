@@ -47,9 +47,10 @@ TupLibraryDisplay::TupLibraryDisplay() : QWidget()
     #endif
 
     previewPanel = new TupItemPreview(this);
-    soundPlayer = new TupSoundPlayer(this);
-    connect(soundPlayer, SIGNAL(frameUpdated(int)), this, SIGNAL(frameUpdated(int)));
+    soundPlayer = new TupSoundPlayer();
     connect(soundPlayer, SIGNAL(muteEnabled(bool)), this, SIGNAL(muteEnabled(bool)));
+    connect(soundPlayer, SIGNAL(soundResourceModified(SoundResource)),
+            this, SIGNAL(soundResourceModified(SoundResource)));
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
@@ -119,9 +120,14 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(QStringList scenes, SoundResource params)
+void TupLibraryDisplay::setSoundParams(SoundResource params, TupProject *project)
 {
-    soundPlayer->setSoundParams(scenes, params);
+    soundPlayer->setSoundParams(params, project);
+}
+
+void TupLibraryDisplay::updateFrameLimits()
+{
+    soundPlayer->updateFrameLimits();
 }
 
 void TupLibraryDisplay::showSoundPlayer()
@@ -150,10 +156,12 @@ QString TupLibraryDisplay::getSoundID() const
     return soundPlayer->getSoundID();
 }
 
+/*
 void TupLibraryDisplay::updateSoundInitFrame(int frame)
 {
     soundPlayer->updateInitFrame(frame);
 }
+*/
 
 void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, QList<SoundScene> scenes)
 {
