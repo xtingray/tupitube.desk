@@ -72,7 +72,7 @@
 #include <QCamera>
 #include <QCameraInfo>
 
-TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringList &users, QWidget *parent):
+TupDocumentView::TupDocumentView(TupProject *work, TActionManager *actionMng, bool netFlag, const QStringList &users, QWidget *parent):
                                  QMainWindow(parent)
 {
     #ifdef TUP_DEBUG
@@ -82,6 +82,8 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     setWindowIcon(QPixmap(THEME_DIR + "icons/animation_mode.png"));
     setContextMenuPolicy(Qt::NoContextMenu);
 
+    // actionManager = new TActionManager(this);
+    actionManager = actionMng;
     project = work;
     currentTool = nullptr;
     onionEnabled = true;
@@ -107,8 +109,6 @@ TupDocumentView::TupDocumentView(TupProject *work, bool netFlag, const QStringLi
     // Big resolutions
     if (screenWidth > HD_WIDTH)
         bigScreen = true;
-
-    actionManager = new TActionManager(this);
 
     actionGroup = new QActionGroup(this);
     actionGroup->setExclusive(true);
@@ -421,14 +421,16 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(ICONS_DIR + "onion.png"), tr("Onion Skin Factor"), QKeySequence(),
                 this, SLOT(setDefaultOnionFactor()), actionManager, "onion_factor");
 
-    new TAction(QPixmap(ICONS_DIR + "export_frame.png"), tr("Export Frame As Image"), QKeySequence(/*tr("X")*/),
+    /*
+    new TAction(QPixmap(ICONS_DIR + "export_frame.png"), tr("Export Frame As Image") + QString(" - X"), QKeySequence(),
                 this, SLOT(exportImage()), actionManager, "export_image");
 
-    new TAction(QPixmap(ICONS_DIR + "share.png"), tr("Post Frame On TupiTube"), QKeySequence(/*tr("Ctrl+X")*/),
+    new TAction(QPixmap(ICONS_DIR + "share.png"), tr("Post Frame On TupiTube") + QString(" - Ctrl+X"), QKeySequence(),
                 this, SLOT(postImage()), actionManager, "post_image");
 
     new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Export Storyboard"), QKeySequence(),
                 this, SLOT(storyboardSettings()), actionManager, "export_storyboard");
+    */
 
     new TAction(QPixmap(ICONS_DIR + "camera.png"), tr("Camera") + QString(" - Ctrl+Shift+C"), QKeySequence(tr("Ctrl+Shift+C")),
                 this, SLOT(cameraInterface()), actionManager, "camera");

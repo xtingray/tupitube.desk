@@ -108,7 +108,7 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
 
         void updatePaths(const QString &newPath);
 
-        bool isLoadingProject();
+        bool isLoadingAssets();
 
         QList<TupLibraryObject *> getLibrarySoundItems();
         void releaseLipSyncVoices(const QString &soundFile);
@@ -134,6 +134,6 @@ class TUPITUBE_EXPORT TupLibraryFolder : public QObject, public TupAbstractSeria
         Folders folders;
         LibraryObjects objects;
         TupProject *project;
-        bool loadingProject;
+        bool loadingLibraryAssets;
 };
 #endif

@@ -40,7 +40,6 @@
 #include "timagebutton.h"
 #include "tapplicationproperties.h"
 #include "tuplibraryobject.h"
-#include "tupproject.h"
 
 #include <QWidget>
 #include <QLabel>
@@ -61,8 +60,8 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         ~TupSoundForm();
 
         QSize sizeHint() const;
-        void setSoundParams(SoundResource params, TupProject *project);
-        void updateFrameLimits();
+        void setSoundParams(SoundResource params, QStringList scenesList);
+        void updateFrameLimits(int sceneIndex, int framesCount);
 
         void loadScenesCombo(QStringList scenes);
 
@@ -73,7 +72,7 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         void updateFramesList(int index);
 
     private:
-        void setFramesLimit(int sceneIndex);
+        void setFramesLimit(int sceneIndex, int framesCount);
 
         QComboBox *scenesCombo;
         QLabel *playAtLabel;
@@ -83,10 +82,11 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         TImageButton *addFrameButton;
         TImageButton *removeFrameButton;
 
-        TupProject *project;
         SoundResource soundParams;
         int currentSceneIndex;
         QString bgTrackLabel;
+
+        QList<int> framesMaxList;
 };
 
 #endif

@@ -112,33 +112,39 @@ QSize TupSoundForm::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundForm::setSoundParams(SoundResource params, TupProject *work)
+void TupSoundForm::setSoundParams(SoundResource params, QStringList scenesList)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::setSoundParams()]";
     #endif
 
     soundParams = params;
-    project = work;
 
-    qDebug() << "[TupSoundForm::setSoundParams()] - params.isBackgroundTrack -> " << params.isBackgroundTrack;
+    QList<SoundScene> scenes = params.scenes;
+    for (int i=0; i<scenes.size(); i++)
+        framesMaxList << 0;
 
-    loadScenesCombo(project->getSceneNames());
+    loadScenesCombo(scenesList);
 }
 
-void TupSoundForm::updateFrameLimits()
+void TupSoundForm::updateFrameLimits(int sceneIndex, int maxFrame)
 {
-    qDebug() << "TupSoundForm::updateFrameLimits()";
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundForm::updateFrameLimits()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupSoundForm::updateFrameLimits()] - maxFrame ->" << maxFrame;
+    #endif
 
-    setFramesLimit(currentSceneIndex);
+    // setFramesLimit(currentSceneIndex, framesCount);
 }
 
-void TupSoundForm::setFramesLimit(int sceneIndex)
+void TupSoundForm::setFramesLimit(int sceneIndex, int framesCount)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::setFramesList()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupSoundForm::setFramesList()] - framesCount ->" << framesCount;
     #endif
 
+    /*
     if (project->sceneAt(sceneIndex)) {
         int framesMax = project->sceneAt(sceneIndex)->framesCount();
         qDebug() << "sceneIndex->" << sceneIndex;
@@ -146,6 +152,7 @@ void TupSoundForm::setFramesLimit(int sceneIndex)
         framesBox->setRange(1, framesMax);
         framesBox->setMaximum(framesMax);
     }
+    */
 }
 
 void TupSoundForm::loadScenesCombo(QStringList scenes)
@@ -170,7 +177,7 @@ void TupSoundForm::loadScenesCombo(QStringList scenes)
             buttonBar->setVisible(false);
         }
     } else {
-        setFramesLimit(0);
+        setFramesLimit(0, 1);
 
         if (!framesListWidget->isVisible()) {
             framesListWidget->setVisible(true);
@@ -206,7 +213,7 @@ void TupSoundForm::updateFramesList(int sceneIndex)
                 buttonBar->setVisible(true);
             }
 
-            setFramesLimit(sceneIndex);
+            // setFramesLimit(sceneIndex, 1);
 
             QList<SoundScene> scenes = soundParams.scenes;
             int scenesTotal = scenes.size();

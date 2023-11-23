@@ -50,7 +50,7 @@ TupLibraryFolder::TupLibraryFolder(const QString &key, TupProject *animation, QO
 
     id = key;
     project = animation;
-    loadingProject = false;
+    loadingLibraryAssets = false;
 }
 
 TupLibraryFolder::~TupLibraryFolder()
@@ -599,7 +599,7 @@ void TupLibraryFolder::fromXml(const QString &xml)
         qDebug() << "[TupLibraryFolder::fromXml()]";
     #endif
 
-    loadingProject = true;
+    loadingLibraryAssets = true;
 
     QDomDocument document;
     if (!document.setContent(xml)) {
@@ -636,7 +636,7 @@ void TupLibraryFolder::fromXml(const QString &xml)
         domNode = domNode.nextSibling();
     }
 
-    loadingProject = false;
+    loadingLibraryAssets = false;
 }
 
 QDomElement TupLibraryFolder::toXml(QDomDocument &doc) const
@@ -809,9 +809,9 @@ void TupLibraryFolder::updatePaths(const QString &newPath)
         folder->updatePaths(newPath);    
 }
 
-bool TupLibraryFolder::isLoadingProject()
+bool TupLibraryFolder::isLoadingAssets()
 {
-    return loadingProject;
+    return loadingLibraryAssets;
 }
 
 // SQA: Update source record list when this method is called

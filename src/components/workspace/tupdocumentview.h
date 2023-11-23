@@ -74,7 +74,8 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
     public:
         enum DockType { None = 0, ExposureSheet, TimeLine };
 
-        TupDocumentView(TupProject *work, bool netFlag = true, const QStringList &users = QStringList(), QWidget *parent = nullptr);
+        TupDocumentView(TupProject *work, TActionManager *actionMng, bool netFlag = true, const QStringList &users = QStringList(),
+                        QWidget *parent = nullptr);
         ~TupDocumentView();
 
         void setWorkSpaceSize(int width, int height);

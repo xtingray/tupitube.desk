@@ -296,7 +296,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         // Setting undo/redo actions
         setUndoRedoActions();
 
-        animationTab = new TupDocumentView(m_projectManager->getProject(), isNetworked, users, this);
+        // animationTab = new TupDocumentView(m_projectManager->getProject(), isNetworked, users, this);
+        animationTab = new TupDocumentView(m_projectManager->getProject(), m_actionManager, isNetworked, users, this);
 
         /* SQA: Multi-user code. Pending for the future.
         TCONFIG->beginGroup("Network");
@@ -665,6 +666,10 @@ void TupMainWindow::resetUI()
     }
 
     resetMousePointer();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "";
+    #endif
 }
 
 /*

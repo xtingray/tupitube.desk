@@ -126,6 +126,12 @@ qreal TupLayer::getOpacity()
 
 TupFrame *TupLayer::createFrame(QString name, int index, bool loaded)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLayer::createFrame()] - name ->" << name;
+        qDebug() << "[TupLayer::createFrame()] - index ->" << index;
+        qDebug() << "[TupLayer::createFrame()] - loaded ->" << loaded;
+    #endif
+
     if (index < 0)
         return nullptr;
 

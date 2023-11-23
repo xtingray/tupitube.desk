@@ -71,7 +71,6 @@ TupLibraryWidget::TupLibraryWidget(QWidget *parent) : TupModuleWidgetBase(parent
     libraryDir = QDir(CONFIG_DIR + "libraries");
 
     display = new TupLibraryDisplay();
-    // connect(display, SIGNAL(frameUpdated(int)), this, SLOT(updateSoundTiming(int)));
     connect(display, SIGNAL(muteEnabled(bool)), this, SLOT(updateSoundMuteStatus(bool)));
     connect(display, SIGNAL(soundResourceModified(SoundResource)),
             this, SLOT(updateSoundResource(SoundResource)));
@@ -387,7 +386,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
-                     display->setSoundParams(object->getSoundResourceParams(), project);
+                     display->setSoundParams(object->getSoundResourceParams(), project->getSceneNames());
                      display->showSoundPlayer();
                    }
                    break;
@@ -1797,8 +1796,10 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
         case TupProjectRequest::Add:
         case TupProjectRequest::Remove:
         {
-            if (display->isSoundPanelVisible())
-                display->setSoundParams(currentSound->getSoundResourceParams(), project);
+            if (project->hasLibrarySounds()) {
+                if (display->isSoundPanelVisible())
+                    display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames());
+            }
         }
         break;
     }
@@ -1914,7 +1915,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          previewItem(item);
 
                          if (nativeFromFileSystem) {
-                             if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
+                             if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingAssets()
                                  && !isExternalLibraryAsset)
                                  insertObjectInWorkspace();
                              nativeFromFileSystem = false;
@@ -1932,7 +1933,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
 
-                         if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingProject()
+                         if (!isNetworked && !folderName.endsWith(".pgo") && !library->isLoadingAssets()
                              && folderName.compare(tr("Raster Objects")) != 0 && !isExternalLibraryAsset)
                              insertObjectInWorkspace();
                        }
@@ -1942,13 +1943,13 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                          item->setIcon(0, QIcon(THEME_DIR + "icons/svg.png"));
                          libraryTree->setCurrentItem(item);
                          previewItem(item);
-                         if (!isNetworked && !library->isLoadingProject() && !isExternalLibraryAsset)
+                         if (!isNetworked && !library->isLoadingAssets() && !isExternalLibraryAsset)
                              insertObjectInWorkspace();
                        }
                      break;
                      case TupLibraryObject::Audio:
                        {
-                         if (!library->isLoadingProject()) {
+                         if (!library->isLoadingAssets()) {
                              if (isEffectSound) {
                                  library->updateObjectSoundType(id, Effect);
                                  isEffectSound = false;
@@ -2073,27 +2074,18 @@ void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 
     updateCurrentFrameIndex(sceneIndex, layerIndex, frameIndex);
 
-    qDebug() << "[TupLibraryWidget::frameResponse()] - Tracing remove action...";
-
     switch (response->getAction()) {
         case TupProjectRequest::Add:
-        {
-            if (sceneIndex == 0 && layerIndex == 0 && frameIndex == 0) {
-                libraryIsLoaded = true;
-            } else {
-                display->updateFrameLimits();
-            }
-        }
-        break;
         case TupProjectRequest::Remove:
         case TupProjectRequest::RemoveSelection:
         {
-            qDebug() << "*** scene index ->" << sceneIndex;
-            qDebug() << "*** layer index ->" << layerIndex;
-            qDebug() << "*** frame index ->" << frameIndex;
-            qDebug() << "*** project scenes size ->" << project->scenesCount();
-
-            display->updateFrameLimits();
+            if (project->hasLibrarySounds()) {
+                if (project->sceneAt(sceneIndex)) {
+                    int framesCount = project->sceneAt(sceneIndex)->framesCount();
+                     if (display->isSoundPanelVisible())
+                         display->updateFrameLimits(sceneIndex, framesCount);
+                }
+            }
         }
         break;
     }
@@ -2702,7 +2694,7 @@ void TupLibraryWidget::updateSoundPlayer()
 
         if (display) {
             if (display->isSoundPanelVisible())
-                display->setSoundParams(currentSound->getSoundResourceParams(), project);
+                display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames());
         }
     }
 

@@ -125,7 +125,7 @@ QSize TupSoundPlayer::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundPlayer::setSoundParams(SoundResource params, TupProject *project)
+void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList)
 {
     soundID = params.key;
     url = params.path;
@@ -168,12 +168,12 @@ void TupSoundPlayer::setSoundParams(SoundResource params, TupProject *project)
         muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
     }
 
-    soundForm->setSoundParams(params, project);
+    soundForm->setSoundParams(params, scenesList);
 }
 
-void TupSoundPlayer::updateFrameLimits()
+void TupSoundPlayer::updateFrameLimits(int sceneIndex, int maxFrames)
 {
-    soundForm->updateFrameLimits();
+    soundForm->updateFrameLimits(sceneIndex, maxFrames);
 }
 
 void TupSoundPlayer::enableLipSyncInterface(SoundType type, QList<SoundScene> scenes)

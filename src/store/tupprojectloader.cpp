@@ -70,7 +70,9 @@ void TupProjectLoader::createItem(int sceneIndex, int layerIndex, int frameIndex
 void TupProjectLoader::createFrame(int sceneIndex, int layerIndex, int frameIndex, const QString &name, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectLoader::createFrame()]";
+        qDebug() << "[TupProjectLoader::createFrame()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupProjectLoader::createFrame()] - layerIndex ->" << layerIndex;
+        qDebug() << "[TupProjectLoader::createFrame()] - frameIndex ->" << frameIndex;
     #endif
 
     TupFrameResponse response(TupProjectRequest::Frame, TupProjectRequest::Add);

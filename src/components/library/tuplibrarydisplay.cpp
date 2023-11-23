@@ -120,14 +120,14 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(SoundResource params, TupProject *project)
+void TupLibraryDisplay::setSoundParams(SoundResource params, QStringList scenesList)
 {
-    soundPlayer->setSoundParams(params, project);
+    soundPlayer->setSoundParams(params, scenesList);
 }
 
-void TupLibraryDisplay::updateFrameLimits()
+void TupLibraryDisplay::updateFrameLimits(int sceneIndex, int maxFrames)
 {
-    soundPlayer->updateFrameLimits();
+    soundPlayer->updateFrameLimits(sceneIndex, maxFrames);
 }
 
 void TupLibraryDisplay::showSoundPlayer()
@@ -155,13 +155,6 @@ QString TupLibraryDisplay::getSoundID() const
 {
     return soundPlayer->getSoundID();
 }
-
-/*
-void TupLibraryDisplay::updateSoundInitFrame(int frame)
-{
-    soundPlayer->updateInitFrame(frame);
-}
-*/
 
 void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, QList<SoundScene> scenes)
 {

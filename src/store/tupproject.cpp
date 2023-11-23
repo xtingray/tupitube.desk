@@ -102,6 +102,10 @@ void TupProject::registerLibrarySounds()
 
 void TupProject::clear()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::clear()]";
+    #endif
+
     for (int i=0; i<scenesList.count(); i++) {
          TupScene *scene = scenesList.takeAt(i);
          scene->clear();
@@ -237,7 +241,9 @@ QString TupProject::getDataDir() const
 TupScene *TupProject::createScene(QString name, int position, bool loaded)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::createScene()]";
+        qDebug() << "[TupProject::createScene()] - name ->" << name;
+        qDebug() << "[TupProject::createScene()] - position ->" << position;
+        qDebug() << "[TupProject::createScene()] - loaded ->" << loaded;
     #endif
 
     if (position < 0 || position > scenesList.count())
@@ -1250,6 +1256,11 @@ QList<SoundResource> TupProject::soundResourcesList()
     #endif
 
     return soundRecords;
+}
+
+bool TupProject::hasLibrarySounds()
+{
+    return !soundRecords.isEmpty();
 }
 
 int TupProject::soundsListSize()

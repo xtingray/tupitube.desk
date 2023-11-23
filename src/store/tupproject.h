@@ -119,8 +119,6 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         bool addFolder(const QString &name);
         bool removeFolder(const QString &name);
 
-        bool removeSound(const QString &name);
-
         bool insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString &name, int scene, int layer, int frame);
         bool removeSymbolFromFrame(const QString &name, TupLibraryObject::ObjectType type);
 
@@ -135,6 +133,8 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void setLibrary(TupLibrary *lib);
         bool isLibraryEmpty();
         void resetSoundRecordsList();
+        bool hasLibrarySounds();
+        bool removeSound(const QString &name);
 
         void emitResponse(TupProjectResponse *response);
 

@@ -394,7 +394,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(exportFrame, "export_image", "file");
 
     // Export Project as Storyboard
-    TAction *storyboard = new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Storyboard Settings"), QKeySequence(tr("W")),
+    TAction *storyboard = new TAction(QPixmap(ICONS_DIR + "storyboard.png"), tr("Export Storyboard"), QKeySequence(tr("W")),
                                       this, SIGNAL(storyboardCalled()), m_actionManager, "export_storyboard");
     m_actionManager->insert(storyboard, "export_storyboard", "file");
 

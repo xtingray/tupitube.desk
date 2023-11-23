@@ -217,7 +217,8 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
             }
         }
 
-        if (project->soundsListSize()) // The project has at least one sound
+        // if (project->soundsListSize()) // The project has at least one sound
+        if (project->hasLibrarySounds()) // The project has at least one sound
             emit soundPathsChanged();
     } else {
         // If project's path doesn't exist, create it
@@ -416,7 +417,7 @@ bool TupFileManager::save(const QString &fileName, TupProject *project)
 bool TupFileManager::load(const QString &fileName, TupProject *project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFileManager::load()] - fileName -> " << fileName;
+        qDebug() << "[TupFileManager::load()] - fileName ->" << fileName;
     #endif
 
     TupPackageHandler packageHandler;
@@ -429,10 +430,11 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
             pfile.close();
         } else {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupFileManager::load()] - Error while open .tpp file. Name: " << pfile.fileName();
-                qWarning() << "[TupFileManager::load()] - Path: " << projectDir.path();
-                qWarning() << "[TupFileManager::load()] - Error Description: " << pfile.errorString();
+                qWarning() << "[TupFileManager::load()] - Error while open .tpp file. Name ->" << pfile.fileName();
+                qWarning() << "[TupFileManager::load()] - Path ->" << projectDir.path();
+                qWarning() << "[TupFileManager::load()] - Error Description ->" << pfile.errorString();
             #endif
+
             return false;
         }
 
@@ -445,6 +447,10 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
         QDomDocument doc;
         QString xml;
         QDomElement root;
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupFileManager::load()] - scenes.count() ->" << scenes.count();
+        #endif
 
         if (scenes.count() > 0) {
             int index = 0;
