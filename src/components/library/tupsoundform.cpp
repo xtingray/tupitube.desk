@@ -112,7 +112,7 @@ QSize TupSoundForm::sizeHint() const
     return QWidget::sizeHint().expandedTo(QSize(100, 100));
 }
 
-void TupSoundForm::setSoundParams(SoundResource params, QStringList scenesList)
+void TupSoundForm::setSoundParams(SoundResource params, QStringList scenesList, QList<int> frameLimits)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::setSoundParams()]";
@@ -122,53 +122,45 @@ void TupSoundForm::setSoundParams(SoundResource params, QStringList scenesList)
 
     QList<SoundScene> scenes = params.scenes;
     for (int i=0; i<scenes.size(); i++)
-        framesMaxList << 0;
+        framesMaxList << frameLimits.at(i);
 
-    loadScenesCombo(scenesList);
+    loadScenesCombo(scenesList, true);
 }
 
-void TupSoundForm::updateFrameLimits(int sceneIndex, int maxFrame)
+void TupSoundForm::updateFrameLimit(int sceneIndex, int maxFrame)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundForm::updateFrameLimits()] - sceneIndex ->" << sceneIndex;
-        qDebug() << "[TupSoundForm::updateFrameLimits()] - maxFrame ->" << maxFrame;
+        qDebug() << "[TupSoundForm::updateFrameLimit()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupSoundForm::updateFrameLimit()] - maxFrame ->" << maxFrame;
     #endif
 
-    // setFramesLimit(currentSceneIndex, framesCount);
+    framesMaxList.replace(sceneIndex, maxFrame);
+    if (currentSceneIndex == sceneIndex)
+        setFramesLimit(sceneIndex, maxFrame);
 }
 
-void TupSoundForm::setFramesLimit(int sceneIndex, int framesCount)
+void TupSoundForm::setFramesLimit(int sceneIndex, int maxFrame)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::setFramesList()] - sceneIndex ->" << sceneIndex;
-        qDebug() << "[TupSoundForm::setFramesList()] - framesCount ->" << framesCount;
+        qDebug() << "[TupSoundForm::setFramesList()] - maxFrame ->" << maxFrame;
     #endif
 
-    /*
-    if (project->sceneAt(sceneIndex)) {
-        int framesMax = project->sceneAt(sceneIndex)->framesCount();
-        qDebug() << "sceneIndex->" << sceneIndex;
-        qDebug() << "framesMax ->" << framesMax;
-        framesBox->setRange(1, framesMax);
-        framesBox->setMaximum(framesMax);
-    }
-    */
+    framesBox->setRange(1, maxFrame);
+    framesBox->setMaximum(maxFrame);
 }
 
-void TupSoundForm::loadScenesCombo(QStringList scenes)
+void TupSoundForm::loadScenesCombo(QStringList scenes, bool firstTime)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundForm::loadScenesCombo()]";
+        qDebug() << "[TupSoundForm::loadScenesCombo()] - scenes ->" << scenes;
     #endif
 
     scenesCombo->blockSignals(true);
 
     scenesCombo->clear();
     scenesCombo->addItems(scenes);
-
     scenesCombo->addItem(bgTrackLabel);
-
-    qDebug() << "soundParams.isBackgroundTrack ->" << soundParams.isBackgroundTrack;
 
     if (soundParams.isBackgroundTrack) {
         scenesCombo->setCurrentText(bgTrackLabel);
@@ -177,12 +169,17 @@ void TupSoundForm::loadScenesCombo(QStringList scenes)
             buttonBar->setVisible(false);
         }
     } else {
-        setFramesLimit(0, 1);
-
         if (!framesListWidget->isVisible()) {
             framesListWidget->setVisible(true);
             buttonBar->setVisible(true);
         }
+
+        /*
+        if (!firstTime)
+            updateFramesList(currentSceneIndex);
+        else
+            // load frames list for first time here
+        */
     }
 
     scenesCombo->blockSignals(false);
@@ -192,6 +189,7 @@ void TupSoundForm::updateFramesList(int sceneIndex)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::updateFramesList()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupSoundForm::updateFramesList()] - currentSceneIndex ->" << currentSceneIndex;
     #endif
 
     if (sceneIndex != currentSceneIndex) {
@@ -199,29 +197,34 @@ void TupSoundForm::updateFramesList(int sceneIndex)
 
         QString backgroundTrack = scenesCombo->currentText();
         if (backgroundTrack.compare(bgTrackLabel) == 0) { // background track
+            qDebug() << "[TupSoundForm::updateFramesList()] - FLAG -1";
             soundParams.isBackgroundTrack = true;
             framesListWidget->setVisible(false);
             buttonBar->setVisible(false);
         } else { // Adding frames for the scene
+            qDebug() << "[TupSoundForm::updateFramesList()] - FLAG 0";
+
             if (soundParams.isBackgroundTrack)
                 soundParams.isBackgroundTrack = false;
 
             framesListWidget->clear();
             if (!framesListWidget->isVisible()) {
-                qDebug() << "*** Enabling frames list and button bar!";
                 framesListWidget->setVisible(true);
                 buttonBar->setVisible(true);
             }
 
-            // setFramesLimit(sceneIndex, 1);
+            setFramesLimit(sceneIndex, framesMaxList.at(sceneIndex));
+
+            qDebug() << "[TupSoundForm::updateFramesList()] - FLAG 1";
 
             QList<SoundScene> scenes = soundParams.scenes;
             int scenesTotal = scenes.size();
+            qDebug() << "[TupSoundForm::updateFramesList()] - scenes total ->" << scenesTotal;
             for(int i=0; i<scenesTotal; i++) {
                 SoundScene scene = scenes.at(i);
-                int soundSceneIndex = scene.sceneIndex;
-                if (soundSceneIndex == sceneIndex) {
+                if (scene.sceneIndex == sceneIndex) {
                     QList<int> frames = scene.frames;
+                    qDebug() << "[TupSoundForm::updateFramesList()] - frames ->" << frames;
                     int framesTotal = frames.size();
                     for(int j=0; j<framesTotal; j++) {
                         QString frameIndex = QString::number(frames.at(j));

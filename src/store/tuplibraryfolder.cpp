@@ -436,14 +436,14 @@ QString TupLibraryFolder::getFolderKey(const QString &folderName)
 TupLibraryObject* TupLibraryFolder::getObject(const QString &key) const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::getObject()] - object key -> " << key;
+        qDebug() << "[TupLibraryFolder::getObject()] - object key ->" << key;
     #endif
 
     QStringList keys = objects.keys();
     foreach (QString oid, keys) {
         if (oid.compare(key) == 0) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryFolder::getObject()] - Found it at folder -> " << id;
+                qDebug() << "[TupLibraryFolder::getObject()] - Found it at folder ->" << id;
             #endif
             return objects[oid];
         }
@@ -454,7 +454,7 @@ TupLibraryObject* TupLibraryFolder::getObject(const QString &key) const
         if (object) {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryFolder::getObject()] - "
-                            "Found it at folder -> " << folder->getId();
+                            "Found it at folder ->" << folder->getId();
             #endif
             return object;
         }
@@ -462,7 +462,7 @@ TupLibraryObject* TupLibraryFolder::getObject(const QString &key) const
     
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryFolder::getObject()] - "
-                    "Fatal Error: Can't get object with id -> " << key;
+                    "Fatal Error: Can't get object with id ->" << key;
     #endif
 
     return nullptr;
@@ -489,7 +489,7 @@ TupLibraryObject::ObjectType TupLibraryFolder::getObjectType(const QString &obje
 TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryFolder::getFolder()] - folder key -> " << key;
+        qDebug() << "[TupLibraryFolder::getFolder()] - folder key ->" << key;
     #endif
 
     foreach (TupLibraryFolder *folder, folders) {
@@ -499,7 +499,7 @@ TupLibraryFolder *TupLibraryFolder::getFolder(const QString &key) const
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryFolder::getFolder()] - "
-                    "Fatal Error: Can't find folder with id -> " << key;
+                    "Fatal Error: Can't find folder with id ->" << key;
     #endif
    
     return nullptr;

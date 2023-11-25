@@ -120,14 +120,14 @@ void TupLibraryDisplay::showDisplay()
     }
 }
 
-void TupLibraryDisplay::setSoundParams(SoundResource params, QStringList scenesList)
+void TupLibraryDisplay::setSoundParams(SoundResource params, QStringList scenesList, QList<int> frameLimits)
 {
-    soundPlayer->setSoundParams(params, scenesList);
+    soundPlayer->setSoundParams(params, scenesList, frameLimits);
 }
 
-void TupLibraryDisplay::updateFrameLimits(int sceneIndex, int maxFrames)
+void TupLibraryDisplay::updateFrameLimit(int sceneIndex, int maxFrames)
 {
-    soundPlayer->updateFrameLimits(sceneIndex, maxFrames);
+    soundPlayer->updateFrameLimit(sceneIndex, maxFrames);
 }
 
 void TupLibraryDisplay::showSoundPlayer()

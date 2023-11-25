@@ -60,10 +60,10 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         ~TupSoundForm();
 
         QSize sizeHint() const;
-        void setSoundParams(SoundResource params, QStringList scenesList);
-        void updateFrameLimits(int sceneIndex, int framesCount);
+        void setSoundParams(SoundResource params, QStringList scenesList, QList<int> frameLimits);
+        void updateFrameLimit(int sceneIndex, int framesCount);
 
-        void loadScenesCombo(QStringList scenes);
+        void loadScenesCombo(QStringList scenes, bool firstTime);
 
     signals:
         void soundResourceModified(SoundResource params);

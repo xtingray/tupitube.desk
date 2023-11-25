@@ -386,7 +386,8 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
-                     display->setSoundParams(object->getSoundResourceParams(), project->getSceneNames());
+                     display->setSoundParams(object->getSoundResourceParams(),
+                                             project->getSceneNames(), project->getFrameLimits());
                      display->showSoundPlayer();
                    }
                    break;
@@ -394,7 +395,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                    {
                      #ifdef TUP_DEBUG
                          qDebug() << "[TupLibraryWidget::previewItem()] - "
-                                     "Unknown symbol type -> " << object->getObjectType();
+                                     "Unknown symbol type ->" << object->getObjectType();
                      #endif
                    }
                    break;
@@ -1798,7 +1799,8 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
         {
             if (project->hasLibrarySounds()) {
                 if (display->isSoundPanelVisible())
-                    display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames());
+                    display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
+                                            project->getFrameLimits());
             }
         }
         break;
@@ -1863,7 +1865,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
 void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::libraryResponse()] - response->action() -> "
+        qDebug() << "[TupLibraryWidget::libraryResponse()] - response->action() ->"
                  << response->getAction();
     #endif
 
@@ -1881,7 +1883,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
              QString id = response->getArg().toString();
 
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupLibraryWidget::libraryResponse()] - response->getArg() -> " << id;
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - response->getArg() ->" << id;
              #endif
 
              int index = id.lastIndexOf(".");
@@ -1976,7 +1978,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                      isExternalLibraryAsset = false;
              } else {
                  #ifdef TUP_DEBUG
-                     qDebug() << "[TupLibraryWidget::libraryResponse()] - No object found: " << id;
+                     qDebug() << "[TupLibraryWidget::libraryResponse()] - No object found ->" << id;
                  #endif
              }
           }
@@ -1999,7 +2001,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
           {
              QString id = response->getArg().toString();
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Removing item -> " << id;
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Removing item ->" << id;
              #endif
 
              bool isFolder = false;
@@ -2029,7 +2031,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                      } else {
                          #ifdef TUP_DEBUG
                              qWarning() << "[TupLibraryWidget::libraryResponse()] - "
-                                           "Warning: Can't remove sound resource record -> " << id;
+                                           "Warning: Can't remove sound resource record ->" << id;
                              #endif
                      }
                  }
@@ -2046,7 +2048,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
         default:
           {
              #ifdef TUP_DEBUG
-                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Unknown/Unhandled project action -> "
+                 qDebug() << "[TupLibraryWidget::libraryResponse()] - Unknown/Unhandled project action ->"
                              << response->getAction();
              #endif
           }
@@ -2083,7 +2085,7 @@ void TupLibraryWidget::frameResponse(TupFrameResponse *response)
                 if (project->sceneAt(sceneIndex)) {
                     int framesCount = project->sceneAt(sceneIndex)->framesCount();
                      if (display->isSoundPanelVisible())
-                         display->updateFrameLimits(sceneIndex, framesCount);
+                         display->updateFrameLimit(sceneIndex, framesCount);
                 }
             }
         }
@@ -2694,7 +2696,8 @@ void TupLibraryWidget::updateSoundPlayer()
 
         if (display) {
             if (display->isSoundPanelVisible())
-                display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames());
+                display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
+                                        project->getFrameLimits());
         }
     }
 
