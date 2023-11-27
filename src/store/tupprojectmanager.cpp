@@ -219,7 +219,7 @@ bool TupProjectManager::saveProject(const QString &fileName)
 bool TupProjectManager::loadProject(const QString &fileName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProjectManager::loadProject()] - fileName -> " << fileName;
+        qDebug() << "[TupProjectManager::loadProject()] - fileName ->" << fileName;
     #endif
 
     if (!handler) {
@@ -236,7 +236,7 @@ bool TupProjectManager::loadProject(const QString &fileName)
         modified = false;
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProjectManager::loadProject()] - Fatal Error: Can't load project -> " << fileName;
+            qDebug() << "[TupProjectManager::loadProject()] - Fatal Error: Can't load project ->" << fileName;
         #endif
     }
 

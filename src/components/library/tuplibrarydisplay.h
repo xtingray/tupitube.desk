@@ -84,6 +84,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         TupItemPreview *previewPanel;
         TupSoundPlayer *soundPlayer;
         bool isVisual;
+        bool soundPlayerVisible;
 };
 
 #endif

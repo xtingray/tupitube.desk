@@ -52,7 +52,8 @@ TupLibraryObject::TupLibraryObject(const QString &name, const QString &dir, TupL
     setSymbolName(name);
     folder = dir;
     objectType = type;
-    soundObject = new TupSoundObject();
+    if (type == TupLibraryObject::Audio)
+        soundObject = new TupSoundObject();
 }
 
 TupLibraryObject::~TupLibraryObject()
@@ -131,13 +132,23 @@ void TupLibraryObject::setSoundType(SoundType type)
 
 SoundResource TupLibraryObject::getSoundResourceParams()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryObject::getSoundResourceParams()]";
+    #endif
+
     SoundResource params;
-    params.key = symbolName;
-    params.scenes = soundObject->getAudioScenes();
-    params.path = dataPath;
-    params.muted = soundObject->isMuted();
-    params.type = soundObject->getSoundType();
-    params.isBackgroundTrack = soundObject->isBackgroundTrack();
+    if (soundObject) {
+        params.key = symbolName;
+        params.scenes = soundObject->getAudioScenes();
+        params.path = dataPath;
+        params.muted = soundObject->isMuted();
+        params.type = soundObject->getSoundType();
+        params.isBackgroundTrack = soundObject->isBackgroundTrack();
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryObject::getSoundResourceParams()] - Fatal Error: soundObject is NULL!";
+        #endif
+    }
 
     return params;
 }
@@ -405,13 +416,20 @@ void TupLibraryObject::fromXml(const QString &xml)
                      folder = dataPath.left(index);
 
                  if (!objectTag.isNull()) {
-                     QDomElement objectData = objectTag.firstChild().toElement();
-                     QString data;
-                     {
-                         QTextStream ts(&data);
-                         ts << objectData;
+                     soundObject = new TupSoundObject();
+                     if (objectTag.hasChildNodes()) {
+                         QDomElement objectData = objectTag.firstChild().toElement();
+                         QString data;
+                         {
+                             QTextStream ts(&data);
+                             ts << objectData;
+                         }
+
+                         soundObject->fromXml(data);
+                     } else {
+                         // Old versions of TupiTube
+                         soundObject->setDefaultValues();
                      }
-                     soundObject->fromXml(data);
                  }
              }
             break;

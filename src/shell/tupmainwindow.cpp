@@ -807,6 +807,8 @@ void TupMainWindow::openProject(const QString &path)
         tabWidget()->setCurrentWidget(animationTab);
 
         if (m_projectManager->loadProject(path)) {
+            m_libraryWidget->updateSoundItems();
+
             if (QDir::isRelativePath(path))
                 m_fileName = QDir::currentPath() + "/" + path;
             else

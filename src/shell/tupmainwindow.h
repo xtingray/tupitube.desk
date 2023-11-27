@@ -102,6 +102,14 @@ class TupMainWindow : public TabbedMainWindow
         TupMainWindow(const QString &winKey);
         ~TupMainWindow();
 
+    signals:
+        void responsed(TupProjectResponse *);
+        void updateAnimationModule(TupProject *, int, int, int);
+        void activeDockChanged(TupDocumentView::DockType);
+        void imagePosted();
+        void imageExported();
+        void storyboardCalled();
+
     private:
         void createGUI();
         void setupFileActions();
@@ -284,14 +292,6 @@ class TupMainWindow : public TabbedMainWindow
         TAction *updatesAction;
         TupDocumentView::DockType currentDock;
         QString examplePath;
-
-    signals:
-        void responsed(TupProjectResponse *);
-        void updateAnimationModule(TupProject *, int, int, int);
-        void activeDockChanged(TupDocumentView::DockType);
-        void imagePosted();
-        void imageExported();
-        void storyboardCalled();
 };
 
 #endif

@@ -58,11 +58,9 @@
 
 Tweener::Tweener() : TupToolPlugin()
 {
-    /*
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::Tweener()]";
+        qDebug() << "[Motion Tweener::Tweener()]";
     #endif
-    */
 
     setupActions();
 
@@ -133,7 +131,7 @@ void Tweener::updateStartFrame(int index)
 {
     #ifdef TUP_DEBUG
        qDebug() << "[Motion Tweener::updateStartFrame()]";
-       qDebug() << "*** index -> " << index;
+       qDebug() << "*** index ->" << index;
     #endif
 
     if (index == 1)
@@ -142,7 +140,7 @@ void Tweener::updateStartFrame(int index)
     if (initFrame != index && index >= 0) {
         initFrame = index;
         #ifdef TUP_DEBUG
-           qDebug() << "[Motion Tweener::updateStartFrame()] - initFrame -> " << initFrame;
+           qDebug() << "[Motion Tweener::updateStartFrame()] - initFrame ->" << initFrame;
         #endif
     }
 }
@@ -344,6 +342,10 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
 
 void Tweener::updateTweenPath()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::updateTweenPath()]";
+    #endif
+
     QString route = pathToCoords();
     foreach (QGraphicsItem *item, objects) {
         TupLibraryObject::ObjectType type = TupLibraryObject::Item;
@@ -380,6 +382,10 @@ int Tweener::toolType() const
 
 QWidget *Tweener::configurator()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::configurator()]";
+    #endif
+
     if (!configPanel) {
         mode = TupToolPlugin::View;
 
@@ -559,6 +565,10 @@ void Tweener::setSelection()
 
 QString Tweener::pathToCoords()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::pathToCoords()]";
+    #endif
+
     QString strPath = "";
     QChar t;
     int offsetX = static_cast<int> (pathOffset.x());
@@ -927,6 +937,10 @@ void Tweener::updateScene(TupGraphicsScene *scene)
 
 void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::updateMode()] - currentMode ->" << currentMode;
+    #endif
+
     mode = currentMode;
 
     if (mode == TupToolPlugin::Edit)
@@ -936,7 +950,7 @@ void Tweener::updateMode(TupToolPlugin::Mode currentMode)
 void Tweener::removeTweenFromProject(const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::removeTweenFromProject()] - name -> " << name;
+        qDebug() << "[Motion Tweener::removeTweenFromProject()] - name ->" << name;
     #endif
 
     TupScene *sceneData = scene->currentScene();
@@ -962,13 +976,17 @@ void Tweener::removeTweenFromProject(const QString &name)
         emit tweenRemoved();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[Motion Tweener::removeTweenFromProject()] - Motion tween couldn't be removed -> " << name;
+            qDebug() << "[Motion Tweener::removeTweenFromProject()] - Motion tween couldn't be removed ->" << name;
         #endif
     }
 }
 
 void Tweener::removeTween(const QString &name)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::removeTween()] - tween name ->" << name;
+    #endif
+
     removeTweenFromProject(name);
     applyReset();
 
@@ -1051,6 +1069,10 @@ void Tweener::setEditEnv()
 
 int Tweener::framesCount()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::framesCount()]";
+    #endif
+
     int total = 1;
     TupLayer *layer = scene->currentScene()->layerAt(scene->currentLayerIndex());
     if (layer)
@@ -1077,10 +1099,14 @@ void Tweener::clearSelection()
     }
 }
 
-/* This method disables object selection */
+// This method disables object selection
 
 void Tweener::disableSelection()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Motion Tweener::disableSelection()]";
+    #endif
+
     foreach (QGraphicsView *view, scene->views()) {
         view->setDragMode (QGraphicsView::NoDrag);
         foreach (QGraphicsItem *item, view->scene()->items()) {
@@ -1118,7 +1144,7 @@ void Tweener::layerResponse(const TupLayerResponse *response)
 void Tweener::frameResponse(const TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::frameResponse()] - index: " << response->getFrameIndex();
+        qDebug() << "[Motion Tweener::frameResponse()] - index ->" << response->getFrameIndex();
     #endif
 
     if (response->getAction() == TupProjectRequest::Remove && scene->currentLayerIndex() == response->getLayerIndex()) {
@@ -1154,7 +1180,7 @@ void Tweener::frameResponse(const TupFrameResponse *response)
 void Tweener::itemResponse(const TupItemResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[Motion Tweener::itemResponse()] - index: " << response->getItemIndex();
+        qDebug() << "[Motion Tweener::itemResponse()] - index ->" << response->getItemIndex();
     #endif
 
     if (editMode == TupToolPlugin::Properties) {

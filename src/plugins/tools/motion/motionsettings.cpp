@@ -233,6 +233,10 @@ void MotionSettings::updateSteps(const QGraphicsPathItem *path)
         stepViewer->setPath(path);
         totalLabel->setText(tr("Frames Total") + ": " + QString::number(stepViewer->totalSteps()));
         endingLabel->setText(tr("Ending at frame") + ": " + QString::number(startFrame() + stepViewer->totalSteps()));
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[MotionSettings::updateSteps()] - Warning: Path is NULL!";
+        #endif
     }
 }
 
@@ -361,6 +365,10 @@ QString MotionSettings::currentTweenName() const
 
 void MotionSettings::updateTotalLabel(int total)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MotionSettings::updateTotalLabel()] - total ->" << total;
+    #endif
+
     endingLabel->setText(tr("Ending at frame") + ": " + QString::number(startFrame() + stepViewer->totalSteps()));
     totalLabel->setText(tr("Frames Total") + ": " + QString::number(total));
     emit framesTotalChanged(); 

@@ -99,6 +99,12 @@ void StepsViewer::loadPath(const QGraphicsPathItem *pathItem, QList<int> interva
          QList<QPointF> block = pointBlocks.at(row);
          int framesCount = frames.at(row);
          int size = block.size();
+
+         qDebug() << "row ->" << row;
+         qDebug() << "points at row ->" << pointBlocks.at(row);
+         qDebug() << "points size ->" << size;
+         qDebug() << "framesCount ->" << framesCount;
+
          QList<QPointF> segment;
 
          if (size > 2) {
@@ -404,9 +410,17 @@ QVector<TupTweenerStep *> StepsViewer::steps()
 
 int StepsViewer::totalSteps()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::totalSteps()] - frames.count() ->" << frames.count();
+    #endif
+
     int total = 0;
     for (int i=0; i < frames.count(); i++)
          total += frames.at(i);
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::totalSteps()] - total ->" << total;
+    #endif
 
     return total;
 }

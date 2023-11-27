@@ -386,6 +386,9 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
+
+                     qDebug() << "[TupLibraryWidget::previewItem()] - project->getSceneNames() ->" << project->getSceneNames();
+
                      display->setSoundParams(object->getSoundResourceParams(),
                                              project->getSceneNames(), project->getFrameLimits());
                      display->showSoundPlayer();
@@ -746,6 +749,10 @@ void TupLibraryWidget::renameObject(QTreeWidgetItem *item)
 
 void TupLibraryWidget::createRasterObject()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::createRasterObject()]";
+    #endif
+
     QString name = "object00";
     QString extension = "PNG";
     name = verifyNameAvailability(name, extension, true);
@@ -1797,6 +1804,8 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
         case TupProjectRequest::Add:
         case TupProjectRequest::Remove:
         {
+            qDebug() << "[TupLibraryWidget::sceneResponse()] - project->getSceneNames() ->" << project->getSceneNames();
+
             if (project->hasLibrarySounds()) {
                 if (display->isSoundPanelVisible())
                     display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
@@ -2570,6 +2579,10 @@ void TupLibraryWidget::updateSoundTiming(int frame)
 
 void TupLibraryWidget::updateSoundMuteStatus(bool mute)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateSoundMuteStatus()] - mute ->" << mute;
+    #endif
+
     if (currentSound) {
         currentSound->enableMute(mute);
         project->updateSoundResourcesItem(currentSound);
@@ -2579,6 +2592,18 @@ void TupLibraryWidget::updateSoundMuteStatus(bool mute)
 
 void TupLibraryWidget::updateSoundResource(SoundResource params)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateSoundResource()]"
+                    " - params.isBackgroundTrack ->" << params.isBackgroundTrack;
+        qDebug() << "[TupLibraryWidget::updateSoundResource()]"
+                    " - params.scenes.count() ->" << params.scenes.count();
+        foreach(SoundScene scene, params.scenes) {
+            qDebug() << "[TupLibraryWidget::updateSoundResource()] - scene index ->" << scene.sceneIndex;
+            foreach(int frameIndex, scene.frames)
+                qDebug() << "[TupLibraryWidget::updateSoundResource()] - frame index ->" << frameIndex;
+        }
+    #endif
+
     if (currentSound) {
         currentSound->updateSoundResourceParams(params);
         project->updateSoundResourcesItem(currentSound);
@@ -2695,13 +2720,37 @@ void TupLibraryWidget::updateSoundPlayer()
         #endif
 
         if (display) {
-            if (display->isSoundPanelVisible())
+            if (display->isSoundPanelVisible()) {
+                qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - project->getSceneNames() ->" << project->getSceneNames();
                 display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
                                         project->getFrameLimits());
+            }
         }
     }
 
     #ifdef TUP_DEBUG
         qDebug() << "---";
     #endif
+}
+
+void TupLibraryWidget::updateSoundItems()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateSoundItems()]";
+    #endif
+
+    if (display) {
+        if (display->isSoundPanelVisible()) {
+            display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
+                                    project->getFrameLimits());
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryWidget::updateSoundItems()] - SoundPanel is NOT visible!";
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::updateSoundItems()] - display is NULL!";
+        #endif
+    }
 }

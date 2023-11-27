@@ -1081,7 +1081,7 @@ void TupProject::releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName
 void TupProject::addSoundResource(TupLibraryObject *object)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::addSoundResource()] - Symbol name -> " << object->getSymbolName();
+        qDebug() << "[TupProject::addSoundResource()] - Symbol name ->" << object->getSymbolName();
     #endif
 
     /*
@@ -1147,16 +1147,21 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
             qDebug() << "[TupProject::updateSoundResourcesItem()] - record path -> "
                      << record.path;
         #endif
-        if (item->getDataPath().compare(record.path) == 0) {
-            /*
-            record.key = item->getSymbolName();
-            record.frameIndex = item->frameToPlay();
-            record.sceneIndex = item->sceneToPlay();
-            record.muted = item->isMuted();
-            record.type = item->getSoundType();
-            */
 
+        if (item->getSymbolName().compare(record.key == 0)) {
             record = item->getSoundResourceParams();
+
+            qDebug() << "";
+            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - Audio key ->" << record.key;
+            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - Audio path ->" << record.path;
+            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - isBackgroundTrack ->" << record.isBackgroundTrack;
+            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - scenes count ->" << record.scenes.count();
+            foreach(SoundScene scene, record.scenes) {
+                qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - scene index ->" << scene.sceneIndex;
+                foreach(int frameIndex, scene.frames)
+                    qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - frame index ->" << frameIndex;
+            }
+            qDebug() << "";
 
             soundRecords.replace(i, record);
 
@@ -1248,7 +1253,7 @@ bool TupProject::updateSoundFramesToPlay(const QString audioId, int sceneIndex, 
     return false;
 }
 
-QList<SoundResource> TupProject::soundResourcesList()
+QList<SoundResource> TupProject::getSoundResourcesList()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::soundResourcesList()] - items size -> "

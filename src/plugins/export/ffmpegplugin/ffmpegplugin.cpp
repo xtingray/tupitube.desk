@@ -124,7 +124,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
 
     QList<SoundResource> sounds;
     if (project) {
-        QList<SoundResource> soundItems = project->soundResourcesList();
+        QList<SoundResource> soundItems = project->getSoundResourcesList();
         #ifdef TUP_DEBUG
             qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total -> " << soundItems.size();
         #endif

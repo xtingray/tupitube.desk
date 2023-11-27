@@ -114,14 +114,23 @@ void TupLibraryDisplay::render(bool flag, const QPixmap &img)
 
 void TupLibraryDisplay::showDisplay()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay::showDisplay()]";
+    #endif
+
     if (!previewPanel->isVisible()) {
         previewPanel->show();
         soundPlayer->hide();
+        soundPlayerVisible = false;
     }
 }
 
 void TupLibraryDisplay::setSoundParams(SoundResource params, QStringList scenesList, QList<int> frameLimits)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay::setSoundParams()]";
+    #endif
+
     soundPlayer->setSoundParams(params, scenesList, frameLimits);
 }
 
@@ -132,9 +141,14 @@ void TupLibraryDisplay::updateFrameLimit(int sceneIndex, int maxFrames)
 
 void TupLibraryDisplay::showSoundPlayer()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryDisplay::showSoundPlayer()]";
+    #endif
+
     if (!soundPlayer->isVisible()) {
         previewPanel->hide();
         soundPlayer->show();
+        soundPlayerVisible = true;
     }
 }
 
@@ -148,7 +162,7 @@ void TupLibraryDisplay::stopSoundPlayer()
 
 bool TupLibraryDisplay::isSoundPanelVisible()
 {
-    return soundPlayer->isVisible();
+    return soundPlayerVisible;
 }
 
 QString TupLibraryDisplay::getSoundID() const

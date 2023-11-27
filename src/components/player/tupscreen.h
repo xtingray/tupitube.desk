@@ -62,7 +62,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void setLoop(bool l);
         void updateSceneIndex(int index);
         TupScene *getCurrentScene();
-        int getCurrentSceneIndex();
+        int getCurrentSceneIndex();        
         int sceneFramesTotal();
         void setFPS(int fps);
         void resetSceneFromList(int sceneIndex);
@@ -120,10 +120,13 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void initAllPhotograms();
         void addPhotogramsEmptyArray(int index);
         void updateFirstFrame();
-        void playSoundAt(int frame);
-        void stopSounds();
         void renderAllScenes();
         void calculateFramesTotal();
+
+        void playSoundsAt(int frame);
+        void stopSounds();
+        bool currentSceneGotSounds();
+        void getSoundsForCurrentScene();
 
         TupProject *project;
         int currentFramePosition;
@@ -153,6 +156,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         TupLibrary *library;
         QList<SoundResource> soundRecords;
         QList<QMediaPlayer *> soundPlayer;
+        QList<int> sceneSoundIndexes;
+        QList<QList<int>> soundFrames;
 
         bool playerIsActive;
         PlayDirection playDirection;

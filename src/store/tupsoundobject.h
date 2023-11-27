@@ -45,6 +45,8 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         TupSoundObject(QObject *parent = nullptr);
         ~TupSoundObject();
 
+        void setDefaultValues();
+
         void setMute(bool flag);
         bool isMuted();
 

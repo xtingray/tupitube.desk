@@ -47,15 +47,22 @@ TupSoundObject::TupSoundObject(QObject *parent) : QObject(parent)
     soundType = NoSound;
     mute = false;
     backgroundTrack = false;
-
-    SoundScene scene;
-    scene.sceneIndex = 0;
-    scene.frames << 0;
-    audioScenes << scene;
 }
 
 TupSoundObject::~TupSoundObject()
 {
+}
+
+void TupSoundObject::setDefaultValues()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundObject::setDefaultValues()]";
+    #endif
+
+    SoundScene scene;
+    scene.sceneIndex = 0;
+    scene.frames << 1;
+    audioScenes << scene;
 }
 
 void TupSoundObject::setMute(bool flag)
@@ -70,11 +77,19 @@ bool TupSoundObject::isMuted()
 
 void TupSoundObject::setBackgroundTrack(bool flag)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundObject::setBackgroundTrack()] - flag ->" << flag;
+    #endif
+
     backgroundTrack = flag;
 }
 
 bool TupSoundObject::isBackgroundTrack()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundObject::setBackgroundTrack()] - backgroundTrack ->" << backgroundTrack;
+    #endif
+
     return backgroundTrack;
 }
 
@@ -85,6 +100,10 @@ void TupSoundObject::setAudioScenes(QList<SoundScene> scenes)
 
 QList<SoundScene> TupSoundObject::getAudioScenes()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundObject::getAudioScenes()] - audioScenes.count() ->" << audioScenes.count();
+    #endif
+
     return audioScenes;
 }
 
@@ -157,6 +176,14 @@ void TupSoundObject::fromXml(const QString &xml)
         qDebug() << "[TupSoundObject::fromXml()] - xml -> " << xml;
     #endif
 
+    if (xml.isEmpty()) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSoundObject::fromXml()] - Fatal Error: XML string is empty!";
+        #endif
+
+        return;
+    }
+
     QDomDocument document;
     if (!document.setContent(xml)) {
         #ifdef TUP_DEBUG
@@ -192,7 +219,7 @@ void TupSoundObject::fromXml(const QString &xml)
             }
 
             n = n.nextSibling();
-        } // end while
+        }
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupSoundObject::fromXml()] - Fatal Error: XML element is NOT a sound!";

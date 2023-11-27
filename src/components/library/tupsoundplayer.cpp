@@ -135,6 +135,7 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
         qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() ->" << params.type;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() ->" << params.muted;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url ->" << url;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - scenes list ->" << scenesList;
         qDebug() << "---";
     #endif
 
@@ -391,14 +392,3 @@ QString TupSoundPlayer::getSoundID() const
 
     return soundID;
 }
-
-/*
-void TupSoundPlayer::updateInitFrame(int frame)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::updateInitFrame()] - frame -> " << frame;
-    #endif
-
-    // frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
-}
-*/
