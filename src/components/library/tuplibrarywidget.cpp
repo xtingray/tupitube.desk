@@ -2557,26 +2557,6 @@ void TupLibraryWidget::callLipsyncEditor(QTreeWidgetItem *item)
     emit lipsyncModuleCalled(AudioFromLibrary, audioPath);
 }
 
-/*
-void TupLibraryWidget::updateSoundTiming(int frame)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::updateSoundTiming()] - frame -> " << frame;
-    #endif
-
-    if (currentSound) {
-        currentSound->updateFrameToPlay(frame);
-        if (!project->updateSoundResourcesItem(currentSound)) {
-            #ifdef TUP_DEBUG
-                qWarning() << "[TupLibraryWidget::updateSoundTiming()] - "
-                              "Warning: Can't update audio object -> " << currentSound->getSymbolName();
-            #endif
-        }
-        emit soundUpdated();
-    }
-}
-*/
-
 void TupLibraryWidget::updateSoundMuteStatus(bool mute)
 {
     #ifdef TUP_DEBUG
@@ -2726,6 +2706,10 @@ void TupLibraryWidget::updateSoundPlayer()
                                         project->getFrameLimits());
             }
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Warning: current sound variable is NULL!";
+        #endif
     }
 
     #ifdef TUP_DEBUG

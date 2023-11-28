@@ -204,15 +204,21 @@ void TupSoundObject::fromXml(const QString &xml)
             QDomElement e = n.toElement();
             if (!e.isNull()) {
                 if (e.tagName() == "scene") {
-                    int sceneIndex = e.attribute("index").toInt();
-                    QList<QString> framesArray = e.attribute("frames").split(",");
-                    QList<int> frames;
-                    foreach(QString frame, framesArray)
-                        frames << frame.toInt();
-
+                    int sceneIndex = e.attribute("index", 0).toInt();
                     SoundScene record;
                     record.sceneIndex = sceneIndex;
-                    record.frames = frames;
+                    QString framesInput = e.attribute("frames");
+                    if (!framesInput.isEmpty()) {
+                        QList<QString> framesArray = framesInput.split(",");
+                        if (!framesArray.isEmpty()) {
+                            QList<int> frames;
+                            foreach(QString frame, framesArray) {
+                                if (!frame.isEmpty())
+                                    frames << frame.toInt();
+                            }
+                            record.frames = QList<int>(frames);
+                        }
+                    }
 
                     audioScenes << record;
                 }

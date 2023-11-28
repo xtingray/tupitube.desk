@@ -1152,14 +1152,14 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
             record = item->getSoundResourceParams();
 
             qDebug() << "";
-            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - Audio key ->" << record.key;
-            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - Audio path ->" << record.path;
-            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - isBackgroundTrack ->" << record.isBackgroundTrack;
-            qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - scenes count ->" << record.scenes.count();
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - Audio key ->" << record.key;
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - Audio path ->" << record.path;
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - isBackgroundTrack ->" << record.isBackgroundTrack;
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - scenes count ->" << record.scenes.count();
             foreach(SoundScene scene, record.scenes) {
-                qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - scene index ->" << scene.sceneIndex;
+                qDebug() << "[TupProject::updateSoundResourcesItem()] - scene index ->" << scene.sceneIndex;
                 foreach(int frameIndex, scene.frames)
-                    qDebug() << "[TupSoundForm::updateSoundResourcesItem()] - frame index ->" << frameIndex;
+                    qDebug() << "[TupProject::updateSoundResourcesItem()] - frame index ->" << frameIndex;
             }
             qDebug() << "";
 
