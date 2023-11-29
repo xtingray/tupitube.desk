@@ -2679,6 +2679,18 @@ void TupLibraryWidget::resetSoundPlayer()
         display->resetSoundPlayer();
 }
 
+void TupLibraryWidget::updateSoundPath()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryWidget::updateSoundPath()]";
+    #endif
+
+    QString soundID = display->getSoundID();
+    currentSound = library->getObject(soundID);
+    SoundResource resource = project->getSoundResource(soundID);
+    display->updateSoundPath(resource.path);
+}
+
 void TupLibraryWidget::updateSoundPlayer()
 {
     #ifdef TUP_DEBUG

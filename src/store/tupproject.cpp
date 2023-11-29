@@ -1078,6 +1078,19 @@ void TupProject::releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName
 
 // Sound Records API
 
+SoundResource TupProject::getSoundResource(const QString &key)
+{
+    SoundResource sound;
+    foreach(SoundResource record, soundRecords) {
+        if (record.key.compare(key) == 0) {
+            sound = record;
+            break;
+        }
+    }
+
+    return sound;
+}
+
 void TupProject::addSoundResource(TupLibraryObject *object)
 {
     #ifdef TUP_DEBUG

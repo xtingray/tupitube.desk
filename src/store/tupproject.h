@@ -154,6 +154,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         void releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName);
 
         // Sound Records API
+        SoundResource getSoundResource(const QString &key);
         void addSoundResource(TupLibraryObject *object);
         bool removeSoundResource(const QString &key);
         QList<SoundResource> getSoundResourcesList();

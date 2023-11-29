@@ -1133,7 +1133,9 @@ bool TupMainWindow::storeProcedure()
     connect(m_projectManager, SIGNAL(projectPathChanged()),
             this, SLOT(updateSoundsPath()));
     connect(m_projectManager, SIGNAL(soundPathsChanged()),
-            m_libraryWidget, SLOT(updateSoundPlayer()));
+            m_libraryWidget, SLOT(updateSoundPath()));
+    // connect(m_projectManager, SIGNAL(soundPathsChanged()),
+    //         m_libraryWidget, SLOT(updateSoundPlayer()));
 
     if (m_projectManager->saveProject(m_fileName)) {
         updateRecentProjectList();
@@ -1153,8 +1155,11 @@ bool TupMainWindow::storeProcedure()
 
         disconnect(m_projectManager, SIGNAL(projectPathChanged()),
                    this, SLOT(updateSoundsPath()));
+        // disconnect(m_projectManager, SIGNAL(soundPathsChanged()),
+        //            m_libraryWidget, SLOT(updateSoundPlayer()));
+
         disconnect(m_projectManager, SIGNAL(soundPathsChanged()),
-                   m_libraryWidget, SLOT(updateSoundPlayer()));
+                   m_libraryWidget, SLOT(updateSoundPath()));
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
@@ -1183,8 +1188,8 @@ void TupMainWindow::updateSoundsPath()
         qDebug() << "[TupMainWindow::updateSoundsPath()]";
     #endif
 
-    if (m_libraryWidget)
-        m_libraryWidget->resetSoundPlayer();
+    // if (m_libraryWidget)
+    //     m_libraryWidget->resetSoundPlayer();
 
     if (cameraWidget)
         cameraWidget->loadSoundRecords();

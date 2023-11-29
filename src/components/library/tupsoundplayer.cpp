@@ -139,6 +139,21 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
         qDebug() << "---";
     #endif
 
+    updateSoundPath(url);
+    enableLipSyncInterface(params.type, params.scenes);
+
+    mute = params.muted;
+    if (mute) {
+        muteButton->setToolTip(tr("Unmute"));
+        playButton->setEnabled(false);
+        muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
+    }
+
+    soundForm->setSoundParams(params, scenesList, frameLimits);
+}
+
+void TupSoundPlayer::updateSoundPath(const QString &url)
+{
     if (!soundPlayer.isEmpty()) {
         while(!soundPlayer.isEmpty()) {
             disconnect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
@@ -159,17 +174,6 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
     connect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
-
-    enableLipSyncInterface(params.type, params.scenes);
-
-    mute = params.muted;
-    if (mute) {
-        muteButton->setToolTip(tr("Unmute"));
-        playButton->setEnabled(false);
-        muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
-    }
-
-    soundForm->setSoundParams(params, scenesList, frameLimits);
 }
 
 void TupSoundPlayer::updateFrameLimit(int sceneIndex, int maxFrames)

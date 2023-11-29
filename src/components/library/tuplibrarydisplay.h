@@ -58,6 +58,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         QSize sizeHint() const;
         void reset();
         void resetSoundPlayer();
+        void updateSoundPath(const QString &url);
 
         void render(bool isVisual, QGraphicsItem *item);
         void render(bool isVisual, const QPixmap &img);
