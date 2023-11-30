@@ -139,7 +139,7 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
         qDebug() << "---";
     #endif
 
-    updateSoundPath(url);
+    updateCurrentSoundPath(url);
     enableLipSyncInterface(params.type, params.scenes);
 
     mute = params.muted;
@@ -152,8 +152,12 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
     soundForm->setSoundParams(params, scenesList, frameLimits);
 }
 
-void TupSoundPlayer::updateSoundPath(const QString &url)
+void TupSoundPlayer::updateCurrentSoundPath(const QString &soundPath)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundPlayer::updateCurrentSoundPath()] - soundPath ->" << soundPath;
+    #endif
+
     if (!soundPlayer.isEmpty()) {
         while(!soundPlayer.isEmpty()) {
             disconnect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
@@ -166,8 +170,13 @@ void TupSoundPlayer::updateSoundPath(const QString &url)
             delete player;
             player = nullptr;
         }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSoundPlayer::updateCurrentSoundPath()] - Warning: soundPlayer is empty!";
+        #endif
     }
 
+    url = soundPath;
     soundPlayer << new QMediaPlayer();
     soundPlayer.at(0)->setMedia(QUrl::fromLocalFile(url));
 
@@ -218,7 +227,7 @@ void TupSoundPlayer::playFile()
 void TupSoundPlayer::startPlayer()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::startPlayer()] - Playing audio -> " << url;
+        qDebug() << "[TupSoundPlayer::startPlayer()] - Playing audio ->" << url;
     #endif
 
     playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));

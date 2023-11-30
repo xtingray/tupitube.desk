@@ -92,13 +92,13 @@ void TupLibraryDisplay::resetSoundPlayer()
     soundPlayer->reset();
 }
 
-void TupLibraryDisplay::updateSoundPath(const QString &url)
+void TupLibraryDisplay::updateCurrentSoundPath(const QString &url)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupLibraryDisplay::updateSoundPath()] - url ->" << url;
     #endif
 
-    soundPlayer->updateSoundPath(url);
+    soundPlayer->updateCurrentSoundPath(url);
 }
 
 void TupLibraryDisplay::render(bool flag, QGraphicsItem *item)

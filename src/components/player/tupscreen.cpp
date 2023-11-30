@@ -1161,6 +1161,7 @@ void TupScreen::playSoundsAt(int frameIndex)
     #endif
 
     if (playMode == OneScene) {
+        qDebug() << "[TupScreen::playSoundsAt()] - sceneSoundIndexes.size() ->" << sceneSoundIndexes.size();
         for(int i=0; i< sceneSoundIndexes.size(); i++) {
             int soundIndex = sceneSoundIndexes.at(i);
             SoundResource soundRecord = soundRecords.at(soundIndex);

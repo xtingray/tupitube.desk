@@ -1133,7 +1133,7 @@ bool TupMainWindow::storeProcedure()
     connect(m_projectManager, SIGNAL(projectPathChanged()),
             this, SLOT(updateSoundsPath()));
     connect(m_projectManager, SIGNAL(soundPathsChanged()),
-            m_libraryWidget, SLOT(updateSoundPath()));
+            m_libraryWidget, SLOT(updateCurrentSoundPath()));
     // connect(m_projectManager, SIGNAL(soundPathsChanged()),
     //         m_libraryWidget, SLOT(updateSoundPlayer()));
 
@@ -1159,7 +1159,7 @@ bool TupMainWindow::storeProcedure()
         //            m_libraryWidget, SLOT(updateSoundPlayer()));
 
         disconnect(m_projectManager, SIGNAL(soundPathsChanged()),
-                   m_libraryWidget, SLOT(updateSoundPath()));
+                   m_libraryWidget, SLOT(updateCurrentSoundPath()));
     } else {
         #ifdef TUP_DEBUG
             qWarning() << "TupMainWindow::saveProject() - Error: Can't save project -> " << m_fileName;
