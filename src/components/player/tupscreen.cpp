@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Project TUPITUBE DESK                                                *
  *   Project Contact: info@maefloresta.com                                 *
  *   Project Website: http://www.maefloresta.com                           *
@@ -642,8 +642,15 @@ void TupScreen::paintEvent(QPaintEvent *)
     if (playMode == OneScene) {
         if (!mute && !renderOn) {
             if ((photograms.count() > 1) && currentSceneGotSounds()) {
-                if (playerIsActive && (playDirection == Forward))
+                if (playerIsActive && (playDirection == Forward)) {
+                    qDebug() << "TRACKING SOUND!";
                     playSoundsAt(currentFramePosition);
+                } else {
+                    qDebug() << "TRACKING NO SOUND!";
+                }
+            } else {
+                qDebug() << "NO SOUNDS TO PLAY!";
+                qDebug() << "currentSceneGotSounds() ->" << currentSceneGotSounds();
             }
         }
 
@@ -1107,7 +1114,7 @@ void TupScreen::loadSoundRecords()
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "*** Sound items total -> " << soundRecords.size();
+        qDebug() << "*** Sound items total - soundRecords.size() ->" << soundRecords.size();
         qDebug() << "---";
     #endif
 }

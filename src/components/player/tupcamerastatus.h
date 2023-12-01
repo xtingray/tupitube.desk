@@ -54,7 +54,6 @@ class TUPITUBE_EXPORT TupCameraStatus : public QFrame
         ~TupCameraStatus();
 
         void setScenes(QStringList scenes);
-        // void setScenes(TupProject *project);
 
         void setFPS(int frames);
         int getFPS();

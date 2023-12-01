@@ -137,7 +137,7 @@ void TupCameraStatus::setFPS(int frames)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::setFPS()]";
+        qDebug() << "[TupCameraStatus::setFPS()]";
     #endif
     */
 
@@ -154,12 +154,21 @@ int TupCameraStatus::getFPS()
 
 void TupCameraStatus::setCurrentScene(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraStatus::setCurrentScene()] - index ->" << index;
+        qDebug() << "[TupCameraStatus::setCurrentScene()] - scenesCombo->currentIndex() ->" << scenesCombo->currentIndex();
+    #endif
+
     if (scenesCombo->currentIndex() != index)
         scenesCombo->setCurrentIndex(index);
 }
 
 void TupCameraStatus::setScenes(QStringList scenes)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraStatus::setScenes()] - scenes ->" << scenes;
+    #endif
+
     if (scenesCombo->count())
         scenesCombo->clear();
 
