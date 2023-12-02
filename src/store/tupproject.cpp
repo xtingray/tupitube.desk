@@ -381,12 +381,12 @@ bool TupProject::moveScene(int position, int newPosition)
 TupScene *TupProject::sceneAt(int sceneIndex) const
 {    
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::sceneAt()] - position -> " << sceneIndex;
+        qDebug() << "[TupProject::sceneAt()] - position ->" << sceneIndex;
     #endif    
 
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::sceneAt()] - FATAL ERROR: index out of bound -> " << sceneIndex;
+            qDebug() << "[TupProject::sceneAt()] - FATAL ERROR: index out of bound ->" << sceneIndex;
         #endif
 
         return nullptr;
@@ -399,7 +399,7 @@ TupBackground * TupProject::getBackgroundFromScene(int sceneIndex)
 {
     if (sceneIndex < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::getBackgroundFromScene()] - FATAL ERROR: index out of bound -> " << sceneIndex;
+            qDebug() << "[TupProject::getBackgroundFromScene()] - FATAL ERROR: index out of bound ->" << sceneIndex;
         #endif
 
         return nullptr;
@@ -419,7 +419,7 @@ void TupProject::fromXml(const QString &xml)
 
     if (!document.setContent(xml)) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupProject::fromXml()] - Fatal Error: Xml input is corrupt! -> " << xml;
+            qWarning() << "[TupProject::fromXml()] - Fatal Error: Xml input is corrupt! ->" << xml;
         #endif
 
         return;
@@ -555,8 +555,8 @@ QList<int> TupProject::getFrameLimits()
 bool TupProject::createSymbol(int type, const QString &name, const QByteArray &data, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::createSymbol()] - name -> " << name;
-        qDebug() << "[TupProject::createSymbol()] - folder -> " << folder;
+        qDebug() << "[TupProject::createSymbol()] - name ->" << name;
+        qDebug() << "[TupProject::createSymbol()] - folder ->" << folder;
     #endif
 
     if (!isOpen) {
@@ -576,7 +576,7 @@ bool TupProject::createSymbol(int type, const QString &name, const QByteArray &d
     }         
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::createSymbol()] - Object added successfully -> " << name;
+        qDebug() << "[TupProject::createSymbol()] - Object added successfully ->" << name;
     #endif
 
     return true;
@@ -664,7 +664,7 @@ bool TupProject::removeFolder(const QString &name)
 bool TupProject::removeSound(const QString &name)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::removeSound()] - item -> " << name;
+        qDebug() << "[TupProject::removeSound()] - item ->" << name;
     #endif
 
     return library->removeObject(name, true);
@@ -674,7 +674,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                                        int layerIndex, int frameIndex)
 {    
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::insertSymbolIntoFrame()] - spaceMode -> " << spaceMode;
+        qDebug() << "[TupProject::insertSymbolIntoFrame()] - spaceMode ->" << spaceMode;
     #endif
     
     TupFrame *frame = nullptr;
@@ -820,7 +820,7 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
                 return true;
             } else {                
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupProject::insertSymbolIntoFrame()] - Object NOT found at library! -> " << name;
+                    qDebug() << "[TupProject::insertSymbolIntoFrame()] - Object NOT found at library! ->" << name;
                 #endif
                 
                 return false;
@@ -842,12 +842,12 @@ bool TupProject::insertSymbolIntoFrame(TupProject::Mode spaceMode, const QString
 bool TupProject::removeSymbolFromFrame(const QString &name, TupLibraryObject::ObjectType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::removeSymbolFromFrame()] - Removing symbol from project -> " << name;
+        qDebug() << "[TupProject::removeSymbolFromFrame()] - Removing symbol from project ->" << name;
     #endif
     
     if (type == TupLibraryObject::Folder) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupProject::removeSymbolFromFrame()] - Ignoring! Object is a folder -> " << name;
+            qWarning() << "[TupProject::removeSymbolFromFrame()] - Ignoring! Object is a folder ->" << name;
         #endif
 
         return true;
@@ -1068,7 +1068,7 @@ void TupProject::releaseLipSyncVoices(int sceneIndex, const QString &lipSyncName
             if (!updateSoundType(soundKey, Effect)) {
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupProject::releaseLipSyncVoices()] - "
-                                  "Fatal Error: Couldn't update sound resource type -> "
+                                  "Fatal Error: Couldn't update sound resource type ->"
                                << soundKey;
                 #endif
             }
@@ -1115,14 +1115,14 @@ bool TupProject::removeSoundResource(const QString &id)
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupProject::removeSoundResource()] - id -> " << id;
-        qDebug() << "[TupProject::removeSoundResource()] - soundRecords.size() -> " << soundRecords.size();
+        qDebug() << "[TupProject::removeSoundResource()] - id ->" << id;
+        qDebug() << "[TupProject::removeSoundResource()] - soundRecords.size() ->" << soundRecords.size();
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
         SoundResource item = soundRecords.at(i);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::removeSoundResource()] - record key -> " << item.key;
+            qDebug() << "[TupProject::removeSoundResource()] - record key ->" << item.key;
         #endif
         if (item.key.compare(id) == 0) {
             soundRecords.removeAt(i);
@@ -1146,18 +1146,18 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
 {
     int size = soundRecords.count();
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::updateSoundResourcesItem()] - item -> "
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - item ->"
                  << item->getSymbolName();
-        qDebug() << "[TupProject::updateSoundResourcesItem()] - item path -> "
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - item path ->"
                  << item->getDataPath();
-        qDebug() << "[TupProject::updateSoundResourcesItem()] - soundRecords.count() -> "
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - soundRecords.count() ->"
                  << size;
     #endif
 
     for(int i=0; i<size; i++) {
         SoundResource record = soundRecords.at(i);
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - record path -> "
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - record path ->"
                      << record.path;
         #endif
 
@@ -1192,7 +1192,7 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
 void TupProject::updateLibraryPaths(const QString &newPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::updateLibraryPaths()] - newPath -> " << newPath;
+        qDebug() << "[TupProject::updateLibraryPaths()] - newPath ->" << newPath;
     #endif
 
     library->updatePaths(newPath);
@@ -1203,9 +1203,9 @@ void TupProject::updateSoundPaths(const QString &newPath)
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupProject::updateSoundPaths()] - newPath -> " << newPath;
-        qDebug() << "[TupProject::updateSoundPaths()] - old path -> " << kAppProp->projectDir();
-        qDebug() << "[TupProject::updateSoundPaths()] - soundRecords.size() -> " << soundRecords.size();
+        qDebug() << "[TupProject::updateSoundPaths()] - newPath ->" << newPath;
+        qDebug() << "[TupProject::updateSoundPaths()] - old path ->" << kAppProp->projectDir();
+        qDebug() << "[TupProject::updateSoundPaths()] - soundRecords.size() ->" << soundRecords.size();
         qDebug() << "---";
     #endif
 
@@ -1216,8 +1216,8 @@ void TupProject::updateSoundPaths(const QString &newPath)
         QString path = newPath + "/" + oldPath.right(range);
 
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::updateSoundPaths()] - oldPath -> " << oldPath;
-            qDebug() << "[TupProject::updateSoundPaths()] - path -> " << path;
+            qDebug() << "[TupProject::updateSoundPaths()] - oldPath ->" << oldPath;
+            qDebug() << "[TupProject::updateSoundPaths()] - path ->" << path;
         #endif
 
         item.path = path;
@@ -1228,7 +1228,7 @@ void TupProject::updateSoundPaths(const QString &newPath)
 bool TupProject::updateSoundType(const QString audioId, SoundType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::updateSoundType()] - audioId -> " << audioId;
+        qDebug() << "[TupProject::updateSoundType()] - audioId ->" << audioId;
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
@@ -1266,10 +1266,10 @@ bool TupProject::updateSoundFramesToPlay(const QString audioId, int sceneIndex, 
     return false;
 }
 
-QList<SoundResource> TupProject::getSoundResourcesList()
+QList<SoundResource> TupProject::getSoundResourcesList() const
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::soundResourcesList()] - items size -> "
+        qDebug() << "[TupProject::getSoundResourcesList()] - items size ->"
                  << soundRecords.size();
     #endif
 
