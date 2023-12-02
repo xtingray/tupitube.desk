@@ -337,12 +337,12 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
 
         QString objectName = item->text(1) + "." + item->text(2).toLower();
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::previewItem()] - Getting object -> " << objectName;
+            qDebug() << "[TupLibraryWidget::previewItem()] - Getting object ->" << objectName;
         #endif
         TupLibraryObject *object = library->getObject(objectName);
         if (!object) {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::previewItem()] - Fatal Error: Cannot find the object -> "
+                qDebug() << "[TupLibraryWidget::previewItem()] - Fatal Error: Cannot find the object ->"
                             + item->text(1) + "." + item->text(2).toLower();
             #endif
 
@@ -1739,8 +1739,8 @@ void TupLibraryWidget::importLocalSoundFile(const QString &filePath)
 void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - filePath -> " << filePath;
-        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - folder -> " << folder;
+        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - filePath ->" << filePath;
+        qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - folder ->" << folder;
     #endif
 
     QFile file(filePath);
@@ -1964,8 +1964,9 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                              if (isEffectSound) {
                                  library->updateObjectSoundType(id, Effect);
                                  isEffectSound = false;
-                                 library->updateSoundFramesToPlay(id, currentFrame.scene,
-                                                                  object->framesToPlayAt(currentFrame.scene));
+                                 QList<int> frames;
+                                 frames << 1;
+                                 library->updateSoundFramesToPlay(id, currentFrame.scene, frames);
                              } else {
                                  library->updateObjectSoundType(id, Lipsync);
                              }

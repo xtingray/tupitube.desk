@@ -874,8 +874,13 @@ void TupLibraryFolder::updateSoundFramesToPlay(const QString &id, int sceneIndex
     #endif
 
     TupLibraryObject *object = getObject(id);
-    if (object)
+    if (object) {
         object->updateFramesToPlay(sceneIndex, frames);
+    } else {
+       #ifdef TUP_DEBUG
+           qDebug() << "[TupLibraryFolder::updateSoundFramesToPlay()] - Fatal Error: Can't find object ->" << id;
+       #endif
+    }
 }
 
 void TupLibraryFolder::registerSoundResource(const QString &id)
@@ -885,8 +890,13 @@ void TupLibraryFolder::registerSoundResource(const QString &id)
     #endif
 
     TupLibraryObject *object = getObject(id);
-    if (object)
+    if (object) {
         project->addSoundResource(object);
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupLibraryFolder::registerSoundResource()] - Fatal Error: Can't find object ->" << id;
+        #endif
+    }
 }
 
 bool TupLibraryFolder::folderHasAudioObjects(const QString &folderName)

@@ -182,6 +182,11 @@ QList<int> TupLibraryObject::framesToPlayAt(int sceneIndex)
 
 void TupLibraryObject::updateFramesToPlay(int sceneIndex, QList<int> frames)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupLibraryFolder::updateFramesToPlay()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupLibraryFolder::updateFramesToPlay()] - frames ->" << frames;
+    #endif
+
     soundObject->updateFramesToPlay(sceneIndex, frames);
 }
 

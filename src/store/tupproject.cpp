@@ -1095,6 +1095,14 @@ void TupProject::addSoundResource(TupLibraryObject *object)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::addSoundResource()] - Symbol name ->" << object->getSymbolName();
+        QList<SoundScene> scenes = object->getAudioScenes();
+        qDebug() << "[TupProject::addSoundResource()] - scenes ->" << scenes.size();
+        if (scenes.isEmpty()) {
+            qDebug() << "[TupProject::addSoundResource()] - Warning: No scenes available!";
+        } else {
+            SoundScene scene = scenes.first();
+            qDebug() << "[TupProject::addSoundResource()] - frames ->" << scene.frames;
+        }
     #endif
 
     /*
