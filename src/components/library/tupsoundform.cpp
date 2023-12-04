@@ -58,6 +58,9 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
     scenesCombo = new QComboBox();
     connect(scenesCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(updateFramesList(int)));
 
+    QLabel *framesLabel = new QLabel(tr("At Frames:"));
+    framesLabel->setAlignment(Qt::AlignHCenter);
+
     QHBoxLayout *scenesLayout = new QHBoxLayout;
     scenesLayout->addWidget(scenesCombo, Qt::AlignHCenter);
 
@@ -99,6 +102,7 @@ TupSoundForm::TupSoundForm(QWidget *parent) : QWidget(parent)
     blockLayout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
     blockLayout->addWidget(playAtLabel);
     blockLayout->addLayout(scenesLayout);
+    blockLayout->addWidget(framesLabel);
     blockLayout->addLayout(framesLayout);
     blockLayout->addWidget(buttonBar);
 }

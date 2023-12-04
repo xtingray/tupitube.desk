@@ -179,9 +179,9 @@ QString TupLibraryDisplay::getSoundID() const
     return soundPlayer->getSoundID();
 }
 
-void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType, QList<SoundScene> scenes)
+void TupLibraryDisplay::enableLipSyncInterface(SoundType soundType)
 {
-    soundPlayer->enableLipSyncInterface(soundType, scenes);
+    soundPlayer->enableLipSyncInterface(soundType);
 }
 
 void TupLibraryDisplay::mousePressEvent(QMouseEvent *event)

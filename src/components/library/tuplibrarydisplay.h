@@ -72,7 +72,7 @@ class TUPITUBE_EXPORT TupLibraryDisplay : public QWidget
         void stopSoundPlayer();     
         QString getSoundID() const;
 
-        void enableLipSyncInterface(SoundType soundType, QList<SoundScene> scenes);
+        void enableLipSyncInterface(SoundType soundType);
 
     signals:
         void muteEnabled(bool mute);

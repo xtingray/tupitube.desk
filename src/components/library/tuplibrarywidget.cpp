@@ -1853,10 +1853,8 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
                 TupLibraryObject *sound = library->findSoundFile(id);
                 if (sound) {
                     QString currentId = display->getSoundID();
-                    if (currentId.compare(sound->getSymbolName()) == 0) {
-                        // display->enableLipSyncInterface(sound->getSoundType(), sound->frameToPlay() + 1);
-                        display->enableLipSyncInterface(sound->getSoundType(), sound->getAudioScenes());
-                    }
+                    if (currentId.compare(sound->getSymbolName()) == 0)
+                        display->enableLipSyncInterface(sound->getSoundType());
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupLibraryWidget::layerResponse()] - "

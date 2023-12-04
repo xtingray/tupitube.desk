@@ -50,12 +50,13 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     playing = false;
     loop = false;
 
-    QLabel *widgetLabel = new QLabel("<b>" + tr("Audio Properties") + "</b>");
-    widgetLabel->setAlignment(Qt::AlignHCenter);
+    mainLabel = new QLabel();
+    mainLabel->setAlignment(Qt::AlignHCenter);
 
     soundForm = new TupSoundForm();
     connect(soundForm, SIGNAL(soundResourceModified(SoundResource)),
             this, SIGNAL(soundResourceModified(SoundResource)));
+    soundForm->setVisible(false);
 
     timer = new QLabel("");
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
@@ -100,7 +101,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 
     QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
     layout->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
-    layout->addWidget(widgetLabel);
+    layout->addWidget(mainLabel);
     layout->addWidget(soundForm);
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addSpacing(5);
@@ -108,7 +109,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     layout->addLayout(sliderLayout);
     layout->addLayout(buttonLayout);
     layout->addStretch();
-    layout->setContentsMargins(5, 5, 5, 5);
+    layout->setContentsMargins(5, 5, 5, 5);    
 }
 
 TupSoundPlayer::~TupSoundPlayer()
@@ -127,20 +128,20 @@ QSize TupSoundPlayer::sizeHint() const
 
 void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList, QList<int> frameLimits)
 {
-    soundID = params.key;
-    url = params.path;
-
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - getSoundType() ->" << params.type;
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - isMuted() ->" << params.muted;
-        qDebug() << "[TupSoundPlayer::setSoundParams()] - audio url ->" << url;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - params.type ->" << params.type;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - params.muted ->" << params.muted;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - params.path ->" << params.path;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - scenes list ->" << scenesList;
         qDebug() << "---";
     #endif
 
+    soundID = params.key;
+    url = params.path;
     updateCurrentSoundPath(url);
-    enableLipSyncInterface(params.type, params.scenes);
+
+    enableLipSyncInterface(params.type);
 
     mute = params.muted;
     if (mute) {
@@ -172,7 +173,7 @@ void TupSoundPlayer::updateCurrentSoundPath(const QString &soundPath)
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupSoundPlayer::updateCurrentSoundPath()] - Warning: soundPlayer is empty!";
+            qDebug() << "[TupSoundPlayer::updateCurrentSoundPath()] - Warning: Media player list is empty!";
         #endif
     }
 
@@ -190,26 +191,24 @@ void TupSoundPlayer::updateFrameLimit(int sceneIndex, int maxFrames)
     soundForm->updateFrameLimit(sceneIndex, maxFrames);
 }
 
-void TupSoundPlayer::enableLipSyncInterface(SoundType type, QList<SoundScene> scenes)
+void TupSoundPlayer::enableLipSyncInterface(SoundType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - type -> " << type;
+        qDebug() << "[TupSoundPlayer::enableLipSyncInterface()] - type ->" << type;
     #endif
 
-    if (type != Lipsync) {
-        /*
-        frameBox->setVisible(true);
-        frameLabel->setText(tr("Play at frame:") + " ");
-        frameBox->blockSignals(true);
-        frameBox->setValue(frame);
-        frameBox->blockSignals(false);
-        */
+    QString title = "<b>" + tr("Audio Properties") + "</b>";
+
+    if (type == Lipsync) {
+        title = "<b>" + tr("Lipsync Audio") + "</b>";
+        if (soundForm->isVisible())
+            soundForm->setVisible(false);
     } else {
-        /*
-        frameBox->setVisible(false);
-        frameLabel->setText(tr("Play at frame:") + " " + QString::number(frame));
-        */
+        if (!soundForm->isVisible())
+            soundForm->setVisible(true);
     }
+
+    mainLabel->setText(title);
 }
 
 void TupSoundPlayer::playFile()

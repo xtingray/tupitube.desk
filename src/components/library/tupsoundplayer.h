@@ -73,7 +73,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void reset();
         void resetMediaPlayer();
         QString getSoundID() const;
-        void enableLipSyncInterface(SoundType type, QList<SoundScene> scenes);
+        void enableLipSyncInterface(SoundType type);
         void updateCurrentSoundPath(const QString &url);
 
     signals:
@@ -91,6 +91,7 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         void muteAction();
 
     private:
+        QLabel *mainLabel;
         QList<QMediaPlayer *> soundPlayer;
 
         QSlider *slider;

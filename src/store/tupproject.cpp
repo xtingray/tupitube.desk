@@ -1105,17 +1105,7 @@ void TupProject::addSoundResource(TupLibraryObject *object)
         }
     #endif
 
-    /*
-    SoundResource record;
-    record.key = object->getSymbolName();
-    record.scenes = object->getAudioScenes();
-    record.path = object->getDataPath();
-    record.muted = object->isMuted();
-    record.type = object->getSoundType();
-    */
-
     SoundResource record = object->getSoundResourceParams();
-
     soundRecords << record;
 }
 
@@ -1257,15 +1247,32 @@ bool TupProject::updateSoundFramesToPlay(const QString audioId, int sceneIndex, 
     #ifdef TUP_DEBUG
         qDebug() << "[TupProject::updateSoundFramesToPlay()] - audioId ->" << audioId;
         qDebug() << "[TupProject::updateSoundFramesToPlay()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupProject::updateSoundFramesToPlay()] - soundRecords.size() ->" << soundRecords.size();
     #endif
 
     for (int i=0; i<soundRecords.size(); i++) {
-        SoundResource item = soundRecords.at(i);
-        if (item.key.compare(audioId) == 0) {
+        SoundResource sound = soundRecords.at(i);
+        if (sound.key.compare(audioId) == 0) {
             library->updateSoundFramesToPlay(audioId, sceneIndex, frames);
-            // item.frameIndex = frame + 1;
-            item.scenes[sceneIndex].frames = frames;
-            soundRecords[i] = item;
+            QList<SoundScene> scenes = sound.scenes;
+            if (!scenes.isEmpty()) {
+                for (int j=0; j<scenes.size(); j++) {
+                    SoundScene scene = scenes.at(j);
+                    if (scene.sceneIndex == sceneIndex) {
+                        scene.frames = frames;
+                        scenes.replace(j, scene);
+                        break;
+                    }
+                }
+                sound.scenes = scenes;
+                soundRecords.replace(i, sound);
+            } else { // No scenes
+                SoundScene scene;
+                scene.sceneIndex = sceneIndex;
+                scene.frames = frames;
+                sound.scenes << scene;
+                soundRecords.replace(i, sound);
+            }
 
             return true;
         }
