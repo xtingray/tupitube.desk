@@ -355,12 +355,17 @@ void TupPapagayoApp::setupUI()
     QHBoxLayout *initFrameLayout = new QHBoxLayout();
     initFrameLayout->setSpacing(6);
 
+    QString nameScene = "<b>" + tupProject->sceneAt(sceneIndex)->getSceneName() + "</b>";
+    QLabel *sceneLabel = new QLabel(tr("Scene:") + " " + nameScene);
+
     QLabel *initFrameLabel = new QLabel(tr("Initial Frame:"));
     initFrameBox = new QSpinBox;
     initFrameBox->setMinimum(1);
     initFrameBox->setValue(frameIndex + 1);
 
     voiceHorizontalLayout->addSpacing(20);
+    voiceHorizontalLayout->addWidget(sceneLabel);
+    voiceHorizontalLayout->addSpacing(10);
     voiceHorizontalLayout->addWidget(initFrameLabel);
     voiceHorizontalLayout->addWidget(initFrameBox);
 
@@ -1378,7 +1383,7 @@ bool TupPapagayoApp::saveLipsyncRecord()
         QFile projectFile(pgoFilePath);
         if (projectFile.exists()) {
             if (projectFile.size() > 0) {
-                frameIndex = initFrameBox->value() - 1;
+                frameIndex = initFrameBox->value();
                 QDir dir(currentMouthPath);
                 QStringList imagesList = dir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg");
                 if (imagesList.size() > 0) {
