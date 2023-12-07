@@ -1835,7 +1835,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
             if (sound) {
                 QList<int> frames;
                 frames << frameIndex;
-                sound->updateFramesToPlay(currentFrame.scene, frames);
+                sound->updateSoundFramesToPlay(currentFrame.scene, frames);
                 // if (display->getSoundID().compare(soundID) == 0)
                 //     display->updateSoundInitFrame(frameIndex + 1);
             } else {
@@ -1964,6 +1964,7 @@ void TupLibraryWidget::libraryResponse(TupLibraryResponse *response)
                                  isEffectSound = false;
                                  QList<int> frames;
                                  frames << 1;
+                                 // Set the scene and frames for the new sound item
                                  library->updateSoundFramesToPlay(id, currentFrame.scene, frames);
                              } else {
                                  library->updateObjectSoundType(id, Lipsync);
@@ -2736,8 +2737,14 @@ void TupLibraryWidget::updateSoundItems()
 
     if (display) {
         if (display->isSoundPanelVisible()) {
-            display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
-                                    project->getFrameLimits());
+            if (currentSound) {
+                display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
+                                        project->getFrameLimits());
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupLibraryWidget::updateSoundItems()] - Fatal Error: Current sound is NULL!";
+                #endif
+            }
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupLibraryWidget::updateSoundItems()] - SoundPanel is NOT visible!";

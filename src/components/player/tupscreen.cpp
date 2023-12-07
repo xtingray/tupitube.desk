@@ -756,6 +756,7 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
     switch (event->getAction()) {
         case TupProjectRequest::Add:
           {
+              sceneIndex = index;
               addPhotogramsEmptyArray(index);
               calculateFramesTotal();
           }
@@ -808,7 +809,33 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
        qDebug() << "[TupScreen::libraryResponse()]";
     #endif
 
-    Q_UNUSED(response)
+   switch (response->getAction()) {
+       case TupProjectRequest::Add:
+       {
+            if (response->symbolType() == TupLibraryObject::Folder)
+                return;
+
+            QString id = response->getArg().toString();
+            #ifdef TUP_DEBUG
+                    qDebug() << "[TupScreen::libraryResponse()] - response->getArg() ->" << id;
+            #endif
+
+            TupLibraryObject *object = library->getObject(id);
+            if (object) {
+                switch (object->getObjectType()) {
+                    case TupLibraryObject::Audio:
+                    {
+                        loadSoundRecords();
+                    }
+                    break;
+                }
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupScreen::libraryResponse()] - Fatal Error: Can't find library object ->" << id;
+                #endif
+            }
+       }
+   }
 }
 
 void TupScreen::renderAllScenes()
@@ -1121,6 +1148,7 @@ void TupScreen::getSoundsForCurrentScene()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::getSoundsForCurrentScene()] - soundRecords.size() ->" << soundRecords.size();
+        qDebug() << "[TupScreen::getSoundsForCurrentScene()] - sceneIndex ->" << sceneIndex;
     #endif
 
     sceneSoundIndexes.clear();
@@ -1130,6 +1158,13 @@ void TupScreen::getSoundsForCurrentScene()
             SoundResource resource = soundRecords.at(i);
             if (!resource.scenes.isEmpty() && !resource.muted) {
                 foreach(SoundScene scene, resource.scenes) {
+                    qDebug() << "";
+                    qDebug() << "";
+                    qDebug() << "scene.sceneIndex ->" << scene.sceneIndex;
+                    qDebug() << "scene.frames.size() ->" << scene.frames.size();
+                    qDebug() << "scene.frames ->" << scene.frames;
+                    qDebug() << "";
+                    qDebug() << "";
                     if ((scene.sceneIndex == sceneIndex) && (!scene.frames.isEmpty())) {
                         #ifdef TUP_DEBUG
                             qDebug() << "[TupScreen::getSoundsForCurrentScene()] - Found sound at index ->" << i;
@@ -1161,7 +1196,7 @@ void TupScreen::getSoundsForCurrentScene()
 void TupScreen::playSoundsAt(int frameIndex)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::playSoundsAt()] - frameIndex ->" << frameIndex;
+        qDebug() << "[TupScreen::playSoundsAt()] - current frame ->" << frameIndex;
     #endif
 
     if (playMode == OneScene) {
@@ -1175,7 +1210,7 @@ void TupScreen::playSoundsAt(int frameIndex)
                         if (soundPlayer.at(soundIndex)->state() != QMediaPlayer::PlayingState) {
                             #ifdef TUP_DEBUG
                                 qWarning() << "[TupScreen::playSoundsAt()] - Playing file ->" << soundRecord.path;
-                                qWarning() << "[TupScreen::playSoundsAt()] - frame ->" << frame;
+                                qWarning() << "[TupScreen::playSoundsAt()] - sound frame ->" << frame;
                             #endif
                             soundPlayer.at(soundIndex)->setMedia(QUrl::fromLocalFile(soundRecord.path));
                             soundPlayer.at(soundIndex)->play();

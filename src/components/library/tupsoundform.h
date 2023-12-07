@@ -63,8 +63,6 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         void setSoundParams(SoundResource params, QStringList scenesList, QList<int> frameLimits);
         void updateFrameLimit(int sceneIndex, int framesCount);
 
-        void loadScenesCombo(QStringList scenes);
-
     signals:
         void soundResourceModified(SoundResource params);
 
@@ -74,7 +72,9 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         void removeFrame();
 
     private:
+        void loadScenesCombo(QStringList scenes);
         void setFramesLimit(int sceneIndex, int framesCount);
+        void populateFramesList(int sceneIndex);
 
         QComboBox *scenesCombo;
         QLabel *playAtLabel;
@@ -89,6 +89,7 @@ class TUPITUBE_EXPORT TupSoundForm : public QWidget
         QString bgTrackLabel;
 
         QList<int> framesMaxList;
+        bool bgTrackEnabled;
 };
 
 #endif

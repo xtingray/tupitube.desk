@@ -133,21 +133,20 @@ void TupSoundObject::updateFramesToPlay(int sceneIndex, QList<int> frames)
         qDebug() << "[TupSoundObject::updateFramesToPlay()] - frames ->" << frames;
     #endif
 
-    if (sceneIndex == 0 && audioScenes.isEmpty()) {
-        SoundScene scene;
-        scene.sceneIndex = sceneIndex;
-        scene.frames = frames;
-        audioScenes << scene;
-    } else if (sceneIndex < audioScenes.size()) {
-        SoundScene scene = audioScenes.at(sceneIndex);
-        scene.frames = frames;
-        audioScenes.replace(sceneIndex, scene);
-    } else {
-        #ifdef TUP_DEBUG
-            qDebug() << "[TupSoundObject::updateFramesToPlay()] - Warning: sceneIndex is invalid! ->" << sceneIndex;
-            qDebug() << "[TupSoundObject::updateFramesToPlay()] - audioScenes.size() ->" << audioScenes.size();
-        #endif
+    for(int i=0; i<audioScenes.size(); i++) {
+        SoundScene scene = audioScenes.at(i);
+        if (scene.sceneIndex == sceneIndex) {
+            scene.frames = frames;
+            audioScenes.replace(i, scene);
+
+            return;
+        }
     }
+
+    SoundScene scene;
+    scene.sceneIndex = sceneIndex;
+    scene.frames = frames;
+    audioScenes << scene;
 }
 
 void TupSoundObject::addSceneToPlay(SoundScene scene)

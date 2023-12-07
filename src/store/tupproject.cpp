@@ -1153,11 +1153,15 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
     #endif
 
     for(int i=0; i<size; i++) {
+        qDebug() << "***";
         SoundResource record = soundRecords.at(i);
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::updateSoundResourcesItem()] - record path ->"
                      << record.path;
         #endif
+
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - item->getSymbolName() ->" << item->getSymbolName();
+        qDebug() << "[TupProject::updateSoundResourcesItem()] - record.key ->" << record.key;
 
         if (item->getSymbolName().compare(record.key == 0)) {
             record = item->getSoundResourceParams();
@@ -1182,6 +1186,7 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
 
             return true;
         }
+        qDebug() << "***";
     }
 
     return false;
@@ -1284,8 +1289,17 @@ bool TupProject::updateSoundFramesToPlay(const QString audioId, int sceneIndex, 
 QList<SoundResource> TupProject::getSoundResourcesList() const
 {
     #ifdef TUP_DEBUG
+        qDebug() << "";
         qDebug() << "[TupProject::getSoundResourcesList()] - items size ->"
                  << soundRecords.size();
+        foreach(SoundResource resource, soundRecords) {
+            QList<SoundScene> scenes = resource.scenes;
+            foreach(SoundScene scene, scenes) {
+               qDebug() << "   scene.sceneIndex ->" << scene.sceneIndex;
+               qDebug() << "   scene.frames ->" << scene.frames;
+            }
+        }
+        qDebug() << "";
     #endif
 
     return soundRecords;

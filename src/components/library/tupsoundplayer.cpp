@@ -133,6 +133,12 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.type ->" << params.type;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.muted ->" << params.muted;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.path ->" << params.path;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - params.scenes.size() ->" << params.scenes.size();
+        for(int i=0; i<params.scenes.size(); i++) {
+            SoundScene scene = params.scenes.at(i);
+            qDebug() << "[TupSoundPlayer::setSoundParams()] -    sceneIndex ->" << scene.sceneIndex;
+            qDebug() << "[TupSoundPlayer::setSoundParams()] -    frames ->" << scene.frames;
+        }
         qDebug() << "[TupSoundPlayer::setSoundParams()] - scenes list ->" << scenesList;
         qDebug() << "---";
     #endif

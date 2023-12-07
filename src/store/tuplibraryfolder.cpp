@@ -875,7 +875,7 @@ void TupLibraryFolder::updateSoundFramesToPlay(const QString &id, int sceneIndex
 
     TupLibraryObject *object = getObject(id);
     if (object) {
-        object->updateFramesToPlay(sceneIndex, frames);
+        object->updateSoundFramesToPlay(sceneIndex, frames);
     } else {
        #ifdef TUP_DEBUG
            qDebug() << "[TupLibraryFolder::updateSoundFramesToPlay()] - Fatal Error: Can't find object ->" << id;
