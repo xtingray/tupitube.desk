@@ -159,8 +159,19 @@ void TupCameraStatus::setCurrentScene(int index)
         qDebug() << "[TupCameraStatus::setCurrentScene()] - scenesCombo->currentIndex() ->" << scenesCombo->currentIndex();
     #endif
 
-    if (scenesCombo->currentIndex() != index)
-        scenesCombo->setCurrentIndex(index);
+    if ((index >= 0) && (index < scenesCombo->count())) {
+        if (scenesCombo->currentIndex() != index) {
+            scenesCombo->setCurrentIndex(index);
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupCameraStatus::setCurrentScene()] - Warning: No combo index updated ->" << index;
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupCameraStatus::setCurrentScene()] - Fatal Error: Invalid index ->" << index;
+        #endif
+    }
 }
 
 void TupCameraStatus::setScenes(QStringList scenes)

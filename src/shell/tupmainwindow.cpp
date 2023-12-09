@@ -397,6 +397,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(cameraWidget, SIGNAL(projectHasChanged(bool)), m_projectManager, SLOT(setModificationStatus(bool)));
         connect(cameraWidget, SIGNAL(fpsUpdated(int)), m_exposureSheet, SLOT(updateFPS(int)));
         connect(cameraWidget, SIGNAL(fpsUpdated(int)), m_timeLine, SLOT(updateFPS(int)));
+
         connectWidgetToManager(cameraWidget);
 
         // Player widget must be hidden while the Player tab is not visible

@@ -80,7 +80,7 @@ int TupProjectResponse::getAction() const
             default:
                  {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupProjectResponse::action()] - Returning same action as UNDO respoonse -> " << action;
+                        qDebug() << "[TupProjectResponse::action()] - Returning same action as UNDO respoonse ->" << action;
                     #endif
                  }
             break;
@@ -133,6 +133,19 @@ TupProjectRequestArgument TupProjectResponse::getArg() const
 QByteArray TupProjectResponse::getData() const
 {
     return data;
+}
+
+void TupProjectResponse::toString()
+{
+    qDebug() << "---";
+    qDebug() << "  Project Response";
+    qDebug() << "  *** Action: " + QString::number(getAction());
+    qDebug() << "  *** Mode: " + QString::number(getMode());
+    qDebug() << "  *** Args: " + getArg().toString();
+    qDebug() << "  *** Part: " + QString::number(part);
+    qDebug() << "  *** isExternal: " + QString::number(isExternal);
+    qDebug() << "  *** Data: " + QString(data);
+    qDebug() << "---";
 }
 
 // SCENE

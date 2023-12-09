@@ -752,6 +752,14 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
     #endif
 
     int index = event->getSceneIndex();
+    if (index < 0) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::sceneResponse()] - Invalid scene index ->" << index;
+        #endif
+        return;
+    }
+
+    emit sceneResponseActivated(event->getAction(), index);
 
     switch (event->getAction()) {
         case TupProjectRequest::Add:
@@ -817,7 +825,7 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
 
             QString id = response->getArg().toString();
             #ifdef TUP_DEBUG
-                    qDebug() << "[TupScreen::libraryResponse()] - response->getArg() ->" << id;
+                qDebug() << "[TupScreen::libraryResponse()] - response->getArg() ->" << id;
             #endif
 
             TupLibraryObject *object = library->getObject(id);
@@ -828,6 +836,8 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
                         loadSoundRecords();
                     }
                     break;
+                    default:
+                    break;
                 }
             } else {
                 #ifdef TUP_DEBUG
@@ -835,6 +845,13 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
                 #endif
             }
        }
+       case TupProjectRequest::Remove:
+       {
+            loadSoundRecords();
+       }
+       break;
+       default:
+       break;
    }
 }
 

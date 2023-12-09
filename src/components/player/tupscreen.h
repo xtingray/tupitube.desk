@@ -102,14 +102,20 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void mousePressEvent(QMouseEvent *event);
 
     signals:
-        void progressStep(int, int);
-        void toStatusBar(const QString &, int);
-        void sceneChanged(const TupScene *newScene);
-        void requestTriggered(const TupProjectRequest *event);
+        // void progressStep(int, int);
+        // void toStatusBar(const QString &, int);
+        // void sceneChanged(const TupScene *newScene);
+        // void requestTriggered(const TupProjectRequest *event);
+
         void isRendering(int advance);
         void frameChanged(int frame);
         void activePause();
         void playerStopped();
+
+        void sceneResponseActivated(int action, int sceneIndex);
+        // void layerResponseActivated(int action, int sceneIndex, int layerIndex);
+        // void frameResponseActivated(int action, int sceneIndex, int layerIndex, int frameIndex);
+        // void libraryResponseActivated(int action);
 
     protected:
         void paintEvent(QPaintEvent *event);

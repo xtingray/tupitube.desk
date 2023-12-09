@@ -253,6 +253,9 @@ void TupCameraWidget::addAnimationDisplay()
     connect(previewScreen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
     connect(previewScreen, SIGNAL(activePause()), this, SLOT(doPause()));
 
+    connect(previewScreen, SIGNAL(sceneResponseActivated(int, int)),
+            SLOT(sceneResponse(int, int)));
+
     layout->addWidget(previewScreen, 0, Qt::AlignCenter);
 }
 
@@ -430,74 +433,72 @@ void TupCameraWidget::previousFrame()
     previewScreen->previousFrame();
 }
 
+void TupCameraWidget::sceneResponse(int action, int sceneIndex)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::sceneResponse()] - action ->" << action;
+        qDebug() << "[TupCameraWidget::sceneResponse()] - sceneIndex ->" << sceneIndex;
+    #endif
+
+    switch (action) {
+        case TupProjectRequest::Add:
+        {
+             cameraStatus->setScenes(project->getSceneNames());
+             cameraStatus->setCurrentScene(sceneIndex);
+             updateFramesTotal(sceneIndex);
+        }
+        break;
+        case TupProjectRequest::Remove:
+        {
+             if (sceneIndex == project->scenesCount())
+                 sceneIndex--;
+
+             cameraStatus->setScenes(project->getSceneNames());
+             cameraStatus->setCurrentScene(sceneIndex);
+             updateFramesTotal(sceneIndex);
+        }
+        break;
+        case TupProjectRequest::Reset:
+        {
+             cameraStatus->setScenes(project->getSceneNames());
+        }
+        break;
+        case TupProjectRequest::Select:
+        {
+             currentSceneIndex = sceneIndex;
+
+             int fps = project->getFPS(currentSceneIndex);
+             fpsDelta = 1.0 / fps;
+             cameraStatus->setFPS(fps);
+
+             updateFramesTotal(sceneIndex);
+             cameraStatus->setCurrentScene(sceneIndex);
+        }
+        break;
+        case TupProjectRequest::Rename:
+        {
+             cameraStatus->setScenes(project->getSceneNames());
+             cameraStatus->setCurrentScene(sceneIndex);
+        }
+        break;
+        default:
+        {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupCameraWidget::sceneResponse()] - "
+                             "Unknown/Unhandled project action: "
+                             << action;
+             #endif
+        }
+        break;
+    }
+}
+
 bool TupCameraWidget::handleProjectResponse(TupProjectResponse *response)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraWidget::handleProjectResponse()]";
+        response->toString();
     #endif
-
-    if (TupSceneResponse *sceneResponse = static_cast<TupSceneResponse *>(response)) {
-        int index = sceneResponse->getSceneIndex();
-
-        switch (sceneResponse->getAction()) {
-            case TupProjectRequest::Add:
-            {
-                 cameraStatus->setScenes(project->getSceneNames());
-                 cameraStatus->setCurrentScene(index);
-                 updateFramesTotal(index);
-            }
-            break;
-            case TupProjectRequest::Remove:
-            {
-                 if (index < 0)
-                     break;
-
-                 if (index == project->scenesCount())
-                     index--;
-
-                 if (index >= 0) {
-                     cameraStatus->setScenes(project->getSceneNames());
-                     cameraStatus->setCurrentScene(index);
-                     updateFramesTotal(index);
-                 }
-            }
-            break;
-            case TupProjectRequest::Reset:
-            {
-                 cameraStatus->setScenes(project->getSceneNames());
-            }
-            break;
-            case TupProjectRequest::Select:
-            {
-                 if (index >= 0) {
-                     currentSceneIndex = index;
-
-                     int fps = project->getFPS(currentSceneIndex);
-                     fpsDelta = 1.0 / fps;
-                     cameraStatus->setFPS(fps);
-
-                     updateFramesTotal(index);
-                     cameraStatus->setCurrentScene(index);
-                 }
-            }
-            break;
-            case TupProjectRequest::Rename:
-            {
-                 cameraStatus->setScenes(project->getSceneNames());
-                 cameraStatus->setCurrentScene(index);
-            }
-            break;
-            default:
-            {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "[TupCameraWidget::handleProjectResponse()] - "
-                                 "Unknown/Unhandled project action: "
-                                 << sceneResponse->getAction();
-                 #endif
-            }
-            break;
-        }
-    }
 
     if (previewScreen)
         return previewScreen->handleResponse(response);
@@ -539,7 +540,7 @@ void TupCameraWidget::updateFPS(int fps)
 void TupCameraWidget::setFpsStatus(int fps)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupCameraWidget::setStatusFPS()] - fps -> " << fps;
+        qDebug() << "[TupCameraWidget::setStatusFPS()] - fps ->" << fps;
     #endif
 
     cameraStatus->blockSignals(true);
@@ -563,7 +564,7 @@ void TupCameraWidget::updateFramesTotal(int sceneIndex)
         } else {
             #ifdef TUP_DEBUG
                 qDebug() << "[TupCameraWidget::updateFramesTotal()] - "
-                            "Fatal Error: Scene index invalid ->" << sceneIndex;
+                            "Fatal Error: Scene index is invalid ->" << sceneIndex;
             #endif
         }
     } else { // Play All mode

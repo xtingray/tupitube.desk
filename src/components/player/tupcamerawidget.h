@@ -90,6 +90,8 @@ class TUPITUBE_EXPORT TupCameraWidget : public QFrame
         void updatePlayMode(PlayMode mode, int sceneIndex);
         void disablePlayButtons();
 
+        void sceneResponse(int action, int sceneIndex);
+
     public slots:
         bool handleProjectResponse(TupProjectResponse *event);
         void setFPS(int fps);

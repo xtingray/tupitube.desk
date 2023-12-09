@@ -72,6 +72,8 @@ class TUPITUBE_EXPORT TupProjectResponse
         TupProjectRequestArgument getArg() const;
         QByteArray getData() const;
 
+        void toString();
+
     private:
         int part;
         int action;

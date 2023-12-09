@@ -122,7 +122,6 @@ void TupLocalProjectManagerHandler::handleProjectRequest(const TupProjectRequest
 
     if (request->isValid()) {
         emit sendCommand(request, true);
-        //emit sendCommand(request, isUndoCommand(request->xml()));
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[TupLocalProjectManagerHandler::handleProjectRequest()] - INVALID REQUEST! ID -> " << request->getId();
