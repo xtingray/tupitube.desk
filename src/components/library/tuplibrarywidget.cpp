@@ -388,7 +388,6 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                      currentSound = object;
 
                      qDebug() << "[TupLibraryWidget::previewItem()] - project->getSceneNames() ->" << project->getSceneNames();
-
                      display->setSoundParams(object->getSoundResourceParams(),
                                              project->getSceneNames(), project->getFrameLimits());
                      display->showSoundPlayer();

@@ -254,7 +254,11 @@ TupScene *TupProject::createScene(QString name, int position, bool loaded)
     scenesList.insert(position, scene);
     sceneCounter++;
     scene->setSceneName(name);
-    
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::createScene()] - scenesList.count() ->" << scenesList.count();
+    #endif
+
     if (loaded)
         TupProjectLoader::createScene(scene->getSceneName(), position, this);
 
@@ -541,6 +545,8 @@ QStringList TupProject::getSceneNames()
 
 QList<int> TupProject::getFrameLimits()
 {
+    qDebug() << "[TupProject::getFrameLimits()] - scenesList.size() ->" << scenesList.size();
+
     QList<int> limits;
     int scenesCount = scenesList.size();
     for (int i = 0; i < scenesCount; i++) {
@@ -548,6 +554,10 @@ QList<int> TupProject::getFrameLimits()
         if (scene)
             limits << scene->framesCount();
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::getFrameLimits()] - limits ->" << limits;
+    #endif
 
     return limits;
 }
@@ -1163,7 +1173,8 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
         qDebug() << "[TupProject::updateSoundResourcesItem()] - item->getSymbolName() ->" << item->getSymbolName();
         qDebug() << "[TupProject::updateSoundResourcesItem()] - record.key ->" << record.key;
 
-        if (item->getSymbolName().compare(record.key == 0)) {
+        if (item->getSymbolName().compare(record.key) == 0) {
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - REPLACING AUDIO!";
             record = item->getSoundResourceParams();
 
             qDebug() << "";
@@ -1186,7 +1197,7 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
 
             return true;
         }
-        qDebug() << "***";
+        qDebug() << "*********";
     }
 
     return false;
@@ -1293,6 +1304,9 @@ QList<SoundResource> TupProject::getSoundResourcesList() const
         qDebug() << "[TupProject::getSoundResourcesList()] - items size ->"
                  << soundRecords.size();
         foreach(SoundResource resource, soundRecords) {
+            qDebug() << "---";
+            qDebug() << "resource key ->" << resource.key;
+            qDebug() << "resource path ->" << resource.path;
             QList<SoundScene> scenes = resource.scenes;
             foreach(SoundScene scene, scenes) {
                qDebug() << "   scene.sceneIndex ->" << scene.sceneIndex;

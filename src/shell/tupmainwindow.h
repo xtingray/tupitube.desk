@@ -221,6 +221,7 @@ class TupMainWindow : public TabbedMainWindow
         void requestSaveAction();
         void updateSoundsPath();
         void updateBgColorInPalette(int sceneIndex);
+        void updateSoundItems();
 
     private:
         QString appTitle;

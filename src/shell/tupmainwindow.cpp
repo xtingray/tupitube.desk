@@ -402,7 +402,8 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         // Player widget must be hidden while the Player tab is not visible
         cameraWidget->setVisible(false);
-        connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
+        // connect(m_libraryWidget, SIGNAL(soundUpdated()), cameraWidget, SLOT(updateSoundItems()));
+        connect(m_libraryWidget, SIGNAL(soundUpdated()), this, SLOT(updateSoundItems()));
         m_libraryWidget->setNetworking(isNetworked);
         // Autosave event
         connect(animationTab, SIGNAL(autoSave()), this, SLOT(callSaveProcedure()));
@@ -450,6 +451,12 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         m_projectManager->clearUndoStack();
     }
+}
+
+void TupMainWindow::updateSoundItems()
+{
+    cameraWidget->updateSoundItems();
+    m_projectManager->setModificationStatus(true);
 }
 
 void TupMainWindow::enableUpdatesDialog()

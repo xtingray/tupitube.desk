@@ -135,10 +135,10 @@ void TupScreen::initPlayerScreen()
         qDebug() << "[TupScreen::initPlayerScreen()]";
     #endif
 
-    getSoundsForCurrentScene();
-
     if (playMode == OneScene) {
         if (sceneIndex > -1 && sceneIndex < animationList.count()) {
+            getSoundsForCurrentScene();
+
             currentFramePosition = 0;
             clearPhotograms();
             photograms = animationList.at(sceneIndex);
@@ -151,6 +151,8 @@ void TupScreen::initPlayerScreen()
             #endif
         }
     } else { // PlayAll mode
+        getSoundsForProject();
+
         sceneIndex = 0;
         currentFramePosition = 0;
         projectFramePosition = 0;
@@ -219,7 +221,7 @@ void TupScreen::releaseAudioResources()
     #endif
 
     soundRecords.clear();
-    sceneSoundIndexes.clear();
+    soundIndexesForScene.clear();
     while(!soundPlayer.isEmpty()) {
         QMediaPlayer *player = soundPlayer.takeFirst();
         player->stop();
@@ -845,6 +847,7 @@ void TupScreen::libraryResponse(TupLibraryResponse *response)
                 #endif
             }
        }
+       break;
        case TupProjectRequest::Remove:
        {
             loadSoundRecords();
@@ -1137,6 +1140,7 @@ void TupScreen::loadSoundRecords()
         SoundResource sound = effectsList.at(i);
         soundRecords << sound;
         #ifdef TUP_DEBUG
+            qDebug() << "---";
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio key ->" <<sound.key;
             qDebug() << "[TupScreen::loadSoundRecords()] - Audio path ->" << sound.path;
             qDebug() << "[TupScreen::loadSoundRecords()] - isBackgroundTrack ->" << sound.isBackgroundTrack;
@@ -1158,7 +1162,7 @@ void TupScreen::loadSoundRecords()
 
 bool TupScreen::currentSceneGotSounds()
 {
-    return !sceneSoundIndexes.isEmpty();
+    return !soundIndexesForScene.isEmpty();
 }
 
 void TupScreen::getSoundsForCurrentScene()
@@ -1168,26 +1172,25 @@ void TupScreen::getSoundsForCurrentScene()
         qDebug() << "[TupScreen::getSoundsForCurrentScene()] - sceneIndex ->" << sceneIndex;
     #endif
 
-    sceneSoundIndexes.clear();
-    soundFrames.clear();
+    soundIndexesForScene.clear();
+    soundFramesForScene.clear();
     if (!soundRecords.isEmpty()) {
         for(int i=0; i<soundRecords.size(); i++) {
             SoundResource resource = soundRecords.at(i);
+            qDebug() << "---";
+            qDebug() << "resource.key ->" << resource.key;
+            qDebug() << "resource.path ->" << resource.path;
             if (!resource.scenes.isEmpty() && !resource.muted) {
                 foreach(SoundScene scene, resource.scenes) {
-                    qDebug() << "";
-                    qDebug() << "";
-                    qDebug() << "scene.sceneIndex ->" << scene.sceneIndex;
-                    qDebug() << "scene.frames.size() ->" << scene.frames.size();
-                    qDebug() << "scene.frames ->" << scene.frames;
-                    qDebug() << "";
-                    qDebug() << "";
+                    qDebug() << "   scene.sceneIndex ->" << scene.sceneIndex;
+                    qDebug() << "   scene.frames.size() ->" << scene.frames.size();
+                    qDebug() << "   scene.frames ->" << scene.frames;
                     if ((scene.sceneIndex == sceneIndex) && (!scene.frames.isEmpty())) {
                         #ifdef TUP_DEBUG
                             qDebug() << "[TupScreen::getSoundsForCurrentScene()] - Found sound at index ->" << i;
                         #endif
-                        sceneSoundIndexes << i;
-                        soundFrames << scene.frames;
+                        soundIndexesForScene << i;
+                        soundFramesForScene << scene.frames;
                         break;
                     }
                 }
@@ -1206,7 +1209,66 @@ void TupScreen::getSoundsForCurrentScene()
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::getSoundsForCurrentScene()] - sceneSoundIndexes ->" << sceneSoundIndexes;
+        qDebug() << "[TupScreen::getSoundsForCurrentScene()] - sceneSoundIndexes ->" << soundIndexesForScene;
+    #endif
+}
+
+void TupScreen::getSoundsForProject()
+{
+    #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::getSoundsForProject()] - soundRecords.size() ->" << soundRecords.size();
+    #endif
+
+    if (!soundRecords.isEmpty()) {
+        for(int i=0; i<soundRecords.size(); i++) {
+            SoundResource resource = soundRecords.at(i);
+            qDebug() << "---";
+            qDebug() << "resource.key ->" << resource.key;
+            qDebug() << "resource.path ->" << resource.path;
+            if (!resource.scenes.isEmpty() && !resource.muted) {
+                foreach(SoundScene scene, resource.scenes) {
+                    if (!scene.frames.isEmpty()) {
+                        bool found = false;
+                        if (!projectSoundsList.isEmpty()) {
+                            for(int j=0; j<projectSoundsList.count(); j++) {
+                                ProjectSoundList list = projectSoundsList.at(j);
+                                if (list.sceneIndex == scene.sceneIndex) {
+                                    ProjectSoundItem item;
+                                    item.playerIndex = i;
+                                    item.frames = scene.frames;
+
+                                    list.soundItems << item;
+                                    projectSoundsList.replace(j, list);
+
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!found) {
+                            ProjectSoundList newList;
+                            newList.sceneIndex = scene.sceneIndex;
+
+                            ProjectSoundItem item;
+                            item.playerIndex = i;
+                            item.frames = scene.frames;
+
+                            newList.soundItems << item;
+                            projectSoundsList << newList;
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupScreen::getSoundsForProject()] - Warning: No sound records!";
+        #endif
+    }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::getSoundsForProject()] - sceneSoundIndexes ->" << soundIndexesForScene;
     #endif
 }
 
@@ -1217,21 +1279,20 @@ void TupScreen::playSoundsAt(int frameIndex)
     #endif
 
     if (playMode == OneScene) {
-        for(int i=0; i< sceneSoundIndexes.size(); i++) {
-            int soundIndex = sceneSoundIndexes.at(i);
+        for(int i=0; i< soundIndexesForScene.size(); i++) {
+            int soundIndex = soundIndexesForScene.at(i);
             SoundResource soundRecord = soundRecords.at(soundIndex);
-            QList<int> frameIndexes = soundFrames.at(i);
+            QList<int> frameIndexes = soundFramesForScene.at(i);
+            for(int i=0; i<frameIndexes.count(); i++) {
+                int value = frameIndexes.at(i);
+                value--;
+                frameIndexes.replace(i, value);
+            }
+
             foreach(int frame, frameIndexes) {
                 if (frameIndex == frame) {
                     if (i < soundPlayer.count()) {
-                        if (soundPlayer.at(soundIndex)->state() != QMediaPlayer::PlayingState) {
-                            #ifdef TUP_DEBUG
-                                qWarning() << "[TupScreen::playSoundsAt()] - Playing file ->" << soundRecord.path;
-                                qWarning() << "[TupScreen::playSoundsAt()] - sound frame ->" << frame;
-                            #endif
-                            soundPlayer.at(soundIndex)->setMedia(QUrl::fromLocalFile(soundRecord.path));
-                            soundPlayer.at(soundIndex)->play();
-                        }
+                        playAudioFile(soundIndex, soundRecord.path);
                     } else {
                         #ifdef TUP_DEBUG
                             qWarning() << "[TupScreen::playSoundsAt()] - Fatal Error: "
@@ -1242,7 +1303,52 @@ void TupScreen::playSoundsAt(int frameIndex)
             }
         }
     } else { // PlayAll mode
+        qDebug() << "---";
+        qDebug() << "[TupScreen::playSoundsAt()] - PlayAll Mode...";
+        qDebug() << "[TupScreen::playSoundsAt()] - projectFramePosition ->" << projectFramePosition;
+        qDebug() << "[TupScreen::playSoundsAt()] - projectSceneIndex ->" << projectSceneIndex;
+        qDebug() << "[TupScreen::playSoundsAt()] - scene frames total ->" << animationList.at(projectSceneIndex).count();
 
+        for(int i=0; i<projectSoundsList.size(); i++) {
+            ProjectSoundList list = projectSoundsList.at(i);
+            if (list.sceneIndex == projectSceneIndex) {
+                if (!list.soundItems.isEmpty()) {
+                    QList<ProjectSoundItem> items = list.soundItems;
+                    for (int j=0; j<items.size(); j++) {
+                         ProjectSoundItem item = items.at(j);
+                         QList<int> frameIndexes = item.frames;
+                         for(int i=0; i<frameIndexes.count(); i++) {
+                            int value = frameIndexes.at(i);
+                            value--;
+                            frameIndexes.replace(i, value);
+                         }
+                         foreach(int frame, frameIndexes) {
+                            if (frame == frameIndex) {
+                                SoundResource resource = soundRecords.at(item.playerIndex);
+
+                                qDebug() << "[TupScreen::playSoundsAt()] - key frame ->" << frame;
+                                qDebug() << "[TupScreen::playSoundsAt()] - current frame ->" << frameIndex;
+                                qDebug() << "[TupScreen::playSoundsAt()] - playing file ->" << resource.path;
+
+                                playAudioFile(item.playerIndex, resource.path);
+                            }
+                         }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void TupScreen::playAudioFile(int index, QString audioPath)
+{
+    if (soundPlayer.at(index)->state() != QMediaPlayer::PlayingState) {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupScreen::playAudioFile()] - Playing file ->" << audioPath;
+        #endif
+        soundPlayer.at(index)->setMedia(QUrl::fromLocalFile(audioPath));
+        soundPlayer.at(index)->play();
     }
 }
 

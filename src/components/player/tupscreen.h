@@ -130,9 +130,11 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void calculateFramesTotal();
 
         void playSoundsAt(int frame);
+        void playAudioFile(int index, QString audioPath);
         void stopSounds();
         bool currentSceneGotSounds();
         void getSoundsForCurrentScene();
+        void getSoundsForProject();
 
         TupProject *project;
         int currentFramePosition;
@@ -162,8 +164,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         TupLibrary *library;
         QList<SoundResource> soundRecords;
         QList<QMediaPlayer *> soundPlayer;
-        QList<int> sceneSoundIndexes;
-        QList<QList<int>> soundFrames;
+        QList<int> soundIndexesForScene;
+        QList<QList<int>> soundFramesForScene;
 
         bool playerIsActive;
         PlayDirection playDirection;
@@ -178,6 +180,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QPainter *painter;
         QImage renderedImg;
         QImage currentPhotogram;
+
+        QList<ProjectSoundList> projectSoundsList;
 };
 
 #endif
