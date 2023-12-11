@@ -272,12 +272,12 @@ QDomElement TupSoundObject::toXml(QDomDocument &doc) const
              for (int j = 0; j < frames.count(); j++)
                   framesString = QString::number(frames.at(j)) + ",";
              framesString.chop(1);
-         }
 
-         QDomElement element = doc.createElement("scene");
-         element.setAttribute("index", scene.sceneIndex);
-         element.setAttribute("frames", framesString);
-         root.appendChild(element);
+             QDomElement element = doc.createElement("scene");
+             element.setAttribute("index", scene.sceneIndex);
+             element.setAttribute("frames", framesString);
+             root.appendChild(element);
+         }
     }
 
     return root;

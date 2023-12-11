@@ -284,31 +284,38 @@ void TupSoundForm::addFrame()
 
     int frameIndex = framesBox->value();
     QString frame = QString::number(frameIndex);
+    qDebug() << "frame ->" << frame;
     QList<QListWidgetItem *> items = framesListWidget->findItems(frame, Qt::MatchExactly);
     if (items.isEmpty()) {
         int sceneIndex = scenesCombo->currentIndex();
-        SoundScene scene;
-        if (sceneIndex < soundParams.scenes.size()) {
-            qDebug() << "FLAG 1 - soundParams.scenes.size() ->" << soundParams.scenes.size();
-            scene = soundParams.scenes.at(sceneIndex);
-            scene.frames.append(frameIndex);
-            std::sort(scene.frames.begin(), scene.frames.end());
-            soundParams.scenes.replace(sceneIndex, scene);
-        } else {
-            qDebug() << "FLAG 2 - soundParams.scenes.size() ->" << soundParams.scenes.size();
+        bool found = false;
+        QList<int> framesList;
+        foreach(SoundScene scene, soundParams.scenes) {
+            if (scene.sceneIndex == sceneIndex) {
+                scene.frames << frameIndex;
+                std::sort(scene.frames.begin(), scene.frames.end());
+                framesList = scene.frames;
+                soundParams.scenes.replace(sceneIndex, scene);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            SoundScene scene;
             scene.sceneIndex = sceneIndex;
             QList<int> frames;
             frames << frameIndex;
-            scene.frames = QList(frames);
-            std::sort(scene.frames.begin(), scene.frames.end());
+            scene.frames = frames;
+            framesList = scene.frames;
             soundParams.scenes.append(scene);
         }
 
-        QStringList frames;
-        foreach(int frame, scene.frames)
-            frames << QString::number(frame);
+        QStringList strFrames;
+        foreach(int frame, framesList)
+            strFrames << QString::number(frame);
         framesListWidget->clear();
-        framesListWidget->addItems(frames);
+        framesListWidget->addItems(strFrames);
 
         qDebug() << "[TupSoundForm::addFrame()] - Audio key ->" << soundParams.key;
         qDebug() << "[TupSoundForm::addFrame()] - Audio path ->" << soundParams.path;
@@ -335,25 +342,32 @@ void TupSoundForm::removeFrame()
         int sceneIndex = scenesCombo->currentIndex();
         int i = 0;
         foreach(SoundScene scene, soundParams.scenes) {
+            qDebug() << "scene.sceneIndex ->" << scene.sceneIndex;
+            qDebug() << "sceneIndex ->" << sceneIndex;
             if (scene.sceneIndex == sceneIndex) {
                 QString frame = item->text();
                 scene.frames.removeOne(frame.toInt());
-                soundParams.scenes.replace(i, scene);
+                qDebug() << "frame ->" << frame;
+                qDebug() << "scene.frames ->" << scene.frames;
+                qDebug() << "i ->" << i;
+
+                if (scene.frames.isEmpty()) {
+                    qDebug() << "Removing scene at" << i;
+                    qDebug() << "soundParams.scenes.count() before ->" << soundParams.scenes.count();
+                    soundParams.scenes.removeAt(i);
+                    qDebug() << "soundParams.scenes.count() after ->" << soundParams.scenes.count();
+                } else {
+                    qDebug() << "Replacing scene at" << i;
+                    soundParams.scenes.replace(i, scene);
+                }
+
                 framesListWidget->takeItem(framesListWidget->row(item));
                 break;
             }
             i++;
         }
 
-        /*
-        SoundScene scene = soundParams.scenes.at(sceneIndex);
-        QString frame = item->text();
-        scene.frames.removeOne(frame.toInt());
-        soundParams.scenes.replace(sceneIndex, scene);
-        framesListWidget->takeItem(framesListWidget->row(item));
-        */
-
-        qDebug() << "";
+        qDebug() << "---";
         qDebug() << "[TupSoundForm::removeFrame()] - Audio key ->" << soundParams.key;
         qDebug() << "[TupSoundForm::removeFrame()] - Audio path ->" << soundParams.path;
         qDebug() << "[TupSoundForm::removeFrame()] - isBackgroundTrack ->" << soundParams.isBackgroundTrack;

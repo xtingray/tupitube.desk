@@ -1216,8 +1216,10 @@ void TupScreen::getSoundsForCurrentScene()
 void TupScreen::getSoundsForProject()
 {
     #ifdef TUP_DEBUG
-            qDebug() << "[TupScreen::getSoundsForProject()] - soundRecords.size() ->" << soundRecords.size();
+        qDebug() << "[TupScreen::getSoundsForProject()] - soundRecords.size() ->" << soundRecords.size();
     #endif
+
+    projectSoundsList.clear();
 
     if (!soundRecords.isEmpty()) {
         for(int i=0; i<soundRecords.size(); i++) {
@@ -1233,9 +1235,13 @@ void TupScreen::getSoundsForProject()
                             for(int j=0; j<projectSoundsList.count(); j++) {
                                 ProjectSoundList list = projectSoundsList.at(j);
                                 if (list.sceneIndex == scene.sceneIndex) {
+                                    qDebug() << "*** Adding item to existing sound list...";
                                     ProjectSoundItem item;
                                     item.playerIndex = i;
                                     item.frames = scene.frames;
+
+                                    qDebug() << "*** scene.frames ->" << scene.frames;
+                                    qDebug() << "---";
 
                                     list.soundItems << item;
                                     projectSoundsList.replace(j, list);
@@ -1247,12 +1253,17 @@ void TupScreen::getSoundsForProject()
                         }
 
                         if (!found) {
+                            qDebug() << "*** Adding a new project sound list...";
+                            qDebug() << "*** scene.sceneIndex ->" << scene.sceneIndex;
                             ProjectSoundList newList;
                             newList.sceneIndex = scene.sceneIndex;
 
                             ProjectSoundItem item;
                             item.playerIndex = i;
                             item.frames = scene.frames;
+
+                            qDebug() << "*** scene.frames ->" << scene.frames;
+                            qDebug() << "---";
 
                             newList.soundItems << item;
                             projectSoundsList << newList;
