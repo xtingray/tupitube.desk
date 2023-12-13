@@ -69,7 +69,7 @@ fileSystem.CopyFile sourceDir & "\mypaint\raster\color\release\rastercolor.dll",
 fileSystem.CopyFile sourceDir & "\mypaint\raster\main\release\rastermain.dll", tupiDir & "\lib\raster\rastermain.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\common\release\tupiplugincommon.dll", tupiDir & "\lib\tupiplugincommon.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\color\release\tupicoloringtool.dll", tupiDir & "\plugins\tupicoloringtool.dll"
-fileSystem.CopyFile sourceDir & "\plugins\tools\fill\release\tupifilltool.dll", tupiDir & "\plugins\tupifilltool.dll"
+fileSystem.CopyFile sourceDir & "\plugins\tools\bucket\release\tupibuckettool.dll", tupiDir & "\plugins\tupibuckettool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\geometric\release\tupigeometrictool.dll", tupiDir & "\plugins\tupigeometrictool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\ink\release\tupiinktool.dll", tupiDir & "\plugins\tupiinktool.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\nodes\release\tupinodestool.dll", tupiDir & "\plugins\tupinodestool.dll"
