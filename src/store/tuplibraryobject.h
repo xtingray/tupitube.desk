@@ -133,7 +133,7 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
     public:
         virtual void fromXml(const QString &xml);
         virtual QDomElement toXml(QDomDocument &doc) const;
-        
+
     private:
         TupLibraryObject::ObjectType objectType;
         TupLibraryObject::ItemType itemType;

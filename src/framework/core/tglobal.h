@@ -108,6 +108,7 @@ struct SoundResource {
     bool muted;
     bool isBackgroundTrack;
     SoundType type;
+    QString duration;
 };
 
 enum PapagayoAppMode { Insert = 0, Update, VoiceRecorded, AudioFromLibrary };

@@ -1,4 +1,4 @@
-QT += opengl core gui svg xml network
+QT += opengl core gui svg xml network multimedia
 TEMPLATE = lib
 TARGET = tupistore
 

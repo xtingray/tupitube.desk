@@ -93,6 +93,16 @@ bool TupSoundObject::isBackgroundTrack()
     return backgroundTrack;
 }
 
+void TupSoundObject::setDuration(const QString &time)
+{
+    duration = time;
+}
+
+QString TupSoundObject::getDuration() const
+{
+    return duration;
+}
+
 void TupSoundObject::setAudioScenes(QList<SoundScene> scenes)
 {
     audioScenes = scenes;
@@ -157,7 +167,7 @@ void TupSoundObject::addSceneToPlay(SoundScene scene)
 void TupSoundObject::updateSoundScene(int sceneIndex, SoundScene scene)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundObject::updateSoundScene()] - scene -> " << sceneIndex;
+        qDebug() << "[TupSoundObject::updateSoundScene()] - scene ->" << sceneIndex;
     #endif
 
     if (sceneIndex < audioScenes.count())
@@ -183,7 +193,7 @@ void TupSoundObject::setSoundType(SoundType type)
 void TupSoundObject::fromXml(const QString &xml)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundObject::fromXml()] - xml -> " << xml;
+        qDebug() << "[TupSoundObject::fromXml()] - xml ->" << xml;
     #endif
 
     if (xml.isEmpty()) {
@@ -208,6 +218,7 @@ void TupSoundObject::fromXml(const QString &xml)
         soundType = SoundType(root.attribute("soundType").toInt());
         mute = root.attribute("mute", "true").toInt() ? true : false;
         backgroundTrack = root.attribute("backgroundTrack", "false").toInt() ? true : false;
+        duration = root.attribute("duration");
 
         QDomNode n = root.firstChild();
         while (!n.isNull()) {
@@ -254,15 +265,16 @@ QDomElement TupSoundObject::toXml(QDomDocument &doc) const
 {
     #ifdef TUP_DEBUG
         qDebug() << "---";
-        qDebug() << "[TupSoundObject::toXml()] - soundType -> " << soundType;
-        qDebug() << "[TupSoundObject::toXml()] - mute -> " << mute;
-        qDebug() << "[TupSoundObject::toXml()] - backgroundTrack -> " << backgroundTrack;
+        qDebug() << "[TupSoundObject::toXml()] - soundType ->" << soundType;
+        qDebug() << "[TupSoundObject::toXml()] - mute ->" << mute;
+        qDebug() << "[TupSoundObject::toXml()] - backgroundTrack ->" << backgroundTrack;
     #endif
 
     QDomElement root = doc.createElement("sound");
     root.setAttribute("soundType", soundType);
     root.setAttribute("mute", mute);
     root.setAttribute("backgroundTrack", backgroundTrack);
+    root.setAttribute("duration", duration);
 
     QString framesString = "";
     for (int i = 0; i < audioScenes.count(); i++) {

@@ -1181,6 +1181,7 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
             qDebug() << "[TupProject::updateSoundResourcesItem()] - Audio key ->" << record.key;
             qDebug() << "[TupProject::updateSoundResourcesItem()] - Audio path ->" << record.path;
             qDebug() << "[TupProject::updateSoundResourcesItem()] - isBackgroundTrack ->" << record.isBackgroundTrack;
+            qDebug() << "[TupProject::updateSoundResourcesItem()] - duration ->" << record.duration;
             qDebug() << "[TupProject::updateSoundResourcesItem()] - scenes count ->" << record.scenes.count();
             foreach(SoundScene scene, record.scenes) {
                 qDebug() << "[TupProject::updateSoundResourcesItem()] - scene index ->" << scene.sceneIndex;

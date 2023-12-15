@@ -44,7 +44,6 @@
 
 #include <QFrame>
 #include <QBoxLayout>
-#include <QSlider>
 #include <QLabel>
 #include <QMediaPlayer>
 #include <QUrl>
@@ -83,7 +82,6 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
     private slots:
         void playFile();
         void startPlayer();
-        void positionChanged(qint64 value);
         void durationChanged(qint64 value);
         void stateChanged(QMediaPlayer::State state);
         void updateSoundPos(int pos);
@@ -94,14 +92,13 @@ class TUPITUBE_EXPORT TupSoundPlayer : public QFrame
         QLabel *mainLabel;
         QList<QMediaPlayer *> soundPlayer;
 
-        QSlider *slider;
         QLabel *timer;
         TImageButton *playButton;
         TImageButton *muteButton;
         bool playing;
-        qint64 duration;
-        QTime soundTotalTime;
-        QString totalTime;
+        QString soundDuration;
+        bool hasDuration;
+
         QCheckBox *loopBox;
         bool loop;
         bool mute;

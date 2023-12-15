@@ -46,7 +46,7 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
 
     setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 
-    totalTime = "00:00";
+    soundDuration = "";
     playing = false;
     loop = false;
 
@@ -58,19 +58,12 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
             this, SIGNAL(soundResourceModified(SoundResource)));
     soundForm->setVisible(false);
 
-    timer = new QLabel("");
+    timer = new QLabel(tr("Duration:") + " " + soundDuration);
     QBoxLayout *timerLayout = new QBoxLayout(QBoxLayout::LeftToRight);
     timerLayout->addStretch();
     timerLayout->addWidget(timer);
     timerLayout->addStretch();
     timerLayout->setContentsMargins(0, 0, 0, 0);
-
-    slider = new QSlider(Qt::Horizontal, this);
-    connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(updateSoundPos(int)));
-
-    QBoxLayout *sliderLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    sliderLayout->addWidget(slider);
-    sliderLayout->setContentsMargins(0, 0, 0, 0);
 
     playButton = new TImageButton(QPixmap(THEME_DIR + "icons/play_small.png"), 33, this);
     playButton->setToolTip(tr("Play"));
@@ -106,7 +99,6 @@ TupSoundPlayer::TupSoundPlayer(QWidget *parent) : QFrame(parent)
     layout->addWidget(new TSeparator(Qt::Horizontal));
     layout->addSpacing(5);
     layout->addLayout(timerLayout);
-    layout->addLayout(sliderLayout);
     layout->addLayout(buttonLayout);
     layout->addStretch();
     layout->setContentsMargins(5, 5, 5, 5);    
@@ -133,6 +125,7 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.type ->" << params.type;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.muted ->" << params.muted;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.path ->" << params.path;
+        qDebug() << "[TupSoundPlayer::setSoundParams()] - params.duration ->" << params.duration;
         qDebug() << "[TupSoundPlayer::setSoundParams()] - params.scenes.size() ->" << params.scenes.size();
         for(int i=0; i<params.scenes.size(); i++) {
             SoundScene scene = params.scenes.at(i);
@@ -143,7 +136,16 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
         qDebug() << "---";
     #endif
 
+    hasDuration = false;
     soundID = params.key;
+    if (!params.duration.isEmpty()) {
+        soundDuration = params.duration;
+        hasDuration = true;
+    } else {
+        soundDuration = "00:00";
+    }
+    timer->setText(tr("Duration:") + " " + soundDuration);
+
     url = params.path;
     updateCurrentSoundPath(url);
 
@@ -167,8 +169,8 @@ void TupSoundPlayer::updateCurrentSoundPath(const QString &soundPath)
 
     if (!soundPlayer.isEmpty()) {
         while(!soundPlayer.isEmpty()) {
-            disconnect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
-            disconnect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+            if (!hasDuration)
+                disconnect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
             disconnect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 
             QMediaPlayer *player = soundPlayer.takeFirst();
@@ -187,8 +189,8 @@ void TupSoundPlayer::updateCurrentSoundPath(const QString &soundPath)
     soundPlayer << new QMediaPlayer();
     soundPlayer.at(0)->setMedia(QUrl::fromLocalFile(url));
 
-    connect(soundPlayer.at(0), SIGNAL(positionChanged(qint64)), this, SLOT(positionChanged(qint64)));
-    connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
+    if (!hasDuration)
+        connect(soundPlayer.at(0), SIGNAL(durationChanged(qint64)), this, SLOT(durationChanged(qint64)));
     connect(soundPlayer.at(0), SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(stateChanged(QMediaPlayer::State)));
 }
 
@@ -238,11 +240,7 @@ void TupSoundPlayer::startPlayer()
     playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/pause.png")));
     playing = true;
 
-    QString initTime = "00:00";
-    if (duration > 3600)
-        initTime = "00:00";
-    initTime = initTime + " / " + totalTime;
-    timer->setText(initTime);
+    timer->setText(tr("Duration:") + " " + soundDuration);
 
     soundPlayer.at(0)->setVolume(60);
     soundPlayer.at(0)->play();
@@ -272,42 +270,23 @@ void TupSoundPlayer::updateLoopState()
         loop = false;
 }
 
-void TupSoundPlayer::positionChanged(qint64 value)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupSoundPlayer::positionChanged()]";
-    #endif
-
-    qint64 currentInfo = value / 1000;
-    slider->setValue(static_cast<int>(currentInfo));
-    QString time;
-
-    if (currentInfo || duration) {
-        QTime currentTime((currentInfo/3600)%60, (currentInfo/60)%60, currentInfo%60, (currentInfo*1000)%1000);
-        QString format = "mm:ss";
-        if (duration > 3600)
-            format = "hh:mm:ss";
-        time = currentTime.toString(format) + " / " + totalTime;
-    }
-
-    timer->setText(time);
-}
-
 void TupSoundPlayer::durationChanged(qint64 value)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundPlayer::durationChanged()]";
     #endif
 
-    duration = value/1000;
-    slider->setMinimum(0);
-    slider->setMaximum(static_cast<int>(duration));
+    if (soundDuration.compare("00:00") == 0) {
+        qint64 duration = value/1000;
+        QTime soundTotalTime = QTime((duration/3600)%60, (duration/60)%60, duration%60, (duration*1000)%1000);
+        QString format = "mm:ss";
+        if (duration > 3600)
+            format = "hh:mm:ss";
 
-    soundTotalTime = QTime((duration/3600)%60, (duration/60)%60, duration%60, (duration*1000)%1000);
-    QString format = "mm:ss";
-    if (duration > 3600)
-        format = "hh:mm:ss";
-    totalTime = soundTotalTime.toString(format);
+        soundDuration = soundTotalTime.toString(format);
+        hasDuration = true;
+        timer->setText(tr("Duration:") + " " + soundDuration);
+    }
 }
 
 void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
@@ -317,13 +296,8 @@ void TupSoundPlayer::stateChanged(QMediaPlayer::State state)
     #endif
 
     if (state == QMediaPlayer::StoppedState) {
-        slider->setValue(0);
         playButton->setIcon(QIcon(QPixmap(THEME_DIR + "icons/play_small.png")));
         playing = false;
-        QString init = "00:00";
-        if (duration > 3600)
-            init = "00:00";
-        timer->setText(init + " / " + totalTime);
 
         if (loop)
             QTimer::singleShot(200, this, SLOT(startPlayer()));

@@ -53,6 +53,9 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         void setBackgroundTrack(bool flag);
         bool isBackgroundTrack();
 
+        void setDuration(const QString &time);
+        QString getDuration() const;
+
         void setAudioScenes(QList<SoundScene> scenes);
         QList<SoundScene> getAudioScenes();
 
@@ -76,6 +79,7 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         bool mute;
         bool backgroundTrack;
         QList<SoundScene> audioScenes;
+        QString duration;
 };
 
 #endif
