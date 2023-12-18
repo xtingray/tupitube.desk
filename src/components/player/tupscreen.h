@@ -102,20 +102,12 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void mousePressEvent(QMouseEvent *event);
 
     signals:
-        // void progressStep(int, int);
-        // void toStatusBar(const QString &, int);
-        // void sceneChanged(const TupScene *newScene);
-        // void requestTriggered(const TupProjectRequest *event);
-
         void isRendering(int advance);
         void frameChanged(int frame);
         void activePause();
         void playerStopped();
 
         void sceneResponseActivated(int action, int sceneIndex);
-        // void layerResponseActivated(int action, int sceneIndex, int layerIndex);
-        // void frameResponseActivated(int action, int sceneIndex, int layerIndex, int frameIndex);
-        // void libraryResponseActivated(int action);
 
     protected:
         void paintEvent(QPaintEvent *event);
@@ -128,9 +120,10 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void updateFirstFrame();
         void renderAllScenes();
         void calculateFramesTotal();
+        void calculateSceneTimes();
 
         void playSoundsAt(int frame);
-        void playAudioFile(int index, QString audioPath);
+        void playAudioFile(int index, QString audioPath, int position = 0);
         void stopSounds();
         bool currentSceneGotSounds();
         void getSoundsForCurrentScene();
@@ -153,8 +146,8 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QList<QImage> photograms;
         QList<QImage> blankImagesList;
 
-        typedef QList<QImage> photoArray;
-        QList<photoArray> animationList;
+        typedef QList<QImage> PhotoArray;
+        QList<PhotoArray> animationList;
 
         QList<bool> sceneIsRendered;
         bool renderOn;
@@ -182,6 +175,7 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         QImage currentPhotogram;
 
         QList<ProjectSoundList> projectSoundsList;
+        QList<double> accumulatedTime;
 };
 
 #endif

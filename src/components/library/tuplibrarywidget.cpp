@@ -386,8 +386,6 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
                 case TupLibraryObject::Audio:
                    {
                      currentSound = object;
-
-                     qDebug() << "[TupLibraryWidget::previewItem()] - project->getSceneNames() ->" << project->getSceneNames();
                      display->setSoundParams(object->getSoundResourceParams(),
                                              project->getSceneNames(), project->getFrameLimits());
                      display->showSoundPlayer();
@@ -411,7 +409,7 @@ void TupLibraryWidget::previewItem(QTreeWidgetItem *item)
 void TupLibraryWidget::insertObjectInWorkspace()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - currentMode -> " << currentMode;
+        qDebug() << "[TupLibraryWidget::insertObjectInWorkspace()] - currentMode ->" << currentMode;
     #endif
 
     if (libraryTree->topLevelItemCount() == 0) {
@@ -507,7 +505,7 @@ void TupLibraryWidget::removeCurrentItem()
         if (type == TupLibraryObject::Folder) {
             if (library->folderHasAudioObjects(objectKey)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::removeCurrentItem()] - Folder has audio items! -> " << objectKey;
+                    qDebug() << "[TupLibraryWidget::removeCurrentItem()] - Folder has audio items! ->" << objectKey;
                 #endif
                 emit folderWithAudiosRemoved();
             }
@@ -521,7 +519,7 @@ void TupLibraryWidget::removeCurrentItem()
 void TupLibraryWidget::removeSoundItem(const QString &soundKey)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::removeSoundItem()] - soundKey -> " << soundKey;
+        qDebug() << "[TupLibraryWidget::removeSoundItem()] - soundKey ->" << soundKey;
     #endif
 
     TupProjectRequest request = TupRequestBuilder::createLibraryRequest(TupProjectRequest::Remove,
@@ -622,7 +620,7 @@ void TupLibraryWidget::cloneObject(QTreeWidgetItem* item)
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::cloneObject()] - Fatal Error: Object doesn't exist! -> " << id;
+                qDebug() << "[TupLibraryWidget::cloneObject()] - Fatal Error: Object doesn't exist! ->" << id;
             #endif
 
             return;
@@ -707,7 +705,7 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                 if (QFile::exists(target)) {
                     if (!QFile::remove(target)) {
                         #ifdef TUP_DEBUG
-                            qDebug() << "[TupLibraryWidget::exportObject()] - Fatal Error: Destination path already exists! -> " << id;
+                            qDebug() << "[TupLibraryWidget::exportObject()] - Fatal Error: Destination path already exists! ->" << id;
                         #endif
                         return;
                     }
@@ -718,19 +716,19 @@ void TupLibraryWidget::exportObject(QTreeWidgetItem *item)
                     TOsd::self()->display(TOsd::Info, tr("Item exported successfully!"));
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object file couldn't be exported! -> " << id;
+                        qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object file couldn't be exported! ->" << id;
                     #endif
                     return;
                 }
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object path is null! -> " << id;
+                    qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object path is null! ->" << id;
                 #endif
                 return;
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object doesn't exist! -> " << id;
+                qDebug() << "[TupLibraryWidget::exportObject()] - Error: Object doesn't exist! ->" << id;
             #endif
             return;
         }
@@ -782,7 +780,7 @@ void TupLibraryWidget::createRasterObject()
             QDir dir;
             if (!dir.mkpath(imagesDir)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createRasterObject()] - Fatal Error: Couldn't create directory -> " << imagesDir;
+                    qDebug() << "[TupLibraryWidget::createRasterObject()] - Fatal Error: Couldn't create directory ->" << imagesDir;
                 #endif
                 TOsd::self()->display(TOsd::Error, tr("Couldn't create images directory!"));
                 return;
@@ -831,13 +829,13 @@ void TupLibraryWidget::createRasterObject()
                 executeSoftware(editor, path);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createRasterObject()] - Fatal Error: Object file couldn't be loaded from -> " << path;
+                    qDebug() << "[TupLibraryWidget::createRasterObject()] - Fatal Error: Object file couldn't be loaded from ->" << path;
                 #endif
                 return;
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::createRasterObject()] - Fatal Error: Object file couldn't be saved at -> " << path;
+                qDebug() << "[TupLibraryWidget::createRasterObject()] - Fatal Error: Object file couldn't be saved at ->" << path;
             #endif
             return;
         }
@@ -875,7 +873,7 @@ void TupLibraryWidget::createVectorObject()
             QDir dir;
             if (!dir.mkpath(vectorDir)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Couldn't create directory -> " << vectorDir;
+                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Couldn't create directory ->" << vectorDir;
                 #endif
 
                 TOsd::self()->display(TOsd::Error, tr("Couldn't create vector directory!"));
@@ -907,13 +905,13 @@ void TupLibraryWidget::createVectorObject()
             QFile file(path);
             if (!file.open(QIODevice::ReadOnly)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: SVG file couldn't be opened -> " << path;
+                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: SVG file couldn't be opened ->" << path;
                 #endif
                 return;
             }
             if (!doc.setContent(&file)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: SVG file couldn't be parsed as XML -> " << path;
+                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: SVG file couldn't be parsed as XML ->" << path;
                 #endif
                 return;
             }
@@ -925,7 +923,7 @@ void TupLibraryWidget::createVectorObject()
             root.setAttribute("height", size.height());
             if (!file.open(QIODevice::Truncate | QIODevice::WriteOnly)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: SVG file couldn't be updated -> " << path;
+                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: SVG file couldn't be updated ->" << path;
                 #endif
                 return;
             } 
@@ -955,13 +953,13 @@ void TupLibraryWidget::createVectorObject()
                 executeSoftware(editor, path);
             } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Object file couldn't be loaded from -> " << path;
+                    qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Object file couldn't be loaded from ->" << path;
                 #endif
                 return;
             }
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Object file couldn't be saved at -> " << path;
+                qDebug() << "[TupLibraryWidget::createVectorObject()] - Fatal Error: Object file couldn't be saved at ->" << path;
             #endif
             return;
         }
@@ -1003,8 +1001,8 @@ void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryOb
 void TupLibraryWidget::importLocalDroppedAsset(const QString &path, TupLibraryObject::ObjectType type, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - path -> " << path;
-        qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - folder -> " << folder;
+        qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - path ->" << path;
+        qDebug() << "[TupLibraryWidget::importLocalDroppedAsset()] - folder ->" << folder;
     #endif
 
     if (type == TupLibraryObject::Image) {
@@ -1107,16 +1105,16 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
                         buffer.open(QIODevice::WriteOnly);
                         if (newpix.save(&buffer, ext)) {
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image resize successfully! -> " << imageName;
+                                qDebug() << "[TupLibraryWidget::importImageFromByteArray()] - Image resize successfully! ->" << imageName;
                             #endif
                         } else {
                             #ifdef TUP_DEBUG
-                                qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't save resized image -> " << imageName;
+                                qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't save resized image ->" << imageName;
                             #endif
                         }
                     } else {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't load large image -> " << imageName;
+                            qWarning() << "[TupLibraryWidget::importImageFromByteArray()] - Fatal Error: Can't load large image ->" << imageName;
                         #endif
                     }
                 }
@@ -1133,7 +1131,7 @@ void TupLibraryWidget::importImageFromByteArray(const QString &imageName, const 
 void TupLibraryWidget::importImage(const QString &imagePath, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importImage()] - imagePath -> " << imagePath;
+        qDebug() << "[TupLibraryWidget::importImage()] - imagePath ->" << imagePath;
     #endif
 
     if (imagePath.isEmpty()) {
@@ -1149,7 +1147,7 @@ void TupLibraryWidget::importImage(const QString &imagePath, const QString &fold
         QFileInfo fileInfo(imageFile);
         QString key = library->getItemKey(fileInfo.fileName().toLower());
         QString extension = fileInfo.suffix().toUpper();
-        QByteArray ba = extension.toLatin1();
+        // QByteArray ba = extension.toLatin1();
 
         QByteArray data = imageFile.readAll();
         imageFile.close();
@@ -1157,7 +1155,7 @@ void TupLibraryWidget::importImage(const QString &imagePath, const QString &fold
         data.clear();
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::importImage()] - Error: Can't open image - imagePath -> " << imagePath;
+            qDebug() << "[TupLibraryWidget::importImage()] - Error: Can't open image - imagePath ->" << imagePath;
         #endif
         TOsd::self()->display(TOsd::Error, tr("Cannot open file: %1").arg(imagePath));
     }
@@ -1185,7 +1183,7 @@ void TupLibraryWidget::importSvgGroup()
 void TupLibraryWidget::importSvgFromByteArray(const QString &filename, QByteArray data, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importSvg()] - Inserting SVG into project -> " << project->getName();
+        qDebug() << "[TupLibraryWidget::importSvg()] - Inserting SVG into project ->" << project->getName();
         int projectWidth = project->getDimension().width();
         int projectHeight = project->getDimension().height();
         qDebug() << "[TupLibraryWidget::importSvg()] - Project Size: [" << projectWidth << ","
@@ -1245,7 +1243,7 @@ void TupLibraryWidget::importNativeObjects()
 void TupLibraryWidget::importNativeObjectFromByteArray(const QString &filename, QByteArray data, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importNativeObjectFromByteArray()] - Inserting native object into project -> "
+        qDebug() << "[TupLibraryWidget::importNativeObjectFromByteArray()] - Inserting native object into project ->"
                  << project->getName();
     #endif
 
@@ -1258,7 +1256,7 @@ void TupLibraryWidget::importNativeObjectFromByteArray(const QString &filename, 
 void TupLibraryWidget::importNativeObject(const QString &nativePath, const QString &folder)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importNativeObject()] - object -> ";
+        qDebug() << "[TupLibraryWidget::importNativeObject()] - object ->";
         qDebug() << nativePath;
     #endif
 
@@ -1331,7 +1329,7 @@ bool TupLibraryWidget::importImageRecord(const QString &photogram, const QString
                                          const QSize projectSize, bool resize, const QString &directory)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importImageRecord()] - photogram -> " << photogram;
+        qDebug() << "[TupLibraryWidget::importImageRecord()] - photogram ->" << photogram;
     #endif
 
     QFile file(photogram);
@@ -1388,7 +1386,7 @@ bool TupLibraryWidget::fileIsImage(const QString &extension)
 void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QString &path, bool resizeFlag)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - path -> " << path;
+        qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - path ->" << path;
     #endif
 
     QDir source(path);
@@ -1519,18 +1517,19 @@ void TupLibraryWidget::loadSequenceFromDirectory(ImportAction action, const QStr
             QString tempDir = info.absolutePath();
             QDir videoDir(tempDir);
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Removing temporary (video) folder -> "
+                qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Removing temporary (video) folder ->"
                          << tempDir;
             #endif
             if (videoDir.exists()) {
                 if (!videoDir.removeRecursively()) {
                     #ifdef TUP_DEBUG
-                        qWarning() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Error: Can't remove temporary folder -> "
+                        qWarning() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Error: Can't remove temporary folder ->"
                                    << tempDir;
                     #endif
                 } else {
                     #ifdef TUP_DEBUG
-                        qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - Temporary (video) folder was removed succesfully! -> "
+                        qDebug() << "[TupLibraryWidget::loadSequenceFromDirectory()] - "
+                                    "Temporary (video) folder was removed succesfully! ->"
                                  << tempDir;
                     #endif
                 }
@@ -1694,7 +1693,7 @@ void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QBy
 void TupLibraryWidget::importVideoFileFromByteArray(const QString &filename, QByteArray data)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importVideoFileFromByteArray()] - filename -> " << filename;
+        qDebug() << "[TupLibraryWidget::importVideoFileFromByteArray()] - filename ->" << filename;
     #endif
 
     removeTempVideo = true;
@@ -1704,7 +1703,7 @@ void TupLibraryWidget::importVideoFileFromByteArray(const QString &filename, QBy
         QDir dir;
         if (!dir.mkpath(tempVideoPath)) {
             #ifdef TUP_DEBUG
-                qWarning() << "[TupLibraryWidget::importVideoFileFromByteArray()] - Fatal Error: Couldn't create directory -> "
+                qWarning() << "[TupLibraryWidget::importVideoFileFromByteArray()] - Fatal Error: Couldn't create directory ->"
                            << tempVideoPath;
             #endif
             TOsd::self()->display(TOsd::Error, tr("Couldn't create temporary directory!"));
@@ -1723,7 +1722,7 @@ void TupLibraryWidget::importVideoFileFromByteArray(const QString &filename, QBy
         importVideoFileFromFolder(tempVideoPath);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupLibraryWidget::importVideoFileFromByteArray()] - Fatal Error: Can't save temporary video file -> "
+            qWarning() << "[TupLibraryWidget::importVideoFileFromByteArray()] - Fatal Error: Can't save temporary video file ->"
                        << tempVideoPath;
         #endif
         videoFile.close();
@@ -1760,7 +1759,7 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath, const 
 void TupLibraryWidget::importVideoFileFromFolder(const QString &videoPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importVideoFileFromFolder()] - videoPath -> " << videoPath;
+        qDebug() << "[TupLibraryWidget::importVideoFileFromFolder()] - videoPath ->" << videoPath;
     #endif
 
     QFile file(videoPath);
@@ -1789,7 +1788,7 @@ void TupLibraryWidget::importVideoFileFromFolder(const QString &videoPath)
 void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::sceneResponse()] - response->action() -> " << response->getAction();
+        qDebug() << "[TupLibraryWidget::sceneResponse()] - response->action() ->" << response->getAction();
     #endif
 
     switch (response->getAction()) {
@@ -1803,8 +1802,6 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
         case TupProjectRequest::Add:
         case TupProjectRequest::Remove:
         {
-            qDebug() << "[TupLibraryWidget::sceneResponse()] - project->getSceneNames() ->" << project->getSceneNames();
-
             if (project->hasLibrarySounds()) {
                 if (display->isSoundPanelVisible())
                     display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
@@ -1818,7 +1815,7 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
 void TupLibraryWidget::layerResponse(TupLayerResponse *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::layerResponse()] - event -> " << event->getAction();
+        qDebug() << "[TupLibraryWidget::layerResponse()] - event ->" << event->getAction();
     #endif
 
     switch(event->getAction()) {
@@ -1840,7 +1837,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
             } else {
                 #ifdef TUP_DEBUG
                     qDebug() << "[TupLibraryWidget::layerResponse()] - "
-                                "Fatal Error: Can't find audio item -> " << soundID;
+                                "Fatal Error: Can't find audio item ->" << soundID;
                 #endif
             }
         }
@@ -1857,7 +1854,7 @@ void TupLibraryWidget::layerResponse(TupLayerResponse *event)
                 } else {
                     #ifdef TUP_DEBUG
                         qDebug() << "[TupLibraryWidget::layerResponse()] - "
-                                    "Fatal Error: Can't find audio item -> " << id;
+                                    "Fatal Error: Can't find audio item ->" << id;
                     #endif
                 }
             }
@@ -2074,8 +2071,8 @@ void TupLibraryWidget::updateCurrentFrameIndex(int sceneIndex, int layerIndex, i
 void TupLibraryWidget::frameResponse(TupFrameResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::frameResponse()] - frameIndex -> "
-                 << response->getFrameIndex() << " - action -> " << response->getAction();
+        qDebug() << "[TupLibraryWidget::frameResponse()] - frameIndex ->"
+                 << response->getFrameIndex() << " - action ->" << response->getAction();
     #endif
 
     int sceneIndex = response->getSceneIndex();
@@ -2099,8 +2096,6 @@ void TupLibraryWidget::frameResponse(TupFrameResponse *response)
         }
         break;
     }
-
-    qDebug() << "[TupLibraryWidget::frameResponse()] - END!";
 }
 
 void TupLibraryWidget::importLibraryObject()
@@ -2255,8 +2250,8 @@ void TupLibraryWidget::refreshItem(QTreeWidgetItem *item)
 void TupLibraryWidget::updateLibrary(QString file, QString folder) 
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::updateLibrary()] - folder -> " << folder;
-        qDebug() << "[TupLibraryWidget::updateLibrary()] - file -> " << file;
+        qDebug() << "[TupLibraryWidget::updateLibrary()] - folder ->" << folder;
+        qDebug() << "[TupLibraryWidget::updateLibrary()] - file ->" << file;
     #endif
 
     if (folder.length() > 0)
@@ -2297,7 +2292,8 @@ void TupLibraryWidget::callExternalEditor(QTreeWidgetItem *item, const QString &
             executeSoftware(software, path);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::callExternalEditor()] - Fatal Error: No object related to the current library item was found! -> " << id;
+                qDebug() << "[TupLibraryWidget::callExternalEditor()] - "
+                            "Fatal Error: No object related to the current library item was found! ->" << id;
             #endif
         }
     } else {
@@ -2310,8 +2306,8 @@ void TupLibraryWidget::callExternalEditor(QTreeWidgetItem *item, const QString &
 void TupLibraryWidget::executeSoftware(const QString &software, QString &path)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::executeSoftware()] - Application -> " << software;
-        qDebug() << "[TupLibraryWidget::executeSoftware()] - File Path -> " << path;
+        qDebug() << "[TupLibraryWidget::executeSoftware()] - Application ->" << software;
+        qDebug() << "[TupLibraryWidget::executeSoftware()] - File Path ->" << path;
     #endif
 
     if (path.length() > 0 && QFile::exists(path)) {
@@ -2327,7 +2323,8 @@ void TupLibraryWidget::executeSoftware(const QString &software, QString &path)
         watcher->addPath(path);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupLibraryWidget::executeSoftware()] - Fatal Error: Item path either doesn't exist or is empty";
+            qDebug() << "[TupLibraryWidget::executeSoftware()] - "
+                        "Fatal Error: Item path either doesn't exist or is empty";
         #endif
     }
 }
@@ -2620,7 +2617,7 @@ void TupLibraryWidget::importAsset(const QString &name, TupSearchDialog::AssetTy
                                    const QString &extension, int extensionId, QByteArray &data)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupLibraryWidget::importAsset()] - name -> " << name;
+        qDebug() << "[TupLibraryWidget::importAsset()] - name ->" << name;
     #endif
 
     QString key = name + "." + extension;
@@ -2702,8 +2699,8 @@ void TupLibraryWidget::updateSoundPlayer()
         currentSound = library->getObject(key);
         #ifdef TUP_DEBUG
             QString path = currentSound->getDataPath();
-            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound key -> " << key;
-            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound path -> " << path;
+            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound key ->" << key;
+            qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound path ->" << path;
             if (QFile::exists(path))
                 qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - Sound file exists!";
             else
@@ -2711,11 +2708,9 @@ void TupLibraryWidget::updateSoundPlayer()
         #endif
 
         if (display) {
-            if (display->isSoundPanelVisible()) {
-                qDebug() << "[TupLibraryWidget::updateSoundPlayer()] - project->getSceneNames() ->" << project->getSceneNames();
+            if (display->isSoundPanelVisible())
                 display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
                                         project->getFrameLimits());
-            }
         }
     } else {
         #ifdef TUP_DEBUG

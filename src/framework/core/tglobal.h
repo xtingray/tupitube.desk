@@ -92,6 +92,7 @@ struct SoundScene {
 };
 
 struct ProjectSoundItem {
+    bool isBackgroundTrack;
     int playerIndex;
     QList<int> frames;
 };

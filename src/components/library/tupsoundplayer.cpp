@@ -154,8 +154,14 @@ void TupSoundPlayer::setSoundParams(SoundResource params, QStringList scenesList
     mute = params.muted;
     if (mute) {
         muteButton->setToolTip(tr("Unmute"));
-        playButton->setEnabled(false);
+        if (playButton->isEnabled())
+            playButton->setEnabled(false);
         muteButton->setImage(QPixmap(THEME_DIR + QString("icons/mute.png")));
+    } else {
+        muteButton->setToolTip(tr("Mute"));
+        if (!playButton->isEnabled())
+            playButton->setEnabled(true);
+        muteButton->setImage(QPixmap(THEME_DIR + QString("icons/speaker.png")));
     }
 
     soundForm->setSoundParams(params, scenesList, frameLimits);
