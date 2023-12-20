@@ -41,16 +41,18 @@
 // The audio sample output format
 #define OUTPUT_SAMPLE_FORMAT AV_SAMPLE_FMT_S16
 
-TupAudioMixer::TupAudioMixer(int frames, QList<SoundResource> audioList, const QString &path)
+TupAudioMixer::TupAudioMixer(int speed, QList<SoundResource> audioList, const QString &path,
+                             QList<SceneData> scenes)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupAudioMixer::TupAudioMixer()] - output path -> " << path;
+        qDebug() << "[TupAudioMixer::TupAudioMixer()] - output path ->" << path;
     #endif
 
-    fps = frames;
+    fps = speed;
     sounds = audioList;
     soundsTotal = audioList.size();
     outputPath = path;
+    scenesList = scenes;
 }
 
 TupAudioMixer::~TupAudioMixer()
@@ -61,7 +63,7 @@ TupAudioMixer::~TupAudioMixer()
 int TupAudioMixer::openInputFile(const char *filename)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupAudioMixer::openInputFile()] - Processing input file -> " << QString(filename);
+        qDebug() << "[TupAudioMixer::openInputFile()] - Processing input file ->" << QString(filename);
     #endif
 
     AVCodec *input_codec;
@@ -76,9 +78,10 @@ int TupAudioMixer::openInputFile(const char *filename)
         errorMsg = "Fatal Error: Could not open input file -> " + QString(filename);
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
-            qCritical() << "ERROR CODE -> " << error;
+            qCritical() << "ERROR CODE ->" << error;
         #endif
         inputFormatContext = nullptr;
+
         return error;
     }
 
@@ -87,9 +90,10 @@ int TupAudioMixer::openInputFile(const char *filename)
         errorMsg = "Fatal Error: Could not open find stream -> " + QString(filename);
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
-            qCritical() << "ERROR CODE -> " << error;
+            qCritical() << "ERROR CODE ->" << error;
         #endif
         avformat_close_input(&inputFormatContext);
+
         return error;
     }
 
@@ -100,36 +104,16 @@ int TupAudioMixer::openInputFile(const char *filename)
         #ifdef TUP_DEBUG
             qWarning() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
         #endif
-        /*
-        avformat_close_input(&inputFormatContext);
-        return AVERROR_EXIT;
-        */
     }
 
     av_dump_format(inputFormatContext, 0, filename, 0);
-
-    /*
-    in_stream = inputFormatContext->streams[0];
-    in_codecpar = in_stream->codecpar;
-    audioCodecID = in_codecpar->codec_id;
-    #ifdef TUP_DEBUG
-        qWarning() << "[TupAudioMixer::openInputFile()] - Codec ID -> " << avcodec_get_name(audioCodecID);
-    #endif
-    if (in_codecpar->codec_type != AVMEDIA_TYPE_AUDIO) {
-        errorMsg = "Fatal Error: File input has no stream audio -> " + QString(filename);
-        #ifdef TUP_DEBUG
-            qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
-        #endif
-        return -1;
-    }
-    */
 
     for(int i=0; i<streamsTotal; i++) {
         in_stream = inputFormatContext->streams[i];
         in_codecpar = in_stream->codecpar;
         audioCodecID = in_codecpar->codec_id;
         #ifdef TUP_DEBUG
-            qWarning() << "[TupAudioMixer::openInputFile()] - Codec ID -> " << avcodec_get_name(audioCodecID);
+            qWarning() << "[TupAudioMixer::openInputFile()] - Codec ID ->" << avcodec_get_name(audioCodecID);
         #endif
 
         if (in_codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
@@ -147,6 +131,7 @@ int TupAudioMixer::openInputFile(const char *filename)
             qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
         #endif
         avformat_close_input(&inputFormatContext);
+
         return AVERROR_EXIT;
     }
 
@@ -158,6 +143,7 @@ int TupAudioMixer::openInputFile(const char *filename)
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
         #endif
+
         return -1;
     }
 
@@ -168,6 +154,7 @@ int TupAudioMixer::openInputFile(const char *filename)
             qCritical() << "[TupAudioMixer::openInputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
 
@@ -179,9 +166,11 @@ int TupAudioMixer::openInputFile(const char *filename)
             qCritical() << "ERROR CODE -> " << error;
         #endif
         avformat_close_input(&inputFormatContext);
+
         return error;
     }
 
+    // Storing audio variables into arrays
     inputFormatContextList << inputFormatContext;
     inputCodecContextList << inputCodecContext;
 
@@ -213,6 +202,7 @@ int TupAudioMixer::initFilterGraph()
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
         #endif
+
         return AVERROR(ENOMEM);
     }
 
@@ -228,6 +218,7 @@ int TupAudioMixer::initFilterGraph()
                 #ifdef TUP_DEBUG
                     qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                 #endif
+
                 return AVERROR_FILTER_NOT_FOUND;
             }
 
@@ -250,6 +241,7 @@ int TupAudioMixer::initFilterGraph()
                     qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                     qCritical() << "ERROR CODE -> " << error;
                 #endif
+
                 return error;
             }
 
@@ -264,12 +256,25 @@ int TupAudioMixer::initFilterGraph()
                 #ifdef TUP_DEBUG
                     qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                 #endif
+
                 return AVERROR_FILTER_NOT_FOUND;
             }
 
             // SQA: This line must be modified!
             // int frameAt = sounds.at(i).frameIndex - 1;
             int frameAt = 0;
+            SoundResource audio = sounds.at(i);
+            QList<SoundScene> scenes = audio.scenes;
+            for (int j=0; j< scenes.count(); j++) {
+                SoundScene scene = scenes.at(j);
+                QList<int> frames = scene.frames;
+                foreach(int frame, frames) {
+                    qDebug() << "[TupAudioMixer::initFilterGraph()] - scene index ->" << scene.sceneIndex;
+                    qDebug() << "[TupAudioMixer::initFilterGraph()] - frame index ->" << frame;
+                    frameAt = frame;
+                }
+            }
+
             float millisecs = ((float) frameAt / (float) fps);
             millisecs *= 1000;
             int delayTime = millisecs;
@@ -289,6 +294,7 @@ int TupAudioMixer::initFilterGraph()
                     qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                     qCritical() << "ERROR CODE -> " << error;
                 #endif
+
                 return error;
             }
 
@@ -307,6 +313,7 @@ int TupAudioMixer::initFilterGraph()
             #ifdef TUP_DEBUG
                 qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
             #endif
+
             return AVERROR_FILTER_NOT_FOUND;
         }
 
@@ -319,6 +326,7 @@ int TupAudioMixer::initFilterGraph()
                 qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                 qCritical() << "ERROR CODE -> " << error;
             #endif
+
             return error;
         }
     }
@@ -332,6 +340,7 @@ int TupAudioMixer::initFilterGraph()
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
         #endif
+
         return AVERROR_FILTER_NOT_FOUND;
     }
     
@@ -341,6 +350,7 @@ int TupAudioMixer::initFilterGraph()
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
         #endif
+
         return AVERROR(ENOMEM);
     }
     
@@ -358,6 +368,7 @@ int TupAudioMixer::initFilterGraph()
             qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
 
@@ -368,6 +379,7 @@ int TupAudioMixer::initFilterGraph()
             qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
     
@@ -384,6 +396,7 @@ int TupAudioMixer::initFilterGraph()
                     qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                     qCritical() << "ERROR CODE -> " << error;
                 #endif
+
                 return error;
             }
         }
@@ -395,6 +408,7 @@ int TupAudioMixer::initFilterGraph()
                 qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                 qCritical() << "ERROR CODE -> " << error;
             #endif
+
             return error;
         }
     } else {
@@ -407,6 +421,7 @@ int TupAudioMixer::initFilterGraph()
                 qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
                 qCritical() << "ERROR CODE -> " << error;
             #endif
+
             return error;
         }
     }
@@ -419,6 +434,7 @@ int TupAudioMixer::initFilterGraph()
             qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
 
@@ -451,6 +467,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
             qCritical() << "[TupAudioMixer::openOutputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
     
@@ -460,6 +477,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openOutputFile()] - ";
         #endif
+
         return AVERROR(ENOMEM);
     }
     
@@ -472,6 +490,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openOutputFile()] - " << errorMsg;
         #endif
+
         return -1;
     }
 
@@ -506,6 +525,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openOutputFile()] - " << errorMsg;
         #endif
+
         return -1;
     }
 
@@ -530,6 +550,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
             qCritical() << "[TupAudioMixer::openOutputFile()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     } 
 
@@ -565,6 +586,7 @@ int TupAudioMixer::initInputFrame(AVFrame **frame)
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::initInputFrame()] - " << errorMsg;
         #endif
+
         return AVERROR(ENOMEM);
     }
 
@@ -595,6 +617,7 @@ int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormat
                 qCritical() << "[TupAudioMixer::decodeAudioFrame()] - " << errorMsg;
                 qCritical() << "ERROR CODE -> " << error;
             #endif
+
             return error;
         }
     }
@@ -613,6 +636,7 @@ int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormat
             qCritical() << "ERROR CODE -> " << error;
         #endif
         av_packet_unref(inputPacket);
+
         return error;
     }
 
@@ -718,6 +742,7 @@ int TupAudioMixer::encodeAudioFrame(AVFrame *frame, int *dataPresent)
                 qCritical() << "[TupAudioMixer::decodeAudioFrame()] - " << errorMsg;
                 qCritical() << "ERROR CODE -> " << error;
             #endif
+
             return error;
         }
 
@@ -729,6 +754,7 @@ int TupAudioMixer::encodeAudioFrame(AVFrame *frame, int *dataPresent)
                     qCritical() << "ERROR CODE -> " << error;
                 #endif
                 av_packet_unref(outputPacket);
+
                 return error;
             }
     
@@ -929,6 +955,7 @@ int TupAudioMixer::writeOutputFileHeader(AVFormatContext *outputFormatContext)
             qCritical() << "[TupAudioMixer::writeOutputFileHeader()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
 
@@ -949,6 +976,7 @@ int TupAudioMixer::writeOutputFileTrailer(AVFormatContext *outputFormatContext)
             qCritical() << "[TupAudioMixer::writeOutputFileTrailer()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return error;
     }
 
@@ -971,6 +999,7 @@ bool TupAudioMixer::mergeAudios()
             #ifdef TUP_DEBUG
                 qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
             #endif
+
             return false;
         }
     }
@@ -983,6 +1012,7 @@ bool TupAudioMixer::mergeAudios()
             qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return false;
     }
 
@@ -993,6 +1023,7 @@ bool TupAudioMixer::mergeAudios()
             #ifdef TUP_DEBUG
                 qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
             #endif
+
             return false;
         }
     }
@@ -1006,6 +1037,7 @@ bool TupAudioMixer::mergeAudios()
             qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
             qCritical() << "ERROR CODE -> " << error;
         #endif
+
         return false;
     }
 
@@ -1014,6 +1046,7 @@ bool TupAudioMixer::mergeAudios()
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
         #endif
+
         return false;
     }
 
@@ -1024,6 +1057,7 @@ bool TupAudioMixer::mergeAudios()
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::mergeAudios()] - " << errorMsg;
         #endif
+
         return false;
     }
 

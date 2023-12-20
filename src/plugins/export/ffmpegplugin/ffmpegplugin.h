@@ -70,10 +70,12 @@ class TUPITUBE_PLUGIN FFmpegPlugin : public TupExportPluginObject
 
     private:
         TMovieGeneratorInterface::Format videoFormat(TupExportInterface::Format format);
+        void calculateSceneTimes(TupProject *project, int fps);
 
         QString wavAudioPath;
         QString aacAudioPath;
         QString errorMsg;
+        QList<double> scenesDuration;
 };
 
 #endif

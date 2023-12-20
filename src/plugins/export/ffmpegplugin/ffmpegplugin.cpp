@@ -105,7 +105,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
     Q_UNUSED(bgColor)
     Q_UNUSED(newSize)
     #ifdef TUP_DEBUG
-        qDebug() << "[FFmpegPlugin::exportToFormat()] - fps -> " << fps;
+        qDebug() << "[FFmpegPlugin::exportToFormat()] - fps ->" << fps;
     #endif
 
     TupLibrary *library = project->getLibrary();
@@ -113,9 +113,15 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
     aacAudioPath = "";
     int frames = 1;
     double duration = 0;
+    QList<SceneData> scenesList;
     foreach (TupScene *scene, scenes) {
         duration += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
         frames += scene->framesCount();
+
+        SceneData sceneData;
+        sceneData.sceneIndex = scene->objectIndex();
+        sceneData.framesTotal = scene->framesCount();
+        scenesList << sceneData;
     }
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
@@ -126,11 +132,11 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
     if (project) {
         QList<SoundResource> soundItems = project->getSoundResourcesList();
         #ifdef TUP_DEBUG
-            qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total -> " << soundItems.size();
+            qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total ->" << soundItems.size();
         #endif
         if (!soundItems.isEmpty()) {
             foreach(SoundResource item, soundItems) {
-                if (!item.muted)
+                if (!item.muted && !item.scenes.isEmpty())
                     sounds << item;
             }
         }
@@ -144,7 +150,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         wavAudioPath = CACHE_DIR + filename + ".wav";
 
         // Merging all audio tracks to generate one WAV file
-        TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath);
+        TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath, scenesList);
         connect(mixer, SIGNAL(messageChanged(const QString &)),
                 this, SIGNAL(messageChanged(const QString &)));
         connect(mixer, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
@@ -152,7 +158,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
             errorMsg = mixer->getErrorMsg();
             #ifdef TUP_DEBUG
                 qDebug() << "[FFmpegPlugin::exportToFormat()] - "
-                            "Fatal Error: Can't create WAV audio file -> " << wavAudioPath;
+                            "Fatal Error: Can't create WAV audio file ->" << wavAudioPath;
             #endif
             delete mixer;
 
@@ -164,7 +170,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         if (audioFile->exists()) {
             #ifdef TUP_DEBUG
                 qDebug() << "[FFmpegPlugin::exportToFormat()] - "
-                            "WAV file created successfully! -> " << wavAudioPath;
+                            "WAV file created successfully! ->" << wavAudioPath;
             #endif
 
             emit messageChanged(tr("Processing final audio track..."));
@@ -178,7 +184,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                 errorMsg = transcoder->getErrorMsg();
                 #ifdef TUP_DEBUG
                     qDebug() << "[FFmpegPlugin::exportToFormat()] - "
-                                "Fatal Error: Can't create AAC audio file -> " << aacAudioPath;
+                                "Fatal Error: Can't create AAC audio file ->" << aacAudioPath;
                 #endif
                 delete transcoder;
 
@@ -188,12 +194,12 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
 
             #ifdef TUP_DEBUG
                 qDebug() << "[FFmpegPlugin::exportToFormat()] - "
-                            "AAC file created successfully! -> " << aacAudioPath;
+                            "AAC file created successfully! ->" << aacAudioPath;
             #endif
 
             if (!audioFile->remove()) {
                 audioFile->close();
-                errorMsg = "Fatal Error: Can't remove WAV file -> " + wavAudioPath;
+                errorMsg = "Fatal Error: Can't remove WAV file ->" + wavAudioPath;
                 #ifdef TUP_DEBUG
                     qCritical() << "[FFmpegPlugin::exportToFormat()] - " << errorMsg;
                 #endif
@@ -215,7 +221,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();
             #ifdef TUP_DEBUG
-                qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't create video -> " << filePath;
+                qDebug() << "[FFmpegPlugin::exportToFormat()] - Fatal Error: Can't create video ->" << filePath;
             #endif
             delete generator;
 
@@ -232,7 +238,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
             renderer.setScene(scene, size, scene->getBgColor());
             while (renderer.nextPhotogram()) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Rendering frame -> " << photogram;
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - Rendering frame ->" << photogram;
                 #endif
                 renderer.render(&painter);
                 generator->nextFrame();
@@ -261,7 +267,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         if (accAudioFile.exists()) {
             if (!accAudioFile.remove()) {
                 accAudioFile.close();
-                errorMsg = "Fatal Error: Can't remove file -> " + aacAudioPath;
+                errorMsg = "Fatal Error: Can't remove file ->" + aacAudioPath;
                 #ifdef TUP_DEBUG
                     qCritical() << "[FFmpegPlugin::exportToFormat()] - " << errorMsg;
                 #endif
@@ -298,8 +304,8 @@ bool FFmpegPlugin::exportToAnimatic(const QString &filePath, const QList<QImage>
                                     TupExportInterface::Format fmt, const QSize &size, int fps)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[FFmpegPlugin::exportAnimatic()] - fps -> " << fps;
-        qDebug() << "[FFmpegPlugin::exportAnimatic()] - video path -> " << filePath;
+        qDebug() << "[FFmpegPlugin::exportAnimatic()] - fps ->" << fps;
+        qDebug() << "[FFmpegPlugin::exportAnimatic()] - video path ->" << filePath;
     #endif
 
     double duration = static_cast<double>(images.count()) / static_cast<double>(fps);
@@ -312,7 +318,7 @@ bool FFmpegPlugin::exportToAnimatic(const QString &filePath, const QList<QImage>
         if (!generator->validMovieHeader()) {
             errorMsg = generator->getErrorMsg();
             #ifdef TUP_DEBUG
-                qDebug() << "[FFmpegPlugin::exportToAnimatic()] - Fatal Error: Can't create video -> " << filePath;
+                qDebug() << "[FFmpegPlugin::exportToAnimatic()] - Fatal Error: Can't create video ->" << filePath;
             #endif
             delete generator;
             return false;
@@ -329,4 +335,23 @@ bool FFmpegPlugin::exportToAnimatic(const QString &filePath, const QList<QImage>
     delete generator;
 
     return true;
+}
+
+void FFmpegPlugin::calculateSceneTimes(TupProject *project, int fps)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[FFmpegPlugin::calculateSceneTimes()]";
+    #endif
+
+    scenesDuration.clear();
+    double timeTotal = 0;
+    int scenesCount = project->scenesCount();
+
+    for (int j=0; j<scenesCount; j++) {
+        TupScene *scene = project->sceneAt(j);
+        int framesCount = scene->framesCount();
+        scenesDuration << timeTotal;
+        double sceneTime = ((double)framesCount/(double)fps)*1000;
+        timeTotal += sceneTime;
+    }
 }
