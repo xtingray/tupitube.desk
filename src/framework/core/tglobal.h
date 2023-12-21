@@ -102,11 +102,6 @@ struct ProjectSoundList {
     QList<ProjectSoundItem> soundItems;
 };
 
-struct SceneData {
-    int sceneIndex;
-    int framesTotal;
-};
-
 struct SoundResource {
     QString key;
     QList<SoundScene> scenes;

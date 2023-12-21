@@ -42,7 +42,7 @@
 #define OUTPUT_SAMPLE_FORMAT AV_SAMPLE_FMT_S16
 
 TupAudioMixer::TupAudioMixer(int speed, QList<SoundResource> audioList, const QString &path,
-                             QList<SceneData> scenes)
+                             QList<double> durations)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupAudioMixer::TupAudioMixer()] - output path ->" << path;
@@ -52,7 +52,7 @@ TupAudioMixer::TupAudioMixer(int speed, QList<SoundResource> audioList, const QS
     sounds = audioList;
     soundsTotal = audioList.size();
     outputPath = path;
-    scenesList = scenes;
+    scenesDuration = durations;
 }
 
 TupAudioMixer::~TupAudioMixer()
@@ -207,102 +207,98 @@ int TupAudioMixer::initFilterGraph()
     }
 
     for (int i=0; i<soundsTotal; i++) {
-        // SQA: Add loop to get scenes and frames
+        // buffer audio source: the decoded frames from the decoder will be inserted here.
+        if (!inputCodecContextList[i]->channel_layout)
+            inputCodecContextList[i]->channel_layout = av_get_default_channel_layout(inputCodecContextList[i]->channels);
 
-            // abuffer
-            // Create the abuffer filter;
-            // it will be used for feeding the data into the graph.
-            const AVFilter *abufferFilter = avfilter_get_by_name("abuffer");
-            if (!abufferFilter) {
-                errorMsg = "Fatal Error: Could not find the abuffer filter.";
-                #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                #endif
+        snprintf(args, sizeof(args),
+                 "sample_rate=%d:sample_fmt=%s:channel_layout=0x%" PRIx64,
+                 inputCodecContextList[i]->sample_rate, av_get_sample_fmt_name(inputCodecContextList[i]->sample_fmt),
+                 inputCodecContextList[i]->channel_layout);
 
-                return AVERROR_FILTER_NOT_FOUND;
-            }
+        snprintf(sourceTag, sizeof(sourceTag), "src%d", i);
 
-            // buffer audio source: the decoded frames from the decoder will be inserted here.
-            if (!inputCodecContextList[i]->channel_layout)
-                inputCodecContextList[i]->channel_layout = av_get_default_channel_layout(inputCodecContextList[i]->channels);
+        // int frameAt = sounds.at(i).frameIndex - 1;
+        int frameAt = 0;
+        SoundResource audio = sounds.at(i);
+        QList<SoundScene> scenes = audio.scenes;
+        for (int j=0; j<scenes.count(); j++) {
+            SoundScene scene = scenes.at(j);
+            QList<int> frames = scene.frames;
+            foreach(int frame, frames) {
+                qDebug() << "[TupAudioMixer::initFilterGraph()] - scene index ->" << scene.sceneIndex;
+                qDebug() << "[TupAudioMixer::initFilterGraph()] - frame index ->" << frame;
+                frameAt = frame;
 
-            snprintf(args, sizeof(args),
-                     "sample_rate=%d:sample_fmt=%s:channel_layout=0x%" PRIx64,
-                     inputCodecContextList[i]->sample_rate, av_get_sample_fmt_name(inputCodecContextList[i]->sample_fmt),
-                     inputCodecContextList[i]->channel_layout);
+                // abuffer
+                // Create the abuffer filter;
+                // it will be used for feeding the data into the graph.
+                const AVFilter *abufferFilter = avfilter_get_by_name("abuffer");
+                if (!abufferFilter) {
+                    errorMsg = "Fatal Error: Could not find the abuffer filter.";
+                    #ifdef TUP_DEBUG
+                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+                    #endif
 
-            snprintf(sourceTag, sizeof(sourceTag), "src%d", i);
-            AVFilterContext *abufferContext;
-            error = avfilter_graph_create_filter(&abufferContext, abufferFilter, sourceTag,
-                                                 args, nullptr, filterGraph);
-            if (error < 0) {
-                errorMsg = "Fatal Error: Cannot create audio buffer source.";
-                #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                    qCritical() << "ERROR CODE -> " << error;
-                #endif
-
-                return error;
-            }
-
-            abufferList << abufferFilter;
-            abufferContextList << abufferContext;
-
-            // adelay
-            // Create the delay filter;
-            const AVFilter *adelayFilter = avfilter_get_by_name("adelay");
-            if (!adelayFilter) {
-                errorMsg = "Fatal Error: Could not find the adelay filter.";
-                #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                #endif
-
-                return AVERROR_FILTER_NOT_FOUND;
-            }
-
-            // SQA: This line must be modified!
-            // int frameAt = sounds.at(i).frameIndex - 1;
-            int frameAt = 0;
-            SoundResource audio = sounds.at(i);
-            QList<SoundScene> scenes = audio.scenes;
-            for (int j=0; j< scenes.count(); j++) {
-                SoundScene scene = scenes.at(j);
-                QList<int> frames = scene.frames;
-                foreach(int frame, frames) {
-                    qDebug() << "[TupAudioMixer::initFilterGraph()] - scene index ->" << scene.sceneIndex;
-                    qDebug() << "[TupAudioMixer::initFilterGraph()] - frame index ->" << frame;
-                    frameAt = frame;
+                    return AVERROR_FILTER_NOT_FOUND;
                 }
-            }
 
-            float millisecs = ((float) frameAt / (float) fps);
-            millisecs *= 1000;
-            int delayTime = millisecs;
-            snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
+                AVFilterContext *abufferContext;
+                error = avfilter_graph_create_filter(&abufferContext, abufferFilter, sourceTag,
+                                             args, nullptr, filterGraph);
+                if (error < 0) {
+                    errorMsg = "Fatal Error: Cannot create audio buffer source.";
+                    #ifdef TUP_DEBUG
+                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+                        qCritical() << "ERROR CODE -> " << error;
+                    #endif
 
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - frameAt -> " << frameAt;
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - adelay filter args -> " << args;
-            #endif
+                    return error;
+                }
 
-            AVFilterContext *adelayContext;
-            snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
-            error = avfilter_graph_create_filter(&adelayContext, adelayFilter, "adelay", args, nullptr, filterGraph);
-            if (error < 0) {
-                errorMsg = "Fatal Error: Cannot create audio adelay filter.";
+                abufferList << abufferFilter;
+                abufferContextList << abufferContext;
+
+                // adelay
+                // Create the delay filter;
+                const AVFilter *adelayFilter = avfilter_get_by_name("adelay");
+                if (!adelayFilter) {
+                    errorMsg = "Fatal Error: Could not find the adelay filter.";
+                    #ifdef TUP_DEBUG
+                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+                    #endif
+
+                    return AVERROR_FILTER_NOT_FOUND;
+                }
+
+                float millisecs = ((float) frameAt / (float) fps) * 1000;
+                millisecs += scenesDuration.at(scene.sceneIndex);
+                int delayTime = millisecs;
+                snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
+
                 #ifdef TUP_DEBUG
-                    qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                    qCritical() << "ERROR CODE -> " << error;
+                    qDebug() << "[TupAudioMixer::initFilterGraph()] - frameAt ->" << frameAt;
+                    qDebug() << "[TupAudioMixer::initFilterGraph()] - adelay filter args ->" << args;
                 #endif
 
-                return error;
+                AVFilterContext *adelayContext;
+                snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
+                error = avfilter_graph_create_filter(&adelayContext, adelayFilter, "adelay", args, nullptr, filterGraph);
+                if (error < 0) {
+                    errorMsg = "Fatal Error: Cannot create audio adelay filter.";
+                    #ifdef TUP_DEBUG
+                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+                        qCritical() << "ERROR CODE -> " << error;
+                    #endif
+
+                    return error;
+                }
+
+                adelayList << adelayFilter;
+                adelayContextList << adelayContext;
             }
-
-            adelayList << adelayFilter;
-            adelayContextList << adelayContext;
-
-        // loop end
-    }
+        }
+    } // loop end
 
     if (soundsTotal > 1) {
         // amix
@@ -452,7 +448,7 @@ int TupAudioMixer::initFilterGraph()
 int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCodecContext)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupAudioMixer::openOutputFile()] - filename -> " << filename;
+        qDebug() << "[TupAudioMixer::openOutputFile()] - filename ->" << filename;
     #endif
 
     AVIOContext *outputIOContext = nullptr;
@@ -871,7 +867,7 @@ bool TupAudioMixer::processAudioFiles()
 
         if (dataPresentInGraph) {
             AVFrame *filterFrame = av_frame_alloc();
-            // pull filtered audio from the filtergraph
+            // Pull filtered audio from the filtergraph
             while (1) {
                 error = av_buffersink_get_frame(abuffersinkContext, filterFrame);
                 if (error == AVERROR(EAGAIN) || error == AVERROR_EOF) {

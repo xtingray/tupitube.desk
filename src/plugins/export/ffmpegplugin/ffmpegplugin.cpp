@@ -108,20 +108,16 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         qDebug() << "[FFmpegPlugin::exportToFormat()] - fps ->" << fps;
     #endif
 
+    calculateSceneTimes(project, fps);
+
     TupLibrary *library = project->getLibrary();
     wavAudioPath = "";
     aacAudioPath = "";
     int frames = 1;
     double duration = 0;
-    QList<SceneData> scenesList;
     foreach (TupScene *scene, scenes) {
         duration += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
         frames += scene->framesCount();
-
-        SceneData sceneData;
-        sceneData.sceneIndex = scene->objectIndex();
-        sceneData.framesTotal = scene->framesCount();
-        scenesList << sceneData;
     }
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
@@ -150,7 +146,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         wavAudioPath = CACHE_DIR + filename + ".wav";
 
         // Merging all audio tracks to generate one WAV file
-        TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath, scenesList);
+        TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath, scenesDuration);
         connect(mixer, SIGNAL(messageChanged(const QString &)),
                 this, SIGNAL(messageChanged(const QString &)));
         connect(mixer, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
