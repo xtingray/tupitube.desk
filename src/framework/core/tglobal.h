@@ -102,6 +102,11 @@ struct ProjectSoundList {
     QList<ProjectSoundItem> soundItems;
 };
 
+struct SoundMixerItem {
+    int audioIndex;
+    float playAt;
+};
+
 struct SoundResource {
     QString key;
     QList<SoundScene> scenes;

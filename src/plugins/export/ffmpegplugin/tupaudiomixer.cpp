@@ -41,8 +41,8 @@
 // The audio sample output format
 #define OUTPUT_SAMPLE_FORMAT AV_SAMPLE_FMT_S16
 
-TupAudioMixer::TupAudioMixer(int speed, QList<SoundResource> audioList, const QString &path,
-                             QList<double> durations)
+TupAudioMixer::TupAudioMixer(int speed, QList<SoundResource> audioList, QList<SoundMixerItem> mixerList,
+                             const QString &path, double duration)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupAudioMixer::TupAudioMixer()] - output path ->" << path;
@@ -52,7 +52,9 @@ TupAudioMixer::TupAudioMixer(int speed, QList<SoundResource> audioList, const QS
     sounds = audioList;
     soundsTotal = audioList.size();
     outputPath = path;
-    scenesDuration = durations;
+    soundMixerList = mixerList;
+    mixerListSize = soundMixerList.size();
+    projectDuration = duration;
 }
 
 TupAudioMixer::~TupAudioMixer()
@@ -63,6 +65,7 @@ TupAudioMixer::~TupAudioMixer()
 int TupAudioMixer::openInputFile(const char *filename)
 {
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[TupAudioMixer::openInputFile()] - Processing input file ->" << QString(filename);
     #endif
 
@@ -177,6 +180,34 @@ int TupAudioMixer::openInputFile(const char *filename)
     return 0;
 }
 
+void TupAudioMixer::setCodecContextParameters()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupAudioMixer::setCodecContextParameters()]";
+    #endif
+
+    QString args("");
+    QString sourceTag("");
+
+    argsList.clear();
+    sourceTagsList.clear();
+
+    for (int i=0; i<mixerListSize; i++) {
+        // buffer audio source: the decoded frames from the decoder will be inserted here.
+        if (!inputCodecContextList[i]->channel_layout)
+            inputCodecContextList[i]->channel_layout = av_get_default_channel_layout(inputCodecContextList[i]->channels);
+
+        args = "sample_rate=" + QString::number(inputCodecContextList[i]->sample_rate)
+               + ":sample_fmt=" + av_get_sample_fmt_name(inputCodecContextList[i]->sample_fmt) + ":channel_layout=0x"
+               + QString::number(inputCodecContextList[i]->channel_layout);
+
+        argsList.append(args);
+
+        sourceTag = "src" + QString::number(i);
+        sourceTagsList.append(sourceTag);
+    }
+}
+
 int TupAudioMixer::initFilterGraph()
 {
     #ifdef TUP_DEBUG
@@ -187,12 +218,11 @@ int TupAudioMixer::initFilterGraph()
     QList<const AVFilter *> adelayList;
     QList<AVFilterContext *> adelayContextList;
 
-    const AVFilter *mixFilter;
-    AVFilterContext *mixContext;
-    const AVFilter *abuffersink;
+    const AVFilter *mixFilter = nullptr;
+    AVFilterContext *mixContext = nullptr;
+    const AVFilter *abuffersink = nullptr;
 
-    char args[512];
-    char sourceTag[10];
+    QString args("");
     int error;
     
     // Create a new filtergraph, which will contain all the filters.
@@ -206,101 +236,77 @@ int TupAudioMixer::initFilterGraph()
         return AVERROR(ENOMEM);
     }
 
-    for (int i=0; i<soundsTotal; i++) {
-        // buffer audio source: the decoded frames from the decoder will be inserted here.
-        if (!inputCodecContextList[i]->channel_layout)
-            inputCodecContextList[i]->channel_layout = av_get_default_channel_layout(inputCodecContextList[i]->channels);
+    for (int i=0; i<mixerListSize; i++) {
+        const AVFilter *abufferFilter = avfilter_get_by_name("abuffer");
+        if (!abufferFilter) {
+            errorMsg = "Fatal Error: Could not find the abuffer filter.";
+            #ifdef TUP_DEBUG
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+            #endif
 
-        snprintf(args, sizeof(args),
-                 "sample_rate=%d:sample_fmt=%s:channel_layout=0x%" PRIx64,
-                 inputCodecContextList[i]->sample_rate, av_get_sample_fmt_name(inputCodecContextList[i]->sample_fmt),
-                 inputCodecContextList[i]->channel_layout);
-
-        snprintf(sourceTag, sizeof(sourceTag), "src%d", i);
-
-        // int frameAt = sounds.at(i).frameIndex - 1;
-        int frameAt = 0;
-        SoundResource audio = sounds.at(i);
-        QList<SoundScene> scenes = audio.scenes;
-        for (int j=0; j<scenes.count(); j++) {
-            SoundScene scene = scenes.at(j);
-            QList<int> frames = scene.frames;
-            foreach(int frame, frames) {
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - scene index ->" << scene.sceneIndex;
-                qDebug() << "[TupAudioMixer::initFilterGraph()] - frame index ->" << frame;
-                frameAt = frame;
-
-                // abuffer
-                // Create the abuffer filter;
-                // it will be used for feeding the data into the graph.
-                const AVFilter *abufferFilter = avfilter_get_by_name("abuffer");
-                if (!abufferFilter) {
-                    errorMsg = "Fatal Error: Could not find the abuffer filter.";
-                    #ifdef TUP_DEBUG
-                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                    #endif
-
-                    return AVERROR_FILTER_NOT_FOUND;
-                }
-
-                AVFilterContext *abufferContext;
-                error = avfilter_graph_create_filter(&abufferContext, abufferFilter, sourceTag,
-                                             args, nullptr, filterGraph);
-                if (error < 0) {
-                    errorMsg = "Fatal Error: Cannot create audio buffer source.";
-                    #ifdef TUP_DEBUG
-                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                        qCritical() << "ERROR CODE -> " << error;
-                    #endif
-
-                    return error;
-                }
-
-                abufferList << abufferFilter;
-                abufferContextList << abufferContext;
-
-                // adelay
-                // Create the delay filter;
-                const AVFilter *adelayFilter = avfilter_get_by_name("adelay");
-                if (!adelayFilter) {
-                    errorMsg = "Fatal Error: Could not find the adelay filter.";
-                    #ifdef TUP_DEBUG
-                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                    #endif
-
-                    return AVERROR_FILTER_NOT_FOUND;
-                }
-
-                float millisecs = ((float) frameAt / (float) fps) * 1000;
-                millisecs += scenesDuration.at(scene.sceneIndex);
-                int delayTime = millisecs;
-                snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
-
-                #ifdef TUP_DEBUG
-                    qDebug() << "[TupAudioMixer::initFilterGraph()] - frameAt ->" << frameAt;
-                    qDebug() << "[TupAudioMixer::initFilterGraph()] - adelay filter args ->" << args;
-                #endif
-
-                AVFilterContext *adelayContext;
-                snprintf(args, sizeof(args), "delays=%d:all=1", delayTime);
-                error = avfilter_graph_create_filter(&adelayContext, adelayFilter, "adelay", args, nullptr, filterGraph);
-                if (error < 0) {
-                    errorMsg = "Fatal Error: Cannot create audio adelay filter.";
-                    #ifdef TUP_DEBUG
-                        qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
-                        qCritical() << "ERROR CODE -> " << error;
-                    #endif
-
-                    return error;
-                }
-
-                adelayList << adelayFilter;
-                adelayContextList << adelayContext;
-            }
+            return AVERROR_FILTER_NOT_FOUND;
         }
-    } // loop end
 
-    if (soundsTotal > 1) {
+        QByteArray bt1 = sourceTagsList.at(i).toUtf8();
+        const char* param1 = bt1.constData();
+        QByteArray bt2 = argsList.at(i).toUtf8();
+        const char* param2 = bt2.constData();
+
+        AVFilterContext *abufferContext;
+        error = avfilter_graph_create_filter(&abufferContext, abufferFilter, param1,
+                                             param2, nullptr, filterGraph);
+        if (error < 0) {
+            errorMsg = "Fatal Error: Cannot create audio buffer source.";
+            #ifdef TUP_DEBUG
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+               qCritical() << "ERROR CODE -> " << error;
+            #endif
+
+            return error;
+        }
+
+        abufferList << abufferFilter;
+        abufferContextList << abufferContext;
+
+        // adelay
+        // Create the delay filter;
+        const AVFilter *adelayFilter = avfilter_get_by_name("adelay");
+        if (!adelayFilter) {
+            errorMsg = "Fatal Error: Could not find the adelay filter.";
+            #ifdef TUP_DEBUG
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+            #endif
+
+            return AVERROR_FILTER_NOT_FOUND;
+        }
+
+        int delayTime = soundMixerList.at(i).playAt;
+        AVFilterContext *adelayContext;
+        args = "delays=" + QString::number(delayTime) + ":all=1";
+        QByteArray bt = args.toUtf8();
+        const char* params = bt.constData();
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - delayTime ->" << delayTime;
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - adelay filter args ->" << args;
+        #endif
+
+        error = avfilter_graph_create_filter(&adelayContext, adelayFilter, "adelay", params, nullptr, filterGraph);
+        if (error < 0) {
+            errorMsg = "Fatal Error: Cannot create audio adelay filter.";
+            #ifdef TUP_DEBUG
+                qCritical() << "[TupAudioMixer::initFilterGraph()] - " << errorMsg;
+                qCritical() << "ERROR CODE -> " << error;
+            #endif
+
+            return error;
+        }
+
+        adelayList << adelayFilter;
+        adelayContextList << adelayContext;
+    }
+
+    if (mixerListSize > 1) { // Several audios
         // amix
         // Create mix filter.
         mixFilter = avfilter_get_by_name("amix");
@@ -313,9 +319,16 @@ int TupAudioMixer::initFilterGraph()
             return AVERROR_FILTER_NOT_FOUND;
         }
 
-        snprintf(args, sizeof(args), "inputs=%d", soundsTotal);
+        args = "inputs=" + QString::number(mixerListSize);
+        QByteArray bt = args.toUtf8();
+        const char* params = bt.constData();
 
-        error = avfilter_graph_create_filter(&mixContext, mixFilter, "amix", args, nullptr, filterGraph);
+        #ifdef TUP_DEBUG
+             qDebug() << "[TupAudioMixer::initFilterGraph()] - Adding amix filter...";
+             qDebug() << "[TupAudioMixer::initFilterGraph()] - args ->" << args;
+        #endif
+
+        error = avfilter_graph_create_filter(&mixContext, mixFilter, "amix", params, nullptr, filterGraph);
         if (error < 0) {
             errorMsg = "Fatal Error: Cannot create audio amix filter.";
             #ifdef TUP_DEBUG
@@ -380,9 +393,14 @@ int TupAudioMixer::initFilterGraph()
     }
     
     // Connect the filters
-    if (soundsTotal > 1) { // Several audios
-        for(int i=0; i<soundsTotal; i++) {
+    if (mixerListSize > 1) { // Several audios
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - Connecting the filters...";
+        #endif
+
+        for(int i=0; i<mixerListSize; i++) {
             error = avfilter_link(abufferContextList[i], 0, adelayContextList[i], 0);
+
             if (error >= 0)
                 error = avfilter_link(adelayContextList[i], 0, mixContext, i);
 
@@ -396,8 +414,10 @@ int TupAudioMixer::initFilterGraph()
                 return error;
             }
         }
+
         if (error >= 0)
             error = avfilter_link(mixContext, 0, abuffersinkContext, 0);
+
         if (error < 0) {
             errorMsg = "Fatal Error: Couldn't connect filters.";
             #ifdef TUP_DEBUG
@@ -408,6 +428,10 @@ int TupAudioMixer::initFilterGraph()
             return error;
         }
     } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - Connecting just one audio...";
+        #endif
+
         error = avfilter_link(abufferContextList[0], 0, adelayContextList[0], 0);
         if (error >= 0)
             error = avfilter_link(adelayContextList[0], 0, abuffersinkContext, 0);
@@ -589,6 +613,22 @@ int TupAudioMixer::initInputFrame(AVFrame **frame)
     return 0;
 }
 
+double TupAudioMixer::calculateTime(int64_t timeStamp, AVRational timeBase)
+{
+    return av_q2d(timeBase) * timeStamp;
+}
+
+QString TupAudioMixer::formatTS(int64_t timeStamp, AVRational timeBase)
+{
+    QString result = "";
+    if (timeStamp == AV_NOPTS_VALUE)
+        result = "NOPTS";
+    else
+        result = QString::number(calculateTime(timeStamp, timeBase));
+
+    return result;
+}
+
 // Decode one audio frame from the input file.
 int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormatContext,
                                     AVCodecContext *inputCodecContext, int *dataPresent, int *finished)
@@ -616,6 +656,14 @@ int TupAudioMixer::decodeAudioFrame(AVFrame *frame, AVFormatContext *inputFormat
 
             return error;
         }
+    }
+
+    AVStream *in_stream = inputFormatContext->streams[inputPacket->stream_index];
+    QString duration = formatTS(inputPacket->dts, in_stream->time_base);
+    if (duration.toDouble() >= projectDuration) {
+        *finished = 1;
+
+        return -1;
     }
 
     // Decode the audio frame stored in the temporary packet.
@@ -781,12 +829,11 @@ bool TupAudioMixer::processAudioFiles()
     int finished = 0;
     int totalOutSamples = 0;
     int soundFinished = 0;
-    int soundsTotal = sounds.size();
 
-    int inputFinished[soundsTotal];
-    int inputToRead[soundsTotal];
-    int totalSamples[soundsTotal];
-    for (int i=0; i<soundsTotal; i++) {
+    int inputFinished[mixerListSize];
+    int inputToRead[mixerListSize];
+    int totalSamples[mixerListSize];
+    for (int i=0; i<mixerListSize; i++) {
         inputFinished[i] = 0;
         inputToRead[i] = 1;
         totalSamples[i] = 0;
@@ -795,9 +842,9 @@ bool TupAudioMixer::processAudioFiles()
     emit messageChanged(tr("Merging audio files..."));
 
     int percent = 0;
-    while (soundFinished < soundsTotal) {
+    while (soundFinished < mixerListSize) {
         int dataPresentInGraph = 0;
-        for (int i=0; i<soundsTotal; i++) {
+        for (int i=0; i<mixerListSize; i++) {
             if (inputFinished[i] || inputToRead[i] == 0)
                 continue;
 
@@ -812,6 +859,12 @@ bool TupAudioMixer::processAudioFiles()
                                           &dataPresent, &finished))) {
                 goto end;
             }
+
+            /*
+            // If time of the frame is larger than animation, exit the process
+            // finished = true;
+            // dataPresent = 0;
+            */
 
             // If we are at the end of the file and there are no more samples
             // in the decoder which are delayed, we are actually finished.
@@ -854,14 +907,12 @@ bool TupAudioMixer::processAudioFiles()
             av_frame_free(&frame);
             dataPresentInGraph = dataPresent | dataPresentInGraph;
 
-            /*
             #ifdef TUP_DEBUG
                 qDebug() << "[TupAudioMixer::processAudioFile()] - Progress -> " << percent << "%";
             #endif
-            */
             emit progressChanged(percent);
             percent++;
-            if (percent >100)
+            if (percent > 100)
                 percent = 0;
         }
 
@@ -871,12 +922,12 @@ bool TupAudioMixer::processAudioFiles()
             while (1) {
                 error = av_buffersink_get_frame(abuffersinkContext, filterFrame);
                 if (error == AVERROR(EAGAIN) || error == AVERROR_EOF) {
-                    for (int i = 0 ; i < soundsTotal ; i++) {
+                    for (int i = 0 ; i < mixerListSize ; i++) {
                         if (av_buffersrc_get_nb_failed_requests(abufferContextList[i]) > 0) {
                             inputToRead[i] = 1;
                             #ifdef TUP_DEBUG
-                                qDebug() << "[TupAudioMixer::processAudioFile()] - Need to read input "
-                                            << QString::number(i) << ".";
+                                qDebug() << "[TupAudioMixer::processAudioFile()] - Warning: Need to read input ->"
+                                         << QString::number(i);
                             #endif
                         }
                     }
@@ -916,9 +967,8 @@ bool TupAudioMixer::processAudioFiles()
                 qDebug() << "[TupAudioMixer::processAudioFile()] - No data in graph!";
             #endif
 
-            for (int i=0; i<soundsTotal; i++) {
+            for (int i=0; i<mixerListSize; i++)
                 inputToRead[i] = 1;
-            }
         }
     }
 
@@ -986,8 +1036,9 @@ bool TupAudioMixer::mergeAudios()
     #endif
 
     int error;
-    for (int i=0; i < soundsTotal; i++) {
-        QString source = sounds[i].path;
+    for (int i=0; i < mixerListSize; i++) {
+        int index = soundMixerList.at(i).audioIndex;
+        QString source = sounds.at(index).path;
         QByteArray array = source.toLocal8Bit();
         char *path = array.data();
         if (openInputFile(path) < 0) {
@@ -999,6 +1050,8 @@ bool TupAudioMixer::mergeAudios()
             return false;
         }
     }
+
+    setCodecContextParameters();
 
     // Set up the filtergraph.
     error = initFilterGraph();

@@ -108,37 +108,22 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         qDebug() << "[FFmpegPlugin::exportToFormat()] - fps ->" << fps;
     #endif
 
-    calculateSceneTimes(project, fps);
+    durationInSeconds = 0;
 
     TupLibrary *library = project->getLibrary();
     wavAudioPath = "";
     aacAudioPath = "";
-    int frames = 1;
-    double duration = 0;
-    foreach (TupScene *scene, scenes) {
-        duration += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
-        frames += scene->framesCount();
-    }
 
     TMovieGeneratorInterface::Format format = videoFormat(fmt);
     if (format == TFFmpegMovieGenerator::NONE)
         return false;
 
-    QList<SoundResource> sounds;
-    if (project) {
-        QList<SoundResource> soundItems = project->getSoundResourcesList();
-        #ifdef TUP_DEBUG
-            qDebug() << "[FFmpegPlugin::exportToFormat()] - Sound items total ->" << soundItems.size();
-        #endif
-        if (!soundItems.isEmpty()) {
-            foreach(SoundResource item, soundItems) {
-                if (!item.muted && !item.scenes.isEmpty())
-                    sounds << item;
-            }
-        }
-    }
+    calculateSceneTimes(scenes, fps);
+    calculateProjectDuration(scenes, fps);
+    loadSoundResources(project);
+    loadSoundMixerList(fps);
 
-    bool hasSound = !sounds.isEmpty();
+    bool hasSound = !soundResources.isEmpty();
     if (hasSound) {
         emit progressChanged(0);
 
@@ -146,9 +131,9 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         wavAudioPath = CACHE_DIR + filename + ".wav";
 
         // Merging all audio tracks to generate one WAV file
-        TupAudioMixer *mixer = new TupAudioMixer(fps, sounds, wavAudioPath, scenesDuration);
-        connect(mixer, SIGNAL(messageChanged(const QString &)),
-                this, SIGNAL(messageChanged(const QString &)));
+        TupAudioMixer *mixer = new TupAudioMixer(fps, soundResources, soundMixerList, wavAudioPath, durationInSeconds);
+        connect(mixer, SIGNAL(messageChanged(QString)),
+                this, SIGNAL(messageChanged(QString)));
         connect(mixer, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
         if (!mixer->mergeAudios()) {
             errorMsg = mixer->getErrorMsg();
@@ -211,7 +196,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
         #endif
     }
 
-    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, duration, aacAudioPath);
+    TFFmpegMovieGenerator *generator = new TFFmpegMovieGenerator(format, size, fps, durationInSeconds, aacAudioPath);
     TupAnimationRenderer renderer(library, waterMark);
     {
         if (!generator->validMovieHeader()) {
@@ -240,7 +225,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                 generator->nextFrame();
                 generator->reset();
                 photogram++;
-                emit progressChanged((photogram * 100) / frames);
+                emit progressChanged((photogram * 100) / framesTotal);
             }
         }
 
@@ -317,6 +302,7 @@ bool FFmpegPlugin::exportToAnimatic(const QString &filePath, const QList<QImage>
                 qDebug() << "[FFmpegPlugin::exportToAnimatic()] - Fatal Error: Can't create video ->" << filePath;
             #endif
             delete generator;
+
             return false;
         }
 
@@ -333,21 +319,105 @@ bool FFmpegPlugin::exportToAnimatic(const QString &filePath, const QList<QImage>
     return true;
 }
 
-void FFmpegPlugin::calculateSceneTimes(TupProject *project, int fps)
+void FFmpegPlugin::calculateSceneTimes(const QList<TupScene *> &scenes, int fps)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[FFmpegPlugin::calculateSceneTimes()]";
     #endif
 
+    double durationInMilliseconds = 0;
     scenesDuration.clear();
-    double timeTotal = 0;
-    int scenesCount = project->scenesCount();
-
+    int scenesCount = scenes.count();
     for (int j=0; j<scenesCount; j++) {
-        TupScene *scene = project->sceneAt(j);
-        int framesCount = scene->framesCount();
-        scenesDuration << timeTotal;
+        int framesCount = scenes.at(j)->framesCount();
+        scenesDuration << durationInMilliseconds;
         double sceneTime = ((double)framesCount/(double)fps)*1000;
-        timeTotal += sceneTime;
+        durationInMilliseconds += sceneTime;
+    }
+}
+
+void FFmpegPlugin::calculateProjectDuration(const QList<TupScene *> &scenes, int fps)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[FFmpegPlugin::calculateProjectDuration()]";
+    #endif
+
+    scenesIndexesList.clear();
+    // Calculating frames total and project duration
+    foreach (TupScene *scene, scenes) {
+        int sceneIndex = scene->objectIndex();
+        scenesIndexesList << sceneIndex;
+        durationInSeconds += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
+        framesTotal += scene->framesCount();
+    }
+}
+
+void FFmpegPlugin::loadSoundResources(const TupProject *project)
+{
+    if (project) {
+        soundResources.clear();
+        QList<SoundResource> soundItems = project->getSoundResourcesList();
+        #ifdef TUP_DEBUG
+            qDebug() << "[FFmpegPlugin::loadSoundResources()] - Sound items total ->" << soundItems.size();
+        #endif
+        if (!soundItems.isEmpty()) {
+            foreach(SoundResource item, soundItems) {
+                if (!item.muted && !item.scenes.isEmpty()) {
+                    QList<SoundScene> scenes = item.scenes;
+                    foreach(SoundScene scene, scenes) {
+                        if (scenesIndexesList.contains(scene.sceneIndex)
+                            && !scene.frames.isEmpty())
+                            soundResources << item;
+                    }
+                }
+            }
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[FFmpegPlugin::loadSoundResources()] - Fatal Error: Project variable is NULL!";
+        #endif
+    }
+}
+
+void FFmpegPlugin::loadSoundMixerList(int fps)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[FFmpegPlugin::loadSoundMixerList()] - fps ->" << fps;
+    #endif
+
+    soundMixerList.clear();
+    int sceneIndexCounter = 0;
+    foreach(int sceneIndex, scenesIndexesList) {
+        int resourceIndex = 0;
+        foreach(SoundResource resource, soundResources) {
+            if (resource.isBackgroundTrack) {
+                if (sceneIndexCounter == 0) {
+                    SoundMixerItem mixerItem;
+                    mixerItem.audioIndex = resourceIndex;
+                    mixerItem.playAt = 0;
+
+                    soundMixerList << mixerItem;
+                }
+            } else {
+                QList<SoundScene> scenes = resource.scenes;
+                foreach(SoundScene scene, scenes) {
+                    int soundSceneIndex = scene.sceneIndex;
+                    if (soundSceneIndex == sceneIndex) {
+                        QList<int> frames = scene.frames;
+                        foreach(int frameIndex, frames) {
+                            float millisecs = ((float) (frameIndex-1) / (float) fps) * 1000;
+                            millisecs += scenesDuration.at(sceneIndexCounter);
+                            SoundMixerItem mixerItem;
+                            mixerItem.audioIndex = resourceIndex;
+                            mixerItem.playAt = millisecs;
+
+                            soundMixerList << mixerItem;
+                        }
+                    }
+                }
+            }
+            resourceIndex++;
+        }
+        sceneIndexCounter++;
     }
 }

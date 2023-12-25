@@ -53,13 +53,15 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
     Q_OBJECT
 
     public:
-        TupAudioMixer(int fps, QList<SoundResource> audioList, const QString &path, QList<double> durations);
+        TupAudioMixer(int fps, QList<SoundResource> audioList, QList<SoundMixerItem> soundMixerList,
+                      const QString &path, double duration);
         ~TupAudioMixer();
 
         bool mergeAudios();
         QString getErrorMsg() const;
 
     private:
+        void setCodecContextParameters();
         int initFilterGraph();
         int openInputFile(const char *filename);
         int openOutputFile(const char *filename, AVCodecContext *inputCodecContext);
@@ -70,6 +72,8 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
         bool processAudioFiles();
         int writeOutputFileHeader(AVFormatContext *outputFormatContext);
         int writeOutputFileTrailer(AVFormatContext *outputFormatContext);
+        double calculateTime(int64_t timeStamp, AVRational timeBase);
+        QString formatTS(int64_t timeStamp, AVRational timeBase);
 
     signals:
         void messageChanged(const QString &msg);
@@ -81,6 +85,7 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
         int soundsTotal;
         QString errorMsg;
         QString outputPath;
+        double projectDuration;
 
         AVFormatContext *outputFormatContext;
         AVCodecContext *outputCodecContext;
@@ -93,7 +98,12 @@ class TUPITUBE_PLUGIN TupAudioMixer: public QObject
         AVFilterGraph *filterGraph;
         AVFilterContext *abuffersinkContext;
 
-        QList<double> scenesDuration;
+        QList<SoundMixerItem> soundMixerList;
+        int mixerListSize;
+
+        QStringList argsList;
+        QStringList sourceTagsList;
+
 };
 
 #endif

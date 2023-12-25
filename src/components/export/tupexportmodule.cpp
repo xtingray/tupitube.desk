@@ -436,7 +436,7 @@ void TupExportModule::exportIt()
         if (m_currentExporter) {
             QString msg = m_currentExporter->getExceptionMsg();
             #ifdef TUP_DEBUG
-                qWarning() << "TupExportModule::exportIt() -  Error Message: " << msg;
+                qWarning() << "[TupExportModule::exportIt()] -  Error Message: " << msg;
             #endif
 
             QMessageBox msgBox;
@@ -473,5 +473,9 @@ void TupExportModule::updateProgressMessage(const QString &title)
 
 void TupExportModule::updateProgressLabel(int percent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportModule::updateProgressLabel()] - percent ->" << percent;
+    #endif
+
     progressBar->setValue(percent);
 }
