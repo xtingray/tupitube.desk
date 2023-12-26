@@ -108,7 +108,7 @@ void Configurator::setPropertiesPanel()
 
     connect(settingsPanel, SIGNAL(framesTotalChanged()), this, SIGNAL(framesTotalChanged()));
     connect(settingsPanel, SIGNAL(pathThicknessChanged(int)), this, SIGNAL(pathThicknessChanged(int)));
-    connect(settingsPanel, SIGNAL(pathColorUpdated(const QColor &)), this, SIGNAL(pathColorUpdated(const QColor &)));
+    connect(settingsPanel, SIGNAL(pathColorUpdated(QColor)), this, SIGNAL(pathColorUpdated(QColor)));
 
     settingsLayout->addWidget(settingsPanel);
 

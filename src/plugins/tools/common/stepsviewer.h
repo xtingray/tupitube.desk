@@ -91,19 +91,19 @@ class TUPITUBE_EXPORT StepsViewer : public QTableWidget
         void addTableRow(int row, int frames);
         void loadTweenPoints();
 
-        QList<int> frames;
+        QList<int> frameIntervals;
         QList<int> undoFrames;
 
-        QList<Segment> pointBlocks;
+        QList<Segment> blocksList;
 
         QList<Segment> segments;
         QList<Segment> undoSegments;
 
         QPainterPath path;
 
-        int records;
+        int intervalsTotal;
         QList<QPointF> keys;
-        QPolygonF points;
+        QPolygonF pointsList;
         QList<QPointF> tweenPointsList;
 
         QList<TPushButton*> *plusButton;
