@@ -258,10 +258,14 @@ void StepsViewer::setPath(const QGraphicsPathItem *pathItem)
                           pos += delta;
                      }
                  } else {
-                     if (row > 0)
-                         segment << block.at(pos);
-                     else // when frames == 3
+                     if (row > 0) {
+                         if (pos >= block.size())
+                             segment << block.last();
+                         else
+                             segment << block.at(pos);
+                     } else { // when frames == 3
                          segment << block.at(size/2);
+                     }
                  }
 
                  segment << keys.at(row);
@@ -521,8 +525,8 @@ void StepsViewer::addTableRow(int row, int frames)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[StepsViewer::addTableRow()]";
-        qWarning() << "row: " << row;
-        qWarning() << "frames: " << frames;
+        qWarning() << "  row:    " << row;
+        qWarning() << "  frames: " << frames;
     #endif
 
     setRowCount(rowCount() + 1);
@@ -552,13 +556,19 @@ void StepsViewer::addTableRow(int row, int frames)
 // Store all the points of the current path
 void StepsViewer::calculateKeys()
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[StepsViewer::calculateKeys()]";
-    #endif
-
     keys.clear();
     int total = path.elementCount();
     int count = 0;
+
+    if (total < 2) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[StepsViewer::calculateKeys()] - Warning: Motion path is EMPTY!";
+        #endif
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[StepsViewer::calculateKeys()] - path.elementCount() ->" << total;
+        #endif
+    }
 
     for (int i = 1; i < total; i++) {
          QPainterPath::Element e = path.elementAt(i);
@@ -572,20 +582,25 @@ void StepsViewer::calculateKeys()
              count++;
          }
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::calculateKeys()] - keys.size() ->" << keys.size();
+    #endif
 }
 
 // Calculate blocks of points per segment 
 void StepsViewer::calculateGroups()
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[StepsViewer::calculateGroups()]";
-    #endif
-
     blocksList.clear();
 
     int index = 0;
     int total = pointsList.size();
     QList<QPointF> segment;
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::calculateGroups()] - pointsList.size() ->" << total;
+        qDebug() << "[StepsViewer::calculateGroups()] - keys.size() ->" << keys.size();
+    #endif
 
     for (int i=0; i < total; i++) { // Counting points between keys and saving key indexes
          QPointF point = pointsList.at(i);
@@ -598,6 +613,10 @@ void StepsViewer::calculateGroups()
              segment << point;
         }
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[StepsViewer::calculateGroups()] - blocksList.size() ->" << blocksList.size();
+    #endif
 }
 
 void StepsViewer::commitData(QWidget *editor)
@@ -700,7 +719,7 @@ void StepsViewer::redoSegment(const QPainterPath painterPath)
 void StepsViewer::updateSegments(const QPainterPath painterPath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[StepsViewer::undoSegment()]";
+        qDebug() << "[StepsViewer::updateSegments()]";
     #endif
 
     path = painterPath;
@@ -716,15 +735,17 @@ void StepsViewer::updateSegments(const QPainterPath painterPath)
 
 void StepsViewer::updateSegments()
 {
+    int total = frameIntervals.count();
+
     #ifdef TUP_DEBUG
-        qDebug() << "[StepsViewer::updateSegments()]";
+        qDebug() << "[StepsViewer::updateSegments()] - frameIntervals.count() ->" << total;
+        qDebug() << "[StepsViewer::updateSegments()] - blocksList.count() ->" << blocksList.count();
     #endif
 
-    int total = frameIntervals.count();
     for (int row=0; row < total; row++) { // Processing every segment
          QList<QPointF> block = blocksList.at(row);
-         int framesCount = frameIntervals.at(row);
          int size = block.size();
+         int framesCount = frameIntervals.at(row);         
          QList<QPointF> segment; 
 
          if (size > 2) {
@@ -774,10 +795,14 @@ void StepsViewer::updateSegments()
                       pos += delta;
                  }
              } else {
-                 if (row > 0)
-                     segment << block.at(pos);
-                 else // when frames == 3
-                     segment << block.at(size/2);
+                 if (row > 0) {
+                     if (pos < block.size())
+                         segment << block.at(pos);
+                 } else { // when frames == 3
+                     int index = size/2;
+                     if (index < block.size())
+                         segment << block.at(index);
+                 }
              }
 
              segment << keys.at(row);

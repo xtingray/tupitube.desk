@@ -142,7 +142,7 @@ void Configurator::setTweenManagerPanel()
     connect(tweenManager, SIGNAL(addNewTween(const QString &)), this, SLOT(addTween(const QString &)));
     connect(tweenManager, SIGNAL(editCurrentTween(const QString &)), this, SLOT(editTween()));
     connect(tweenManager, SIGNAL(removeCurrentTween(const QString &)), this, SLOT(removeTween(const QString &)));
-    connect(tweenManager, SIGNAL(getTweenData(const QString &)), this, SLOT(updateTweenData(const QString &)));
+    connect(tweenManager, SIGNAL(tweenDataRequested(const QString &)), this, SLOT(updateTweenData(const QString &)));
 
     settingsLayout->addWidget(tweenManager);
 
@@ -371,7 +371,7 @@ void Configurator::resetUI()
 
 void Configurator::updateTweenData(const QString &name)
 {
-    emit getTweenData(name);
+    emit tweenDataRequested(name);
 }
 
 void Configurator::setCurrentTween(TupItemTweener *tween)

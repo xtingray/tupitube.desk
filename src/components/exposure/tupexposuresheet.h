@@ -98,6 +98,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
 
     private slots: 
         void requestChangeScene(int index);
+        void requestSceneMove(int from, int to);
         void requestCopyFrameSelection();
         void requestPasteSelectionInCurrentFrame();
         void requestUpdateLayerOpacity(double opacity);
@@ -131,6 +132,8 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
 
         QList<QString> framesList;
         QList<TupExposureTable::FrameType> statesList;
+
+        // bool movingTab;
 };
 
 #endif

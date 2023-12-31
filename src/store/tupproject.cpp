@@ -329,9 +329,9 @@ bool TupProject::removeScene(int pos)
 bool TupProject::resetScene(int pos, const QString &newName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupProject::resetScene()]";
+        qDebug() << "[TupProject::resetScene()] - pos ->" << pos;
     #endif
-   
+
     TupScene *scene = sceneAt(pos);
     if (scene) {
         undoScenes << scenesList.takeAt(pos);
@@ -365,19 +365,25 @@ QString TupProject::recoverScene(int pos)
     return "";
 }
 
-bool TupProject::moveScene(int position, int newPosition)
+bool TupProject::moveScene(int pos, int newPos)
 {
-    if (position < 0 || newPosition < 0) {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProject::moveScene()] - pos ->" << pos;
+        qDebug() << "[TupProject::moveScene()] - newPos ->" << newPos;
+    #endif
+
+    if (pos < 0 || newPos < 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupProject::moveScene()] - Failed moving scene from " << position
-                     << " to " << newPosition;
+            qDebug() << "[TupProject::moveScene()] - Failed moving scene from ->" << pos
+                     << " to ->" << newPos;
         #endif
 
         return false;
     }
 
-    TupScene *scene = scenesList.takeAt(position);
-    scenesList.insert(newPosition, scene);
+    // TupScene *scene = scenesList.takeAt(pos);
+    // scenesList.insert(newPos, scene);
+    scenesList.swap(pos, newPos);
 
     return true;
 }

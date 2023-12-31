@@ -252,7 +252,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             #endif
             if (gScene->selectedItems().size() > 0) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "[Motion Tweener::release()] - selection size -> " << gScene->selectedItems().size();
+                    qDebug() << "[Motion Tweener::release()] - selection size ->" << gScene->selectedItems().size();
                 #endif
 
                 objects = gScene->selectedItems();
@@ -312,13 +312,7 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
                     pathOffset = QPointF(0, 0);
 
                     // Include guide line
-                    guideLine = new TupLineItem();
-                    QPen guidePen;
-                    guidePen.setWidth(configPanel->getPathThickness());
-                    guidePen.setBrush(pathColor);
-                    guideLine->setPen(guidePen);
-
-                    guideLine->setLine(QLineF(firstNode, firstNode));
+                    setGuideLine(pathColor, firstNode);
                 } else {
                     int distanceX = static_cast<int> (newPos.x() - oldPos.x());
                     int distanceY = static_cast<int> (newPos.y() - oldPos.y());
@@ -338,6 +332,17 @@ void Tweener::release(const TupInputDeviceInformation *input, TupBrushManager *b
             qDebug() << "initFrame -> " << initFrame;
         #endif
     }
+}
+
+void Tweener::setGuideLine(const QColor &pathColor, const QPointF &initPoint)
+{
+    guideLine = new TupLineItem();
+    QPen guidePen;
+    guidePen.setWidth(configPanel->getPathThickness());
+    guidePen.setBrush(pathColor);
+    guideLine->setPen(guidePen);
+
+    guideLine->setLine(QLineF(initPoint, initPoint));
 }
 
 void Tweener::updateTweenPath()
@@ -393,14 +398,14 @@ QWidget *Tweener::configurator()
         connect(configPanel, SIGNAL(startingFrameChanged(int)), this, SLOT(updateStartFrame(int)));
         connect(configPanel, SIGNAL(clickedCreatePath()), this, SLOT(setTweenPath()));
         connect(configPanel, SIGNAL(clickedSelect()), this, SLOT(setSelection()));
-        connect(configPanel, SIGNAL(clickedRemoveTween(const QString &)), this, SLOT(removeTween(const QString &)));
+        connect(configPanel, SIGNAL(clickedRemoveTween(QString)), this, SLOT(removeTween(QString)));
         connect(configPanel, SIGNAL(clickedResetInterface()), this, SLOT(applyReset()));
         connect(configPanel, SIGNAL(setMode(TupToolPlugin::Mode)), this, SLOT(updateMode(TupToolPlugin::Mode)));
         connect(configPanel, SIGNAL(clickedApplyTween()), this, SLOT(applyTween()));
-        connect(configPanel, SIGNAL(getTweenData(const QString &)), this, SLOT(setCurrentTween(const QString &)));
+        connect(configPanel, SIGNAL(tweenDataRequested(QString)), this, SLOT(setCurrentTween(QString)));
         connect(configPanel, SIGNAL(framesTotalChanged()), this, SLOT(updateTweenPoints()));
         connect(configPanel, SIGNAL(pathThicknessChanged(int)), this, SLOT(updatePathThickness(int)));
-        connect(configPanel, SIGNAL(pathColorUpdated(const QColor &)), this, SLOT(updatePathColor(const QColor &)));
+        connect(configPanel, SIGNAL(pathColorUpdated(QColor)), this, SLOT(updatePathColor(QColor)));
     } else {
         mode = configPanel->mode();
     }
@@ -1059,6 +1064,16 @@ void Tweener::setEditEnv()
         linePath->setPen(pen);
 
         setTweenPath();
+
+        int index = linePath->path().elementCount() - 1;
+        QPainterPath::Element lastElement = linePath->path().elementAt(index);
+        QPointF lastNode = QPointF(lastElement.x, lastElement.y);
+        currentPoint = lastNode;
+
+        doList.clear();
+        doList << linePath->path();
+
+        setGuideLine(pathColor, lastNode + pathOffset);
     } else {
         #ifdef TUP_DEBUG
             qDebug() << "[Motion Tweener::setEditEnv()] - Fatal Error: Motion tween wasn't found -> "
@@ -1384,6 +1399,10 @@ void Tweener::updatePathColor(const QColor &color)
 
 void Tweener::keyPressEvent(QKeyEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::keyPressEvent()] - key ->" << event->key();
+    #endif
+
     if (editMode == TupToolPlugin::Properties) {
         if (event->key() == Qt::Key_Control) {
             lineStraightMode = true;
@@ -1395,6 +1414,10 @@ void Tweener::keyPressEvent(QKeyEvent *event)
 
 void Tweener::keyReleaseEvent(QKeyEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[Tweener::keyReleaseEvent()] - key ->" << event->key();
+    #endif
+
     if (editMode == TupToolPlugin::Properties) {
         if (event->key() == Qt::Key_Control) {
             lineStraightMode = false;
@@ -1406,11 +1429,11 @@ void Tweener::keyReleaseEvent(QKeyEvent *event)
 
 void Tweener::updatePos(QPointF pos)
 {
-    /*
     #ifdef TUP_DEBUG
-        qDebug() << "[Tweener::updatePos()] - pos -> " << pos;
+        qDebug() << "[Tweener::updatePos()] - pos ->" << pos;
+        qDebug() << "[Tweener::updatePos()] - currentPoint.x() ->" << currentPoint.x();
+        qDebug() << "[Tweener::updatePos()] - currentPoint.y() ->" << currentPoint.y();
     #endif
-    */
 
     if (editMode == TupToolPlugin::Selection)
         return;

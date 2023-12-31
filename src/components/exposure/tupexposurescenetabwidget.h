@@ -65,6 +65,7 @@ class T_GUI_EXPORT TupExposureSceneTabWidget : public QFrame
         void restoreScene(int index, const QString &name);
         void removeScene(int index, bool withBackup);
         void renameScene(int index, const QString &name);
+        void moveScene(int pos, int newPos);
 
         TupExposureTable* getCurrentTable();
         TupExposureTable* getTable(int index);
@@ -82,6 +83,7 @@ class T_GUI_EXPORT TupExposureSceneTabWidget : public QFrame
         void currentChanged(int index);
         void layerOpacityChanged(double opacity);
         void sceneRenameRequested(int index);
+        void sceneMoved(int from, int to);
 
     private:
         QList<TupExposureTable *> tables;

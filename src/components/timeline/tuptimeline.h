@@ -94,10 +94,12 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
 
         void requestLayerVisibilityAction(int layerIndex, bool isVisible);
         void requestLayerRenameAction(int layerIndex, const QString &name);
+
         void requestSceneSelection(int sceneIndex);
+        void requestSceneMove(int from, int to);
 
         void requestUpdateLayerOpacity(double opacity);
-        void showRenameSceneDialog(int sceneIndex);
+        void showRenameSceneDialog(int sceneIndex);        
 
     private:
         void requestReverseFrameSelection();

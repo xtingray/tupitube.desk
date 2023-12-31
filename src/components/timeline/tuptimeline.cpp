@@ -116,6 +116,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     connect(actionBar, SIGNAL(actionSelected(int)), this, SLOT(requestCommand(int)));
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestSceneSelection(int)));
     connect(scenesContainer, SIGNAL(sceneRenameRequested(int)), this, SLOT(showRenameSceneDialog(int)));
+    connect(scenesContainer, SIGNAL(sceneMoved(int,int)), this, SLOT(requestSceneMove(int,int)));
 }
 
 TupTimeLine::~TupTimeLine()
@@ -229,13 +230,15 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
                 currentTable->blockSignals(false);
             }
         }
-        break;
-        /*
+        break;        
         case TupProjectRequest::Move:
         {
-            
+            qDebug() << "[TupTimeLine::sceneResponse()] - Moving scene from ->" << sceneIndex;
+            qDebug() << "[TupTimeLine::sceneResponse()] - to ->" << response->getArg().toInt();
+            scenesContainer->moveScene(sceneIndex, response->getArg().toInt());
         }
         break;
+        /*
         case TupProjectRequest::Lock:
         {
             
@@ -947,6 +950,24 @@ void TupTimeLine::requestSceneSelection(int sceneIndex)
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select, args);
         emit localRequestTriggered(&request);
         emit sceneChanged(previewSceneIndex);
+    }
+}
+
+void TupTimeLine::requestSceneMove(int from, int to)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupTimeLine::requestSceneMove()] - from ->" << from;
+        qDebug() << "[TupTimeLine::requestSceneMove()] - to ->" << to;
+    #endif
+
+    // movingTab = true;
+    if (scenesContainer->count() > 1) {
+        qDebug() << "[TupTimeLine::requestSceneMove()] - Calling move request...";
+        TupProjectRequest request = TupRequestBuilder::createSceneRequest(to, TupProjectRequest::Move, from);
+        emit requestTriggered(&request);
+    } else {
+        qDebug() << "[TupTimeLine::requestSceneMove()] - Fatal Error: Can't request scene move. "
+                    "Scenes container size ->" << scenesContainer->count();
     }
 }
 

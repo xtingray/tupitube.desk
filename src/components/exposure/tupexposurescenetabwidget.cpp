@@ -47,8 +47,11 @@ TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(p
     layout->setMargin(1);
 
     tabber = new QTabWidget;
-    connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
+    tabber->setMovable(true);
+
     connect(tabber->tabBar(), SIGNAL(tabBarDoubleClicked(int)), this, SIGNAL(sceneRenameRequested(int)));
+    connect(tabber->tabBar(), SIGNAL(tabMoved(int, int)), this, SIGNAL(sceneMoved(int, int)));
+    connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
 
     layout->addWidget(tabber);
 
@@ -172,6 +175,18 @@ void TupExposureSceneTabWidget::removeScene(int index, bool withBackup)
 void TupExposureSceneTabWidget::renameScene(int index, const QString &name)
 {
     tabber->setTabText(index, name);
+}
+
+void TupExposureSceneTabWidget::moveScene(int pos, int newPos)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSceneTabWidget::moveScene()] - pos ->" << pos;
+        qDebug() << "[TupExposureSceneTabWidget::moveScene()] - newPos ->" << newPos;
+    #endif
+
+    tabber->tabBar()->blockSignals(true);
+    tabber->tabBar()->moveTab(pos, newPos);
+    tabber->tabBar()->blockSignals(false);
 }
 
 TupExposureTable* TupExposureSceneTabWidget::getCurrentTable() 

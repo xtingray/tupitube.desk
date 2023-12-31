@@ -465,68 +465,73 @@ void TupProjectCommand::layerCommand()
 
 void TupProjectCommand::sceneCommand()
 {
-    TupSceneResponse *res = static_cast<TupSceneResponse *>(response);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupProjectCommand::sceneCommand()]";
+    #endif
 
-    switch (res->getAction()) {
+    TupSceneResponse *resp = static_cast<TupSceneResponse *>(response);
+
+    switch (resp->getAction()) {
 	    // SQA: Check if this case is valid 
-            case TupProjectRequest::GetInfo:
-            {
-                 executor->getScenes(res);
-            }
-	    break;
-            case TupProjectRequest::Add:
-            {
-                 executor->createScene(res);
-            }
-            break;
-            case TupProjectRequest::Remove:
-            {
-                 executor->removeScene(res);
-            }
-            break;
-            case TupProjectRequest::Reset:
-            {
-                 executor->resetScene(res);
-            }
-            break;
-            case TupProjectRequest::Move:
-            {
-                 executor->moveScene(res);
-            }
-            break;
-            case TupProjectRequest::Lock:
-            {
-                 executor->lockScene(res);
-            }
-            break;
-            case TupProjectRequest::Rename:
-            {
-                 executor->renameScene(res);
-            }
-            break;
-            case TupProjectRequest::Select:
-            {
-                 executor->selectScene(res);
-            }
-            break;
-            case TupProjectRequest::View:
-            {
-                 executor->setSceneVisibility(res);
-            }
-            break;
-            case TupProjectRequest::BgColor:
-            {
-                 executor->setBgColor(res);
-            }
-            break;
+        case TupProjectRequest::GetInfo:
+        {
+             executor->getScenes(resp);
+        }
+        break;
+        case TupProjectRequest::Add:
+        {
+             executor->createScene(resp);
+        }
+        break;
+        case TupProjectRequest::Remove:
+        {
+             executor->removeScene(resp);
+        }
+        break;
+        case TupProjectRequest::Reset:
+        {
+             executor->resetScene(resp);
+        }
+        break;
+        case TupProjectRequest::Move:
+        {
+             qDebug() << "[TupProjectCommand::sceneCommand()] - Tracing move action...";
+             executor->moveScene(resp);
+        }
+        break;
+        case TupProjectRequest::Lock:
+        {
+             executor->lockScene(resp);
+        }
+        break;
+        case TupProjectRequest::Rename:
+        {
+             executor->renameScene(resp);
+        }
+        break;
+        case TupProjectRequest::Select:
+        {
+             executor->selectScene(resp);
+        }
+        break;
+        case TupProjectRequest::View:
+        {
+             executor->setSceneVisibility(resp);
+        }
+        break;
+        case TupProjectRequest::BgColor:
+        {
+             executor->setBgColor(resp);
+        }
+        break;
 
-            default: 
-            {
-                 #ifdef TUP_DEBUG
-                     qDebug() << "[TupProjectCommand::sceneCommand()] - Error: Unknown project response";
-                 #endif
-            }
-            break;
+        default:
+        {
+             #ifdef TUP_DEBUG
+                 qDebug() << "[TupProjectCommand::sceneCommand()] - Error: Unknown project response";
+             #endif
+        }
+        break;
     }
 }
 

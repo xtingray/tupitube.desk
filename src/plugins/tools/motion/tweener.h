@@ -38,7 +38,6 @@
 
 #include "tglobal.h"
 #include "tuptoolplugin.h"
-// #include "motionsettings.h"
 #include "tupprojectresponse.h"
 #include "tnodegroup.h"
 #include "configurator.h"
@@ -127,6 +126,7 @@ class TUPITUBE_PLUGIN Tweener : public TupToolPlugin
         void removeTweenPoints();
         void paintTweenPoints();
         void updateTweenPath();
+        void setGuideLine(const QColor &pathColor, const QPointF &initPoint);
 
         QMap<TAction::ActionId, TAction *> posActions;
         Configurator *configPanel;

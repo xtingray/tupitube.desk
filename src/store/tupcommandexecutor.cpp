@@ -111,13 +111,25 @@ bool TupCommandExecutor::removeScene(TupSceneResponse *response)
 
 bool TupCommandExecutor::moveScene(TupSceneResponse *response)
 {
-    int pos = response->getSceneIndex();
+    int oldPos = response->getSceneIndex();
     int newPos = response->getArg().toInt();
-    if (project->moveScene(pos, newPos)) {
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCommandExecutor::moveScene()] - oldPos ->" << oldPos;
+        qDebug() << "[TupCommandExecutor::moveScene()] - newPos ->" << newPos;
+    #endif
+
+    if (project->moveScene(oldPos, newPos)) {
+        qDebug() << "[TupCommandExecutor::moveScene()] - Swap action was successful!";
         emit responsed(response);
+
         return true;
+    } else {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupCommandExecutor::moveScene()] - Fatal Error: Can't move scene at index ->" << oldPos;
+        #endif
     }
-    
+
     return false;
 }
 

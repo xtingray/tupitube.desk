@@ -53,6 +53,7 @@ class T_GUI_EXPORT TupTimelineSceneContainer : public QTabWidget
 
         void addScene(int sceneIndex, TupTimeLineTable *framesTable, const QString &title);
         void restoreScene(int sceneIndex, const QString &title);
+        void moveScene(int pos, int newPos);
         void removeScene(int sceneIndex, bool withBackup);
         void renameScene(int index, const QString &name);
 
@@ -61,9 +62,10 @@ class T_GUI_EXPORT TupTimelineSceneContainer : public QTabWidget
         int count();
         void removeAllScenes();
         bool isTableIndexValid(int index);
-        
+
     signals:
         void sceneRenameRequested(int sceneIndex);
+        void sceneMoved(int from, int to);
 
     protected:
     #ifndef QT_NO_WHEELEVENT

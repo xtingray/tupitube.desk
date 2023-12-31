@@ -518,6 +518,15 @@ void TupPaintArea::sceneResponse(TupSceneResponse *event)
                   }
               }
             break;
+            case TupProjectRequest::Move:
+              {
+                  qDebug() << "[TupPaintArea::sceneResponse()] - Tracing scene move action!";
+                  qDebug() << "[TupPaintArea::sceneResponse()] - pos ->" << sceneIndex;
+                  qDebug() << "[TupPaintArea::sceneResponse()] - newPos ->" << event->getArg().toInt();
+
+                  setCurrentScene(event->getArg().toInt());
+              }
+            break;
             case TupProjectRequest::Reset:
               {
                   setCurrentScene(sceneIndex);

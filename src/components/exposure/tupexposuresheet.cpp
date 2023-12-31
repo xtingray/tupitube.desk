@@ -56,6 +56,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     localRequest = false;
     previousScene = 0;
     previousLayer = 0;
+    // movingTab = false;
 
     setWindowTitle(tr("Exposure Sheet"));
     setWindowIcon(QPixmap(ICONS_DIR + "exposure_sheet.png"));
@@ -95,6 +96,7 @@ TupExposureSheet::TupExposureSheet(QWidget *parent, TupProject *work) : TupModul
     connect(scenesContainer, SIGNAL(currentChanged(int)), this, SLOT(requestChangeScene(int)));
     connect(scenesContainer, SIGNAL(layerOpacityChanged(double)), this, SLOT(requestUpdateLayerOpacity(double)));
     connect(scenesContainer, SIGNAL(sceneRenameRequested(int)), this, SLOT(showRenameSceneDialog(int)));
+    connect(scenesContainer, SIGNAL(sceneMoved(int,int)), this, SLOT(requestSceneMove(int,int)));
 
     addChild(scenesContainer);
     createMenuForAFrame();
@@ -230,17 +232,17 @@ void TupExposureSheet::addScene(int sceneIndex, const QString &name)
     TupExposureTable *scene = new TupExposureTable(fps);
     scene->setSinglePopUpMenu(singleMenu);
 
-    connect(scene, SIGNAL(frameUsed(int, int)), this, SLOT(insertFrame(int, int)));
+    connect(scene, SIGNAL(frameUsed(int,int)), this, SLOT(insertFrame(int,int)));
     connect(scene, SIGNAL(frameRenamed(int, int, const QString &)), this, SLOT(renameFrame(int, int, const QString &)));
-    connect(scene, SIGNAL(frameSelected(int, int)), SLOT(selectFrame(int, int)));
+    connect(scene, SIGNAL(frameSelected(int,int)), SLOT(selectFrame(int,int)));
     connect(scene, SIGNAL(selectionCopied()), SLOT(requestCopyFrameSelection())); 
     connect(scene, SIGNAL(selectionPasted()), SLOT(requestPasteSelectionInCurrentFrame()));
     connect(scene, SIGNAL(selectionRemoved()), SLOT(removeFrame()));
-    connect(scene, SIGNAL(frameExtended(int, int)), SLOT(extendFrameForward(int, int)));
+    connect(scene, SIGNAL(frameExtended(int,int)), SLOT(extendFrameForward(int,int)));
 
     connect(scene, SIGNAL(layerNameChanged(int, const QString &)), this, SLOT(requestRenameLayer(int, const QString &)));
-    connect(scene, SIGNAL(layerMoved(int, int)), this, SLOT(moveLayer(int, int)));
-    connect(scene, SIGNAL(layerVisibilityChanged(int, bool)), this, SLOT(changeLayerVisibility(int, bool)));
+    connect(scene, SIGNAL(layerMoved(int,int)), this, SLOT(moveLayer(int,int)));
+    connect(scene, SIGNAL(layerVisibilityChanged(int,bool)), this, SLOT(changeLayerVisibility(int,bool)));
     connect(scene, SIGNAL(newPerspective(int)), this, SIGNAL(newPerspective(int)));
 
     scenesContainer->addScene(sceneIndex, name, scene);
@@ -450,19 +452,42 @@ void TupExposureSheet::setScene(int sceneIndex)
         scenesContainer->blockSignals(false);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupExposureSheet::setScene()] - Invalid scene index -> " << sceneIndex;
-            qDebug() << "[TupExposureSheet::setScene()] - Scenes total -> " << scenesContainer->count();
+            qDebug() << "[TupExposureSheet::setScene()] - Invalid scene index ->" << sceneIndex;
+            qDebug() << "[TupExposureSheet::setScene()] - Scenes total ->" << scenesContainer->count();
         #endif
     }
 }
 
 void TupExposureSheet::requestChangeScene(int sceneIndex)
 {
-    if (scenesContainer->count() > 1) {
-        TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
-        emit localRequestTriggered(&request);
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::requestChangeScene()] - sceneIndex ->" << sceneIndex;
+    #endif
 
-        emit sceneChanged(sceneIndex);
+    // if (!movingTab) {
+        if (scenesContainer->count() > 1) {
+            TupProjectRequest request = TupRequestBuilder::createSceneRequest(sceneIndex, TupProjectRequest::Select);
+            emit localRequestTriggered(&request);
+            emit sceneChanged(sceneIndex);
+        }
+    // }
+}
+
+void TupExposureSheet::requestSceneMove(int from, int to)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExposureSheet::requestSceneMove()] - from ->" << from;
+        qDebug() << "[TupExposureSheet::requestSceneMove()] - to ->" << to;
+    #endif
+
+    // movingTab = true;
+    if (scenesContainer->count() > 1) {
+        qDebug() << "[TupExposureSheet::requestSceneMove()] - Calling move request...";
+        TupProjectRequest request = TupRequestBuilder::createSceneRequest(to, TupProjectRequest::Move, from);
+        emit requestTriggered(&request);
+    } else {
+        qDebug() << "[TupExposureSheet::requestSceneMove()] - Fatal Error: Can't request scene move. "
+                    "Scenes container size ->" << scenesContainer->count();
     }
 }
 
@@ -666,11 +691,14 @@ void TupExposureSheet::sceneResponse(TupSceneResponse *response)
                 }
             }
         break;
-        /*
         case TupProjectRequest::Move:
             {
+                 qDebug() << "[TupExposureSheet::sceneResponse()] - Tracing move action...";
+                 // movingTab = false;
+                 scenesContainer->moveScene(sceneIndex, response->getArg().toInt());
             }
         break;
+        /*
         case TupProjectRequest::Lock:
             {
             }

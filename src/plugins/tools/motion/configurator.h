@@ -121,16 +121,16 @@ class TUPITUBE_PLUGIN Configurator : public QFrame
     signals:
         void clickedCreatePath();
         void clickedSelect();
-        void clickedRemoveTween(const QString &);
+        void clickedRemoveTween(QString);
         void setMode(TupToolPlugin::Mode mode);
         void clickedResetInterface();
         void clickedApplyTween();
         void startingFrameChanged(int);
-        void getTweenData(const QString &);
+        void tweenDataRequested(QString);
         void framesTotalChanged();
 
         void pathThicknessChanged(int);
-        void pathColorUpdated(const QColor &);
+        void pathColorUpdated(QColor);
         
     private:
         QBoxLayout *layout;
