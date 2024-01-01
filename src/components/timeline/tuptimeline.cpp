@@ -59,6 +59,7 @@ TupTimeLine::TupTimeLine(TupProject *projectData, QWidget *parent) : TupModuleWi
     library = project->getLibrary();
     currentTable = nullptr;
     doSelection = false;
+    localSceneMove = false;
 
     // SQA: Pending to add the feature "Layer Opacity" as part of this action bar
 
@@ -235,7 +236,11 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         {
             qDebug() << "[TupTimeLine::sceneResponse()] - Moving scene from ->" << sceneIndex;
             qDebug() << "[TupTimeLine::sceneResponse()] - to ->" << response->getArg().toInt();
-            scenesContainer->moveScene(sceneIndex, response->getArg().toInt());
+
+            if (!localSceneMove)
+                scenesContainer->moveScene(sceneIndex, response->getArg().toInt());
+            else
+                localSceneMove = false;
         }
         break;
         /*
@@ -960,9 +965,9 @@ void TupTimeLine::requestSceneMove(int from, int to)
         qDebug() << "[TupTimeLine::requestSceneMove()] - to ->" << to;
     #endif
 
-    // movingTab = true;
     if (scenesContainer->count() > 1) {
         qDebug() << "[TupTimeLine::requestSceneMove()] - Calling move request...";
+        localSceneMove = true;
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(to, TupProjectRequest::Move, from);
         emit requestTriggered(&request);
     } else {

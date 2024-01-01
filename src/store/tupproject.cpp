@@ -381,9 +381,8 @@ bool TupProject::moveScene(int pos, int newPos)
         return false;
     }
 
-    // TupScene *scene = scenesList.takeAt(pos);
-    // scenesList.insert(newPos, scene);
-    scenesList.swap(pos, newPos);
+    scenesList.swapItemsAt(pos, newPos);
+    swapSoundScenes(pos, newPos);
 
     return true;
 }
@@ -551,8 +550,6 @@ QStringList TupProject::getSceneNames()
 
 QList<int> TupProject::getFrameLimits()
 {
-    qDebug() << "[TupProject::getFrameLimits()] - scenesList.size() ->" << scenesList.size();
-
     QList<int> limits;
     int scenesCount = scenesList.size();
     for (int i = 0; i < scenesCount; i++) {
@@ -1169,33 +1166,14 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
     #endif
 
     for(int i=0; i<size; i++) {
-        qDebug() << "***";
         SoundResource record = soundRecords.at(i);
         #ifdef TUP_DEBUG
             qDebug() << "[TupProject::updateSoundResourcesItem()] - record path ->"
                      << record.path;
         #endif
 
-        qDebug() << "[TupProject::updateSoundResourcesItem()] - item->getSymbolName() ->" << item->getSymbolName();
-        qDebug() << "[TupProject::updateSoundResourcesItem()] - record.key ->" << record.key;
-
         if (item->getSymbolName().compare(record.key) == 0) {
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - REPLACING AUDIO!";
             record = item->getSoundResourceParams();
-
-            qDebug() << "";
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - Audio key ->" << record.key;
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - Audio path ->" << record.path;
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - isBackgroundTrack ->" << record.isBackgroundTrack;
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - duration ->" << record.duration;
-            qDebug() << "[TupProject::updateSoundResourcesItem()] - scenes count ->" << record.scenes.count();
-            foreach(SoundScene scene, record.scenes) {
-                qDebug() << "[TupProject::updateSoundResourcesItem()] - scene index ->" << scene.sceneIndex;
-                foreach(int frameIndex, scene.frames)
-                    qDebug() << "[TupProject::updateSoundResourcesItem()] - frame index ->" << frameIndex;
-            }
-            qDebug() << "";
-
             soundRecords.replace(i, record);
 
             #ifdef TUP_DEBUG
@@ -1204,7 +1182,6 @@ bool TupProject::updateSoundResourcesItem(TupLibraryObject *item)
 
             return true;
         }
-        qDebug() << "*********";
     }
 
     return false;
@@ -1324,6 +1301,31 @@ QList<SoundResource> TupProject::getSoundResourcesList() const
     #endif
 
     return soundRecords;
+}
+
+void TupProject::swapSoundScenes(int sceneIndex, int newSceneIndex)
+{
+    for(int i=0; i<soundRecords.size(); i++) {
+        SoundResource sound = soundRecords.at(i);
+        if (!sound.isBackgroundTrack) {
+            library->swapSoundScenes(sceneIndex, newSceneIndex);
+            QList<SoundScene> scenes = sound.scenes;
+            if (!scenes.isEmpty()) {
+               for (int j=0; j<scenes.size(); j++) {
+                SoundScene scene = scenes.at(j);
+                if (scene.sceneIndex == sceneIndex) {
+                    scene.sceneIndex = newSceneIndex;
+                    scenes.replace(j, scene);
+                } else if (scene.sceneIndex == newSceneIndex) {
+                    scene.sceneIndex = sceneIndex;
+                    scenes.replace(j, scene);
+                }
+               }
+               sound.scenes = scenes;
+               soundRecords.replace(i, sound);
+            }
+        }
+    }
 }
 
 bool TupProject::hasLibrarySounds()

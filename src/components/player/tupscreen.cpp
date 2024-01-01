@@ -412,7 +412,7 @@ void TupScreen::stop()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupScreen::stop()] - Stopping player!";
-        qDebug() << "[TupScreen::stop()] - playMode -> " << playDirection;
+        qDebug() << "[TupScreen::stop()] - playMode ->" << playDirection;
     #endif
 
     stopAnimation();
@@ -456,7 +456,7 @@ void TupScreen::stop()
 void TupScreen::stopAnimation()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::stopAnimation()] - playMode -> " << playDirection;
+        qDebug() << "[TupScreen::stopAnimation()] - playMode ->" << playDirection;
     #endif
 
     playerIsActive = false;
@@ -750,7 +750,7 @@ void TupScreen::frameResponse(TupFrameResponse *)
 void TupScreen::layerResponse(TupLayerResponse *response)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupScreen::layerResponse()] - response->getAction() -> " << response->getAction();
+        qDebug() << "[TupScreen::layerResponse()] - response->getAction() ->" << response->getAction();
     #endif
 
     switch (response->getAction()) {
@@ -780,7 +780,7 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
         return;
     }
 
-    emit sceneResponseActivated(event->getAction(), index);
+    emit sceneResponseActivated(event->getAction(), event->getArg(),index);
 
     switch (event->getAction()) {
         case TupProjectRequest::Add:
@@ -818,6 +818,15 @@ void TupScreen::sceneResponse(TupSceneResponse *event)
           {
               updateSceneIndex(index);
           }
+        break;
+        case TupProjectRequest::Move:
+        {
+              int newIndex = event->getArg().toInt();
+              loadSoundRecords();
+              sceneIsRendered.swapItemsAt(index, newIndex);
+              animationList.swapItemsAt(index, newIndex);
+              updateSceneIndex(newIndex);
+        }
         break;
         default: 
         break;

@@ -50,7 +50,7 @@ TupExposureSceneTabWidget::TupExposureSceneTabWidget(QWidget *parent) : QFrame(p
     tabber->setMovable(true);
 
     connect(tabber->tabBar(), SIGNAL(tabBarDoubleClicked(int)), this, SIGNAL(sceneRenameRequested(int)));
-    connect(tabber->tabBar(), SIGNAL(tabMoved(int, int)), this, SIGNAL(sceneMoved(int, int)));
+    connect(tabber->tabBar(), SIGNAL(tabMoved(int,int)), this, SIGNAL(sceneMoved(int,int)));
     connect(tabber, SIGNAL(currentChanged(int)), this, SIGNAL(currentChanged(int)));
 
     layout->addWidget(tabber);
@@ -209,7 +209,7 @@ TupExposureTable* TupExposureSceneTabWidget::getTable(int index)
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSceneTabWidget::getTable()] - Fatal Error: Invalid table index -> " << index;
+        qDebug() << "[TupExposureSceneTabWidget::getTable()] - Fatal Error: Invalid table index ->" << index;
     #endif
 
     return 0;
@@ -218,7 +218,7 @@ TupExposureTable* TupExposureSceneTabWidget::getTable(int index)
 void TupExposureSceneTabWidget::setCurrentIndex(int index)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSceneTabWidget::setCurrentIndex()] - index -> " << index;
+        qDebug() << "[TupExposureSceneTabWidget::setCurrentIndex()] - index ->" << index;
     #endif
 
     tabber->setCurrentIndex(index);
@@ -246,7 +246,7 @@ int TupExposureSceneTabWidget::count()
 void TupExposureSceneTabWidget::setLayerOpacity(int sceneIndex, double opacity)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExposureSceneTabWidget::setLayerOpacity()] - sceneIndex/opacity -> "
+        qDebug() << "[TupExposureSceneTabWidget::setLayerOpacity()] - sceneIndex/opacity ->"
                  << sceneIndex << "," << opacity;
     #endif
 
@@ -265,7 +265,7 @@ void TupExposureSceneTabWidget::setLayerVisibility(int sceneIndex, int layerInde
         table->setLayerVisibility(layerIndex, visibility);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupExposureSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid scene index: " << sceneIndex;
+            qWarning() << "[TupExposureSceneTabWidget::setLayerVisibility()] - Fatal Error: Invalid scene index ->" << sceneIndex;
         #endif
     }
 }

@@ -120,7 +120,6 @@ bool TupCommandExecutor::moveScene(TupSceneResponse *response)
     #endif
 
     if (project->moveScene(oldPos, newPos)) {
-        qDebug() << "[TupCommandExecutor::moveScene()] - Swap action was successful!";
         emit responsed(response);
 
         return true;

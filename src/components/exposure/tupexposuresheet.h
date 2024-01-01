@@ -133,7 +133,7 @@ class TUPITUBE_EXPORT TupExposureSheet : public TupModuleWidgetBase
         QList<QString> framesList;
         QList<TupExposureTable::FrameType> statesList;
 
-        // bool movingTab;
+        bool localSceneMove;
 };
 
 #endif

@@ -116,6 +116,8 @@ class TUPITUBE_EXPORT TupTimeLine : public TupModuleWidgetBase
         QString frameSelection;
         bool doSelection;
         QDoubleSpinBox *opacitySpinBox;
+
+        bool localSceneMove;
 };
 
 #endif

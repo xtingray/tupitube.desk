@@ -174,6 +174,25 @@ void TupSoundObject::updateSoundScene(int sceneIndex, SoundScene scene)
         audioScenes.replace(sceneIndex, scene);
 }
 
+void TupSoundObject::swapSoundScenes(int sceneIndex, int newSceneIndex)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSoundObject::swapSoundScenes()] - sceneIndex ->" << sceneIndex;
+        qDebug() << "[TupSoundObject::swapSoundScenes()] - newSceneIndex ->" << newSceneIndex;
+    #endif
+
+    for(int i=0; i<audioScenes.size(); i++) {
+        SoundScene scene = audioScenes.at(i);
+        if (scene.sceneIndex == sceneIndex) {
+            scene.sceneIndex = newSceneIndex;
+            audioScenes.replace(i, scene);
+        } else if (scene.sceneIndex == newSceneIndex) {
+            scene.sceneIndex = sceneIndex;
+            audioScenes.replace(i, scene);
+        }
+    }
+}
+
 void TupSoundObject::removeSceneToPlay(int sceneIndex)
 {
     if (sceneIndex < audioScenes.count())

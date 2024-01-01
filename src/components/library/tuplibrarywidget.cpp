@@ -1809,6 +1809,18 @@ void TupLibraryWidget::sceneResponse(TupSceneResponse *response)
             }
         }
         break;
+        case TupProjectRequest::Move:
+        {
+            if (project->hasLibrarySounds()) {
+                if (display->isSoundPanelVisible()) {
+                    QString soundID = display->getSoundID();
+                    currentSound = library->getObject(soundID);
+                    display->setSoundParams(currentSound->getSoundResourceParams(), project->getSceneNames(),
+                                            project->getFrameLimits());
+                }
+            }
+        }
+        break;
     }
 }
 

@@ -66,6 +66,7 @@ class TUPITUBE_EXPORT TupSoundObject : public QObject, public TupAbstractSeriali
         void addSceneToPlay(SoundScene scene);
         void updateSoundScene(int sceneIndex, SoundScene scene);
         void removeSceneToPlay(int sceneIndex);
+        void swapSoundScenes(int sceneIndex, int newSceneIndex);
 
         SoundType getSoundType();
         void setSoundType(SoundType type);

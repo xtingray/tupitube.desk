@@ -164,6 +164,7 @@ class TUPITUBE_EXPORT TupProject : public QObject, public TupAbstractSerializabl
         bool updateSoundFramesToPlay(const QString audioId, int sceneIndex, QList<int> frames);
         void updateLibraryPaths(const QString &newPath);
         void updateSoundPaths(const QString &newPath);
+        void swapSoundScenes(int sceneIndex, int newSceneIndex);
 
     signals:
         void responsed(TupProjectResponse *response);

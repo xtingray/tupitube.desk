@@ -253,8 +253,8 @@ void TupCameraWidget::addAnimationDisplay()
     connect(previewScreen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
     connect(previewScreen, SIGNAL(activePause()), this, SLOT(doPause()));
 
-    connect(previewScreen, SIGNAL(sceneResponseActivated(int, int)),
-            SLOT(sceneResponse(int, int)));
+    connect(previewScreen, SIGNAL(sceneResponseActivated(int,TupProjectRequestArgument,int)),
+            this, SLOT(sceneResponse(int,TupProjectRequestArgument,int)));
 
     layout->addWidget(previewScreen, 0, Qt::AlignCenter);
 }
@@ -433,7 +433,7 @@ void TupCameraWidget::previousFrame()
     previewScreen->previousFrame();
 }
 
-void TupCameraWidget::sceneResponse(int action, int sceneIndex)
+void TupCameraWidget::sceneResponse(int action, TupProjectRequestArgument arg, int sceneIndex)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraWidget::sceneResponse()] - action ->" << action;
@@ -476,6 +476,12 @@ void TupCameraWidget::sceneResponse(int action, int sceneIndex)
         }
         break;
         case TupProjectRequest::Rename:
+        {
+             cameraStatus->setScenes(project->getSceneNames());
+             cameraStatus->setCurrentScene(sceneIndex);
+        }
+        break;
+        case TupProjectRequest::Move:
         {
              cameraStatus->setScenes(project->getSceneNames());
              cameraStatus->setCurrentScene(sceneIndex);

@@ -103,15 +103,13 @@ class TUPITUBE_EXPORT TupLibraryObject : public QObject, public TupAbstractSeria
         QList<int>framesToPlayAt(int sceneIndex);
         void updateSoundFramesToPlay(int sceneIndex, QList<int> frames);
 
-        int sceneToPlay();
-        void updateSceneToPlay(int scene);
-
         SoundType getSoundType();
         void setSoundType(SoundType type);
         SoundResource getSoundResourceParams();
         void updateSoundResourceParams(SoundResource params);
         void setAudioScenes(QList<SoundScene> audioScenes);
         QList<SoundScene> getAudioScenes();
+        void swapSoundScenes(int sceneIndex, int newSceneIndex);
 
         QString getShortId() const;
         QString getExtension() const;

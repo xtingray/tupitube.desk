@@ -935,3 +935,23 @@ QList<TupLibraryObject *> TupLibraryFolder::getLibrarySoundItems()
 
     return soundList;
 }
+
+void TupLibraryFolder::swapSoundScenes(int sceneIndex, int newSceneIndex)
+{
+    foreach (TupLibraryObject *object, objects) {
+        if (object->getObjectType() == TupLibraryObject::Audio) {
+            if (!object->isBackgroundTrack())
+                object->swapSoundScenes(sceneIndex, newSceneIndex);
+        }
+    }
+
+    foreach (TupLibraryFolder *folder, folders) {
+        LibraryObjects objects = folder->getObjects();
+        foreach (TupLibraryObject *object, objects) {
+            if (object->getObjectType() == TupLibraryObject::Audio) {
+                if (!object->isBackgroundTrack())
+                    object->swapSoundScenes(sceneIndex, newSceneIndex);
+            }
+        }
+    }
+}

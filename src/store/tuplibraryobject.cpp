@@ -192,6 +192,11 @@ void TupLibraryObject::updateSoundFramesToPlay(int sceneIndex, QList<int> frames
     soundObject->updateFramesToPlay(sceneIndex, frames);
 }
 
+void TupLibraryObject::swapSoundScenes(int sceneIndex, int newSceneIndex)
+{
+    soundObject->swapSoundScenes(sceneIndex, newSceneIndex);
+}
+
 void TupLibraryObject::setSymbolName(const QString &name)
 {
     symbolName = name;
