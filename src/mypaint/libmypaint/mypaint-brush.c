@@ -800,6 +800,8 @@ static inline float smallest_angular_difference(float a, float b)
   // How many dabs will be drawn between the current and the next (x, y, pressure, +dt) position?
   float count_dabs_to (MyPaintBrush *self, float x, float y, float pressure, float dt)
   {
+    UNUSED(pressure);
+
     float xx, yy;
     float res1, res2, res3;
     float dist;

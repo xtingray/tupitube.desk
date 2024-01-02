@@ -450,6 +450,9 @@ static int json_object_boolean_to_json_string(struct json_object* jso,
                           int level,
                           int flags)
 {
+    UNUSED(level);
+    UNUSED(flags);
+
     if (jso->o.c_boolean)
         return sprintbuf(pb, "true");
     else
@@ -492,6 +495,9 @@ static int json_object_int_to_json_string(struct json_object* jso,
                       int level,
                       int flags)
 {
+    UNUSED(level);
+    UNUSED(flags);
+
     return sprintbuf(pb, "%"PRId64, jso->o.c_int64);
 }
 
@@ -571,6 +577,8 @@ int64_t json_object_get_int64(struct json_object *jso)
     case json_type_string:
         if (json_parse_int64(jso->o.c_string.str, &cint) == 0)
             return cint;
+        else
+            return 0;
     default:
         return 0;
     }
@@ -583,6 +591,8 @@ static int json_object_double_to_json_string(struct json_object* jso,
                          int level,
                          int flags)
 {
+    UNUSED(level);
+
     char buf[128], *p, *q;
     int size;
     /* Although JSON RFC does not support
@@ -651,6 +661,9 @@ struct json_object* json_object_new_double_s(double d, const char *ds)
 int json_object_userdata_to_json_string(struct json_object *jso,
     struct printbuf *pb, int level, int flags)
 {
+    UNUSED(level);
+    UNUSED(flags);
+
     int userdata_len = strlen(jso->_userdata);
     printbuf_memappend(pb, jso->_userdata, userdata_len);
     return userdata_len;
@@ -658,6 +671,8 @@ int json_object_userdata_to_json_string(struct json_object *jso,
 
 void json_object_free_userdata(struct json_object *jso, void *userdata)
 {
+    UNUSED(jso);
+
     free(userdata);
 }
 
@@ -718,6 +733,9 @@ static int json_object_string_to_json_string(struct json_object* jso,
                          int level,
                          int flags)
 {
+    UNUSED(level);
+    UNUSED(flags);
+
     sprintbuf(pb, "\"");
     json_escape_str(pb, jso->o.c_string.str, jso->o.c_string.len);
     sprintbuf(pb, "\"");

@@ -72,8 +72,8 @@ static void onTileRequestEnd(MyPaintTiledSurface *tiled_surface, MyPaintTileRequ
 MPSurface::MPSurface(QSize size)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::MPSurface() - size: " << size;
-        qDebug() << "MPSurface::MPSurface() - calling resetSurface()";
+        qDebug() << "[MPSurface::MPSurface()] - size ->" << size;
+        qDebug() << "[MPSurface::MPSurface()] - calling resetSurface()";
     #endif
 
     // Init callbacks
@@ -110,7 +110,7 @@ void MPSurface::setOnClearedSurface(MPOnUpdateSurfaceFunction onClearedSurfaceFu
 void MPSurface::setSize(QSize size)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::setSize() - size: " << size;
+        qDebug() << "[MPSurface::setSize()] - size ->" << size;
     #endif
 
     free(this->tile_buffer);
@@ -122,8 +122,8 @@ void MPSurface::setSize(QSize size)
 QSize MPSurface::size()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::size() - width: " << width;
-        qDebug() << "MPSurface::size() - height: " << height;
+        qDebug() << "[MPSurface::size()] - width ->" << width;
+        qDebug() << "[MPSurface::size()] - height ->" << height;
     #endif
 
     return QSize(width, height);
@@ -170,8 +170,8 @@ void MPSurface::loadImage(const QImage &image)
 QImage MPSurface::renderImage(const QSize canvasSize)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::renderImage() - size: " << size();
-        qDebug() << "MPSurface::renderImage() - canvasSize: " << canvasSize;
+        qDebug() << "[MPSurface::renderImage()] - size ->" << size();
+        qDebug() << "[MPSurface::renderImage()] - canvasSize ->" << canvasSize;
     #endif
 
     QPixmap renderedImage = QPixmap(canvasSize);
@@ -229,7 +229,7 @@ void MPSurface::resetNullTile()
 void MPSurface::resetSurface(QSize size)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::resetSurface() - Setting size: " << size;
+        qDebug() << "[MPSurface::resetSurface()] - Setting size ->" << size;
     #endif
 
     width = size.width();
@@ -251,10 +251,12 @@ void MPSurface::resetSurface(QSize size)
     assert(buffer_size >= static_cast<unsigned long>(width * height * 4) * sizeof(uint16_t));
 
     uint16_t* buffer = static_cast<uint16_t *> (malloc(buffer_size));
-    if (!buffer)
-        fprintf(stderr, "CRITICAL: unable to allocate enough memory: %zu bytes", buffer_size);
-
-    memset(buffer, 255, buffer_size);
+    if (!buffer) {
+        fprintf(stderr, "[MPSurface::resetSurface()] - CRITICAL: Unable to allocate enough memory: %zu bytes", buffer_size);
+        return;
+    } else {
+        memset(buffer, 255, buffer_size);
+    }
 
     this->tile_buffer = buffer;
     this->tile_size = tile_size;
@@ -325,7 +327,7 @@ int MPSurface::getTilesCount()
 void MPSurface::handleCanvas(Action action)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "MPSurface::handleCanvas() - Tracing action -> " << action;
+        qDebug() << "[MPSurface::handleCanvas()] - Tracing action ->" << action;
     #endif
 
     QHashIterator<QPoint, MPTile*> i(tilesHash);

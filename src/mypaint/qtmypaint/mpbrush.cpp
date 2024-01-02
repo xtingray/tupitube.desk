@@ -60,8 +60,7 @@ void MPBrush::load(const QByteArray &content)
 {
     mypaint_brush_from_defaults(brush);
 
-    if (!mypaint_brush_from_string(brush, content.constData()))
-    {
+    if (!mypaint_brush_from_string(brush, content.constData())) {
         // Not able to load the selected brush. Let's execute some backup code...
         qDebug("Trouble when reading the selected brush !");
     }

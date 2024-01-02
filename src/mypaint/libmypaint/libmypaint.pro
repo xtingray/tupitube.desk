@@ -9,7 +9,7 @@ macx {
     INSTALLS += target
     target.path = /lib
 	
-	INCLUDEPATH += ../json-c
+    INCLUDEPATH += ../json-c
     LIBS += -L../json-c -ljson-c
 
     !include(../../../tupiglobal.pri) {
@@ -76,6 +76,7 @@ SOURCES += brushmodes.c \
 
 # for C files, we need to allow C99 mode.
 QMAKE_CFLAGS += -std=c99
+QMAKE_CFLAGS += -Wno-unknown-pragmas
 
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

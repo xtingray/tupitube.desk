@@ -44,11 +44,13 @@ const MyPaintBrushSettingInfo * mypaint_brush_setting_info(MyPaintBrushSetting i
 
 const gchar * mypaint_brush_setting_info_get_name(const MyPaintBrushSettingInfo *self)
 {
+    UNUSED(self);
     return dgettext(GETTEXT_PACKAGE, self->name);
 }
 
 const gchar * mypaint_brush_setting_info_get_tooltip(const MyPaintBrushSettingInfo *self)
 {
+    UNUSED(self);
     return dgettext(GETTEXT_PACKAGE, self->tooltip);
 }
 

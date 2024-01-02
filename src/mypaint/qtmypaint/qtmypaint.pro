@@ -58,3 +58,6 @@ unix:!mac {
         error("Run ./configure first!")
     }
 }   
+
+QMAKE_CFLAGS += -Wno-unknown-pragmas
+

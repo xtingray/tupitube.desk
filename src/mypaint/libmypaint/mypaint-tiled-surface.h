@@ -5,6 +5,8 @@
 #include <mypaint-surface.h>
 #include <mypaint-config.h>
 
+#define UNUSED(x) (void)(x)
+
 G_BEGIN_DECLS
 
 struct _MyPaintTiledSurface;

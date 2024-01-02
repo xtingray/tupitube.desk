@@ -29,6 +29,8 @@
 extern "C" {
 #endif
 
+#define UNUSED(x) (void)(x)
+
 /**
  * Forward declaration for the opaque iterator information.
  */

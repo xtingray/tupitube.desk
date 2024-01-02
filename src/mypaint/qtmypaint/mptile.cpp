@@ -138,7 +138,7 @@ void MPTile::undo()
        setImage(m_cache_img);
     } else {
        #ifdef TUP_DEBUG
-           qDebug() << "MPSurface::undo() - No items to undo!";
+           qDebug() << "[MPSurface::undo()] - No items to undo!";
        #endif
     }
 }
@@ -151,7 +151,7 @@ void MPTile::redo()
        setImage(m_cache_img);
     } else {
        #ifdef TUP_DEBUG
-           qDebug() << "MPSurface::redo() - No items to redo!";
+           qDebug() << "[MPSurface::redo()] - No items to redo!";
        #endif
     }
 }

@@ -36,6 +36,7 @@ SOURCES += arraylist.c \
 # for C files, we need to allow C99 mode.
 QMAKE_CFLAGS += -std=c99
 QMAKE_CFLAGS += -D_XOPEN_SOURCE=600
+QMAKE_CFLAGS += -Wimplicit-fallthrough
 
 FRAMEWORK_DIR = "../../framework"
 include($$FRAMEWORK_DIR/framework.pri)

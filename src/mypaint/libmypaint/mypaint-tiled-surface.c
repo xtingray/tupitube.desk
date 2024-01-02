@@ -625,9 +625,12 @@ void get_color(MyPaintSurface *surface, float x, float y, float radius,
     int tx2 = floor(floor(x + r_fringe) / MYPAINT_TILE_SIZE);
     int ty1 = floor(floor(y - r_fringe) / MYPAINT_TILE_SIZE);
     int ty2 = floor(floor(y + r_fringe) / MYPAINT_TILE_SIZE);
-    int tiles_n = (tx2 - tx1) * (ty2 - ty1);
 
-    #pragma omp parallel for schedule(static) if (self->threadsafe_tile_requests && tiles_n > 3)
+    // Unused var
+    // int tiles_n = (tx2 - tx1) * (ty2 - ty1);
+
+    // Only for MSVC
+    // #pragma omp parallel for schedule(static) if (self->threadsafe_tile_requests && tiles_n > 3)
     int ty;
     for (ty = ty1; ty <= ty2; ty++) {
         int tx;
@@ -657,7 +660,8 @@ void get_color(MyPaintSurface *surface, float x, float y, float radius,
                             aspect_ratio, angle);
 
             // TODO: try atomic operations instead
-            #pragma omp critical
+            // Only for MSVC
+            // #pragma omp critical
             {
             get_color_pixels_accumulate (mask, rgba_p,
                                          &sum_weight, &sum_r, &sum_g, &sum_b, &sum_a);

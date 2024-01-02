@@ -20,6 +20,8 @@
 #include <mypaint-glib-compat.h>
 #include <mypaint-brush-settings-gen.h>
 
+#define UNUSED(x) (void)(x)
+
 typedef struct {
     const gchar *cname;
     const gchar *name; // FIXME: needs to be accessed through gettext

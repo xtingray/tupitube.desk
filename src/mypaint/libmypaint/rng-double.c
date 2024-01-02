@@ -57,7 +57,8 @@ struct _RngDouble {
 
 void rng_double_get_array(RngDouble *self, double aa[], int n)
 {
-  register int i,j;
+  // register int i,j;
+  int i,j;
   for (j=0;j<KK;j++) aa[j]=self->ran_u[j];
   for (;j<n;j++) aa[j]=mod_sum(aa[j-KK],aa[j-LL]);
   for (i=0;i<LL;i++,j++) self->ran_u[i]=mod_sum(aa[j-KK],aa[j-LL]);
@@ -83,7 +84,8 @@ void rng_double_free(RngDouble *self)
 
 void rng_double_set_seed(RngDouble *self, long seed)
 {
-  register int t,s,j;
+  // register int t,s,j;
+  int t,s,j;
   double u[KK+KK-1];
   double ulp=(1.0/(1L<<30))/(1L<<22);               /* 2 to the -52 */
   double ss=2.0*ulp*((seed&0x3fffffff)+2);
