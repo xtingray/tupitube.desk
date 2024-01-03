@@ -40,12 +40,6 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
     public:
         enum Perspective { Raster = 0x01 };
 
-        /*
-        explicit RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
-                                  int scene, const QColor contourColor, const QString &zoomFactor,
-                                  QWidget *parent = nullptr);
-        */
-
         RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
                          int scene, const QColor contourColor, const QString &zoomFactor,
                          QWidget *parent = nullptr);

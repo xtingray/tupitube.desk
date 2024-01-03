@@ -55,7 +55,8 @@
 RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgColor, QWidget *parent) : TupModuleWidgetBase(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterColorWidget()]";
+        qDebug() << "[RasterColorWidget()] - contourColor ->" << contourColor;
+        qDebug() << "[RasterColorWidget()] - contourColor.alpha() ->" << contourColor.alpha();
     #endif
 
     setWindowTitle(tr("Color Palette"));
@@ -217,7 +218,7 @@ void RasterColorWidget::setupColorDisplay()
 void RasterColorWidget::updateColorMode(TColorCell::FillType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterColorWidget::updateColorMode()] - type -> " << type;
+        qDebug() << "[RasterColorWidget::updateColorMode()] - type ->" << type;
     #endif
 
     QBrush brush;

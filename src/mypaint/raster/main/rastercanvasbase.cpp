@@ -183,6 +183,7 @@ void RasterCanvasBase::enterEvent(QEvent *event)
         qDebug() << "RasterCanvasBase::enterEvent(QEvent)";
     #endif
     */
+
     if (!hasFocus())
         setFocus();
 
@@ -196,6 +197,7 @@ void RasterCanvasBase::leaveEvent(QEvent *event)
         qDebug() << "RasterCanvasBase::leaveEvent(QEvent)";
     #endif
     */
+
     if (hasFocus())
         clearFocus();
 

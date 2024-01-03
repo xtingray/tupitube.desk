@@ -42,8 +42,9 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     TCONFIG->sync();
 
     #ifdef TUP_DEBUG
-        qDebug() << "RasterMainWindow::RasterMainWindow() - projectSize: " << projectSize;
-        qDebug() << "RasterMainWindow::RasterMainWindow() - zoomFactor: " << zoomFactor;
+        qDebug() << "[RasterMainWindow::RasterMainWindow()] - projectSize ->" << projectSize;
+        qDebug() << "[RasterMainWindow::RasterMainWindow()] - zoomFactor ->" << zoomFactor;
+        qDebug() << "[RasterMainWindow::RasterMainWindow()] - contourColor ->" << contourColor;
     #endif
 
     createTopResources();
@@ -217,8 +218,8 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
         rasterCanvas->loadFromFile(imgPath);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterMainWindow::createCentralWidget() - Warning: Image doesn't exist -> "
-                        + imgPath;
+            qDebug() << "[RasterMainWindow::createCentralWidget()] - Warning: Image doesn't exist ->"
+                     << imgPath;
         #endif
     }
 
@@ -233,7 +234,7 @@ void RasterMainWindow::createCentralWidget(TupProject * project, const QColor co
 void RasterMainWindow::closeEvent(QCloseEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterMainWindow::closeEvent(QCloseEvent)";
+        qDebug() << "[RasterMainWindow::closeEvent()]";
     #endif
 
     saveCanvas();
@@ -348,7 +349,7 @@ void RasterMainWindow::exportImage()
     QString filePath = QFileDialog::getSaveFileName(this, tr("Export Image"), initPath);
     if (filePath.isEmpty()) {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterMainWindow::exportImage() - File path is empty: " << filePath;
+            qDebug() << "[RasterMainWindow::exportImage()] - File path is empty ->" << filePath;
         #endif
         return;
     }
@@ -368,8 +369,8 @@ void RasterMainWindow::saveCanvas()
         if (!dir.exists()) {
             if (!QDir().mkpath(imgPath)) {
                 #ifdef TUP_DEBUG
-                    qDebug() << "RasterMainWindow::saveCanvas() - Error while creating raster background path!";
-                    qDebug() << "Image Path: " << imgPath;
+                    qDebug() << "[RasterMainWindow::saveCanvas()] - Error while creating raster background path!";
+                    qDebug() << "[RasterMainWindow::saveCanvas()] - Image Path ->" << imgPath;
                 #endif
             }
         }
@@ -377,7 +378,7 @@ void RasterMainWindow::saveCanvas()
         rasterCanvas->saveToFile(file);
 
         #ifdef TUP_DEBUG
-            qWarning() << "RasterMainWindow::saveCanvas() - Creating PNG image!";
+            qWarning() << "[RasterMainWindow::saveCanvas()] - Creating PNG image!";
         #endif
 
         emit closeWindow(file);
@@ -405,7 +406,7 @@ void RasterMainWindow::resizeEvent(QResizeEvent *event)
 void RasterMainWindow::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterMainWindow::keyPressEvent()";
+        qDebug() << "[RasterMainWindow::keyPressEvent()]";
     #endif
 
     switch(event->key()) {

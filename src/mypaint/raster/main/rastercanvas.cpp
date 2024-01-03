@@ -44,11 +44,11 @@ RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidg
     myPaintCanvas->setBrushColor(contourColor);
     myPaintCanvas->clearSurface();
 
-    connect(myPaintCanvas, SIGNAL(newTile(MPSurface*, MPTile*)), this, SLOT(onNewTile(MPSurface*, MPTile*)));
-    connect(myPaintCanvas, SIGNAL(updateTile(MPSurface*, MPTile*)), this, SLOT(onUpdateTile(MPSurface*, MPTile*)));
+    connect(myPaintCanvas, SIGNAL(newTile(MPSurface*,MPTile*)), this, SLOT(onNewTile(MPSurface*,MPTile*)));
+    connect(myPaintCanvas, SIGNAL(updateTile(MPSurface*,MPTile*)), this, SLOT(onUpdateTile(MPSurface*,MPTile*)));
     connect(myPaintCanvas, SIGNAL(clearedSurface(MPSurface*)), this, SLOT(onClearedSurface(MPSurface*)));
 
-    QCursor cursor = QCursor(THEME_DIR + "cursors/pencil.png", 0, 11);
+    QCursor cursor = QCursor(QPixmap(kAppProp->themeDir() + "cursors/target.png"), 4, 4);
     viewport()->setCursor(cursor);
 
     centerDrawingArea();
@@ -77,7 +77,7 @@ void RasterCanvas::centerDrawingArea()
 void RasterCanvas::resetWorkSpaceCenter(const QSize projectSize)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvas::resetWorkSpaceCenter()";
+        qDebug() << "[RasterCanvas::resetWorkSpaceCenter()]";
     #endif
 
     int centerX = projectSize.width() / 2;
@@ -101,7 +101,6 @@ void RasterCanvas::setTabletDevice(QTabletEvent* event)
 void RasterCanvas::onNewTile(MPSurface *surface, MPTile *tile)
 {
     Q_UNUSED(surface)
-    // counter++;
     gScene->addItem(tile);
 }
 

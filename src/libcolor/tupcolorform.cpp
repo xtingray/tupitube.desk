@@ -61,6 +61,10 @@ TupColorForm::~TupColorForm()
 
 void TupColorForm::setupForm()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupColorForm::setupForm()]";
+    #endif
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     QGridLayout *gridLayout = new QGridLayout;
@@ -117,6 +121,11 @@ void TupColorForm::setColor(const QBrush &brush)
 {
     QColor color = brush.color();
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupColorForm::setColor()] - color ->" << color;
+        qDebug() << "[TupColorForm::setColor()] - color alpha ->" << color.alpha();
+    #endif
+
     blockSignals(true);
     valueR->setValue(color.red());
     valueG->setValue(color.green());
@@ -171,7 +180,7 @@ void TupColorForm::syncHsvValues()
 
 void TupColorForm::updateAlphaValueFromSpin(int alpha)
 {
-    Q_UNUSED(alpha)
+    // Q_UNUSED(alpha)
     alphaSlider->blockSignals(true);
     alphaSlider->setValue(alpha);
     alphaSlider->blockSignals(false);
@@ -181,7 +190,7 @@ void TupColorForm::updateAlphaValueFromSpin(int alpha)
 
 void TupColorForm::updateAlphaValueFromSlider(int alpha)
 {
-    Q_UNUSED(alpha)
+    // Q_UNUSED(alpha)
     alphaBox->blockSignals(true);
     alphaBox->setValue(alpha);
     alphaBox->blockSignals(false);
