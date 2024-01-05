@@ -70,6 +70,7 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         void setBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
         void importImageToLibrary();
+        void updateBrushSize(float size);
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);

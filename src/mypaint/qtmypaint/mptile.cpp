@@ -43,6 +43,7 @@ QPainterPath MPTile::shape() const
 {
     QPainterPath path;
     path.addRect(m_cache_img.rect());
+
     return path;
 }
 
@@ -60,6 +61,7 @@ uint16_t* MPTile::bits(bool readOnly)
 {
     // Correct C++ way of doing things is using "const" but MyPaint API is not compatible here
     m_cache_valid = readOnly ? m_cache_valid : false;
+
     return (uint16_t*) t_pixels;
 }
 

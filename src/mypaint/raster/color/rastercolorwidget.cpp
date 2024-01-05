@@ -78,7 +78,7 @@ RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgC
     addChild(splitter);
 
     setupMainPalette();
-    setupColorChooser();
+    setupColorChooser(contourColor);
 
     tab->setPalette(palette());
     tab->setMinimumHeight(320);
@@ -114,6 +114,10 @@ RasterColorWidget::~RasterColorWidget()
 
 void RasterColorWidget::setupColorDisplay()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::setupColorDisplay()]";
+    #endif
+
     QFrame *topPanel = new QFrame(this);
     QBoxLayout *generalLayout = new QBoxLayout(QBoxLayout::TopToBottom);
     generalLayout->setMargin(0);
@@ -264,7 +268,7 @@ void RasterColorWidget::updateColorMode(TColorCell::FillType type)
 void RasterColorWidget::checkColorButton(TColorCell::FillType type)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterColorWidget::checkColorButton()] - type -> " << type;
+        qDebug() << "[RasterColorWidget::checkColorButton()] - type ->" << type;
     #endif
 
     if (type == TColorCell::Contour) {
@@ -276,6 +280,10 @@ void RasterColorWidget::checkColorButton(TColorCell::FillType type)
 
 void RasterColorWidget::setupMainPalette()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::setupMainPalette()]";
+    #endif
+
     // Palettes
     paletteContainer = new TupViewColorCells(splitter);
     connect(paletteContainer, SIGNAL(colorSelected(QBrush)),
@@ -284,8 +292,12 @@ void RasterColorWidget::setupMainPalette()
     splitter->addWidget(paletteContainer);
 }
 
-void RasterColorWidget::setupColorChooser()
+void RasterColorWidget::setupColorChooser(const QColor &color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::setupColorChooser()] - color ->" << color;
+    #endif
+
     QFrame *colorMixer = new QFrame;
     colorMixer->setFrameStyle(QFrame::Box | QFrame::Sunken);
 
@@ -315,10 +327,15 @@ void RasterColorWidget::setupColorChooser()
     mainLayout->addStretch(2);
 
     tab->addTab(colorMixer, tr("Color Mixer"));
+    colorForm->setColor(color);
 }
 
 void RasterColorWidget::setColorOnAppFromHTML(const QBrush& brush)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::setupColorOnAppFromHTML()]";
+    #endif
+
     QColor color = brush.color();
 
     if (color.isValid()) {
@@ -346,6 +363,10 @@ void RasterColorWidget::setColorOnAppFromHTML(const QBrush& brush)
 
 void RasterColorWidget::setGlobalColors(const QBrush &brush)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::setGlobalColors()] - color ->" << brush.color();
+    #endif
+
     if (currentSpace == TColorCell::Background) {
         bgColorCell->setBrush(brush);
         bgHtmlField->setText(brush.color().name());
@@ -380,6 +401,10 @@ void RasterColorWidget::setGlobalColors(const QBrush &brush)
 
 void RasterColorWidget::updateColorFromPalette(const QBrush &brush)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateColorFromPalette()] - color ->" << brush.color();
+    #endif
+
     colorPickerArea->clearSelection();
 
     setGlobalColors(brush);
@@ -390,6 +415,10 @@ void RasterColorWidget::updateColorFromPalette(const QBrush &brush)
 
 void RasterColorWidget::updateColorFromDisplay(const QBrush &brush)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateColorFromDisplay()] - color ->" << brush.color();
+    #endif
+
     setGlobalColors(brush);
     QColor color = brush.color();
     colorPickerArea->setColor(color.hue(), color.saturation());
@@ -398,12 +427,21 @@ void RasterColorWidget::updateColorFromDisplay(const QBrush &brush)
 
 void RasterColorWidget::syncColor(const QColor &color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::syncColor()] - color ->" << color;
+    #endif
+
     setGlobalColors(QBrush(color));
     colorForm->setColor(color);
 }
 
 void RasterColorWidget::setHS(int hue, int saturation)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::syncColor()] - hue ->" << hue;
+        qDebug() << "[RasterColorWidget::syncColor()] - saturation ->" << saturation;
+    #endif
+
     paletteContainer->clearSelection();
     paletteContainer->resetBasicPanel();
 
@@ -421,6 +459,10 @@ void RasterColorWidget::setHS(int hue, int saturation)
 
 void RasterColorWidget::updateColorFromHTML()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateColorFromHTML()]";
+    #endif
+
     QColor currentColor;
     if (currentSpace == TColorCell::Background) {
         bgColorCell->setChecked(false);
@@ -442,6 +484,10 @@ void RasterColorWidget::updateColorFromHTML()
 
 void RasterColorWidget::updateBgColorFromHTML()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateBgColorFromHTML()]";
+    #endif
+
     if (currentSpace != TColorCell::Background) {
         if (contourColorCell->isChecked())
             contourColorCell->setChecked(false);
@@ -462,6 +508,10 @@ void RasterColorWidget::updateBgColorFromHTML()
 
 QPair<QColor, QColor> RasterColorWidget::color()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::color()]";
+    #endif
+
     QPair<QColor, QColor> colors;
     colors.first = contourColorCell->color();
 
@@ -470,17 +520,29 @@ QPair<QColor, QColor> RasterColorWidget::color()
 
 void RasterColorWidget::parsePaletteFile(const QString &file)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::parsePaletteFile()] - file ->" << file;
+    #endif
+
     paletteContainer->readPaletteFile(file);
 }
 
 void RasterColorWidget::setBgColor(const QColor &color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::setBgColor()]";
+    #endif
+
     QBrush brush(color);
     bgColorCell->setBrush(brush);
 }
 
 void RasterColorWidget::initBg()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::initBg()]";
+    #endif
+
     QBrush brush(Qt::white);
     bgColorCell->setBrush(brush);
     bgColorCell->setChecked(true);
@@ -494,6 +556,10 @@ void RasterColorWidget::initBg()
 
 void RasterColorWidget::updateColorType(int index)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateColorType()] - index ->" << index;
+    #endif
+
     if (index == RasterColorWidget::Solid) {
         if (currentSpace == TColorCell::Contour)
             fgType = Solid;
@@ -509,6 +575,10 @@ void RasterColorWidget::updateColorType(int index)
 
 void RasterColorWidget::updateLuminancePicker(const QColor &color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateLuminancePicker()] - color ->" << color;
+    #endif
+
     if (color == Qt::transparent) {
         luminancePicker->setEnabled(false);
         return;
@@ -528,6 +598,10 @@ void RasterColorWidget::updateLuminancePicker(const QColor &color)
 
 void RasterColorWidget::updateContourColor(const QColor &color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateContourColor()] - color ->" << color;
+    #endif
+
     if (bgColorCell->isChecked())
         bgColorCell->setChecked(false);
 
@@ -542,6 +616,10 @@ void RasterColorWidget::updateContourColor(const QColor &color)
 
 void RasterColorWidget::updateBgColor(const QColor &color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterColorWidget::updateBgColor()] - color ->" << color;
+    #endif
+
     if (contourColorCell->isChecked())
         contourColorCell->setChecked(false);
 

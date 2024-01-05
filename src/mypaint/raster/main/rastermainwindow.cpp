@@ -384,11 +384,11 @@ void RasterMainWindow::saveCanvas()
         emit closeWindow(file);
     } else {
         #ifdef TUP_DEBUG
-            qWarning() << "RasterMainWindow::saveCanvas() - Nothing new to save!";
+            qWarning() << "[RasterMainWindow::saveCanvas()] - Nothing new to save!";
         #endif
         if (QFile::exists(file)) {
             #ifdef TUP_DEBUG
-                qWarning() << "RasterMainWindow::saveCanvas() - Removing previous image -> " << file;
+                qWarning() << "[RasterMainWindow::saveCanvas()] - Removing previous image ->" << file;
             #endif
             QFile bg(file);
             bg.remove();
@@ -460,4 +460,9 @@ void RasterMainWindow::importImageToLibrary()
     rasterCanvas->saveToFile(imgPath);
 
     emit libraryCall(imgPath);
+}
+
+void RasterMainWindow::updateBrushSize(float size)
+{
+    rasterCanvas->updateBrushSize(size);
 }

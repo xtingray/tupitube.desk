@@ -55,7 +55,7 @@
 RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent) : QGraphicsView(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvasBase::RasterCanvasBase()";
+        qDebug() << "[RasterCanvasBase::RasterCanvasBase()]";
     #endif
 
     gScene = new QGraphicsScene(this);
@@ -180,7 +180,7 @@ void RasterCanvasBase::enterEvent(QEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvasBase::enterEvent(QEvent)";
+        qDebug() << "[RasterCanvasBase::enterEvent(QEvent)]";
     #endif
     */
 
@@ -194,7 +194,7 @@ void RasterCanvasBase::leaveEvent(QEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvasBase::leaveEvent(QEvent)";
+        qDebug() << "[RasterCanvasBase::leaveEvent(QEvent)]";
     #endif
     */
 
@@ -208,7 +208,7 @@ bool RasterCanvasBase::viewportEvent(QEvent *event)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvasBase::viewportEvent(QEvent)";
+        qDebug() << "[RasterCanvasBase::viewportEvent(QEvent)]";
     #endif
     */
 
@@ -362,7 +362,7 @@ void RasterCanvasBase::scaleView(qreal scaleFactor)
     // qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
     qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
 
-    if (factor < 0.07 || factor > 100)
+    if ((factor < 0.07) || (factor > 100))
         return;
     scale(scaleFactor, scaleFactor);
 

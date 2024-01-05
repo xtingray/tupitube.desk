@@ -89,7 +89,7 @@ class TUPITUBE_EXPORT RasterColorWidget : public TupModuleWidgetBase
         void setupButtons();
         void setupColorDisplay();
         void setupMainPalette();
-        void setupColorChooser();
+        void setupColorChooser(const QColor &color);
         void setGlobalColors(const QBrush &brush);
         void updateLuminancePicker(const QColor &color);
 

@@ -65,6 +65,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void undo();
         void redo();
         void updateBrushColor(const QColor color);
+        void updateBrushSize(float size);
 
         void onNewTile(MPSurface *surface, MPTile *tile);
         void onUpdateTile(MPSurface *surface, MPTile *tile);

@@ -80,9 +80,7 @@ void MPBrush::setColor(QColor newColor)
     float s = static_cast<float>(color.saturation()/255.0);
     float v = static_cast<float>(color.value()/255.0);
 
-    // Opacity is not handled here as it is defined by the brush settings.
-    // If you wish to force opacity, use MPHandler::setBrushValue()
-    //
+    // Brush opacity / alpha value is defined here
     float opacity = color.alpha()/255.0;
     mypaint_brush_set_base_value(brush, MYPAINT_BRUSH_SETTING_OPAQUE, opacity);
 

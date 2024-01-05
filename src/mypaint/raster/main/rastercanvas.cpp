@@ -24,6 +24,10 @@
 #include <QBrush>
 #include <QPixmap>
 #include <QCursor>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
 
 RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent):
                            RasterCanvasBase(project->getDimension(), parent)
@@ -117,7 +121,19 @@ void RasterCanvas::onClearedSurface(MPSurface *surface)
 
 void RasterCanvas::loadBrush(const QByteArray &content)
 {
+    #ifdef TUP_DEBUG
+        QString input = QString(content);
+        input.replace("\n","");
+        input.replace("\\","");
+        QJsonDocument json = QJsonDocument::fromJson(input.toUtf8());
+        QJsonObject object = json.object();
+        QJsonValue value = object.value(QString("comment"));
+        qDebug() << "[RasterCanvas::loadBrush()] - Brush Name ->" << value.toString();
+    #endif
+
+    float size = MPHandler::handler()->getBrushValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC);
     MPHandler::handler()->loadBrush(content);
+    qWarning() << "RasterCanvas::loadBrush() - BRUSH SIZE ->" << size;
 }
 
 void RasterCanvas::tabletEvent(QTabletEvent *event)
@@ -215,6 +231,12 @@ void RasterCanvas::updateBrushColor(const QColor color)
 {
     MPHandler *mypaint = MPHandler::handler();
     mypaint->setBrushColor(color);
+}
+
+void RasterCanvas::updateBrushSize(float size)
+{
+    MPHandler *mypaint = MPHandler::handler();
+    mypaint->setBrushValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC, size);
 }
 
 void RasterCanvas::clearCanvas()

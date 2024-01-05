@@ -138,8 +138,6 @@ void MPHandler::loadBrush(const QByteArray &content)
 
 void MPHandler::strokeTo(float x, float y, float pressure, float xtilt, float ytilt)
 {
-    qDebug() << "[MPHandler::strokeTo()] - PRESSURE ->" << pressure;
-
     float dtime = static_cast<float>(1.0 / 10);
     mypaint_surface_begin_atomic((MyPaintSurface *)m_surface);
     mypaint_brush_stroke_to(m_brush->brush, (MyPaintSurface *) m_surface, x, y, pressure,
@@ -166,14 +164,14 @@ void MPHandler::endStroke()
 {
 }
 
-float MPHandler::getBrushValue(MyPaintBrushSetting setting)
-{
-    return this->m_brush->getValue(setting);
-}
-
 void MPHandler::setBrushColor(const QColor newColor)
 {
     this->m_brush->setColor(newColor);
+}
+
+float MPHandler::getBrushValue(MyPaintBrushSetting setting)
+{
+    return this->m_brush->getValue(setting);
 }
 
 void MPHandler::setBrushValue(MyPaintBrushSetting setting, float value)

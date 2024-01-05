@@ -1,5 +1,5 @@
 {
-    "comment": "MyPaint brush file", 
+    "comment": "Imp Blending Brush",
     "group": "smudge", 
     "parent_brush_name": "classic/imp_blending", 
     "settings": {
