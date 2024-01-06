@@ -62,6 +62,9 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
+    sizeWidget = new RasterSizeWidget();
+    sizeView = addToolView(sizeWidget, Qt::LeftDockWidgetArea, Raster, "Brush Size", QKeySequence(tr("Shift+S")));
+
     brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, "Brushes", QKeySequence(tr("Shift+B")));
     brushesView->expandDock(true);
 

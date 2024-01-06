@@ -25,6 +25,7 @@
 #include "rastercanvas.h"
 #include "rasterbrusheswidget.h"
 #include "rastercolorwidget.h"
+#include "rastersizewidget.h"
 #include "tuppaintareastatus.h"
 #include "tupbackground.h"
 
@@ -93,8 +94,10 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         RasterCanvas *rasterCanvas;
         RasterBrushesWidget *brushesWidget;
         RasterColorWidget *colorWidget;
+        RasterSizeWidget *sizeWidget;
         ToolView *brushesView;
         ToolView *colorView;
+        ToolView *sizeView;
         TupPaintAreaStatus *status;
 
         QSize projectSize;

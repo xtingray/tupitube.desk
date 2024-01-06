@@ -18,6 +18,9 @@ INCLUDEPATH += ../../qtmypaint
 INCLUDEPATH += ../brushes
 LIBS += -L../brushes -lrasterbrushes
 
+INCLUDEPATH += ../size
+LIBS += -L../size -lrastersize
+
 INCLUDEPATH += ../color
 LIBS += -L../color -lrastercolor
 
