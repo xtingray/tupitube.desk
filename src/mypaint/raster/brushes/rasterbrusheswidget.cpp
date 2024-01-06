@@ -192,7 +192,7 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
 RasterBrushesWidget::~RasterBrushesWidget()
 {
     #ifdef TUP_DEBUG
-       qDebug() << "~RasterBrushesWidget()";
+       qDebug() << "[~RasterBrushesWidget()]";
     #endif
 }
 
@@ -216,7 +216,7 @@ void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
 {
     QListWidget* brushesList = item->listWidget();
     if (brushesList) {
-        QString caption;
+        QString caption = "";
         // first of all, we will deselect all other items in other panels :
         for (int index = 0; index < stackedWidget->count(); index++) {
             QListWidget *list = dynamic_cast<QListWidget*>(stackedWidget->widget(index));

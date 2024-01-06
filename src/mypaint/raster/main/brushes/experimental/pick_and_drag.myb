@@ -1,5 +1,5 @@
 {
-    "comment": "MyPaint brush file", 
+    "comment": "Exp. Pick and Drag Brush", 
     "group": "", 
     "parent_brush_name": "experimental/pick_and_drag", 
     "settings": {
