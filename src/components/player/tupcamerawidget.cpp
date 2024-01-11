@@ -278,7 +278,7 @@ void TupCameraWidget::addStatusPanel()
 {
     cameraStatus = new TupCameraStatus(project->getSceneNames().size());
     cameraStatus->setScenes(project->getSceneNames());
-    connect(cameraStatus, SIGNAL(playModeChanged(PlayMode, int)), this, SLOT(updatePlayMode(PlayMode, int)));
+    connect(cameraStatus, SIGNAL(playModeChanged(PlayMode,int)), this, SLOT(updatePlayMode(PlayMode,int)));
     connect(cameraStatus, SIGNAL(sceneIndexChanged(int)), this, SLOT(selectScene(int)));
     connect(cameraStatus, SIGNAL(muteEnabled(bool)), previewScreen, SLOT(enableMute(bool)));
     connect(cameraStatus, SIGNAL(fpsChanged(int)), this, SLOT(updateFPS(int)));
@@ -435,6 +435,8 @@ void TupCameraWidget::previousFrame()
 
 void TupCameraWidget::sceneResponse(int action, TupProjectRequestArgument arg, int sceneIndex)
 {
+    Q_UNUSED(arg)
+
     #ifdef TUP_DEBUG
         qDebug() << "[TupCameraWidget::sceneResponse()] - action ->" << action;
         qDebug() << "[TupCameraWidget::sceneResponse()] - sceneIndex ->" << sceneIndex;

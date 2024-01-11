@@ -160,7 +160,7 @@ bool TupVideoProperties::isComplete() const
     return true;
 }
 
-void TupVideoProperties::reset()
+void TupVideoProperties::resetUI()
 {
 }
 
@@ -601,7 +601,7 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
     QString answer(bArray);
     if (answer.length() > 0) {
         #ifdef TUP_DEBUG
-            qDebug() << "[TupVideoProperties::closeRequest()] - answer -> " << answer;
+            qDebug() << "[TupVideoProperties::closeRequest()] - answer ->" << answer;
         #endif
 
         QDomDocument doc;
@@ -623,8 +623,8 @@ void TupVideoProperties::closeRequest(QNetworkReply *reply)
                             QFile file(filePath);
                             if (!file.remove()) {
                                 #ifdef TUP_DEBUG
-                                    qDebug() << "[TupVideoProperties::closeRequest()] - Removing temp file -> " << filePath;
-                                    qDebug() << "[TupVideoProperties::closeRequest()] - Error: Can't remove project file -> " << filePath;
+                                    qDebug() << "[TupVideoProperties::closeRequest()] - Removing temp file ->" << filePath;
+                                    qDebug() << "[TupVideoProperties::closeRequest()] - Error: Can't remove project file ->" << filePath;
                                 #endif
                             }
                         }

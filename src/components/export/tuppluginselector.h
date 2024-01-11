@@ -54,7 +54,7 @@ class TUPITUBE_EXPORT TupPluginSelector : public TupExportWizardPage
         bool isComplete() const;
         const char *extension;
 
-        void reset();
+        void resetUI();
         void addPlugin(TupExportInterface::Plugin pluginId, const QString &pluginName);
         void setFormats(TupExportInterface::Plugin plugin, TupExportInterface::Formats formats);
 
@@ -65,7 +65,7 @@ class TUPITUBE_EXPORT TupPluginSelector : public TupExportWizardPage
         const char* getFileExtension();
 
     signals:
-        void selectedPlugin(TupExportInterface::Plugin key);
+        void pluginSelected(TupExportInterface::Plugin key);
         void animationFormatSelected(TupExportInterface::Format format, const QString &extension);
 
         // SQA: Pending for implementation
@@ -74,9 +74,10 @@ class TUPITUBE_EXPORT TupPluginSelector : public TupExportWizardPage
         void imagesArrayFormatSelected(TupExportInterface::Format format, const QString &extension);
 
     private:
+        const char* getFormatExtension(TupExportInterface::Format formatId);
+
         QListWidget *pluginList;
         QListWidget *formatList;
-        const char* getFormatExtension(TupExportInterface::Format formatId);
 
         QList<TupExportInterface::Plugin> plugins;
         QList<TupExportInterface::Format> videoFormats;

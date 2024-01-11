@@ -57,7 +57,7 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         ~TupExportModule();
 
         bool isComplete() const;
-        void reset();
+        void resetUI();
 
     public slots:
         void exportIt();
@@ -86,11 +86,16 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         void isDone();
 
     private:
+        double calculateProjectDuration(const QList<TupScene *> &scenes, int fps);
+
         QList<int> m_indexes;
+        QList<TupScene *> scenes;
+        int fps;
+
         TupExportInterface *m_currentExporter;
         TupExportInterface::Format m_currentFormat;
 
-        TupProject *m_project;
+        TupProject *m_project;        
         QLineEdit *m_filePath;
         QLineEdit *m_prefix;
 
@@ -102,12 +107,11 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
         bool browserWasOpened;
         QSize dimension;
 
-        // TSizeBox *m_size;
-        // QSpinBox *m_fps;
-
         QWidget *progressWidget;
         QLabel *progressLabel;
         QProgressBar *progressBar;
+
+        OutputFormat outputFormat;
 };
 
 #endif

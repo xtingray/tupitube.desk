@@ -67,18 +67,23 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
     private slots:
         void setExporter(TupExportInterface::Plugin plugin);
         void updateWindowTitle();
+        void updateWidgetConnections();
 
     private:
         void loadPlugins();
 		
     private:
+        TupExportInterface::Plugin currentPlugin;
+
         TupPluginSelector *pluginPage;
         TupSceneSelector *scenesPage;
         TupExportModule *animationExport;
         TupExportModule *imagesArrayExport;
-        TupExportModule *animatedImageExport;
-        TupVideoProperties *videoProperties;
 
+        // SQA: Code temporary disabled
+        // TupExportModule *animatedImageExport;
+
+        TupVideoProperties *videoProperties;
         const TupProject *project;
         QHash<TupExportInterface::Plugin, TupExportInterface *> plugins;
         ExportType exportFlag;

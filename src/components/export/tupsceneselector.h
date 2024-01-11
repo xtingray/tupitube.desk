@@ -39,7 +39,6 @@
 #include "tglobal.h"
 #include "tupexportinterface.h"
 #include "tupexportwizard.h"
-// #include "tupexportwidget.h"
 #include "titemselector.h"
 
 class TUPITUBE_EXPORT TupSceneSelector : public TupExportWizardPage
@@ -51,14 +50,13 @@ class TUPITUBE_EXPORT TupSceneSelector : public TupExportWizardPage
         ~TupSceneSelector();
 
         bool isComplete() const;
-        void reset();
+        void resetUI();
 
         void setScenes(const QList<TupScene *> &scenes);
         void aboutToNextPage();
 
     private slots:
         void updateState();
-        void updateScenesList();
 
     signals:
         void selectedScenes(const QList<int> &scenes);

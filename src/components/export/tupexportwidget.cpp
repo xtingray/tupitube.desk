@@ -57,28 +57,27 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
 
             scenesPage = new TupSceneSelector();
             scenesPage->setScenes(work->getScenes());
-            connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
+            connect(this, SIGNAL(scenesUpdated()), scenesPage, SLOT(updateScenesList()));
             addPage(scenesPage);
 
             animationExport = new TupExportModule(work, TupExportModule::Animation, tr("Export To Video File"));
-            connect(this, SIGNAL(exportAnimation()), animationExport, SLOT(exportIt()));
-            connect(this, SIGNAL(setAnimationFileName()), animationExport, SLOT(updateNameField()));
-            connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
             addPage(animationExport);
 
             imagesArrayExport = new TupExportModule(work, TupExportModule::ImagesArray, tr("Export To Image Sequence"));
-            connect(this, SIGNAL(exportImagesArray()), imagesArrayExport, SLOT(exportIt()));
-            connect(this, SIGNAL(setImagesArrayFileName()), imagesArrayExport, SLOT(updateNameField()));
-            connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
             addPage(imagesArrayExport);
 
+            // SQA: Pending for development
+            // Code temporarily disabled
+            /*
             animatedImageExport = new TupExportModule(work, TupExportModule::AnimatedImage, tr("Export To Animated Image"));
-            connect(this, SIGNAL(exportAnimatedImage()), animatedImageExport, SLOT(exportIt()));
-            connect(this, SIGNAL(setAnimatedImageFileName()), animatedImageExport, SLOT(updateNameField()));
+            connect(this, SIGNAL(animatedImageExported()), animatedImageExport, SLOT(exportIt()));
+            connect(this, SIGNAL(animatedImageFileNameChanged()), animatedImageExport, SLOT(updateNameField()));
             addPage(animatedImageExport);
+            */
 
-            // connect(pluginPage, SIGNAL(selectedPlugin(const QString &)), this, SLOT(setExporter(const QString &)));
-            connect(pluginPage, SIGNAL(selectedPlugin(TupExportInterface::Plugin)),
+            connect(this, SIGNAL(pluginSelected()), this, SLOT(updateWidgetConnections()));
+
+            connect(pluginPage, SIGNAL(pluginSelected(TupExportInterface::Plugin)),                    
                     this, SLOT(setExporter(TupExportInterface::Plugin)));
 
             connect(pluginPage, SIGNAL(animationFormatSelected(TupExportInterface::Format, const QString &)),
@@ -87,15 +86,18 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
                     imagesArrayExport, SLOT(setCurrentFormat(TupExportInterface::Format, const QString &)));
 
             // SQA: Pending for development
-            // connect(pluginPage, SIGNAL(animatedImageFormatSelected(int, const QString &)),
-            //         animatedImageExport, SLOT(setCurrentFormat(int, const QString &)));
+            // Code temporarily disabled
+            /*
+            connect(pluginPage, SIGNAL(animatedImageFormatSelected(int, const QString &)),
+                   animatedImageExport, SLOT(setCurrentFormat(int, const QString &)));
+            */
 
-            connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                    animationExport, SLOT(setScenesIndexes(const QList<int> &)));
-            connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                    imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
+            // SQA: Pending for development
+            // Code temporarily disabled
+            /*
             connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
                     animatedImageExport, SLOT(setScenesIndexes(const QList<int> &)));
+            */
 
             loadPlugins();
             pluginPage->selectFirstPlugin();
@@ -116,7 +118,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
 
             scenesPage = new TupSceneSelector();
             scenesPage->setScenes(work->getScenes());
-            connect(this, SIGNAL(updateScenes()), scenesPage, SLOT(updateScenesList()));
+            connect(this, SIGNAL(scenesUpdated()), scenesPage, SLOT(updateScenesList()));
             addPage(scenesPage);
 
             videoProperties = new TupVideoProperties(TupVideoProperties::Video);
@@ -173,6 +175,7 @@ void TupExportWidget::loadPlugins()
             if (exporter) {                
                 if (exporter->key() == TupExportInterface::VideoFormats)
                     videoExporter = exporter;
+
                 if (exporter->key() == TupExportInterface::ImageSequence)
                     imagesExporter = exporter;
             } else {
@@ -197,7 +200,12 @@ void TupExportWidget::loadPlugins()
 void TupExportWidget::setExporter(TupExportInterface::Plugin plugin)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExportWidget::setExporter()] - plugin -> " << plugin;
+        if (plugin == 0)
+            qDebug() << "[TupExportWidget::setExporter()] - plugin -> Video Format";
+        else if (plugin == 2)
+            qDebug() << "[TupExportWidget::setExporter()] - plugin -> Image Sequence";
+        else
+            qDebug() << "[TupExportWidget::setExporter()] - plugin ->" << plugin;
     #endif
 
     if (plugins.contains(plugin)) {
@@ -205,12 +213,16 @@ void TupExportWidget::setExporter(TupExportInterface::Plugin plugin)
         pluginPage->setFormats(plugin, currentExporter->availableFormats());
 
         if (currentExporter) {
-            animationExport->setCurrentExporter(currentExporter);
-            imagesArrayExport->setCurrentExporter(currentExporter);
+            currentPlugin = plugin;
+            if (plugin == TupExportInterface::VideoFormats) {
+                animationExport->setCurrentExporter(currentExporter);
+            } else if (plugin == TupExportInterface::ImageSequence) {
+                imagesArrayExport->setCurrentExporter(currentExporter);
+            }
         }
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "TupExportWidget::setExporter() - [ Fatal Error ] - Can't load export plugin -> " << plugin;
+            qDebug() << "TupExportWidget::setExporter() - Fatal Error: Can't load export plugin ->" << plugin;
         #endif
     }
 }
@@ -253,4 +265,25 @@ void TupExportWidget::updateWindowTitle()
 
     setWindowTitle(label);
     enableButtonSet(false);
+}
+
+void TupExportWidget::updateWidgetConnections()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportWidget::updateWidgetConnections()] - Tracing...";
+    #endif
+
+    if (currentPlugin == TupExportInterface::VideoFormats) {
+        connect(this, SIGNAL(animationExported()), animationExport, SLOT(exportIt()));
+        connect(this, SIGNAL(animationFileNameChanged()), animationExport, SLOT(updateNameField()));
+        connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
+        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
+                animationExport, SLOT(setScenesIndexes(const QList<int> &)));
+    } else if (currentPlugin == TupExportInterface::ImageSequence) {
+        connect(this, SIGNAL(imagesArrayExported()), imagesArrayExport, SLOT(exportIt()));
+        connect(this, SIGNAL(imagesArrayFileNameChanged()), imagesArrayExport, SLOT(updateNameField()));
+        connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
+        connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
+                imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
+    }
 }

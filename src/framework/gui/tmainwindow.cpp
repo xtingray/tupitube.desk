@@ -486,7 +486,7 @@ void TMainWindow::closeEvent(QCloseEvent *e)
     #endif
     */
 
-    saveGUI();
+    // saveGUI();
     QMainWindow::closeEvent(e);
 }
 

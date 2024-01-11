@@ -56,7 +56,7 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         ~TupVideoProperties();
 
         bool isComplete() const;
-        void reset();
+        void resetUI();
         QString title() const;
         QString hashtags() const;
         QString description() const;

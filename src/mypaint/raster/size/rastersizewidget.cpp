@@ -38,7 +38,7 @@
 
 RasterSizeWidget::RasterSizeWidget(QWidget *parent) : TupModuleWidgetBase(parent)
 {
-    setWindowIcon(QIcon(ICONS_DIR + "brush.png"));
+    setWindowIcon(QIcon(ICONS_DIR + "brush_size.png"));
     setWindowTitle(tr("Brush Size"));
 
     QWidget *borderWidget = new QWidget;
@@ -79,8 +79,7 @@ RasterSizeWidget::~RasterSizeWidget()
 void RasterSizeWidget::setThickness(int width)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::setThickness()]";
-        qDebug() << "*** thickness: " << width;
+        qDebug() << "[RasterSizeWidget::setThickness()] - width ->" << width;
     #endif
 
     if (width > 0) {
@@ -93,6 +92,10 @@ void RasterSizeWidget::setThickness(int width)
 
 void RasterSizeWidget::setPenColor(const QColor color)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterSizeWidget::setPenColor()] - color ->" << color;
+    #endif
+
     borderBrush.setColor(color);
     thickPreview->setColor(color);
 }
@@ -100,8 +103,7 @@ void RasterSizeWidget::setPenColor(const QColor color)
 void RasterSizeWidget::setPenThickness(int width)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::setPenThickness()]";
-        qDebug() << "*** thickness: " << width;
+        qDebug() << "[RasterSizeWidget::setPenThickness()] - thickness ->" << width;
     #endif
 
     pen.setWidth(width);
@@ -117,8 +119,7 @@ void RasterSizeWidget::setPenThickness(int width)
 void RasterSizeWidget::init(int width)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::init()]";
-        qDebug() << "*** thickness: " << width;
+        qDebug() << "[RasterSizeWidget::init()] - thickness ->" << width;
     #endif
 
     blockSignals(true);
@@ -134,6 +135,10 @@ QPen RasterSizeWidget::getPen() const
 
 void RasterSizeWidget::updatePenProperties()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterSizeWidget::updatePenProperties()]";
+    #endif
+
     pen.setBrush(borderBrush);
 
     TupPaintAreaEvent event(TupPaintAreaEvent::ChangePen, pen);

@@ -44,7 +44,6 @@ TupSceneSelector::TupSceneSelector() : TupExportWizardPage(tr("Select Scenes"))
     m_selector = new TItemSelector(tr("Add Scene"), tr("Remove Scene"));
 
     connect(m_selector, SIGNAL(changed()), this, SLOT(updateState()));
-    // connect(widget, SIGNAL(updateScenes()), this, SLOT(updateScenesList()));
 
     setWidget(m_selector);
 }
@@ -58,7 +57,7 @@ bool TupSceneSelector::isComplete() const
     return m_selector->selectedItems().count() > 0;
 }
 
-void TupSceneSelector::reset()
+void TupSceneSelector::resetUI()
 {
 }
 
@@ -74,7 +73,7 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
         int pos = 1;
         foreach (TupScene *scene, scenes) {
                  #ifdef TUP_DEBUG
-                     qWarning() << "TupSceneSelector::setScenes() - Adding " + scene->getSceneName();
+                      qWarning() << "[TupSceneSelector::setScenes()] - Adding scene ->" << scene->getSceneName();
                  #endif
 
                  m_selector->addItem(QString("%1: ").arg(pos) + scene->getSceneName());
@@ -82,7 +81,7 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
         }
 
         #ifdef TUP_DEBUG
-            qWarning() << "TupSceneSelector::setScenes() - Available Scenes: " + QString::number(pos - 1);
+            qWarning() << "[TupSceneSelector::setScenes() - Available Scenes ->" << (pos - 1);
         #endif
 
         m_selector->selectFirstItem();
@@ -101,9 +100,4 @@ void TupSceneSelector::aboutToNextPage()
 void TupSceneSelector::updateState()
 {
     emit completed();
-}
-
-void TupSceneSelector::updateScenesList()
-{
-    // SQA: Pending code right over here
 }

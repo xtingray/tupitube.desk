@@ -35,7 +35,6 @@
 
 #include "tuppluginselector.h"
 
-
 TupPluginSelector::TupPluginSelector() : TupExportWizardPage(tr("Select Plugin"))
 {
     #ifdef TUP_DEBUG
@@ -57,7 +56,7 @@ TupPluginSelector::TupPluginSelector() : TupExportWizardPage(tr("Select Plugin")
     layout->addWidget(formatList);
 
     setWidget(container);
-    reset();
+    resetUI();
 }
 
 TupPluginSelector::~TupPluginSelector()
@@ -69,10 +68,10 @@ bool TupPluginSelector::isComplete() const
     return pluginList->selectedItems().count() > 0 && formatList->selectedItems().count() > 0;
 }
 
-void TupPluginSelector::reset()
+void TupPluginSelector::resetUI()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPluginSelector::reset()]";
+        qDebug() << "[TupPluginSelector::resetUI()]";
     #endif
 
     pluginList->clearSelection();
@@ -86,8 +85,8 @@ void TupPluginSelector::reset()
 void TupPluginSelector::addPlugin(TupExportInterface::Plugin pluginId, const QString &pluginName)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPluginSelector::addPlugin()] - plugin -> " << pluginName;
-        qDebug() << "[TupPluginSelector::addPlugin()] - plugin id-> " << pluginId;
+        qDebug() << "[TupPluginSelector::addPlugin()] - plugin ->" << pluginName;
+        qDebug() << "[TupPluginSelector::addPlugin()] - plugin id ->" << pluginId;
     #endif
 
     new QListWidgetItem(pluginName, pluginList);
@@ -105,7 +104,7 @@ void TupPluginSelector::selectedPluginItem(QListWidgetItem *item)
     int pluginIndex = pluginList->currentRow();
     if (pluginIndex != -1) {
         currentPlugin = plugins.at(pluginIndex);
-        emit selectedPlugin(currentPlugin);
+        emit pluginSelected(currentPlugin);
         emit completed();
     }
 }
@@ -119,16 +118,16 @@ void TupPluginSelector::selectFirstPlugin()
     if (pluginList->item(0)) {
         pluginList->item(0)->setSelected(true);
         currentPlugin = plugins.at(0);
-        emit selectedPlugin(plugins.at(0));
+        emit pluginSelected(plugins.at(0));
         emit completed();
     }
 }
 
 void TupPluginSelector::selectedFormatItem(QListWidgetItem *item)
 {
-    Q_UNUSED(item)
     #ifdef TUP_DEBUG
-        qDebug() << "[TupPluginSelector::selectedFormatItem()]";
+        qDebug() << "[TupPluginSelector::selectedFormatItem()] - item->text() ->" << item->text();
+        qDebug() << "[TupPluginSelector::selectedFormatItem()] - currentPlugin ->" << currentPlugin;
     #endif
 
     int formatIndex = formatList->currentRow();

@@ -63,8 +63,9 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                                  TupProject *project, bool waterMark)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[ImagePlugin::exportToFormat()]";
-        qWarning() << "Size -> " << size;
+        qDebug() << "[ImagePlugin::exportToFormat()] - size ->" << size;
+        qDebug() << "[ImagePlugin::exportToFormat()] - scenes.size() ->" << scenes.size();
+        qDebug() << "[ImagePlugin::exportToFormat()] - format ->" << format;
     #endif
 
     Q_UNUSED(fps)
@@ -99,6 +100,9 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                  extension = "SVG";
                  break;
             default:
+                 #ifdef TUP_DEBUG
+                     qDebug() << "[ImagePlugin::exportToFormat()] - Warning: Image format is unknown ->" << format;
+                 #endif
                  imageFormat = QImage::Format_RGB32;
                  break;
     }
@@ -143,7 +147,7 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
                 painter.setRenderHint(QPainter::Antialiasing, true);
                 renderer.render(&painter); // Frame render is created here
                 painter.end();
-            } else {
+            } else { // Exporting JPG/PNG
                 QImage image(size, imageFormat);
                 image.fill(background);
 
@@ -155,11 +159,16 @@ bool ImagePlugin::exportToFormat(const QColor bgColor, const QString &filePath, 
 
                 if (size != newSize)
                     image = image.QImage::scaled(newSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                image.save(fileInfo.absolutePath() + "/"
-                           + QString(m_baseName + "%1.%2").arg(index, QString(extension).toLower()), extension, 100);
+
+                QString imgPath = fileInfo.absolutePath() + "/"
+                                  + QString(m_baseName + "%1.%2").arg(index, QString(extension).toLower());
+                #ifdef TUP_DEBUG
+                    qDebug() << "[ImagePlugin::exportToFormat()] - Saving image at ->" << imgPath;
+                #endif
+                image.save(imgPath, extension, 100);
             }
             #ifdef TUP_DEBUG
-                qDebug() << "ImagePlugin::exportToFormat() - Rendering frame -> " << QString::number(photogram);
+                qDebug() << "[ImagePlugin::exportToFormat()] - Rendering frame ->" << photogram;
             #endif
             photogram++;
 
@@ -175,8 +184,7 @@ bool ImagePlugin::exportFrame(int frameIndex, const QColor color, const QString 
                               const QSize &size, TupProject *project, bool waterMark)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[ImagePlugin::exportToFrame()]";
-        qWarning() << "Size: " << size;
+        qDebug() << "[ImagePlugin::exportToFrame()] - size ->" << size;
     #endif
 
     bool result = false;

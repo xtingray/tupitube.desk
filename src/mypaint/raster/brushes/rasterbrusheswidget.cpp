@@ -51,7 +51,7 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
        qDebug() << "[RasterBrushesWidget()]";
     #endif
 
-    setWindowTitle(tr("Brush Properties"));
+    setWindowTitle(tr("Brush Texture"));
     setWindowIcon(QIcon(THEME_DIR + "icons/brush.png"));
 
     TCONFIG->beginGroup("Raster");
@@ -198,18 +198,41 @@ RasterBrushesWidget::~RasterBrushesWidget()
 
 void RasterBrushesWidget::loadInitSettings()
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "[RasterBrushesWidget::loadInitSettings()] - groupIndex ->" << groupIndex;
+    #endif
+
     // Setting latest parameters
-    buttonsList.at(groupIndex)->setChecked(true);
-    stackedWidget->setCurrentIndex(groupIndex);
-    const QStringList subList = brushLib.value(buttonsList.at(groupIndex)->getLabel());
+    if ((groupIndex > -1) && (groupIndex < buttonsList.size())) {
+        buttonsList.at(groupIndex)->setChecked(true);
+        stackedWidget->setCurrentIndex(groupIndex);
+        QString brushLabel = buttonsList.at(groupIndex)->getLabel();
+        if (!brushLabel.isEmpty()) {
+            const QStringList subList = brushLib.value(brushLabel);
 
-    /*
-    qDebug() << "--> List Size: " << subList.size();
-    qDebug() << "--> Group Index: " << groupIndex;
-    qDebug() << "--> Brush Index: " << brushIndex;
-    */
+            #ifdef TUP_DEBUG
+                qDebug() << "  Brush Label ->" << brushLabel;
+                qDebug() << "  Brushes List Size ->" << subList.size();
+                qDebug() << "  Brush Index ->" << brushIndex;
+            #endif
 
-    selectBrush(subList.at(brushIndex));
+            if ((brushIndex > -1) && (brushIndex < subList.size())) {
+                selectBrush(subList.at(brushIndex));
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[RasterBrushesWidget::loadInitSettings()] - Fatal Error: Invalid brushIndex ->" << brushIndex;
+                #endif
+            }
+        } else {
+            #ifdef TUP_DEBUG
+                qDebug() << "[RasterBrushesWidget::loadInitSettings()] - Fatal Error: brushLabel is NULL!";
+            #endif
+        }
+    } else {
+        #ifdef TUP_DEBUG
+            qDebug() << "[RasterBrushesWidget::loadInitSettings()] - Fatal Error: Invalid groupIndex ->" << groupIndex;
+        #endif
+    }
 }
 
 void RasterBrushesWidget::itemClicked(QListWidgetItem *item)

@@ -133,7 +133,7 @@ void RasterCanvas::loadBrush(const QByteArray &content)
 
     float size = MPHandler::handler()->getBrushValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC);
     MPHandler::handler()->loadBrush(content);
-    qWarning() << "RasterCanvas::loadBrush() - BRUSH SIZE ->" << size;
+    qWarning() << "[RasterCanvas::loadBrush()] - BRUSH SIZE ->" << size;
 }
 
 void RasterCanvas::tabletEvent(QTabletEvent *event)
@@ -247,7 +247,7 @@ void RasterCanvas::clearCanvas()
 void RasterCanvas::saveToFile(QString filePath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvas::saveToFile() - filePath: " << filePath;
+        qDebug() << "[RasterCanvas::saveToFile()] - filePath ->" << filePath;
     #endif
 
     QImage image = myPaintCanvas->renderImage(canvasSize);
@@ -257,7 +257,7 @@ void RasterCanvas::saveToFile(QString filePath)
 void RasterCanvas::loadFromFile(QString filePath)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "RasterCanvas::loadFromFile() - Tracing...";
+        qDebug() << "[RasterCanvas::loadFromFile()]";
     #endif
 
     // Clear the surface
@@ -269,50 +269,54 @@ void RasterCanvas::loadFromFile(QString filePath)
         myPaintCanvas->loadImage(image);
     } else {
         #ifdef TUP_DEBUG
-            qDebug() << "RasterCanvas::loadFromFile() - Fatal Error: Can't load image at path: " << filePath;
+            qDebug() << "[RasterCanvas::loadFromFile()] - Fatal Error: Can't load image at path ->" << filePath;
         #endif
     }
 }
 
 void RasterCanvas::updateCursor(const QTabletEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::updateCursor()]";
+    #endif
+
     QCursor cursor;
     if (event->type() != QEvent::TabletLeaveProximity) {
         if (event->pointerType() == QTabletEvent::Eraser) {
             cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-eraser.png"), 3, 28);
         } else {
-#ifdef TUP_32BIT
+        #ifdef TUP_32BIT
             switch (event->device()) {
-#else
+        #else
             switch (event->deviceType()) {
-#endif
-            case QTabletEvent::Stylus:
-                cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-pencil.png"), 0, 0);
-                break;
-            case QTabletEvent::Airbrush:
-                cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-airbrush.png"), 3, 4);
-                break;
-            case QTabletEvent::RotationStylus: {
-                QImage origImg(RASTER_RESOURCES_DIR + "resources/cursor-felt-marker.png");
-                QImage img(32, 32, QImage::Format_ARGB32);
-                QColor solid = color;
-                solid.setAlpha(255);
-                img.fill(solid);
+        #endif
+                case QTabletEvent::Stylus:
+                    cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-pencil.png"), 0, 0);
+                    break;
+                case QTabletEvent::Airbrush:
+                    cursor = QCursor(QPixmap(RASTER_RESOURCES_DIR + "resources/cursor-airbrush.png"), 3, 4);
+                    break;
+                case QTabletEvent::RotationStylus: {
+                    QImage origImg(RASTER_RESOURCES_DIR + "resources/cursor-felt-marker.png");
+                    QImage img(32, 32, QImage::Format_ARGB32);
+                    QColor solid = color;
+                    solid.setAlpha(255);
+                    img.fill(solid);
 
-                QPainter painter(&img);
-                QTransform transform = painter.transform();
-                transform.translate(16, 16);
-                transform.rotate(-event->rotation());
-                painter.setTransform(transform);
-                painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-                painter.drawImage(-24, -24, origImg);
-                painter.setCompositionMode(QPainter::CompositionMode_HardLight);
-                painter.drawImage(-24, -24, origImg);
-                painter.end();
-                cursor = QCursor(QPixmap::fromImage(img), 16, 16);
-            } break;
-            default:
-                break;
+                    QPainter painter(&img);
+                    QTransform transform = painter.transform();
+                    transform.translate(16, 16);
+                    transform.rotate(-event->rotation());
+                    painter.setTransform(transform);
+                    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+                    painter.drawImage(-24, -24, origImg);
+                    painter.setCompositionMode(QPainter::CompositionMode_HardLight);
+                    painter.drawImage(-24, -24, origImg);
+                    painter.end();
+                    cursor = QCursor(QPixmap::fromImage(img), 16, 16);
+                } break;
+                default:
+                    break;
             }
         }
     }

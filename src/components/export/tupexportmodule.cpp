@@ -48,9 +48,10 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
                                  m_currentFormat(TupExportInterface::NONE), m_project(project)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExportModule::TupExportModule()] - title -> " << title;
+        qDebug() << "[TupExportModule::TupExportModule()] - title ->" << title;
     #endif
 
+    outputFormat = output;
     transparency = false;
     browserWasOpened = false;
 
@@ -79,8 +80,8 @@ TupExportModule::TupExportModule(TupProject *project, OutputFormat output,
 
     QString prefix = m_project->getName() + "_img";
     m_prefix = new QLineEdit(prefix);
-    m_filePath = new QLineEdit;
 
+    m_filePath = new QLineEdit;
     connect(m_filePath, SIGNAL(textChanged(const QString &)), this, SLOT(updateState(const QString &)));
 
     if (output == ImagesArray)
@@ -163,13 +164,44 @@ bool TupExportModule::isComplete() const
     return !m_filePath->text().isEmpty();
 }
 
-void TupExportModule::reset()
+void TupExportModule::resetUI()
 {
 }
 
 void TupExportModule::setScenesIndexes(const QList<int> &indexes)
 {
-    m_indexes = indexes;
+    m_indexes = indexes;    
+    scenes = scenesToExport();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportModule::setScenesIndexes()] - Scenes total ->" << scenes.count();
+    #endif
+    fps = scenes.first()->getFPS();
+
+    if (outputFormat == Animation) {
+        double duration = calculateProjectDuration(scenes, fps);
+        if (duration < 3) { // Duration is too short to be played
+            #ifdef TUP_DEBUG
+                qWarning() << "[TupExportModule::setScenesIndexes()] - Fatal Error: The project duration is too short. Aborting export action!";
+                qWarning() << "[TupExportModule::setScenesIndexes()] - duration ->" << duration;
+            #endif
+
+            QMessageBox msgBox;
+            msgBox.setStyleSheet(TAppTheme::themeSettings());
+            msgBox.setWindowTitle(tr("Can't export project"));
+            msgBox.setIcon(QMessageBox::Critical);
+            msgBox.setTextFormat(Qt::RichText);
+            msgBox.setText(tr("The duration of the project is too short to generate an accurate MP4 file.\n"
+                              "Please, try to export the scene several times to extend the animation duration\n"
+                              "until reaches at least 3 seconds."));
+            msgBox.addButton(QString(tr("Ok")), QMessageBox::AcceptRole);
+            msgBox.show();
+
+            if (msgBox.exec() == QMessageBox::AcceptRole) {
+                TOsd::self()->display(TOsd::Error, tr("Sorry, export attempt failed!"));
+                emit isDone();
+            }
+        }
+    }
 }
 
 void TupExportModule::setCurrentExporter(TupExportInterface *currentExporter)
@@ -183,14 +215,18 @@ void TupExportModule::setCurrentExporter(TupExportInterface *currentExporter)
 
 void TupExportModule::setCurrentFormat(TupExportInterface::Format format, const QString &value)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportModule::setCurrentFormat()] - current format ->" << format;
+        qDebug() << "[TupExportModule::setCurrentFormat()] - extension ->" << extension;
+    #endif
+
     m_currentFormat = format;
     extension = value;
     filename = path;
     filename = QDir::fromNativeSeparators(filename);
 
     // Animated Image or Animation
-    if (m_currentFormat == TupExportInterface::APNG || (m_currentFormat != TupExportInterface::PNG 
-        && m_currentFormat != TupExportInterface::JPEG && m_currentFormat != TupExportInterface::SVG)) {
+    if (outputFormat == Animation) {
         if (!filename.endsWith("/"))
             filename += "/";
 
@@ -204,7 +240,7 @@ void TupExportModule::setCurrentFormat(TupExportInterface::Format format, const 
             if (!bgTransparency->isVisible())
                 bgTransparency->setVisible(true);
         }
-    } 
+    }
 
     m_filePath->setText(filename);
 }
@@ -228,7 +264,6 @@ void TupExportModule::chooseFile()
 
     filename = QFileDialog::getSaveFileName(this, tr("Export video as..."), path,
                                             tr("Video File") + " (*" + extension.toLocal8Bit() + ")");
-
     if (!filename.isEmpty()) {
         browserWasOpened = true;
         QString lower = filename.toLower();
@@ -276,7 +311,7 @@ void TupExportModule::updateState(const QString &name)
 void TupExportModule::exportIt()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExportModule::exportIt()]";
+        qDebug() << "[TupExportModule::exportIt()] - current format ->" << m_currentFormat;
     #endif
 
     bool done = false; 
@@ -286,7 +321,7 @@ void TupExportModule::exportIt()
     QList<TupExportInterface::Format> imageFormats;
     imageFormats << TupExportInterface::JPEG << TupExportInterface::PNG << TupExportInterface::SVG;
 
-    if (imageFormats.contains(m_currentFormat)) {
+    if (outputFormat == ImagesArray) {
         isArray = true;
         name = m_prefix->text();
         path = m_filePath->text();
@@ -325,7 +360,7 @@ void TupExportModule::exportIt()
         if (filename.length() == 0) {
             TOsd::self()->display(TOsd::Error, tr("Animation path is unset! Please, choose one."));
             #ifdef TUP_DEBUG
-                qDebug() << "TupExportModule::exportIt() - [Tracer 01] Fatal Error: Animation path is unset! -> "
+                qDebug() << "[TupExportModule::exportIt()] - [Tracer 01] Fatal Error: Animation path is unset! ->"
                          << path.toLocal8Bit();
             #endif
             return;
@@ -354,7 +389,7 @@ void TupExportModule::exportIt()
             if (QFile::exists(filename)) {
                 QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(this, tr("Warning!"),
-                                              tr("File exists. Overwrite it?"),
+                                              tr("Video file exists. Overwrite it?"),
                                               QMessageBox::Yes | QMessageBox::No);
 
                 if (reply == QMessageBox::No)
@@ -363,7 +398,7 @@ void TupExportModule::exportIt()
         }
     }
 
-    if (imageFormats.contains(m_currentFormat)) {
+    if (outputFormat == ImagesArray) {
         QFileInfo dir(path);
         if (!dir.isReadable() || !dir.isWritable()) {
             TOsd::self()->display(TOsd::Error, tr("Insufficient permissions. Please, choose another directory."));
@@ -386,17 +421,17 @@ void TupExportModule::exportIt()
 
     if (m_currentExporter) {
         #ifdef TUP_DEBUG
-            qWarning() << "TupExportModule::exportIt() -  Exporting to file: " << path.toLocal8Bit();
+            qWarning() << "[TupExportModule::exportIt()] -  Exporting to file ->" << path.toLocal8Bit();
         #endif
 
-        QList<TupScene *> scenes = scenesToExport();
+        if (outputFormat == ImagesArray)
+            scenes = scenesToExport();
 
         #ifdef TUP_DEBUG
-            qWarning() << "TupExportModule::exportIt() - Exporting " << scenes.count() << " scenes";
+            qWarning() << "[TupExportModule::exportIt()] - Exporting " << scenes.count() << " scenes";
         #endif
 
         if (scenes.count() > 0) {
-            int fps = scenes.at(0)->getFPS();
             int width = dimension.width();
             int height = dimension.height();
             // libav requirement: resolution must be a multiple of two
@@ -436,7 +471,7 @@ void TupExportModule::exportIt()
         if (m_currentExporter) {
             QString msg = m_currentExporter->getExceptionMsg();
             #ifdef TUP_DEBUG
-                qWarning() << "[TupExportModule::exportIt()] -  Error Message: " << msg;
+                qWarning() << "[TupExportModule::exportIt()] -  Error Message ->" << msg;
             #endif
 
             QMessageBox msgBox;
@@ -449,7 +484,7 @@ void TupExportModule::exportIt()
             msgBox.show();
 
             if (msgBox.exec() == QMessageBox::AcceptRole) {
-                msg = tr("Sorry, export attempt failed!");
+                msg = tr("Sorry, animation is too short!");
                 TOsd::self()->display(TOsd::Error, tr(msg.toLocal8Bit()));
                 emit isDone();
             }
@@ -464,6 +499,20 @@ QList<TupScene *> TupExportModule::scenesToExport() const
         scenes << m_project->sceneAt(index);
 
     return scenes;
+}
+
+double TupExportModule::calculateProjectDuration(const QList<TupScene *> &scenes, int fps)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportModule::calculateProjectDuration()] - fps ->" << fps;
+        qDebug() << "[TupExportModule::calculateProjectDuration()] - scenes.size() ->" << scenes.size();
+    #endif
+
+    double durationInSeconds = 0;
+    foreach (TupScene *scene, scenes)
+        durationInSeconds += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
+
+    return durationInSeconds;
 }
 
 void TupExportModule::updateProgressMessage(const QString &title)

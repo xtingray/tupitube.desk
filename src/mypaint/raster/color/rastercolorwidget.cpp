@@ -59,7 +59,7 @@ RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgC
         qDebug() << "[RasterColorWidget()] - contourColor.alpha() ->" << contourColor.alpha();
     #endif
 
-    setWindowTitle(tr("Color Palette"));
+    setWindowTitle(tr("Brush Color"));
     setWindowIcon(QPixmap(THEME_DIR + "icons/color_palette.png"));
 
     currentSpace = TColorCell::Contour;

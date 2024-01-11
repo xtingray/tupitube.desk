@@ -42,6 +42,7 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     TCONFIG->sync();
 
     #ifdef TUP_DEBUG
+        qDebug() << "---";
         qDebug() << "[RasterMainWindow::RasterMainWindow()] - projectSize ->" << projectSize;
         qDebug() << "[RasterMainWindow::RasterMainWindow()] - zoomFactor ->" << zoomFactor;
         qDebug() << "[RasterMainWindow::RasterMainWindow()] - contourColor ->" << contourColor;
@@ -57,13 +58,16 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
             this, SLOT(processColorEvent(const TupPaintAreaEvent *)));
 
     colorView = addToolView(colorWidget, Qt::LeftDockWidgetArea, Raster, "Brush Color", QKeySequence(tr("Shift+C")));
+    colorView->expandDock(false);
 
     brushesWidget = new RasterBrushesWidget(RASTER_RESOURCES_DIR + "brushes");
     connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
     sizeWidget = new RasterSizeWidget();
+    sizeWidget->init(20);
     sizeView = addToolView(sizeWidget, Qt::LeftDockWidgetArea, Raster, "Brush Size", QKeySequence(tr("Shift+S")));
+    sizeView->expandDock(false);
 
     brushesView = addToolView(brushesWidget, Qt::LeftDockWidgetArea, Raster, "Brushes", QKeySequence(tr("Shift+B")));
     brushesView->expandDock(true);

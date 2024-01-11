@@ -79,14 +79,15 @@ class TUPITUBE_EXPORT TupExportWizard : public QDialog
 
     signals:
         void cancelled();
-        void updateScenes();
-        void exportAnimation();
-        void exportAnimatedImage();
+        void pluginSelected();
+        void scenesUpdated();
+        void animationExported();
+        void animatedImageExported();
         void postProcedureCalled();
-        void exportImagesArray();
-        void setAnimationFileName();
-        void setAnimatedImageFileName();
-        void setImagesArrayFileName();
+        void imagesArrayExported();
+        void animationFileNameChanged();
+        void animatedImageFileNameChanged();
+        void imagesArrayFileNameChanged();
 
         void isDone();
 
@@ -115,7 +116,7 @@ class TUPITUBE_EXPORT TupExportWizardPage : public TVHBox
         virtual ~TupExportWizardPage();
 
         virtual bool isComplete() const = 0;
-        virtual void reset() = 0;
+        virtual void resetUI() = 0;
 
         void setTitle(const QString &title);
         void setPixmap(const QPixmap &pixmap);

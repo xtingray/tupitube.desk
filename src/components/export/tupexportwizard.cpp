@@ -154,25 +154,35 @@ void TupExportWizard::back()
 
 void TupExportWizard::next()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupExportWizard::next()]";
+    #endif
+
     TupExportWizardPage *current = qobject_cast<TupExportWizardPage *>(history->currentWidget());
 
     if (current) {
         current->aboutToNextPage();
 
         QString tag = current->getTag();
-        if (tag.compare("PLUGIN") == 0) {
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupExportWizard::next()] - tag ->" << tag;
+        #endif
+
+        if (tag.compare("PLUGIN") == 0) {                
             backButton->setEnabled(true);
             history->setCurrentIndex(history->currentIndex()+1);
+            emit pluginSelected();
         }
 
         if (tag.compare("ANIMATION") == 0)
-            emit exportAnimation();
+            emit animationExported();
 
         if (tag.compare("ANIMATED_IMAGE") == 0)
-            emit exportAnimatedImage();
+            emit animatedImageExported();
 
         if (tag.compare("IMAGES_ARRAY") == 0)
-            emit exportImagesArray();
+            emit imagesArrayExported();
 
         if (tag.compare("PROPERTIES") == 0) {
             current->setTitle(tr("Uploading Source File"));
@@ -184,14 +194,14 @@ void TupExportWizard::next()
             backButton->setEnabled(true);
 
             if (formatCode == TupExportInterface::APNG) { // ANIMATED PNG
-                emit setAnimatedImageFileName();
+                emit animatedImageFileNameChanged();
                 history->setCurrentIndex(history->currentIndex() + 3);
             } else if (formatCode == TupExportInterface::JPEG || formatCode == TupExportInterface::PNG
                        || formatCode == TupExportInterface::SVG) { // Images Array
-                emit setImagesArrayFileName();
+                emit imagesArrayFileNameChanged();
                 history->setCurrentIndex(history->currentIndex() + 2);
             } else { // ANIMATION
-                emit setAnimationFileName();
+                emit animationFileNameChanged();
                 history->setCurrentIndex(history->currentIndex() + 1);
             }
         }
@@ -220,7 +230,7 @@ void TupExportWizard::pageCompleted()
     }
 
     if (history->currentIndex() == 1)
-        emit updateScenes();
+        emit scenesUpdated();
 }
 
 void TupExportWizard::disableNextButton()
