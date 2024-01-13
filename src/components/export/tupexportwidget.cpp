@@ -56,7 +56,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
             addPage(pluginPage);
 
             scenesPage = new TupSceneSelector();
-            scenesPage->setScenes(work->getScenes());
+            scenesPage->setScenes(work->getScenes(), work->getFPS());
             connect(this, SIGNAL(scenesUpdated()), scenesPage, SLOT(updateScenesList()));
             addPage(scenesPage);
 
@@ -117,7 +117,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
             setWindowIcon(QIcon(THEME_DIR + "icons/social_network.png"));
 
             scenesPage = new TupSceneSelector();
-            scenesPage->setScenes(work->getScenes());
+            scenesPage->setScenes(work->getScenes(), work->getFPS());
             connect(this, SIGNAL(scenesUpdated()), scenesPage, SLOT(updateScenesList()));
             addPage(scenesPage);
 
@@ -216,8 +216,12 @@ void TupExportWidget::setExporter(TupExportInterface::Plugin plugin)
             currentPlugin = plugin;
             if (plugin == TupExportInterface::VideoFormats) {
                 animationExport->setCurrentExporter(currentExporter);
+                setWindowTitle(tr("Export To Video"));
+                scenesPage->setFormatType(Animation);
             } else if (plugin == TupExportInterface::ImageSequence) {
                 imagesArrayExport->setCurrentExporter(currentExporter);
+                setWindowTitle(tr("Export To Image Sequence"));
+                scenesPage->setFormatType(ImageSequence);
             }
         }
     } else {
@@ -278,12 +282,12 @@ void TupExportWidget::updateWidgetConnections()
         connect(this, SIGNAL(animationFileNameChanged()), animationExport, SLOT(updateNameField()));
         connect(animationExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
         connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                animationExport, SLOT(setScenesIndexes(const QList<int> &)));
+                animationExport, SLOT(setScenesIndexes(const QList<int> &)));        
     } else if (currentPlugin == TupExportInterface::ImageSequence) {
         connect(this, SIGNAL(imagesArrayExported()), imagesArrayExport, SLOT(exportIt()));
         connect(this, SIGNAL(imagesArrayFileNameChanged()), imagesArrayExport, SLOT(updateNameField()));
         connect(imagesArrayExport, SIGNAL(exportHasStarted()), this, SLOT(updateWindowTitle()));
         connect(scenesPage, SIGNAL(selectedScenes(const QList<int> &)),
-                imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));
+                imagesArrayExport, SLOT(setScenesIndexes(const QList<int> &)));        
     }
 }

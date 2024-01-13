@@ -44,10 +44,12 @@
 TItemSelector::TItemSelector(const QString &topLabel, const QString &bottomLabel,
                              QWidget *parent) : QWidget(parent)
 {
+    QVBoxLayout *layout = new QVBoxLayout;
+
     available = new QListWidget;
 
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(available);
+    QHBoxLayout *selectionLayout = new QHBoxLayout;
+    selectionLayout->addWidget(available);
 
     QVBoxLayout *controlBox = new QVBoxLayout;
     controlBox->setSpacing(0);
@@ -70,10 +72,16 @@ TItemSelector::TItemSelector(const QString &topLabel, const QString &bottomLabel
     controlBox->addWidget(previousButton);
     controlBox->addStretch();
 
-    layout->addLayout(controlBox);
+    selectionLayout->addLayout(controlBox);
 
     selected = new QListWidget;
-    layout->addWidget(selected);
+    selectionLayout->addWidget(selected);
+
+    durationLabel = new QLabel();
+    durationLabel->setAlignment(Qt::AlignCenter);
+    layout->addWidget(durationLabel);
+
+    layout->addLayout(selectionLayout);
 
     setLayout(layout);
 }
@@ -195,4 +203,15 @@ void TItemSelector::reset()
 {
     selected->clear();
     emit changed();
+}
+
+void TItemSelector::setDurationLabelVisible(bool visible)
+{
+    durationLabel->setVisible(visible);
+}
+
+void TItemSelector::updateDurationLabel(const QString &duration)
+{
+    QString label = "<b>" + tr("Duration:") + "</b>" + " " + duration + " " + tr("secs");
+    durationLabel->setText(label);
 }

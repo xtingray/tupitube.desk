@@ -61,35 +61,63 @@ void TupSceneSelector::resetUI()
 {
 }
 
-void TupSceneSelector::setScenes(const QList<TupScene *> &scenes)
+void TupSceneSelector::setFormatType(ExportOutputFormat exportFormat)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSceneSelector::setFormatType()]";
+    #endif
+
+    format = exportFormat;
+    bool visible = false;
+    if (format == Animation)
+        visible = true;
+
+    setDurationLabelVisible(visible);
+}
+
+void TupSceneSelector::setScenes(const QList<TupScene *> &scenesList, int fps)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupSceneSelector::setScenes()]";
     #endif
 
+    scenes = scenesList;
     m_selector->clear();
+    duration = 0;
 
     if (scenes.count() > 1) {
         int pos = 1;
         foreach (TupScene *scene, scenes) {
-                 #ifdef TUP_DEBUG
-                      qWarning() << "[TupSceneSelector::setScenes()] - Adding scene ->" << scene->getSceneName();
-                 #endif
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupSceneSelector::setScenes()] - Adding scene ->" << scene->getSceneName();
+            #endif
 
-                 m_selector->addItem(QString("%1: ").arg(pos) + scene->getSceneName());
-                 pos++;
+            sceneDuration << static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
+            m_selector->addItem(QString("%1: ").arg(pos) + scene->getSceneName());
+            pos++;
         }
 
-        #ifdef TUP_DEBUG
-            qWarning() << "[TupSceneSelector::setScenes() - Available Scenes ->" << (pos - 1);
-        #endif
-
         m_selector->selectFirstItem();
+        duration = static_cast<double>(scenes.first()->framesCount()) / static_cast<double>(fps);
+
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSceneSelector::setScenes()] - Available scenes ->" << (pos - 1);
+            qDebug() << "[TupSceneSelector::setScenes()] - Scene duration ->" << duration;
+        #endif
     } else {
         TupScene *scene = scenes.first();
         m_selector->addItem(QString("1: ") + scene->getSceneName());
         m_selector->addSelectedItem(QString("1: ") + scene->getSceneName());
+
+        duration = static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
+        sceneDuration << duration;
     }
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSceneSelector::setScenes()] - Scene duration ->" << duration;
+    #endif
+
+    m_selector->updateDurationLabel(QString::number(duration));
 }
 
 void TupSceneSelector::aboutToNextPage()
@@ -99,5 +127,31 @@ void TupSceneSelector::aboutToNextPage()
 
 void TupSceneSelector::updateState()
 {
+    QList<int> indexes = m_selector->selectedIndexes();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSceneSelector::updateState()] - selected indexes ->" << indexes;
+    #endif
+
+    if (format == Animation) {
+        duration = 0;
+        foreach(int index, indexes)
+            duration += sceneDuration.at(index);
+
+        m_selector->updateDurationLabel(QString::number(duration));
+    }
+
     emit completed();
+}
+
+void TupSceneSelector::updateScenesList()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupSceneSelector::updateScenesList()] - duration ->" << duration;
+    #endif
+}
+
+void TupSceneSelector::setDurationLabelVisible(bool visible)
+{
+    m_selector->setDurationLabelVisible(visible);
 }

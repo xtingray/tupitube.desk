@@ -43,6 +43,7 @@
 
 #include <QWidget>
 #include <QListWidget>
+#include <QLabel>
 
 class T_GUI_EXPORT TItemSelector : public QWidget
 {
@@ -64,7 +65,10 @@ class T_GUI_EXPORT TItemSelector : public QWidget
         void clear();
         void reset();
         void selectFirstItem();
-        
+
+        void setDurationLabelVisible(bool visible);
+        void updateDurationLabel(const QString &duration);
+
     private slots:
         void addCurrent();
         void removeCurrent();
@@ -75,6 +79,7 @@ class T_GUI_EXPORT TItemSelector : public QWidget
         void changed();
         
     private:
+        QLabel *durationLabel;
         QListWidget *available;
         QListWidget *selected;
 };

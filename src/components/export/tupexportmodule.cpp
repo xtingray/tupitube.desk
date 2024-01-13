@@ -190,7 +190,7 @@ void TupExportModule::setScenesIndexes(const QList<int> &indexes)
             msgBox.setWindowTitle(tr("Can't export project"));
             msgBox.setIcon(QMessageBox::Critical);
             msgBox.setTextFormat(Qt::RichText);
-            msgBox.setText(tr("The duration of the project is too short to generate an accurate MP4 file.\n"
+            msgBox.setText(tr("The duration of the project is TOO SHORT to generate an accurate MP4 file.\n"
                               "Please, try to export the scene several times to extend the animation duration\n"
                               "until reaches at least 3 seconds."));
             msgBox.addButton(QString(tr("Ok")), QMessageBox::AcceptRole);

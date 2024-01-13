@@ -159,4 +159,6 @@ enum NodePosition { TopLeftNode  = 0, TopRightNode, BottomLeftNode, BottomRightN
 enum NodeAction { NoAction = 0, NodeScale, NodeRotate };
 enum NodeType { CurveNode = 0, LineNode };
 
+enum ExportOutputFormat { Animation = 0, ImageSequence, AnimatedImage };
+
 #endif

@@ -53,7 +53,6 @@ class TUPITUBE_EXPORT TupExportWidget : public TupExportWizard
 
     public:
         enum ExportType { Local, Scene, Frame };
-        enum OutputFormat { Animation = 0, ImagesArray, AnimatedImage };
         TupExportWidget(TupProject *project, QWidget *parent = nullptr, ExportType type = Local);
         ~TupExportWidget();
 

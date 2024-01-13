@@ -52,17 +52,25 @@ class TUPITUBE_EXPORT TupSceneSelector : public TupExportWizardPage
         bool isComplete() const;
         void resetUI();
 
-        void setScenes(const QList<TupScene *> &scenes);
+        void setScenes(const QList<TupScene *> &scenes, int fps);
         void aboutToNextPage();
+
+        void setFormatType(ExportOutputFormat exportFormat);
+        void setDurationLabelVisible(bool visible);
 
     private slots:
         void updateState();
+        void updateScenesList();
 
     signals:
         void selectedScenes(const QList<int> &scenes);
 
     private:
+        ExportOutputFormat format;
         TItemSelector *m_selector;
+        QList<TupScene *> scenes;
+        QList<double> sceneDuration;
+        double duration;
 };
 
 #endif
