@@ -55,7 +55,7 @@ class TUPITUBE_EXPORT RasterColorWidget : public TupModuleWidgetBase
     public:
         enum BrushType { Solid = 0, Gradient };
 
-        RasterColorWidget(const QColor contourColor, const QColor bgColor, QWidget *parent = nullptr);
+        RasterColorWidget(const QPen &pen, const QColor bgColor, QWidget *parent = nullptr);
         ~RasterColorWidget();
 
         // SQA: change this for QBrush
@@ -84,6 +84,7 @@ class TUPITUBE_EXPORT RasterColorWidget : public TupModuleWidgetBase
     signals:
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
         void colorSpaceChanged(TColorCell::FillType type);
+        void colorChanged(QColor color);
 
     private:
         void setupButtons();

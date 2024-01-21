@@ -79,6 +79,9 @@ class Q_DECL_EXPORT MPHandler : public QObject
         void redo();
         void saveTiles();
 
+        MPBrush* currentBrush();
+        QByteArray currentBrushData();
+
     public slots:
         void loadBrush(const QByteArray &content);
 

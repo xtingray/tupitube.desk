@@ -42,7 +42,7 @@ void MPBrush::initBrush()
     setValue(MYPAINT_BRUSH_SETTING_COLOR_V, 0);
     setValue(MYPAINT_BRUSH_SETTING_SNAP_TO_PIXEL, 0.0);
     setValue(MYPAINT_BRUSH_SETTING_ANTI_ALIASING, 1.0);
-    setValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC, static_cast<float>(0.3));
+    // setValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC, static_cast<float>(0.3));
     // setValue(MYPAINT_BRUSH_SETTING_STROKE_DURATION_LOGARITHMIC, 4.0);
     // setValue(MYPAINT_BRUSH_SETTING_SPEED2_SLOWNESS, 0.8);
     // setValue(MYPAINT_BRUSH_SETTING_SPEED2_GAMMA, 10);
@@ -58,6 +58,7 @@ void MPBrush::initBrush()
 
 void MPBrush::load(const QByteArray &content)
 {
+    brushData = content;
     mypaint_brush_from_defaults(brush);
 
     if (!mypaint_brush_from_string(brush, content.constData())) {
@@ -65,6 +66,7 @@ void MPBrush::load(const QByteArray &content)
         qDebug("Trouble when reading the selected brush !");
     }
     setColor(color);
+    // setValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC, 0.6);
 }
 
 QColor MPBrush::getColor()
@@ -98,3 +100,9 @@ void MPBrush::setValue(MyPaintBrushSetting setting, float value)
 {
     mypaint_brush_set_base_value(brush, setting, value);
 }
+
+QByteArray MPBrush::getBrushData()
+{
+    return brushData;
+}
+

@@ -33,51 +33,64 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef RASTERBRUSHESWIDGET_H
-#define RASTERBRUSHESWIDGET_H
+#include "tspinboxcontrol.h"
 
-#include "tglobal.h"
-#include "tupmodulewidgetbase.h"
-#include "tconfig.h"
-#include "tuppaintareaevent.h"
-#include "rasterbutton.h"
-
-#include <QStackedWidget>
-#include <QListWidgetItem>
-
-class TUPITUBE_EXPORT RasterBrushesWidget : public TupModuleWidgetBase
+TSpinBoxControl::TSpinBoxControl(int value, int minValue, int maxValue, int step, QString text,
+                                 const char *name, QWidget *parent) : QGroupBox(parent)
 {
-    Q_OBJECT
+    setObjectName(name);
 
-    public:
-        RasterBrushesWidget(const QString &brushLibPath, QWidget *parent = nullptr);
-        ~RasterBrushesWidget();
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->setMargin(2);
+    layout->setSpacing(0);
 
-        void loadInitSettings();
-        bool isValid() { return !brushLib.isEmpty(); }
+    setTitle(text);
+    setLayout(layout);
 
-    public slots:
-        // Give the brush name (no extension) i.e. : "classic/blend+paint"
-        void selectBrush(QString brushName = QString());
-        void updateBrushesPanel(int index);
+    m_spin = new QSpinBox(this);
+    m_spin->setMinimum(minValue);
+    m_spin->setMaximum(maxValue);
+    m_spin->setSingleStep(step);
+    m_spin->setValue(value);
+    layout->addWidget(m_spin);
 
-    signals:
-        void brushSelected(const QByteArray &content);
+    m_slider = new QSlider (Qt::Horizontal, this);
+    m_slider->setMinimum(minValue);
+    m_slider->setMaximum(maxValue);
+    m_slider->setSingleStep(step);
+    
+    layout->addWidget(m_slider);
+    setupConnects();
+    setMinimumHeight(sizeHint().height());
+}
 
-    protected:
-        QMap<QString, QStringList> brushLib;
-        const QString brushesPath;
+TSpinBoxControl::~TSpinBoxControl()
+{
+}
 
-    protected slots:
-        void callBrushLoader(QListWidgetItem *);
+void TSpinBoxControl::setupConnects()
+{
+    QObject::connect(m_spin, SIGNAL(valueChanged(int)), m_slider, SLOT(setValue(int)));
+    QObject::connect(m_slider, SIGNAL(valueChanged(int)), m_spin, SLOT(setValue(int)));
+    QObject::connect(m_slider,  SIGNAL(valueChanged(int)),this, SIGNAL(valueChanged(int)));
+    QObject::connect(m_spin,  SIGNAL(valueChanged(int)),this, SIGNAL(valueChanged(int)));
+}
 
-    private:
-        QStackedWidget * stackedWidget;
-        QList<RasterButton *> buttonsList;
-        QList<QListWidget*> brushesSet;
+void TSpinBoxControl::setRange(int min, int max)
+{
+    m_spin->setMinimum(min);
+    m_spin->setMaximum(max);
+    m_slider->setMinimum(min);
+    m_slider->setMaximum(max);
+}
 
-        int groupIndex;
-        int brushIndex;
-};
+void TSpinBoxControl::setValue(int value)
+{
+    m_spin->setValue(value);
+    m_slider->setValue(value);
+}
 
-#endif
+int TSpinBoxControl::value()
+{
+    return m_slider->value();
+}

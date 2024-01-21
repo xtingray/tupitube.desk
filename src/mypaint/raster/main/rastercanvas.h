@@ -34,7 +34,7 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
     Q_OBJECT
 
     public:
-        RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent = nullptr);
+        RasterCanvas(TupProject *project, double brushSize, const QColor contourColor, QWidget *parent = nullptr);
         ~RasterCanvas();
 
         void setTabletDevice(QTabletEvent *event);
@@ -65,17 +65,19 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         void undo();
         void redo();
         void updateBrushColor(const QColor color);
-        void updateBrushSize(float size);
+        void setBrushSize(double size);
 
         void onNewTile(MPSurface *surface, MPTile *tile);
         void onUpdateTile(MPSurface *surface, MPTile *tile);
         void onClearedSurface(MPSurface *surface);
 
         void loadBrush(const QByteArray &content);
+        void loadBrush(const QByteArray &content, double brushSize);
 
     private:
         void centerDrawingArea();
         void updateCursor(const QTabletEvent *event);
+        QByteArray getBrushData(QJsonObject brush, double size);
 
         QGraphicsScene *gScene;
         QRectF drawingRect;
@@ -86,8 +88,8 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         bool tableInUse;
         MPHandler *myPaintCanvas;
 
-        // int counter;
         QSize canvasSize;
+        double brushSize;
 };
 
 #endif // RASTERCANVAS_H

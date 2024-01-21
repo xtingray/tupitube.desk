@@ -487,7 +487,7 @@ void TupColorPaletteWidget::setGlobalColors(const QBrush &brush)
 
             TupPaintAreaEvent event(TupPaintAreaEvent::ChangePenColor, brush.color());
             emit paintAreaEventTriggered(&event);
-        } else {
+        } else { // SQA: Check if this piece of code is actually required
             if (brush.color() == Qt::transparent) {
                 if (contourColorCell->color() == Qt::transparent) {
                     QBrush black(Qt::black);

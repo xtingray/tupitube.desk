@@ -29,7 +29,7 @@
 #include <QAction>
 
 RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context, int scene,
-                                   const QColor contourColor, const QString &zoomFactor, QWidget *parent): TMainWindow(winKey, parent)
+                                   const QPen &pen, const QString &zoomFactor, QWidget *parent): TMainWindow(winKey, parent)
 {
     spaceContext = context;
     sceneIndex = scene;
@@ -45,13 +45,19 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
         qDebug() << "---";
         qDebug() << "[RasterMainWindow::RasterMainWindow()] - projectSize ->" << projectSize;
         qDebug() << "[RasterMainWindow::RasterMainWindow()] - zoomFactor ->" << zoomFactor;
-        qDebug() << "[RasterMainWindow::RasterMainWindow()] - contourColor ->" << contourColor;
+        qDebug() << "[RasterMainWindow::RasterMainWindow()] - pen.color() ->" << pen.color();
     #endif
 
     createTopResources();
-    createCentralWidget(project, contourColor);
 
-    colorWidget = new RasterColorWidget(contourColor, project->getCurrentBgColor(), this);
+    TCONFIG->beginGroup("BrushParameters");
+    double thickness = TCONFIG->value("RasterThickness", 2).toDouble();
+    if (thickness > 5)
+        thickness = 2;
+
+    createCentralWidget(project, thickness, pen.color());
+
+    colorWidget = new RasterColorWidget(pen, project->getCurrentBgColor(), this);
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
             this, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)));
     connect(colorWidget, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
@@ -64,8 +70,10 @@ RasterMainWindow::RasterMainWindow(TupProject *project, const QString &winKey, T
     connect(brushesWidget, SIGNAL(brushSelected(const QByteArray&)),
             rasterCanvas, SLOT(loadBrush(const QByteArray&)));
 
-    sizeWidget = new RasterSizeWidget();
-    sizeWidget->init(20);
+    sizeWidget = new RasterSizeWidget(thickness, pen.color());
+    connect(sizeWidget, SIGNAL(brushSizeChanged(double)), rasterCanvas, SLOT(setBrushSize(double)));
+    connect(colorWidget, SIGNAL(colorChanged(QColor)), sizeWidget, SLOT(updateColor(QColor)));
+
     sizeView = addToolView(sizeWidget, Qt::LeftDockWidgetArea, Raster, "Brush Size", QKeySequence(tr("Shift+S")));
     sizeView->expandDock(false);
 
@@ -118,10 +126,10 @@ void RasterMainWindow::createTopResources()
     fileMenu->addAction(closeAction);
 }
 
-void RasterMainWindow::createCentralWidget(TupProject * project, const QColor contourColor)
+void RasterMainWindow::createCentralWidget(TupProject *project, double thickness, const QColor &color)
 {
     // Central widget
-    rasterCanvas = new RasterCanvas(project, contourColor, this);
+    rasterCanvas = new RasterCanvas(project, thickness, color, this);
     connect(rasterCanvas, SIGNAL(closeWindow()), this, SLOT(saveCanvas()));
     connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
     connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
@@ -467,9 +475,4 @@ void RasterMainWindow::importImageToLibrary()
     rasterCanvas->saveToFile(imgPath);
 
     emit libraryCall(imgPath);
-}
-
-void RasterMainWindow::updateBrushSize(float size)
-{
-    rasterCanvas->updateBrushSize(size);
 }

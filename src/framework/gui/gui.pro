@@ -45,8 +45,8 @@ HEADERS += taction.h \
            tconfigurationdialog.h \
            tcontrolnode.h \
            tdoublecombobox.h \
+           tdoublespinboxcontrol.h \
            tdualcolorbutton.h \
-           teditspinbox.h \
            tflatbutton.h \
            tfontchooser.h \
            tformfactory.h \
@@ -74,6 +74,7 @@ HEADERS += taction.h \
            tradiobuttongroup.h \
            tresponsiveui.h \
            trulerbase.h \
+           tspinboxcontrol.h \
            # tstackedmainwindow.h \
            tstylecombobox.h \
            tabbedmainwindow.h \
@@ -118,8 +119,8 @@ SOURCES += taction.cpp \
            tconfigurationdialog.cpp \
            tcontrolnode.cpp \
            tdoublecombobox.cpp \
+           tdoublespinboxcontrol.cpp \
            tdualcolorbutton.cpp \
-           teditspinbox.cpp \
            tflatbutton.cpp \
            tfontchooser.cpp \
            tformfactory.cpp \
@@ -144,6 +145,7 @@ SOURCES += taction.cpp \
            tradiobuttongroup.cpp \
            tresponsiveui.cpp \
            trulerbase.cpp \
+           tspinboxcontrol.cpp \
            # tstackedmainwindow.cpp \
            tstylecombobox.cpp \
            tabbedmainwindow.cpp \

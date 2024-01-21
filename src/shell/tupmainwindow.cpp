@@ -361,6 +361,7 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(libraryAssetDragged()), m_libraryWidget, SLOT(insertObjectInWorkspace()));
         connect(animationTab, SIGNAL(sceneCreated(int)), m_exposureSheet, SLOT(updateSceneFramesState(int)));
         connect(animationTab, SIGNAL(sceneCreated(int)), this, SLOT(updateBgColorInPalette(int)));
+        // connect(animationTab, SIGNAL(brushSizeChanged(int)), m_brushWidget, SLOT(setPenThickness(int)));
 
         animationTab->setAntialiasing(true);
         int width = animationTab->workSpaceSize().width();

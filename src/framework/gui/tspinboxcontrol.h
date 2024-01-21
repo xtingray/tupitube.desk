@@ -33,8 +33,8 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef TEDITSPINBOX_H
-#define TEDITSPINBOX_H
+#ifndef TSPINBOXCONTROL_H
+#define TSPINBOXCONTROL_H
 
 #include "tglobal.h"
 
@@ -43,14 +43,14 @@
 #include <QSpinBox>
 #include <QSlider>
 
-class T_GUI_EXPORT TEditSpinBox : public QGroupBox
+class T_GUI_EXPORT TSpinBoxControl : public QGroupBox
 {
     Q_OBJECT
 
     public:
-        TEditSpinBox(int value, int valueMin, int valueMax, int step, QString text,
+        TSpinBoxControl(int value, int valueMin, int valueMax, int step, QString text,
                      const char *name = nullptr, QWidget *parent = nullptr);
-        ~TEditSpinBox();
+        ~TSpinBoxControl();
 
         void setRange(int min, int max);
         int value();

@@ -193,6 +193,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void requestTriggered(const TupProjectRequest *event);
         void localRequestTriggered(const TupProjectRequest *event);
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
+        // void brushSizeChanged(int width);
         void autoSave();
         void modeHasChanged(TupProject::Mode mode);
         void requestExportImageToServer(int frameIndex, int sceneIndex, const QString &title,
@@ -316,7 +317,9 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         DockType currentDock;
         bool cameraMode;
         TColorCell::FillType colorSpace;
-        QColor contourColor;
+
+        // QColor contourColor;
+        QPen currentPen;
 
         bool bigScreen;
 };

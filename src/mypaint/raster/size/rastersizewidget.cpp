@@ -34,33 +34,34 @@
  ***************************************************************************/
 
 #include "rastersizewidget.h"
-#include "tseparator.h"
 
-RasterSizeWidget::RasterSizeWidget(QWidget *parent) : TupModuleWidgetBase(parent)
+RasterSizeWidget::RasterSizeWidget(double thickness, const QColor &penColor, QWidget *parent) : TupModuleWidgetBase(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterSizeWidget()] - thickness ->" << thickness;
+    #endif
+
     setWindowIcon(QIcon(ICONS_DIR + "brush_size.png"));
     setWindowTitle(tr("Brush Size"));
 
     QWidget *borderWidget = new QWidget;
     QVBoxLayout *borderLayout = new QVBoxLayout(borderWidget);
 
-    TCONFIG->beginGroup("BrushParameters");
-    int thicknessValue = TCONFIG->value("Thickness", 3).toInt();
-    if (thicknessValue > 100)
-        thicknessValue = 3;
+    thickPreview = new TupPenThicknessWidget;
+    thickPreview->setColor(penColor);
+    thickPreview->setBrush(Qt::SolidPattern);
+    double input = (thickness*10);
+    int size = (int) input;
+    thickPreview->render(size);
+    thickPreview->setFixedHeight(120);
 
-    thickPreview = new TupPenThicknessWidget(this);
-    thickPreview->render(thicknessValue);
+    thicknessControl = new TDoubleSpinBoxControl(thickness, 0.1, 5, 0.1, tr("Thickness"));
+    thicknessControl->setFixedWidth(180);
 
-    thickness = new TEditSpinBox(thicknessValue, 1, 100, 1, tr("Thickness"));
-    thickness->setValue(thicknessValue);
-    thickness->setFixedWidth(180);
-
-    connect(thickness, SIGNAL(valueChanged(int)), this, SLOT(setThickness(int)));
-    connect(thickness, SIGNAL(valueChanged(int)), thickPreview, SLOT(render(int)));
+    connect(thicknessControl, SIGNAL(valueChanged(double)), this, SLOT(setBrushThickness(double)));
 
     borderLayout->addWidget(thickPreview);
-    borderLayout->addWidget(thickness);
+    borderLayout->addWidget(thicknessControl);
     borderLayout->addStretch();
     borderLayout->setAlignment(Qt::AlignTop);
 
@@ -76,71 +77,35 @@ RasterSizeWidget::~RasterSizeWidget()
     #endif
 }
 
-void RasterSizeWidget::setThickness(int width)
+void RasterSizeWidget::setBrushThickness(double size)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::setThickness()] - width ->" << width;
+        qDebug() << "[RasterSizeWidget::setBrushThickness()] - size ->" << size;
     #endif
 
-    if (width > 0) {
-        pen.setWidth(width);
+    if (size > 0) {
         TCONFIG->beginGroup("BrushParameters");
-        TCONFIG->setValue("Thickness", width);
-        updatePenProperties();
+        TCONFIG->setValue("RasterThickness", QString::number(size, 'g', 2));
+        TCONFIG->sync();
+
+        double param = size*10;
+        int value = (int)param;
+        thickPreview->render(value);
+
+        emit brushSizeChanged(size);
     }
 }
 
-void RasterSizeWidget::setPenColor(const QColor color)
+void RasterSizeWidget::setPenColor(const QColor &color)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[RasterSizeWidget::setPenColor()] - color ->" << color;
     #endif
 
-    borderBrush.setColor(color);
     thickPreview->setColor(color);
 }
 
-void RasterSizeWidget::setPenThickness(int width)
+void RasterSizeWidget::updateColor(QColor color)
 {
-    #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::setPenThickness()] - thickness ->" << width;
-    #endif
-
-    pen.setWidth(width);
-    TCONFIG->beginGroup("BrushParameters");
-    TCONFIG->setValue("Thickness", width);
-    thickPreview->render(width);
-
-    thickness->blockSignals(true);
-    thickness->setValue(width);
-    thickness->blockSignals(false);
-}
-
-void RasterSizeWidget::init(int width)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::init()] - thickness ->" << width;
-    #endif
-
-    blockSignals(true);
-    setPenColor(QColor(0, 0, 0));
-    blockSignals(false);
-    setThickness(width);
-}
-
-QPen RasterSizeWidget::getPen() const
-{
-    return pen;
-}
-
-void RasterSizeWidget::updatePenProperties()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[RasterSizeWidget::updatePenProperties()]";
-    #endif
-
-    pen.setBrush(borderBrush);
-
-    TupPaintAreaEvent event(TupPaintAreaEvent::ChangePen, pen);
-    emit paintAreaEventTriggered(&event);
+    thickPreview->setColor(color);
 }

@@ -52,11 +52,11 @@
 #include <QGroupBox>
 #include <QMenu>
 
-RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgColor, QWidget *parent) : TupModuleWidgetBase(parent)
+RasterColorWidget::RasterColorWidget(const QPen &pen, const QColor bgColor, QWidget *parent) : TupModuleWidgetBase(parent)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterColorWidget()] - contourColor ->" << contourColor;
-        qDebug() << "[RasterColorWidget()] - contourColor.alpha() ->" << contourColor.alpha();
+        qDebug() << "[RasterColorWidget()] - pen ->" << pen;
+        qDebug() << "[RasterColorWidget()] - pen.color().alpha() ->" << pen.color().alpha();
     #endif
 
     setWindowTitle(tr("Brush Color"));
@@ -66,7 +66,7 @@ RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgC
     TCONFIG->beginGroup("ColorPalette");
     TCONFIG->setValue("CurrentColorMode", 0);
 
-    currentContourBrush = QBrush(contourColor);
+    currentContourBrush = pen.brush();
     bgBrush = QBrush(bgColor);
     splitter = new QSplitter(Qt::Vertical, this);
 
@@ -78,7 +78,7 @@ RasterColorWidget::RasterColorWidget(const QColor contourColor, const QColor bgC
     addChild(splitter);
 
     setupMainPalette();
-    setupColorChooser(contourColor);
+    setupColorChooser(pen.color());
 
     tab->setPalette(palette());
     tab->setMinimumHeight(320);
@@ -349,6 +349,7 @@ void RasterColorWidget::setColorOnAppFromHTML(const QBrush& brush)
 
         TupPaintAreaEvent bgEvent(TupPaintAreaEvent::ChangeBgColor, bgColorCell->color());
         emit paintAreaEventTriggered(&bgEvent);
+
         return;
     }
 
@@ -357,6 +358,8 @@ void RasterColorWidget::setColorOnAppFromHTML(const QBrush& brush)
 
         TupPaintAreaEvent contourEvent(TupPaintAreaEvent::ChangePenColor, contourColorCell->color());
         emit paintAreaEventTriggered(&contourEvent);
+        emit colorChanged(contourColorCell->color());
+
         return;
     }
 }
@@ -380,7 +383,8 @@ void RasterColorWidget::setGlobalColors(const QBrush &brush)
 
             TupPaintAreaEvent event(TupPaintAreaEvent::ChangePenColor, brush.color());
             emit paintAreaEventTriggered(&event);
-        } else {
+            emit colorChanged(brush.color());
+        } else { // SQA: Check if this piece of code is actually required
             if (brush.color() == Qt::transparent) {
                 if (contourColorCell->color() == Qt::transparent) {
                     QBrush black(Qt::black);
@@ -389,11 +393,13 @@ void RasterColorWidget::setGlobalColors(const QBrush &brush)
 
                     TupPaintAreaEvent event(TupPaintAreaEvent::ChangePenColor, black);
                     emit paintAreaEventTriggered(&event);
+                    emit colorChanged(Qt::black);
                 }
             }
 
             TupPaintAreaEvent event(TupPaintAreaEvent::ChangeBrush, brush);
             emit paintAreaEventTriggered(&event);
+            emit colorChanged(brush.color());
         }
         htmlField->setText(brush.color().name());
     }

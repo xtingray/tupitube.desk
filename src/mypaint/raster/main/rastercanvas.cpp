@@ -29,13 +29,18 @@
 #include <QJsonObject>
 #include <QJsonValue>
 
-RasterCanvas::RasterCanvas(TupProject *project, const QColor contourColor, QWidget *parent):
+RasterCanvas::RasterCanvas(TupProject *project, double brushWidth, const QColor contourColor, QWidget *parent):
                            RasterCanvasBase(project->getDimension(), parent)
 {
     pressed = false;
     setBgColor(project->getCurrentBgColor());
     tableInUse = false;
     spaceBar = false;
+    brushSize = brushWidth;
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas()] - brushSize ->" << brushSize;
+    #endif
 
     // Set scene
     canvasSize = project->getDimension();
@@ -121,19 +126,53 @@ void RasterCanvas::onClearedSurface(MPSurface *surface)
 
 void RasterCanvas::loadBrush(const QByteArray &content)
 {
+    QString input = QString(content);
+    input.replace("\n","");
+    input.replace("\\","");
+    QJsonDocument json = QJsonDocument::fromJson(input.toUtf8());
+    QJsonObject brush = json.object();
+
     #ifdef TUP_DEBUG
-        QString input = QString(content);
-        input.replace("\n","");
-        input.replace("\\","");
-        QJsonDocument json = QJsonDocument::fromJson(input.toUtf8());
-        QJsonObject object = json.object();
-        QJsonValue value = object.value(QString("comment"));
+        QJsonValue value = brush.value(QString("comment"));
         qDebug() << "[RasterCanvas::loadBrush()] - Brush Name ->" << value.toString();
+        qDebug() << "[RasterCanvas::loadBrush()] - Brush Size ->" << brushSize;
     #endif
 
-    float size = MPHandler::handler()->getBrushValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC);
-    MPHandler::handler()->loadBrush(content);
-    qWarning() << "[RasterCanvas::loadBrush()] - BRUSH SIZE ->" << size;
+    MPHandler::handler()->loadBrush(getBrushData(brush, brushSize));
+}
+
+void RasterCanvas::loadBrush(const QByteArray &content, double size)
+{
+    QString input = QString(content);
+    input.replace("\n","");
+    input.replace("\\","");
+    QJsonDocument json = QJsonDocument::fromJson(input.toUtf8());
+    QJsonObject brush = json.object();
+
+    MPHandler::handler()->loadBrush(getBrushData(brush, size));
+}
+
+QByteArray RasterCanvas::getBrushData(QJsonObject brush, double size)
+{
+   QString targetKey = "settings";
+   if (brush.contains(targetKey)) {
+       QJsonValue jsonValue = brush.value(targetKey);
+       QJsonObject nestedObject1 = jsonValue.toObject();
+       QString targetKey1 = "radius_logarithmic";
+       if (nestedObject1.contains(targetKey1)) {
+           QJsonValue jsonValue1 = nestedObject1.value(targetKey1);
+           QJsonObject nestedObject2 = jsonValue1.toObject();
+           QString targetKey2 = "base_value";
+           if (nestedObject2.contains(targetKey2)) {
+               nestedObject2[targetKey2] = size;
+               nestedObject1[targetKey1] = nestedObject2;
+               brush[targetKey] = nestedObject1;
+           }
+       }
+   }
+
+   QJsonDocument jsonDocument(brush);
+   return jsonDocument.toJson(QJsonDocument::Indented);
 }
 
 void RasterCanvas::tabletEvent(QTabletEvent *event)
@@ -191,13 +230,6 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
-    /*
-    qDebug() << "RasterCanvas::mouseReleaseEvent() - Releasing mouse...";
-    qDebug() << "Tiles Count: " << myPaintCanvas->getTilesCounter();
-    qDebug() << "Tile parts: " << counter;
-    counter = 0;
-    */
-
     myPaintCanvas->saveTiles();
     pressed = false;
     emit rasterStrokeMade();
@@ -233,10 +265,14 @@ void RasterCanvas::updateBrushColor(const QColor color)
     mypaint->setBrushColor(color);
 }
 
-void RasterCanvas::updateBrushSize(float size)
+void RasterCanvas::setBrushSize(double size)
 {
-    MPHandler *mypaint = MPHandler::handler();
-    mypaint->setBrushValue(MYPAINT_BRUSH_SETTING_RADIUS_LOGARITHMIC, size);
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::setBrushSize()] - size ->" << size;
+    #endif
+
+    brushSize = size;
+    loadBrush(myPaintCanvas->currentBrushData(), size);
 }
 
 void RasterCanvas::clearCanvas()

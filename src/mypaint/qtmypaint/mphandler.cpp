@@ -203,3 +203,13 @@ void MPHandler::redo()
 {
     m_surface->redo();
 }
+
+MPBrush* MPHandler::currentBrush()
+{
+    return m_brush;
+}
+
+QByteArray MPHandler::currentBrushData()
+{
+    return m_brush->getBrushData();
+}

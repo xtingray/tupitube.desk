@@ -42,7 +42,7 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         enum Perspective { Raster = 0x01 };
 
         RasterMainWindow(TupProject *project, const QString &winKey, TupProject::Mode context,
-                         int scene, const QColor contourColor, const QString &zoomFactor,
+                         int scene, const QPen &pen, const QString &zoomFactor,
                          QWidget *parent = nullptr);
         ~RasterMainWindow();
 
@@ -71,7 +71,6 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         void setBackgroundDirection(int direction);
         void updateBackgroundShiftProperty(int shift);
         void importImageToLibrary();
-        void updateBrushSize(float size);
 
     signals:
          void paintAreaEventTriggered(const TupPaintAreaEvent *event);
@@ -87,7 +86,7 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
 
     private:
         void createTopResources();
-        void createCentralWidget(TupProject * project, const QColor contourColor);
+        void createCentralWidget(TupProject *project, double thickness, const QColor &color);
 
         TupBackground *tupBg;
         QToolBar *topBar;
@@ -112,7 +111,6 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
 
         QAction *exportAction;
         QAction *libraryAction;
-
 };
 
 #endif // RASTERMAINWINDOW_H

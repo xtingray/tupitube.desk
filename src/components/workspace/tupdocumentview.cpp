@@ -95,7 +95,8 @@ TupDocumentView::TupDocumentView(TupProject *work, TActionManager *actionMng, bo
     dynamicFlag = false;
     staticFlag = false;
     colorSpace = TColorCell::Contour;
-    contourColor = Qt::black;
+    // contourColor = Qt::black;
+    currentPen = QPen(Qt::NoPen);
     currentDock = ExposureSheet;
     zoomFactor = "100";
 
@@ -1456,7 +1457,8 @@ void TupDocumentView::openRasterMode()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     rasterWindow = new RasterMainWindow(project, "raster", spaceContext(), currentSceneIndex(),
-                                        contourColor, zoomFactor, this);
+                                        currentPen, zoomFactor, this);
+                                        // contourColor, zoomFactor, this);
 
     connect(rasterWindow, SIGNAL(closeWindow(const QString &)), this, SLOT(closeRasterWindow(const QString &)));
     connect(rasterWindow, SIGNAL(paintAreaEventTriggered(const TupPaintAreaEvent *)),
@@ -1464,6 +1466,7 @@ void TupDocumentView::openRasterMode()
     connect(rasterWindow, SIGNAL(rasterStrokeMade()), this, SLOT(requestRasterStroke()));
     connect(rasterWindow, SIGNAL(canvasCleared()), this, SLOT(requestClearRasterCanvas()));
     connect(rasterWindow, SIGNAL(libraryCall(const QString &)), this, SLOT(importImageToLibrary(const QString &)));
+    // connect(rasterWindow, SIGNAL(brushSizeChanged(int)), this, SIGNAL(brushSizeChanged(int)));
 
     /* SQA: These connections don't work on Windows
     connect(rasterWindow, &RasterMainWindow::closeWindow, this, &TupDocumentView::closeRasterWindow);
@@ -2502,7 +2505,8 @@ void TupDocumentView::updateWorkspace()
 void TupDocumentView::updatePen(const QPen &pen)
 {
     status->setPen(pen);
-    contourColor = pen.color();
+    // contourColor = pen.color();
+    currentPen = pen;
     if (currentTool) {
         if (currentTool->toolId() == TAction::Text)
             currentTool->updateTextColor(pen.color());

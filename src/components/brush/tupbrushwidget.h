@@ -38,7 +38,7 @@
 
 #include "tglobal.h"
 #include "tupmodulewidgetbase.h"
-#include "teditspinbox.h"
+#include "tspinboxcontrol.h"
 #include "tconfig.h"
 #include "tuppaintareaevent.h"
 #include "tuppenthicknesswidget.h"
@@ -62,9 +62,9 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
         TupBrushWidget(QWidget *parent = nullptr);
         ~TupBrushWidget();
 
-        QPen getPen() const;
         void setPenThickness(int thickness);
-        
+        QPen getPen() const;
+
     private:
         void updatePenProperties();
         void updateBrushProperties();
@@ -72,11 +72,11 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
 
     public slots:
         void init(int thickness);
-        void setThickness(int thickness);
         void setPenColor(const QColor color);
         void setBrush(const QBrush borderBrush);
         
     private slots:
+        void setThickness(int thickness);
         void setStyle(int style);
         void setBorderBrushStyle(QListWidgetItem *item);
         // void setFillBrushStyle(QListWidgetItem *item);
@@ -93,7 +93,7 @@ class TUPITUBE_EXPORT TupBrushWidget : public TupModuleWidgetBase
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);
 
     private:
-        TEditSpinBox *thickness;
+        TSpinBoxControl *thickness;
 
         QPushButton *roundCapButton;
         QPushButton *flatCapButton;

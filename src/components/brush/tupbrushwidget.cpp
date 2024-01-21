@@ -52,11 +52,11 @@ TupBrushWidget::TupBrushWidget(QWidget *parent) : TupModuleWidgetBase(parent)
     thickPreview = new TupPenThicknessWidget(this);
     thickPreview->render(thicknessValue);
 
-    thickness = new TEditSpinBox(thicknessValue, 1, 100, 1, tr("Thickness"));
+    thickness = new TSpinBoxControl(thicknessValue, 1, 100, 1, tr("Thickness"));
     thickness->setValue(thicknessValue);
 
     connect(thickness, SIGNAL(valueChanged(int)), this, SLOT(setThickness(int)));
-    connect(thickness, SIGNAL(valueChanged(int)), thickPreview, SLOT(render(int)));
+    // connect(thickness, SIGNAL(valueChanged(int)), thickPreview, SLOT(render(int)));
 
     borderLayout->addWidget(thickPreview);
     borderLayout->addWidget(thickness);
@@ -196,13 +196,14 @@ void TupBrushWidget::setThickness(int width)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBrushWidget::setThickness()]";
-        qDebug() << "*** thickness: " << width;
+        qDebug() << "*** thickness ->" << width;
     #endif
 
     if (width > 0) {
         pen.setWidth(width);
         TCONFIG->beginGroup("BrushParameters");
         TCONFIG->setValue("Thickness", width);
+        thickPreview->render(width);
         updatePenProperties();
     }
 }
@@ -249,7 +250,7 @@ void TupBrushWidget::setPenThickness(int width)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupBrushWidget::setPenThickness()]";
-        qDebug() << "*** thickness: " << width;
+        qDebug() << "*** thickness ->" << width;
     #endif
 
     pen.setWidth(width);

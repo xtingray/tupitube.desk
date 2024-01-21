@@ -274,7 +274,7 @@ void TupExportWidget::updateWindowTitle()
 void TupExportWidget::updateWidgetConnections()
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupExportWidget::updateWidgetConnections()] - Tracing...";
+        qDebug() << "[TupExportWidget::updateWidgetConnections()]";
     #endif
 
     if (currentPlugin == TupExportInterface::VideoFormats) {

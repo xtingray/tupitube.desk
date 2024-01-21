@@ -144,7 +144,7 @@ RasterBrushesWidget::RasterBrushesWidget(const QString &brushLibPath, QWidget *p
             brushesList->setFlow(QListView::LeftToRight);
             brushesList->setSelectionMode(QAbstractItemView::SingleSelection);
             brushesList->setIconSize(QSize(ICON_SZ, ICON_SZ));
-            connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(itemClicked(QListWidgetItem*)));
+            connect(brushesList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(callBrushLoader(QListWidgetItem*)));
 
             QString iconPath = THEME_DIR;
             if (caption.compare(tr("Art Set 1")) == 0) {
@@ -235,8 +235,12 @@ void RasterBrushesWidget::loadInitSettings()
     }
 }
 
-void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
+void RasterBrushesWidget::callBrushLoader(QListWidgetItem *item)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterBrushesWidget::callBrushLoader()]";
+    #endif
+
     QListWidget* brushesList = item->listWidget();
     if (brushesList) {
         QString caption = "";
@@ -267,6 +271,10 @@ void RasterBrushesWidget::itemClicked(QListWidgetItem *item)
 
 void RasterBrushesWidget::selectBrush(QString brushName)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterBrushesWidget::selectBrush()] - brushName ->" << brushName;
+    #endif
+
     if (!isValid())
         return;
 
@@ -296,7 +304,7 @@ void RasterBrushesWidget::selectBrush(QString brushName)
     if (brushItem){
         stackedWidget->setCurrentWidget(brushTab);
         brushTab->setCurrentItem(brushItem);
-        itemClicked(brushItem);
+        callBrushLoader(brushItem);
     }
 }
 

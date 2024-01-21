@@ -37,6 +37,10 @@
 
 TupPenThicknessWidget::TupPenThicknessWidget(QWidget *parent) : QWidget(parent)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPenThicknessWidget()]";
+    #endif
+
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     opacity = 1.0;
     thickness = 100;
@@ -48,12 +52,20 @@ TupPenThicknessWidget::~TupPenThicknessWidget()
 
 void TupPenThicknessWidget::render(int width)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPenThicknessWidget::render()] - width ->" << width;
+    #endif
+
     thickness = width;
     update();
 }
 
 void TupPenThicknessWidget::render(double transp)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupPenThicknessWidget::render()] - opacity ->" << transp;
+    #endif
+
     opacity = transp;
     update();
 }
@@ -111,19 +123,30 @@ void TupPenThicknessWidget::paintEvent(QPaintEvent *)
                  brush = currentBrush;
              } else {
                 #ifdef TUP_DEBUG
-                    qDebug() << "TupPenThicknessWidget::paintEvent() - Warning! NO gradient!";
+                    qDebug() << "[TupPenThicknessWidget::paintEvent()] - Warning! NO gradient!";
                 #endif
                 return;
              }
          }
 
          QPen pen(Qt::NoPen);
+         brush.setStyle(Qt::SolidPattern);
+
          if (color == Qt::white)
              pen = QPen(QColor(100, 100, 100), 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
          painter.setPen(pen);
          painter.setBrush(brush);
          painter.setOpacity(opacity);
          painter.drawEllipse(-(thickness/2), -(thickness/2), thickness, thickness);
+
+        /*
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupPenThicknessWidget::paintEvent()] - pen ->" << pen;
+            qDebug() << "[TupPenThicknessWidget::paintEvent()] - brush ->" << brush;
+            qDebug() << "[TupPenThicknessWidget::paintEvent()] - thickness ->" << thickness;
+            qDebug() << "[TupPenThicknessWidget::paintEvent()] - opacity ->" << opacity;
+        #endif
+        */
      } else {
          QPixmap pixmap(THEME_DIR + "icons/brush_15.png");
          painter.drawPixmap(-(pixmap.width()/2), -(pixmap.height()/2), pixmap);  

@@ -41,8 +41,11 @@ class MPBrush: public QObject
         float getValue(MyPaintBrushSetting setting);
         void setValue(MyPaintBrushSetting setting, float value);
 
+        QByteArray getBrushData();
+
     private:
         QColor color;
+        QByteArray brushData;
 };
 
 #endif // MPBRUSH_H
