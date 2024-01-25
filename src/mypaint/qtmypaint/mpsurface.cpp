@@ -324,10 +324,13 @@ int MPSurface::getTilesCount()
     return tilesHash.count();
 }
 
-void MPSurface::handleCanvas(Action action)
+void MPSurface::handleCanvas(RasterAction action)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[MPSurface::handleCanvas()] - Tracing action ->" << action;
+        QString value = "Redo";
+        if (action == 0)
+            value = "Undo";
+        qDebug() << "[MPSurface::handleCanvas()] - Tracing action ->" << value;
     #endif
 
     QHashIterator<QPoint, MPTile*> i(tilesHash);
@@ -340,6 +343,7 @@ void MPSurface::handleCanvas(Action action)
                 tile->undo();
             else
                 tile->redo();
+
             this->onUpdateTileFunction(this, tile);
         }
     }
@@ -347,22 +351,35 @@ void MPSurface::handleCanvas(Action action)
 
 void MPSurface::undo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPSurface::undo()]";
+    #endif
+
     handleCanvas(Undo);
 }
 
 void MPSurface::redo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPSurface::redo()]";
+    #endif
+
     handleCanvas(Redo);
 }
 
 void MPSurface::saveTiles()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPSurface::saveTiles()] - tilesHash.size() ->" << tilesHash.size();
+    #endif
+
     QHashIterator<QPoint, MPTile*> i(tilesHash);
     while (i.hasNext()) {
         i.next();
         MPTile *tile = i.value();
         if (tile) {
             // Store the content of the tile
+            qDebug() << "Calling STORE procedure!";
             tile->store();
         }
     }

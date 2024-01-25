@@ -134,6 +134,7 @@ void RasterMainWindow::createCentralWidget(TupProject *project, double thickness
     connect(rasterCanvas, SIGNAL(zoomIn()), this, SLOT(applyZoomIn()));
     connect(rasterCanvas, SIGNAL(zoomOut()), this, SLOT(applyZoomOut()));
     connect(rasterCanvas, SIGNAL(rasterStrokeMade()), this, SIGNAL(rasterStrokeMade()));
+    connect(rasterCanvas, SIGNAL(scaled(qreal)), this, SLOT(applyZoom(qreal)));
 
     topBar = new QToolBar(tr("Raster actions"), this);
     topBar->setIconSize(QSize(16, 16));
@@ -143,23 +144,25 @@ void RasterMainWindow::createCentralWidget(TupProject *project, double thickness
     clearCanvas->setShortcut(Qt::Key_Backspace);
     connect(clearCanvas, SIGNAL(triggered()), this, SLOT(clearCanvas()));
 
-    /*
     QAction *undo = new QAction(QIcon(THEME_DIR + "icons/undo.png"), tr("Undo"), this);
     undo->setIconVisibleInMenu(true);
+    undo->setShortcut(Qt::Key_Control + Qt::Key_Z);
     connect(undo, SIGNAL(triggered()), rasterCanvas, SLOT(undo()));
 
     QAction *redo = new QAction(QIcon(THEME_DIR + "icons/redo.png"), tr("Redo"), this);
     redo->setIconVisibleInMenu(true);
+    undo->setShortcut(Qt::Key_Control + Qt::Key_Y);
     connect(redo, SIGNAL(triggered()), rasterCanvas, SLOT(redo()));
-    */
 
     QWidget *cEmpty0 = new QWidget();
     cEmpty0->setFixedWidth(5);
 
     topBar->addAction(clearCanvas);
     topBar->addWidget(cEmpty0);
-    topBar->addAction(kApp->findGlobalAction("undo"));
-    topBar->addAction(kApp->findGlobalAction("redo"));
+    topBar->addAction(undo);
+    topBar->addAction(redo);
+    // topBar->addAction(kApp->findGlobalAction("undo"));
+    // topBar->addAction(kApp->findGlobalAction("redo"));
     topBar->addSeparator();
     topBar->addAction(exportAction);
     topBar->addAction(libraryAction);
@@ -284,6 +287,10 @@ void RasterMainWindow::closeEvent(QCloseEvent *event)
 
 void RasterMainWindow::resetWorkSpaceTransformations()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::resetWorkSpaceTransformations()]";
+    #endif
+
     rasterCanvas->resetWorkSpaceCenter(projectSize);
     status->setRotationAngle("0");
     status->setZoomPercent("100");
@@ -299,6 +306,11 @@ void RasterMainWindow::drawActionSafeArea()
     rasterCanvas->drawActionSafeArea(!rasterCanvas->getSafeAreaState());
 }
 
+void RasterMainWindow::applyZoom(qreal factor)
+{
+    qDebug() << "[RasterMainWindow::applyZoom()] - factor ->" << factor;
+}
+
 void RasterMainWindow::setZoomFactor(qreal factor)
 {
     rasterCanvas->setZoom(factor);
@@ -306,6 +318,10 @@ void RasterMainWindow::setZoomFactor(qreal factor)
 
 void RasterMainWindow::applyZoomIn()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::applyZoomIn()]";
+    #endif
+
     qreal zoom = status->currentZoomFactor();
     if (zoom <= 495) {
         zoom += 5;
@@ -315,6 +331,10 @@ void RasterMainWindow::applyZoomIn()
 
 void RasterMainWindow::applyZoomOut()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::applyZoomOut()]";
+    #endif
+
     qreal zoom = status->currentZoomFactor();
     if (zoom >= 15) {
         zoom -= 5;
@@ -421,7 +441,7 @@ void RasterMainWindow::resizeEvent(QResizeEvent *event)
 void RasterMainWindow::keyPressEvent(QKeyEvent *event)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[RasterMainWindow::keyPressEvent()]";
+        qDebug() << "[RasterMainWindow::keyPressEvent()] - key ->" << event;
     #endif
 
     switch(event->key()) {
@@ -429,6 +449,33 @@ void RasterMainWindow::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Escape:
         case Qt::Key_Return:
             saveCanvas();
+        break;
+        /*
+        case Qt::Key_Z: // Undo
+            if (event->modifiers() == Qt::ControlModifier) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[RasterMainWindow::keyPressEvent()] - Calling undo action!";
+                #endif
+                undoRasterItem();
+            } else {
+                qDebug() << "*** FLAG 1";
+            }
+        break;            
+        case Qt::Key_Y: // Redo
+            if (event->modifiers() == Qt::ControlModifier) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[RasterMainWindow::keyPressEvent()] - Calling redo action!";
+                #endif
+                redoRasterItem();
+            } else {
+                qDebug() << "*** FLAG 2";
+            }
+        break;
+        */
+        default:
+            #ifdef TUP_DEBUG
+                qDebug() << "[RasterMainWindow::keyPressEvent()] - Key wasn't processed ->" << event->key();
+            #endif
         break;
     }
 }
@@ -445,16 +492,28 @@ void RasterMainWindow::updateBackgroundShiftProperty(int shift)
 
 void RasterMainWindow::undoRasterItem()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::undoRasterItem()]";
+    #endif
+
     rasterCanvas->undo();
 }
 
 void RasterMainWindow::redoRasterItem()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::redoRasterItem()]";
+    #endif
+
     rasterCanvas->redo();
 }
 
 void RasterMainWindow::clearCanvas()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::clearCanvas()]";
+    #endif
+
     rasterCanvas->clearCanvas();
     emit canvasCleared();
 }

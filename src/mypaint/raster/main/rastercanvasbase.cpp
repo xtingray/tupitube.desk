@@ -83,7 +83,9 @@ RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent) : QGraphics
     gScene->setSceneRect(drawingRect);
     setScene(gScene);
     centerDrawingArea();
-    setMouseTracking(true);
+
+    // setInteractive(true);
+    // setMouseTracking(true);
 
     setRenderHints(QPainter::RenderHints(QPainter::Antialiasing));
 
@@ -129,8 +131,21 @@ bool RasterCanvasBase::getSafeAreaState() const
     return safeAreaEnabled;
 }
 
+void RasterCanvasBase::mousePressEvent(QMouseEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvasBase::mousePressEvent()]";
+    #endif
+
+    QGraphicsView::mousePressEvent(event);
+}
+
 void RasterCanvasBase::mouseMoveEvent(QMouseEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvasBase::mouseMoveEvent()]";
+    #endif
+
     QPoint point = mapToScene(event->pos()).toPoint();
     if (spaceBar) {
         updateCenter(point);
@@ -142,6 +157,15 @@ void RasterCanvasBase::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
 }
 
+void RasterCanvasBase::mouseReleaseEvent(QMouseEvent *event)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvasBase::mouseReleaseEvent()]";
+    #endif
+
+    QGraphicsView::mouseReleaseEvent(event);
+}
+
 void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Space) {
@@ -150,7 +174,7 @@ void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
     }
 
     if (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier)) {
-        QDesktopWidget desktop;
+        // QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
 

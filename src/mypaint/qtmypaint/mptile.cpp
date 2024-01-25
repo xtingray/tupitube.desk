@@ -52,6 +52,12 @@ void MPTile::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPTile::paint()]";
+    #endif
+    */
+
     if (!m_cache_valid) 
         updateCache(); // We need to transfer the uint16_t table to the QImage cache
     painter->drawImage(QPoint(), m_cache_img, m_cache_img.rect());
@@ -115,6 +121,12 @@ void MPTile::setImage(const QImage &image)
 
 void MPTile::clear()
 {
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPTile::clear()]";
+    #endif
+    */
+
     redoList << m_cache_img.copy();
 
     memset(t_pixels, 0, sizeof(t_pixels)); // Tile is transparent
@@ -124,11 +136,19 @@ void MPTile::clear()
 
 void MPTile::store()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPTile::store()]";
+    #endif
+
     undoList << m_cache_img.copy();
 }
 
 void MPTile::undo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPTile::undo()]";
+    #endif
+
     if (!undoList.isEmpty()) {
        if (undoList.size() == 1) {
            redoList << undoList.takeLast();
@@ -147,6 +167,10 @@ void MPTile::undo()
 
 void MPTile::redo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPTile::redo()]";
+    #endif
+
     if (!redoList.isEmpty()) {
        undoList << redoList.takeLast();
        m_cache_img = undoList.last();

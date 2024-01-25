@@ -38,7 +38,7 @@
 class MPSurface : public MyPaintTiledSurface
 {    
     public:
-        enum Action { Undo, Redo};
+        enum RasterAction { Undo, Redo};
         MPSurface(QSize size);
         ~MPSurface();
 
@@ -91,7 +91,7 @@ class MPSurface : public MyPaintTiledSurface
     private:
         void resetNullTile();
         void resetSurface(QSize size);
-        void handleCanvas(Action action);
+        void handleCanvas(RasterAction action);
 
         std::string key;
         int tiles_width; // width in tiles

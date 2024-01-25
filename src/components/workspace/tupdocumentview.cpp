@@ -2572,6 +2572,10 @@ void TupDocumentView::setBucketTool(TColorCell::FillType type)
 
 void TupDocumentView::requestRasterStroke()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::requestRasterStroke()]";
+    #endif
+
     TupProjectRequest request = TupRequestBuilder::createItemRequest(-1, -1, -1, 0, QPoint(), spaceContext(),
                                                                      TupLibraryObject::Item,
                                                                      TupProjectRequest::AddRasterItem, "");

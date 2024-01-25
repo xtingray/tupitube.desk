@@ -65,6 +65,7 @@ class Q_DECL_EXPORT RasterMainWindow : public TMainWindow
         void setZoomFactor(qreal factor);
         void applyZoomIn();
         void applyZoomOut();
+        void applyZoom(qreal factor);
         void setRotationAngle(int angle);
 
     private slots:

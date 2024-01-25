@@ -196,11 +196,19 @@ void MPHandler::saveTiles()
 
 void MPHandler::undo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPHandler::undo()]";
+    #endif
+
     m_surface->undo();
 }
 
 void MPHandler::redo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPHandler::redo()]";
+    #endif
+
     m_surface->redo();
 }
 

@@ -177,6 +177,10 @@ QByteArray RasterCanvas::getBrushData(QJsonObject brush, double size)
 
 void RasterCanvas::tabletEvent(QTabletEvent *event)
 {
+    #ifdef TUP_DEBUG
+       qDebug() << "[RasterCanvas::tabletEvent()]";
+    #endif
+
     tableInUse = true;
 
     switch (event->type()) {
@@ -188,7 +192,11 @@ void RasterCanvas::tabletEvent(QTabletEvent *event)
         break;
         case QEvent::TabletRelease:
             if (event->pointerType() == QTabletEvent::Pen) {
-                // Finalize the stroke sequence.
+                // Finalize the stroke sequence.                
+                myPaintCanvas->saveTiles();
+                pressed = false;
+                emit rasterStrokeMade();
+
                 event->accept();
             }
         break;
@@ -208,6 +216,12 @@ void RasterCanvas::tabletEvent(QTabletEvent *event)
 void RasterCanvas::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::mousePressEvent()]";
+    #endif
+
+    tableInUse = false;
     pressed = true;
     MPHandler::handler()->startStroke();
 }
@@ -216,19 +230,25 @@ void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
 
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::mouseMoveEvent()]";
+    #endif
+
     if (pressed) {
         if (!tableInUse) {
             QPointF pt = mapToScene(event->pos());
             MPHandler::handler()->strokeTo(static_cast<float>(pt.x()), static_cast<float>(pt.y()));
         }
     }
-
-    RasterCanvasBase::mouseMoveEvent(event);
 }
 
 void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event)
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::mouseReleaseEvent()]";
+    #endif
 
     myPaintCanvas->saveTiles();
     pressed = false;
@@ -366,10 +386,18 @@ bool RasterCanvas::canvasIsEmpty()
 
 void RasterCanvas::undo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::undo()]";
+    #endif
+
     myPaintCanvas->undo();
 }
 
 void RasterCanvas::redo()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::redo()]";
+    #endif
+
     myPaintCanvas->redo();
 }

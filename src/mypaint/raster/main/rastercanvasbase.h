@@ -75,16 +75,18 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         void updateCenter(const QPoint point);
 
     protected:
-        virtual void mouseMoveEvent(QMouseEvent *event);
+        void keyPressEvent(QKeyEvent *event);
+        void keyReleaseEvent(QKeyEvent *event);
 
-        virtual void keyPressEvent(QKeyEvent *event);
-        virtual void keyReleaseEvent(QKeyEvent *event);
+        void mousePressEvent(QMouseEvent *event);
+        void mouseMoveEvent(QMouseEvent *event);
+        void mouseReleaseEvent(QMouseEvent *event);
 
-        virtual void enterEvent(QEvent *event);
-        virtual void leaveEvent(QEvent *event);
+        void enterEvent(QEvent *event);
+        void leaveEvent(QEvent *event);
 
-        virtual bool viewportEvent(QEvent *event);
-        virtual void wheelEvent(QWheelEvent *event);
+        bool viewportEvent(QEvent *event);
+        void wheelEvent(QWheelEvent *event);
 
     signals:
         void requestTriggered(const TupProjectRequest *event);

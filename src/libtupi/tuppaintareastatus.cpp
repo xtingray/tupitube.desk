@@ -51,12 +51,14 @@ TupPaintAreaStatus::TupPaintAreaStatus(StatusType type, QPen pen, QBrush brush, 
     colorContext = TColorCell::Contour;
     QSize iconSize = TResponsiveUI::fitStatusIconSize();
 
-    QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "clear_frame.png")), "");
-    clearAreaButton->setIconSize(iconSize);
-    clearAreaButton->setToolTip(tr("Clear Frame"));
-    // clearAreaButton->setShortcut(QKeySequence(Qt::Key_3));
-    connect(clearAreaButton, SIGNAL(clicked()), this, SIGNAL(clearFrameClicked()));
-    addPermanentWidget(clearAreaButton);
+    if (type == Vector) {
+        QPushButton *clearAreaButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "clear_frame.png")), "");
+        clearAreaButton->setIconSize(iconSize);
+        clearAreaButton->setToolTip(tr("Clear Frame"));
+        // clearAreaButton->setShortcut(QKeySequence(Qt::Key_3));
+        connect(clearAreaButton, SIGNAL(clicked()), this, SIGNAL(clearFrameClicked()));
+        addPermanentWidget(clearAreaButton);
+    }
 
     QPushButton *resetWSButton = new QPushButton(QIcon(QPixmap(ICONS_DIR + "reset_workspace.png")), "");
     resetWSButton->setIconSize(iconSize);

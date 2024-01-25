@@ -315,7 +315,7 @@ bool TupCommandExecutor::moveItem(TupItemResponse *response)
 {    
     #ifdef TUP_DEBUG
         qDebug() << "[TupCommandExecutor::moveItem()]";
-    #endif    
+    #endif
 
     int sceneIndex = response->getSceneIndex();
     int layerIndex = response->getLayerIndex();
@@ -1270,12 +1270,20 @@ bool TupCommandExecutor::setTextColor(TupItemResponse *response)
 
 bool TupCommandExecutor::createRasterPath(TupItemResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCommandExecutor::createRasterPath()]";
+    #endif
+
     emit responsed(response);
     return true;
 }
 
 bool TupCommandExecutor::clearRasterCanvas(TupItemResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCommandExecutor::clearRasterCanvas()]";
+    #endif
+
     emit responsed(response);
     return true;
 }
