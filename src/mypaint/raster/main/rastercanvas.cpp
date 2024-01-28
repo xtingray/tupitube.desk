@@ -35,7 +35,6 @@ RasterCanvas::RasterCanvas(TupProject *project, double brushWidth, const QColor 
     pressed = false;
     setBgColor(project->getCurrentBgColor());
     tableInUse = false;
-    spaceBar = false;
     brushSize = brushWidth;
 
     #ifdef TUP_DEBUG
@@ -224,6 +223,8 @@ void RasterCanvas::mousePressEvent(QMouseEvent *event)
     tableInUse = false;
     pressed = true;
     MPHandler::handler()->startStroke();
+
+    RasterCanvasBase::mousePressEvent(event);
 }
 
 void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
@@ -240,6 +241,8 @@ void RasterCanvas::mouseMoveEvent(QMouseEvent *event)
             MPHandler::handler()->strokeTo(static_cast<float>(pt.x()), static_cast<float>(pt.y()));
         }
     }
+
+    RasterCanvasBase::mouseMoveEvent(event);
 }
 
 void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
@@ -253,10 +256,16 @@ void RasterCanvas::mouseReleaseEvent(QMouseEvent *event)
     myPaintCanvas->saveTiles();
     pressed = false;
     emit rasterStrokeMade();
+
+    RasterCanvasBase::mouseReleaseEvent(event);
 }
 
 void RasterCanvas::keyPressEvent(QKeyEvent *event)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvas::keyPressEvent()]";
+    #endif
+
     switch(event->key()) {
         case Qt::Key_F11:
         case Qt::Key_Escape:

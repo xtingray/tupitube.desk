@@ -84,8 +84,8 @@ RasterCanvasBase::RasterCanvasBase(QSize dimension, QWidget *parent) : QGraphics
     setScene(gScene);
     centerDrawingArea();
 
-    // setInteractive(true);
-    // setMouseTracking(true);
+    setInteractive(true);
+    setMouseTracking(true);
 
     setRenderHints(QPainter::RenderHints(QPainter::Antialiasing));
 
@@ -169,12 +169,15 @@ void RasterCanvasBase::mouseReleaseEvent(QMouseEvent *event)
 void RasterCanvasBase::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Space) {
+        #ifdef TUP_DEBUG
+            qDebug() << "[RasterCanvasBase::keyPressEvent()] - Spacebar pressed!";
+        #endif
         spaceBar = true;
+
         return;
     }
 
     if (event->modifiers () == (Qt::AltModifier | Qt::ControlModifier)) {
-        // QDesktopWidget desktop;
         dial->setAngle(static_cast<int>(angle));
         dial->show();
 
@@ -243,6 +246,7 @@ void RasterCanvasBase::wheelEvent(QWheelEvent *event)
 {
     // SQA: Evaluate this replacement
     // scaleView(pow(2.0, event->delta() / 520.0));
+
     scaleView(pow(2.0, event->angleDelta().y() / 520.0));
 }
 
@@ -382,14 +386,17 @@ QPointF RasterCanvasBase::getCenterPoint() const
 
 void RasterCanvasBase::scaleView(qreal scaleFactor)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvasBase::scaleView()] - scaleFactor ->" << scaleFactor;
+    #endif
+
     // SQA: Evaluate this replacement
     // qreal factor = matrix().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
     qreal factor = transform().scale(scaleFactor, scaleFactor).mapRect(QRectF(0, 0, 1, 1)).width();
-
     if ((factor < 0.07) || (factor > 100))
         return;
-    scale(scaleFactor, scaleFactor);
 
+    scale(scaleFactor, scaleFactor);
     emit scaled(scaleFactor);
 }
 
@@ -430,6 +437,10 @@ void RasterCanvasBase::updateDimension(const QSize dimension)
 
 void RasterCanvasBase::updateCenter(const QPoint point)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterCanvasBase::updateCenter()] - point ->" << point;
+    #endif
+
     int x = point.x();
     int y = point.y();
 

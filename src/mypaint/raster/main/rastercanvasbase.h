@@ -78,9 +78,9 @@ class TUPITUBE_EXPORT RasterCanvasBase : public QGraphicsView
         void keyPressEvent(QKeyEvent *event);
         void keyReleaseEvent(QKeyEvent *event);
 
-        void mousePressEvent(QMouseEvent *event);
-        void mouseMoveEvent(QMouseEvent *event);
-        void mouseReleaseEvent(QMouseEvent *event);
+        virtual void mousePressEvent(QMouseEvent *event);
+        virtual void mouseMoveEvent(QMouseEvent *event);
+        virtual void mouseReleaseEvent(QMouseEvent *event);
 
         void enterEvent(QEvent *event);
         void leaveEvent(QEvent *event);

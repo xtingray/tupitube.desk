@@ -308,11 +308,20 @@ void RasterMainWindow::drawActionSafeArea()
 
 void RasterMainWindow::applyZoom(qreal factor)
 {
-    qDebug() << "[RasterMainWindow::applyZoom()] - factor ->" << factor;
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[RasterMainWindow::applyZoom()] - factor ->" << factor;
+    #endif
+
+    status->updateZoomFactor(factor);
 }
 
 void RasterMainWindow::setZoomFactor(qreal factor)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[RasterMainWindow::setZoomFactor()] - factor ->" << factor;
+    #endif
+
     rasterCanvas->setZoom(factor);
 }
 
@@ -450,28 +459,6 @@ void RasterMainWindow::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Return:
             saveCanvas();
         break;
-        /*
-        case Qt::Key_Z: // Undo
-            if (event->modifiers() == Qt::ControlModifier) {
-                #ifdef TUP_DEBUG
-                    qDebug() << "[RasterMainWindow::keyPressEvent()] - Calling undo action!";
-                #endif
-                undoRasterItem();
-            } else {
-                qDebug() << "*** FLAG 1";
-            }
-        break;            
-        case Qt::Key_Y: // Redo
-            if (event->modifiers() == Qt::ControlModifier) {
-                #ifdef TUP_DEBUG
-                    qDebug() << "[RasterMainWindow::keyPressEvent()] - Calling redo action!";
-                #endif
-                redoRasterItem();
-            } else {
-                qDebug() << "*** FLAG 2";
-            }
-        break;
-        */
         default:
             #ifdef TUP_DEBUG
                 qDebug() << "[RasterMainWindow::keyPressEvent()] - Key wasn't processed ->" << event->key();

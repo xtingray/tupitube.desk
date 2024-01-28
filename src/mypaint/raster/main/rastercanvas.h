@@ -84,7 +84,6 @@ class TUPITUBE_EXPORT RasterCanvas : public RasterCanvasBase
         QRectF drawingRect;
 
         bool pressed;
-        bool spaceBar;
         QColor color;
         bool tableInUse;
         MPHandler *myPaintCanvas;
