@@ -120,5 +120,8 @@ win32 {
     INCLUDEPATH += ../color
     LIBS += -L../color/release/ -lrastercolor
 
+    INCLUDEPATH += ../size
+    LIBS += -L../size/release/ -lrastersize
+
     include(../../../../win.pri)
 }

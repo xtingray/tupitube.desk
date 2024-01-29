@@ -66,6 +66,7 @@ fileSystem.CopyFile sourceDir & "\mypaint\libmypaint\release\libmypaint.dll", tu
 fileSystem.CopyFile sourceDir & "\mypaint\qtmypaint\release\qtmypaint.dll", tupiDir & "\lib\raster\qtmypaint.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\raster\brushes\release\rasterbrushes.dll", tupiDir & "\lib\raster\rasterbrushes.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\raster\color\release\rastercolor.dll", tupiDir & "\lib\raster\rastercolor.dll"
+fileSystem.CopyFile sourceDir & "\mypaint\raster\size\release\rastersize.dll", tupiDir & "\lib\raster\rastersize.dll"
 fileSystem.CopyFile sourceDir & "\mypaint\raster\main\release\rastermain.dll", tupiDir & "\lib\raster\rastermain.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\common\release\tupiplugincommon.dll", tupiDir & "\lib\tupiplugincommon.dll"
 fileSystem.CopyFile sourceDir & "\plugins\tools\color\release\tupicoloringtool.dll", tupiDir & "\plugins\tupicoloringtool.dll"
