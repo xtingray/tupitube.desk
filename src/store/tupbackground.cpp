@@ -227,7 +227,7 @@ QDomElement TupBackground::toXml(QDomDocument &doc) const
     root.setAttribute("bgLayerIndexes", indexes);
 
     indexes = "";
-    QString visibility = "";
+    // QString visibility = "";
     for (int i=0; i < bgVisibilityList.count(); i++)
         indexes += QString::number(bgVisibilityList.at(i)) + ",";
     indexes.chop(1);

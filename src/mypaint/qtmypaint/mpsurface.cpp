@@ -131,6 +131,10 @@ QSize MPSurface::size()
 
 void MPSurface::clear()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[MPSurface::clear()]";
+    #endif
+
     if (!tilesHash.isEmpty()) {
         QHashIterator<QPoint, MPTile*> i(tilesHash);
         while (i.hasNext()) {
@@ -379,7 +383,6 @@ void MPSurface::saveTiles()
         MPTile *tile = i.value();
         if (tile) {
             // Store the content of the tile
-            qDebug() << "Calling STORE procedure!";
             tile->store();
         }
     }
