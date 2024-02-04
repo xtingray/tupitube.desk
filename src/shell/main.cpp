@@ -98,7 +98,7 @@ int main(int argc, char ** argv)
         #endif
 
         cachePath = QDir::tempPath();
-        TCONFIG->setValue("Cache", cachePath);
+        TCONFIG->setValue("Cache", cachePath);        
     } else {
         cachePath = TCONFIG->value("Cache").toString();
         if (cachePath.isEmpty()) {
@@ -120,9 +120,25 @@ int main(int argc, char ** argv)
     kAppProp->setShareDir(appDirPath.absolutePath() + "/share");
 #else
     kAppProp->setHomeDir(TCONFIG->value("Home").toString());
-    kAppProp->setBinDir(QString::fromLocal8Bit(::getenv("TUPITUBE_BIN")));
-    kAppProp->setPluginDir(QString::fromLocal8Bit(::getenv("TUPITUBE_PLUGIN")));
-    kAppProp->setShareDir(QString::fromLocal8Bit(::getenv("TUPITUBE_SHARE")));
+    QString binPath = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN"));
+    // if (binPath.isEmpty())
+    //     binPath = "/";
+
+#ifdef Q_OS_WIN
+    QString pluginPath = "plugins";
+#else
+    QString pluginPath = QString::fromLocal8Bit(::getenv("TUPITUBE_PLUGIN"));
+#endif
+
+#ifdef Q_OS_WIN
+    QString sharePath = "data";
+#else
+    QString sharePath = QString::fromLocal8Bit(::getenv("TUPITUBE_SHARE"));
+#endif
+
+    kAppProp->setBinDir(binPath);
+    kAppProp->setPluginDir(pluginPath);
+    kAppProp->setShareDir(sharePath);
 #endif
 
     QString locale = "";
@@ -153,7 +169,11 @@ int main(int argc, char ** argv)
     else
         kAppProp->setDataDir(xmlDir + locale + "/");
 
+#ifdef Q_OS_WIN
+    QString themePath = "data/themes/default/";
+#else
     QString themePath = kAppProp->shareDir() + "themes/default/";
+#endif
     kAppProp->setThemeDir(themePath);
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;
@@ -168,23 +188,15 @@ int main(int argc, char ** argv)
     // Setting the repository directory (where the projects are saved)
     application.createCache(cachePath);
 
-    #ifdef TUP_DEBUG
-        qWarning() << "[main.cpp] - CACHE path -> " << cachePath;
-    #endif
-
     QStyle *style = QStyleFactory::create("fusion");
     QApplication::setStyle(style);
 
+    QString langFile = "";
     if (locale.compare("en") != 0) {
         #ifdef Q_OS_WIN
-            QString langFile = kAppProp->shareDir() + "translations/tupi_" + locale + ".qm";
+            langFile = kAppProp->shareDir() + "translations/tupi_" + locale + ".qm";
         #else
-            QString langFile = kAppProp->shareDir() + "data/translations/tupi_" + locale + ".qm";
-        #endif
-
-        #ifdef TUP_DEBUG
-            qWarning() << "[main.cpp] - Locale -> " << locale;
-            qWarning() << "[main.cpp] - Loading lang file -> " << langFile;
+            langFile = kAppProp->shareDir() + "data/translations/tupi_" + locale + ".qm";
         #endif
 
         if (QFile::exists(langFile)) {
@@ -194,7 +206,7 @@ int main(int argc, char ** argv)
             application.installTranslator(translator);
         } else {
             #ifdef TUP_DEBUG
-                qDebug() << "[main.cpp] - Error: Can't open file -> " << langFile;
+                qDebug() << "[main.cpp] - Error: Can't open file ->" << langFile;
             #endif
         }
     }
@@ -205,10 +217,20 @@ int main(int argc, char ** argv)
         application.setMainWindow(mainWindow);
     #endif
 
-    // Looking for plugins for TupiTube Desk
     #ifdef TUP_DEBUG
-        qWarning() << "[main.cpp] - Loading plugins from -> " << kAppProp->pluginDir();
+        qWarning() << "---";
+        qWarning() << "  [main.cpp] - CACHE path ->" << cachePath;
+        qWarning() << "  [main.cpp] - TUPITUBE_BIN ->" << QString::fromLocal8Bit(::getenv("TUPITUBE_BIN"));
+        qWarning() << "  [main.cpp] - TUPITUBE_PLUGIN ->" << QString::fromLocal8Bit(::getenv("TUPITUBE_PLUGIN"));
+        qWarning() << "  [main.cpp] - TUPITUBE_SHARE ->" << QString::fromLocal8Bit(::getenv("TUPITUBE_SHARE"));
+        qWarning() << "  [main.cpp] - themePath ->" <<  themePath;
+        qWarning() << "  [main.cpp] - locale ->" << locale;
+        qWarning() << "  [main.cpp] - lang file ->" << langFile;
+        qWarning() << "  [main.cpp] - plugins path ->" << kAppProp->pluginDir();
+        qWarning() << "---";
     #endif
+
+    // Looking for plugins for TupiTube Desk
     QApplication::addLibraryPath(kAppProp->pluginDir());
 
     // Loading visual components required for the Crash Handler
