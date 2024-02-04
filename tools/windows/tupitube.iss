@@ -60,8 +60,8 @@ Name: "{app}\data\xml\pt"
 Name: "{app}\plugins"
 
 [Files]
-Source: "*.dll"; DestDir: "{app}"
-Source: "*.exe"; DestDir: "{app}"
+Source: "*.dll"; Excludes: "*.iss"; DestDir: "{app}"
+Source: "*.exe"; Excludes: "*.iss"; DestDir: "{app}"
 Source: "icon\*"; DestDir: "{app}\icon"
 Source: "platforms\*"; DestDir: "{app}\platforms"
 Source: "imageformats\*"; DestDir: "{app}\imageformats"
