@@ -137,6 +137,7 @@ QByteArray TupProjectResponse::getData() const
 
 void TupProjectResponse::toString()
 {
+#ifdef TUP_DEBUG
     qDebug() << "---";
     qDebug() << "  Project Response";
     qDebug() << "  *** Action: " + QString::number(getAction());
@@ -146,6 +147,7 @@ void TupProjectResponse::toString()
     qDebug() << "  *** isExternal: " + QString::number(isExternal);
     qDebug() << "  *** Data: " + QString(data);
     qDebug() << "---";
+#endif
 }
 
 // SCENE

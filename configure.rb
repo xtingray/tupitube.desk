@@ -77,8 +77,8 @@ _EOH_
     config = RQonf::Config.new
 
     version = "0.2"
-    codeName = "Acauã"
-    revision = "21"
+    codeName = "Xamã"
+    revision = "22"
     configVersion = "5"
 
     Info.info << "Compiling \033[91mTupiTube " +  version + "." + revision + "\033[0m (" +  codeName + ")" << $endl

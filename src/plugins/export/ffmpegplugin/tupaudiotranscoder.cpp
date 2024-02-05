@@ -341,12 +341,12 @@ QString TupAudioTranscoder::formatTS(int64_t timeStamp, AVRational timeBase)
 // SQA: Method just for debugging
 void TupAudioTranscoder::logAudioPacket(AVRational time_base, const AVPacket *pkt, const QString &direction)
 {
-    int counter = 0;
-    QString prefix = "audio";
-    audioPktCounter++;
-    counter = audioPktCounter;
-
     #ifdef TUP_DEBUG
+        int counter = 0;
+        QString prefix = "audio";
+        audioPktCounter++;
+        counter = audioPktCounter;
+
         QString filename = CACHE_DIR + "/" + prefix + "_packets.txt";
         QFile file(filename);
         if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {

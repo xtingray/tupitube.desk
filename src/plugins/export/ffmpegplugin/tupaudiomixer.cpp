@@ -822,21 +822,24 @@ bool TupAudioMixer::processAudioFiles()
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupAudioMixer::processAudioFiles()]";
+        int totalOutSamples = 0;
+        int totalSamples[mixerListSize];
     #endif
 
     int error = 0;
     int dataPresent = 0;
-    int finished = 0;
-    int totalOutSamples = 0;
+    int finished = 0;           
     int soundFinished = 0;
 
     int inputFinished[mixerListSize];
     int inputToRead[mixerListSize];
-    int totalSamples[mixerListSize];
+
     for (int i=0; i<mixerListSize; i++) {
         inputFinished[i] = 0;
         inputToRead[i] = 1;
-        totalSamples[i] = 0;
+        #ifdef TUP_DEBUG
+            totalSamples[i] = 0;
+        #endif
     }
 
     emit messageChanged(tr("Merging audio files..."));

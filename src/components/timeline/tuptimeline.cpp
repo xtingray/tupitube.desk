@@ -234,9 +234,6 @@ void TupTimeLine::sceneResponse(TupSceneResponse *response)
         break;        
         case TupProjectRequest::Move:
         {
-            qDebug() << "[TupTimeLine::sceneResponse()] - Moving scene from ->" << sceneIndex;
-            qDebug() << "[TupTimeLine::sceneResponse()] - to ->" << response->getArg().toInt();
-
             if (!localSceneMove)
                 scenesContainer->moveScene(sceneIndex, response->getArg().toInt());
             else
@@ -966,13 +963,9 @@ void TupTimeLine::requestSceneMove(int from, int to)
     #endif
 
     if (scenesContainer->count() > 1) {
-        qDebug() << "[TupTimeLine::requestSceneMove()] - Calling move request...";
         localSceneMove = true;
         TupProjectRequest request = TupRequestBuilder::createSceneRequest(to, TupProjectRequest::Move, from);
         emit requestTriggered(&request);
-    } else {
-        qDebug() << "[TupTimeLine::requestSceneMove()] - Fatal Error: Can't request scene move. "
-                    "Scenes container size ->" << scenesContainer->count();
     }
 }
 

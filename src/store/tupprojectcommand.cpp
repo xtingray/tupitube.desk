@@ -495,7 +495,6 @@ void TupProjectCommand::sceneCommand()
         break;
         case TupProjectRequest::Move:
         {
-             qDebug() << "[TupProjectCommand::sceneCommand()] - Tracing move action...";
              executor->moveScene(resp);
         }
         break;

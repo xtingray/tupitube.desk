@@ -128,6 +128,8 @@ void TupPluginSelector::selectedFormatItem(QListWidgetItem *item)
     #ifdef TUP_DEBUG
         qDebug() << "[TupPluginSelector::selectedFormatItem()] - item->text() ->" << item->text();
         qDebug() << "[TupPluginSelector::selectedFormatItem()] - currentPlugin ->" << currentPlugin;
+    #else
+        Q_UNUSED(item)
     #endif
 
     int formatIndex = formatList->currentRow();

@@ -506,11 +506,11 @@ bool TFFmpegMovieGenerator::openAudioInputStream()
 bool TFFmpegMovieGenerator::openAudioOutputStream()
 {
     #ifdef TUP_DEBUG
+        int error;
         qDebug() << "[TFFmpegMovieGenerator::openAudioOutputStream()] - audio codec ->"
                  << avcodec_get_name(audioOutputCodecID);
     #endif
 
-    int error;
     audioOutputCodec = avcodec_find_encoder(audioOutputCodecID);
     if (!audioOutputCodec) {
         errorMsg = "ffmpeg error: Could not find audio encoder.";

@@ -91,7 +91,7 @@ Source: "data\themes\raster\brushes\experimental\*"; DestDir: "{app}\data\themes
 Source: "data\themes\raster\brushes\ramon\*"; DestDir: "{app}\data\themes\raster\brushes\ramon"
 Source: "data\themes\raster\brushes\tanda\*"; DestDir: "{app}\data\themes\raster\brushes\tanda"
 Source: "data\themes\raster\resources\*"; DestDir: "{app}\data\themes\raster\resources"
-Source: "data\translations\*"; DestDir: "{app}\data\translations"
+Source: "data\translations\*"; Excludes: "*.ts"; DestDir: "{app}\data\translations"
 Source: "data\xml\en\*"; DestDir: "{app}\data\xml\en"
 Source: "data\xml\es\*"; DestDir: "{app}\data\xml\es"
 Source: "data\xml\fr\*"; DestDir: "{app}\data\xml\fr"

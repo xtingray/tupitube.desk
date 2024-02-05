@@ -178,16 +178,18 @@ void TupSoundForm::updateFrameLimit(int sceneIndex, int maxFrame)
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::updateFrameLimit()] - sceneIndex ->" << sceneIndex;
         qDebug() << "[TupSoundForm::updateFrameLimit()] - maxFrame ->" << maxFrame;
+    #else
+        Q_UNUSED(sceneIndex)
     #endif
 
-        if (sceneIndex < framesMaxList.size()) {
-            framesMaxList.replace(sceneIndex, maxFrame);
-            if (currentSceneIndex == sceneIndex)
-                setFramesLimit(sceneIndex, maxFrame);
-        } else {
-            if (sceneIndex == framesMaxList.size())
-                framesMaxList << maxFrame;
-        }
+    if (sceneIndex < framesMaxList.size()) {
+        framesMaxList.replace(sceneIndex, maxFrame);
+        if (currentSceneIndex == sceneIndex)
+            setFramesLimit(sceneIndex, maxFrame);
+    } else {
+        if (sceneIndex == framesMaxList.size())
+            framesMaxList << maxFrame;
+    }
 }
 
 void TupSoundForm::setFramesLimit(int sceneIndex, int maxFrame)

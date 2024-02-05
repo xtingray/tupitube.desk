@@ -225,6 +225,8 @@ void GeometricSettings::sendLineState(bool state)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[GeometricSettings::sendLineState()] - state ->" << state;
+    #else
+        Q_UNUSED(state)
     #endif
 
     if (option1->isChecked())
