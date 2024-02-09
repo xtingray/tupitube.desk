@@ -128,6 +128,10 @@ fileSystem.CopyFolder sourceDir & "\themes\default", tupiPath & "data\themes\def
 fileSystem.CopyFolder sourceDir & "\mypaint\raster\main\brushes", tupiPath & "data\themes\raster\brushes"
 fileSystem.CopyFolder sourceDir & "\mypaint\raster\main\resources", tupiPath & "data\themes\raster\resources"
 
+tsFolder = "C:\tupitube\data\translations"
+Set fs = CreateObject("Scripting.Filesystemobject")
+fs.DeleteFile( tsFolder & "\*.ts" )
+
 Dim objFSO
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 RemoveProFiles objFSO.GetFolder("C:\tupitube")
