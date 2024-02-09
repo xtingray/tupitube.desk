@@ -29,6 +29,10 @@ if ($fp) {
                $new = array('2D Animation Tool');
                $line = str_replace($old, $new, $line);
 
+               $old = array('/>');
+               $new = array('Platform="x64" />');
+               $line = str_replace($old, $new, $line);
+
                fwrite($output, $line);
            } else {
                $pattern = '<Icon Id="DesktopIcon.exe"';

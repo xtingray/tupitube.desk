@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product Id="C9C7F944-A661-4915-88C8-E542D2EDEF42" Name="TupiTube Desk" Language="1033" Version="0.2.22" Manufacturer="MaeFloresta" UpgradeCode="DFE39486-F97D-4BA2-A83F-7DCBF085C4E4">
-    <Package Description="TupiTube Desk" Comments="2D Animation Tool" InstallerVersion="200" Compressed="yes" />
+    <Package Description="TupiTube Desk" Comments="2D Animation Tool" InstallerVersion="200" Compressed="yes" Platform="x64" />
     <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder" Name="PFiles">
