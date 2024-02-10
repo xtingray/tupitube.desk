@@ -53,7 +53,28 @@ if ($fp) {
 
                        fwrite($output, $line);
                    } else {
-                       fwrite($output, $line);
+                       $pattern = '<Directory Id="ProgramFilesFolder"';
+                       $pos = strpos($line, $pattern);
+
+                       if ($pos) {
+                           $old = array('ProgramFilesFolder');
+                           $new = array('ProgramFiles64Folder');
+                           $line = str_replace($old, $new, $line);
+
+                           fwrite($output, $line);
+                       } else {
+                           $pattern = '<Directory Id="TUPITUBE"';
+                           $pos = strpos($line, $pattern);
+                           if ($pos) {
+                               $old = array('tupitube');
+                               $new = array('TupiTube');
+                               $line = str_replace($old, $new, $line);
+
+                               fwrite($output, $line);
+                           } else {
+                               fwrite($output, $line);
+                           }
+                       }
                    }
                }
            }
