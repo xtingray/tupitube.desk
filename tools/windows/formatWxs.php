@@ -10,6 +10,14 @@ $fp = @fopen($file, "r");
 if ($fp) {
     $output = fopen("base.wxs", "w") or die("Unable to open file!");
     while (($line = fgets($fp, 4096)) !== false) {
+        $pattern = 'Source="tupitube\\';
+        $pos = strpos($line, $pattern);
+        if ($pos) {
+            $old = array('tupitube\\');
+            $new = array('');
+            $line = str_replace($old, $new, $line);
+        }
+
         $pattern = '<Component Id';
         $pos = strpos($line, $pattern);
         if ($pos) {
