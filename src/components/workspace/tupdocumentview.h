@@ -153,6 +153,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void sendStoryboard(TupStoryboard *storyboard, int sceneIndex);
         void updateStaticOpacity(double opacity);
         void updateDynamicOpacity(double opacity);
+        void updateForegroundOpacity(double opacity);
 
         void updatePen(const QPen &pen);
         void updateBrush(const QBrush &brush);
@@ -255,6 +256,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         QToolBar *toolbar;
         QToolBar *dynamicPropertiesBar;
         QToolBar *staticPropertiesBar;
+        QToolBar *fgPropertiesBar;
 
         QDoubleSpinBox *onionFactorSpin;
         QSpinBox *prevOnionSkinSpin;

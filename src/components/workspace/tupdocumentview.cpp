@@ -1240,6 +1240,8 @@ double TupDocumentView::backgroundOpacity(TupFrame::FrameType type)
                 opacity = bg->vectorStaticOpacity();
             } else if (type == TupFrame::VectorDynamicBg) {
                 opacity = bg->vectorDynamicOpacity();
+            } else if (type == TupFrame::VectorForeground) {
+                opacity = bg->vectorForegroundOpacity();
             }
         }
     }
@@ -1257,6 +1259,7 @@ void TupDocumentView::createToolBar()
 
     staticPropertiesBar = new QToolBar(tr("Vector Static BG Properties"), this);
     dynamicPropertiesBar = new QToolBar(tr("Vector Dynamic BG Properties"), this);
+    fgPropertiesBar = new QToolBar(tr("Foreground Properties"), this);
 
     addToolBar(barGrid);
 
@@ -1427,8 +1430,34 @@ void TupDocumentView::createToolBar()
 
     dynamicPropertiesBar->setVisible(false);
 
+    QWidget *fgEmpty0 = new QWidget();
+    fgEmpty0->setFixedWidth(5);
+    QWidget *fgEmpty1 = new QWidget();
+    fgEmpty1->setFixedWidth(5);
+    QWidget *fgEmpty2 = new QWidget();
+    fgEmpty2->setFixedWidth(5);
+
+    QLabel *fgOpacityLabel = new QLabel();
+    fgOpacityLabel->setToolTip(tr("Foreground BG Opacity"));
+    fgOpacityLabel->setPixmap(QPixmap(THEME_DIR + "icons/bg_opacity.png"));
+
+    QDoubleSpinBox *fgOpacityBox = new QDoubleSpinBox(this);
+    fgOpacityBox->setRange(0.1, 1.0);
+    fgOpacityBox->setSingleStep(0.1);
+    fgOpacityBox->setValue(backgroundOpacity(TupFrame::VectorStaticBg));
+    fgOpacityBox->setToolTip(tr("Static BG Opacity"));
+    connect(fgOpacityBox, SIGNAL(valueChanged(double)), this, SLOT(updateForegroundOpacity(double)));
+
+    fgPropertiesBar->addWidget(fgEmpty0);
+    fgPropertiesBar->addWidget(fgOpacityLabel);
+    fgPropertiesBar->addWidget(fgEmpty1);
+    fgPropertiesBar->addWidget(fgOpacityBox);
+    fgPropertiesBar->addWidget(fgEmpty2);
+    fgPropertiesBar->setVisible(false);
+
     addToolBar(staticPropertiesBar);
     addToolBar(dynamicPropertiesBar);
+    addToolBar(fgPropertiesBar);
 }
 
 void TupDocumentView::showModesSettings()
@@ -1695,15 +1724,17 @@ void TupDocumentView::setSpaceContext()
             project->updateSpaceContext(TupProject::FRAMES_MODE);
             staticPropertiesBar->setVisible(false);
             dynamicPropertiesBar->setVisible(false);
+            fgPropertiesBar->setVisible(false);
             motionMenu->setEnabled(true);
         }
         break;
         case TupProject::VECTOR_STATIC_BG_MODE:
         {
-            project->updateSpaceContext(TupProject::VECTOR_STATIC_BG_MODE);
-            staticPropertiesBar->setVisible(true);
+            project->updateSpaceContext(TupProject::VECTOR_STATIC_BG_MODE);            
             dynamicPropertiesBar->setVisible(false);
+            fgPropertiesBar->setVisible(false);
             motionMenu->setEnabled(false);
+            staticPropertiesBar->setVisible(true);
         }
         break;
         case TupProject::VECTOR_DYNAMIC_BG_MODE:
@@ -1721,8 +1752,9 @@ void TupDocumentView::setSpaceContext()
                 }
             }
             staticPropertiesBar->setVisible(false);
-            dynamicPropertiesBar->setVisible(true);
+            fgPropertiesBar->setVisible(false);
             motionMenu->setEnabled(false);
+            dynamicPropertiesBar->setVisible(true);
         }
         break;
         case TupProject::RASTER_STATIC_BG_MODE:
@@ -1735,9 +1767,10 @@ void TupDocumentView::setSpaceContext()
         case TupProject::VECTOR_FG_MODE:
         {
             project->updateSpaceContext(TupProject::VECTOR_FG_MODE);
-            staticPropertiesBar->setVisible(true);
+            staticPropertiesBar->setVisible(false);
             dynamicPropertiesBar->setVisible(false);
             motionMenu->setEnabled(false);
+            fgPropertiesBar->setVisible(true);
         }
         break;
         default:
@@ -2095,6 +2128,23 @@ void TupDocumentView::updateDynamicOpacity(double opacity)
        TupBackground *bg = scene->sceneBackground();
        if (bg) {
            bg->setVectorDynamicOpacity(opacity);
+           paintArea->updatePaintArea();
+       }
+   }
+}
+
+void TupDocumentView::updateForegroundOpacity(double opacity)
+{
+    #ifdef TUP_DEBUG
+       qDebug() << "[TupDocumentView::updateForegroundOpacity()]";
+    #endif
+
+   int sceneIndex = paintArea->currentSceneIndex();
+   TupScene *scene = project->sceneAt(sceneIndex);
+   if (scene) {
+       TupBackground *bg = scene->sceneBackground();
+       if (bg) {
+           bg->setVectorForegroundOpacity(opacity);
            paintArea->updatePaintArea();
        }
    }

@@ -109,10 +109,12 @@ class TUPITUBE_EXPORT TupBackground : public QObject, public TupAbstractSerializ
         void renderRasterDynamicView();
         QPoint rasterDynamicPos(int frameIndex);
 
-        void setRasterDynamicOpacity(double opacity);
-        double rasterDynamicOpacity();
         void setRasterStaticOpacity(double opacity);
         double rasterStaticOpacity();
+        void setRasterDynamicOpacity(double opacity);
+        double rasterDynamicOpacity();
+        void setVectorForegroundOpacity(double opacity);
+        double vectorForegroundOpacity();
 
         QList<TupBackground::BgType> layerIndexes();
         void updateLayerIndexes(QList<TupBackground::BgType> indexes);
