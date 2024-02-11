@@ -743,8 +743,20 @@ void TupScreen::paintEvent(QPaintEvent *)
     // painter.drawRect(x, y, currentPhotogram.size().width()-1, k->renderCamera.size().height()-1);
 }
 
-void TupScreen::frameResponse(TupFrameResponse *)
+void TupScreen::frameResponse(TupFrameResponse *response)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupScreen::frameResponse()] - response->getAction() ->" << response->getAction();
+    #endif
+
+    switch (response->getAction()) {
+        case TupProjectRequest::Add:
+        case TupProjectRequest::Remove:
+        {
+            emit sceneHasChanged(response->getSceneIndex());
+        }
+        break;
+    }
 }
 
 void TupScreen::layerResponse(TupLayerResponse *response)

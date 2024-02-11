@@ -178,6 +178,7 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                             "AAC file created successfully! ->" << aacAudioPath;
             #endif
 
+            /*
             if (!audioFile->remove()) {
                 audioFile->close();
                 errorMsg = "Fatal Error: Can't remove WAV file ->" + wavAudioPath;
@@ -186,7 +187,12 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                 #endif
 
                 return false;
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - WAV file has been removed successfully! ->" << wavAudioPath;
+                #endif
             }
+            */
 
             audioFile->close();
         }
@@ -254,6 +260,10 @@ bool FFmpegPlugin::exportToFormat(const QColor bgColor, const QString &filePath,
                 #endif
 
                 return false;
+            } else {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[FFmpegPlugin::exportToFormat()] - ACC file has been removed successfully! ->" << aacAudioPath;
+                #endif
             }
         }
         accAudioFile.close();

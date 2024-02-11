@@ -252,7 +252,7 @@ void TupCameraWidget::addAnimationDisplay()
     connect(previewScreen, SIGNAL(isRendering(int)), this, SLOT(updateProgressBar(int)));
     connect(previewScreen, SIGNAL(frameChanged(int)), this, SLOT(updateTimerPanel(int)));
     connect(previewScreen, SIGNAL(activePause()), this, SLOT(doPause()));
-
+    connect(previewScreen, SIGNAL(sceneHasChanged(int)), this, SLOT(updateFramesTotal(int)));
     connect(previewScreen, SIGNAL(sceneResponseActivated(int,TupProjectRequestArgument,int)),
             this, SLOT(sceneResponse(int,TupProjectRequestArgument,int)));
 
@@ -562,6 +562,10 @@ void TupCameraWidget::setFpsStatus(int fps)
 
 void TupCameraWidget::updateFramesTotal(int sceneIndex)
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupCameraWidget::updateFramesTotal()] - sceneIndex ->" << sceneIndex;
+    #endif
+
     if (playMode == OneScene) {
         TupScene *scene = project->sceneAt(sceneIndex);
         if (scene) {

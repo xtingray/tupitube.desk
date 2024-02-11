@@ -59,11 +59,13 @@ TupAudioTranscoder::TupAudioTranscoder(const QString &input, const QString &outp
     audioPktCounter = 0;
     pts = 0;
 
+    /*
     #ifdef TUP_DEBUG
         QFile audioFile(CACHE_DIR + "/aac_packets.txt");
         if (audioFile.exists())
             audioFile.remove();
     #endif
+    */
 }
 
 TupAudioTranscoder::~TupAudioTranscoder()

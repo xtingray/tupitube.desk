@@ -247,6 +247,14 @@ int TupAudioMixer::initFilterGraph()
             return AVERROR_FILTER_NOT_FOUND;
         }
 
+        #ifdef TUP_DEBUG
+            qDebug() << "---";
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - i ->" << i;
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - sourceTagsList(i) ->" << sourceTagsList.at(i);
+            qDebug() << "[TupAudioMixer::initFilterGraph()] - argList(i) ->" << argsList.at(i);
+            qDebug() << "---";
+        #endif
+
         QByteArray bt1 = sourceTagsList.at(i).toUtf8();
         const char* param1 = bt1.constData();
         QByteArray bt2 = argsList.at(i).toUtf8();
@@ -472,7 +480,7 @@ int TupAudioMixer::initFilterGraph()
 int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCodecContext)
 {
     #ifdef TUP_DEBUG
-        qDebug() << "[TupAudioMixer::openOutputFile()] - filename ->" << filename;
+        qDebug() << "[TupAudioMixer::openOutputFile()] - WAV filename ->" << filename;
     #endif
 
     AVIOContext *outputIOContext = nullptr;
@@ -485,7 +493,7 @@ int TupAudioMixer::openOutputFile(const char *filename, AVCodecContext *inputCod
         errorMsg = "Fatal Error: Could not open output file -> " + QString(filename);
         #ifdef TUP_DEBUG
             qCritical() << "[TupAudioMixer::openOutputFile()] - " << errorMsg;
-            qCritical() << "ERROR CODE -> " << error;
+            qCritical() << "ERROR CODE ->" << error;
         #endif
 
         return error;
@@ -900,7 +908,7 @@ bool TupAudioMixer::processAudioFiles()
                 }
 
                 #ifdef TUP_DEBUG
-                    av_log(nullptr, AV_LOG_INFO, "- add %d samples on input %d (%d Hz, time=%f, ttime=%f)\n",
+                    av_log(nullptr, AV_LOG_INFO, "  - add %d samples on input %d (%d Hz, time=%f, ttime=%f)\n",
                            frame->nb_samples, i, inputCodecContextList[i]->sample_rate,
                            (double)frame->nb_samples / inputCodecContextList[i]->sample_rate,
                            (double)(totalSamples[i] += frame->nb_samples) / inputCodecContextList[i]->sample_rate);
@@ -911,7 +919,7 @@ bool TupAudioMixer::processAudioFiles()
             dataPresentInGraph = dataPresent | dataPresentInGraph;
 
             #ifdef TUP_DEBUG
-                qDebug() << "[TupAudioMixer::processAudioFile()] - Progress -> " << percent << "%";
+                qDebug() << "[TupAudioMixer::processAudioFile()] - Progress ->" << percent << "%";
             #endif
             emit progressChanged(percent);
             percent++;
@@ -925,12 +933,12 @@ bool TupAudioMixer::processAudioFiles()
             while (1) {
                 error = av_buffersink_get_frame(abuffersinkContext, filterFrame);
                 if (error == AVERROR(EAGAIN) || error == AVERROR_EOF) {
-                    for (int i = 0 ; i < mixerListSize ; i++) {
+                    for (int i = 0; i < mixerListSize; i++) {
                         if (av_buffersrc_get_nb_failed_requests(abufferContextList[i]) > 0) {
                             inputToRead[i] = 1;
                             #ifdef TUP_DEBUG
                                 qDebug() << "[TupAudioMixer::processAudioFile()] - Warning: Need to read input ->"
-                                         << QString::number(i);
+                                         << i;
                             #endif
                         }
                     }
@@ -946,7 +954,7 @@ bool TupAudioMixer::processAudioFiles()
                 }
 
                 #ifdef TUP_DEBUG
-                    av_log(nullptr, AV_LOG_INFO, "- remove %d samples from sink (%d Hz, time=%f, ttime=%f)\n",
+                    av_log(nullptr, AV_LOG_INFO, "  - remove %d samples from sink (%d Hz, time=%f, ttime=%f)\n",
                            filterFrame->nb_samples, outputCodecContext->sample_rate,
                            (double)filterFrame->nb_samples / outputCodecContext->sample_rate,
                            (double)(totalOutSamples += filterFrame->nb_samples) / outputCodecContext->sample_rate);
@@ -982,7 +990,7 @@ bool TupAudioMixer::processAudioFiles()
             errorMsg = "Fatal Error: Workflow has been interrupted!";
             #ifdef TUP_DEBUG
                 qCritical() << "[TupAudioMixer::processAudioFiles()] - " << errorMsg;
-                qCritical() << "ERROR CODE -> " << error;
+                qCritical() << "ERROR CODE ->" << error;
             #endif
             return false;
         }

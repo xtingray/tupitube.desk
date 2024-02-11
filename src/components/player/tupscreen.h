@@ -93,19 +93,20 @@ class TUPITUBE_EXPORT TupScreen : public QFrame, public TupAbstractProjectRespon
         void enableMute(bool flag);
 
     protected:
-        void frameResponse(TupFrameResponse *event);
-        void layerResponse(TupLayerResponse *event);
-        void sceneResponse(TupSceneResponse *event);
-        void projectResponse(TupProjectResponse *event);
-        void itemResponse(TupItemResponse *event);
-        void libraryResponse(TupLibraryResponse *request);
-        void mousePressEvent(QMouseEvent *event);
+        void frameResponse(TupFrameResponse *response);
+        void layerResponse(TupLayerResponse *response);
+        void sceneResponse(TupSceneResponse *response);
+        void projectResponse(TupProjectResponse *response);
+        void itemResponse(TupItemResponse *response);
+        void libraryResponse(TupLibraryResponse *response);
+        void mousePressEvent(QMouseEvent *response);
 
     signals:
         void isRendering(int advance);
         void frameChanged(int frame);
         void activePause();
         void playerStopped();
+        void sceneHasChanged(int sceneIndex);
 
         void sceneResponseActivated(int action, TupProjectRequestArgument arg, int sceneIndex);
 
