@@ -419,6 +419,8 @@ void Tweener::aboutToChangeScene(TupGraphicsScene *scene)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[Motion Tweener::aboutToChangeScene()] - Scene index ->" << scene->currentSceneIndex();
+    #else
+        Q_UNUSED(scene)
     #endif
 }
 
