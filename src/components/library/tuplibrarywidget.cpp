@@ -1690,6 +1690,68 @@ void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QBy
     emit requestTriggered(&request);
 }
 
+bool TupLibraryWidget::audioFileChannelsCount(const char *filename)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupLibraryWidget::audioFileChannelsCount()] - Checking audio file ->" << QString(filename);
+    #endif
+
+    AVStream *in_stream;
+    AVCodecParameters *in_codecpar;
+    enum AVCodecID audioCodecID = AV_CODEC_ID_NONE;
+    int error;
+    QString errorMsg;
+
+    // Open the input file to read from it.
+    AVFormatContext *inputFormatContext = avformat_alloc_context();
+    if ((error = avformat_open_input(&inputFormatContext, filename, nullptr, nullptr)) < 0) {
+        errorMsg = "Fatal Error: Could not open input file -> " + QString(filename);
+        #ifdef TUP_DEBUG
+            qCritical() << "[TupLibraryWidget::audioFileChannelsCount()] - " << errorMsg;
+            qCritical() << "ERROR CODE ->" << error;
+        #endif
+        inputFormatContext = nullptr;
+        return false;
+    }
+
+    // Get information on the input file (number of streams etc.).
+    if ((error = avformat_find_stream_info(inputFormatContext, nullptr)) < 0) {
+        errorMsg = "Fatal Error: Could not open find stream -> " + QString(filename);
+        #ifdef TUP_DEBUG
+            qCritical() << "[TupLibraryWidget::audioFileChannelsCount()] - " << errorMsg;
+            qCritical() << "ERROR CODE ->" << error;
+        #endif
+        avformat_close_input(&inputFormatContext);
+
+        return false;
+    }
+
+    av_dump_format(inputFormatContext, 0, filename, 0);
+
+    int streamsTotal = inputFormatContext->nb_streams;
+    for(int i=0; i<streamsTotal; i++) {
+        in_stream = inputFormatContext->streams[i];
+        in_codecpar = in_stream->codecpar;
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupLibraryWidget::audioFileChannelsCount()] - Codec ID ->" << avcodec_get_name(audioCodecID);
+        #endif
+
+        if (in_codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupLibraryWidget::audioFileChannelsCount()] - Found audio stream!";
+                qDebug() << "[TupLibraryWidget::audioFileChannelsCount()] - Audio channels total ->" << in_codecpar->channels;
+            #endif
+            if (in_codecpar->channels == 2)
+                return true;
+        }
+    }
+
+    avformat_close_input(&inputFormatContext);
+
+    return false;
+}
+
 void TupLibraryWidget::importVideoFileFromByteArray(const QString &filename, QByteArray data)
 {
     #ifdef TUP_DEBUG

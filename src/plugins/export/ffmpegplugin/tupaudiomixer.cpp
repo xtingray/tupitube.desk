@@ -114,6 +114,7 @@ int TupAudioMixer::openInputFile(const char *filename)
     for(int i=0; i<streamsTotal; i++) {
         in_stream = inputFormatContext->streams[i];
         in_codecpar = in_stream->codecpar;
+        qDebug() << "AUDIO CHANNELS ->" << in_codecpar->channels;
         audioCodecID = in_codecpar->codec_id;
         #ifdef TUP_DEBUG
             qWarning() << "[TupAudioMixer::openInputFile()] - Codec ID ->" << avcodec_get_name(audioCodecID);
