@@ -70,6 +70,7 @@ class TUPITUBE_EXPORT TupSoundDialog : public QDialog
     private:
         QWidget *soundFileTab();
         QWidget *soundRecordTab();
+        bool isAudioInStereo(const QString &soundPath);
 
         QTabWidget *tabWidget;
         QToolButton *fileButton;

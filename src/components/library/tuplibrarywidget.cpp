@@ -1694,65 +1694,6 @@ void TupLibraryWidget::importSoundFileFromByteArray(const QString &filename, QBy
     emit requestTriggered(&request);
 }
 
-bool TupLibraryWidget::isAudioInStereo(const QString &soundPath)
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "---";
-        qDebug() << "[TupLibraryWidget::isAudioInStereo()] - Checking audio file ->" << soundPath;
-    #endif
-
-    QByteArray array = soundPath.toLocal8Bit();
-    char *filename = array.data();
-
-    AVStream *in_stream;
-    AVCodecParameters *in_codecpar;
-    int error;    
-
-    // Open the input file to read from it.
-    AVFormatContext *inputFormatContext = avformat_alloc_context();
-    if ((error = avformat_open_input(&inputFormatContext, filename, nullptr, nullptr)) < 0) {
-        #ifdef TUP_DEBUG
-            qCritical() << "[TupLibraryWidget::isAudioInStereo()] - Fatal Error: Could not open input file ->" << soundPath;
-            qCritical() << "ERROR CODE ->" << error;
-        #endif
-        avformat_close_input(&inputFormatContext);
-
-        return false;
-    }
-
-    // Get information on the input file (number of streams etc.).
-    if ((error = avformat_find_stream_info(inputFormatContext, nullptr)) < 0) {
-        #ifdef TUP_DEBUG
-            qCritical() << "[TupLibraryWidget::isAudioInStereo()] - Fatal Error: Could not open find stream ->" << soundPath;
-            qCritical() << "ERROR CODE ->" << error;
-        #endif
-        avformat_close_input(&inputFormatContext);
-
-        return false;
-    }
-
-    int streamsTotal = inputFormatContext->nb_streams;
-    for(int i=0; i<streamsTotal; i++) {
-        in_stream = inputFormatContext->streams[i];
-        in_codecpar = in_stream->codecpar;
-        if (in_codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::isAudioInStereo()] - Found audio stream!";
-                qDebug() << "[TupLibraryWidget::isAudioInStereo()] - Audio channels total ->" << in_codecpar->channels;
-            #endif
-
-            if (in_codecpar->channels == 2) {
-                avformat_close_input(&inputFormatContext);
-
-                return true;
-            }
-        }
-    }
-    avformat_close_input(&inputFormatContext);
-
-    return false;
-}
-
 void TupLibraryWidget::importVideoFileFromByteArray(const QString &filename, QByteArray data)
 {
     #ifdef TUP_DEBUG
@@ -1805,30 +1746,7 @@ void TupLibraryWidget::importSoundFileFromFolder(const QString &filePath, const 
     #endif
 
     QFile file(filePath);
-    if (file.open(QIODevice::ReadOnly)) {        
-        if (!isAudioInStereo(filePath)) {
-            #ifdef TUP_DEBUG
-                qDebug() << "[TupLibraryWidget::importSoundFileFromFolder()] - "
-                            "Fatal Error: Audio file is NOT in stereo! ->" << filePath;
-            #endif
-
-            QMessageBox msgBox;
-            msgBox.setStyleSheet(TAppTheme::themeSettings());
-            msgBox.setWindowTitle(tr("File:") + " " + filePath);
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText(tr("Audio file only has one channel (Mono). The file must have two channels (Stereo)."));
-            msgBox.setInformativeText(tr("Tip: Use an online service to convert your audio file from Mono to Stereo."));
-            msgBox.setStandardButtons(QMessageBox::Ok);
-            msgBox.show();
-
-            msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
-                        static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
-
-            msgBox.exec();
-
-            return;
-        }
-
+    if (file.open(QIODevice::ReadOnly)) {
         QByteArray data = file.readAll();
         file.close();
 

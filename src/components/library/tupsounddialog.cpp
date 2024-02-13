@@ -47,6 +47,18 @@
 #include <QIcon>
 #include <QFileDialog>
 #include <QPushButton>
+#include <QMessageBox>
+#include <QScreen>
+
+#ifdef __cplusplus
+extern "C" {
+#include <libavformat/avformat.h>
+#include "libavfilter/avfilter.h"
+#include "libavfilter/buffersink.h"
+#include "libavfilter/buffersrc.h"
+#include "libavutil/opt.h"
+}
+#endif
 
 TupSoundDialog::TupSoundDialog(QWidget *parent) : QDialog(parent)
 {
@@ -216,6 +228,30 @@ void TupSoundDialog::importSoundAsset()
     QString path = filePathInput->text();
     if (!path.isEmpty()) {
         if (QFile::exists(path)) {
+            if (!isAudioInStereo(path)) {
+                #ifdef TUP_DEBUG
+                    qDebug() << "[TupSoundDialog::importSoundAsset()] - "
+                                "Fatal Error: Audio file is NOT in stereo! ->" << path;
+                #endif
+
+                QScreen *screen = QGuiApplication::screens().at(0);
+                QMessageBox msgBox;
+                msgBox.setStyleSheet(TAppTheme::themeSettings());
+                msgBox.setWindowTitle(tr("File:") + " " + path);
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.setText(tr("Audio file only has one channel (Mono). The file must have two channels (Stereo)."));
+                msgBox.setInformativeText(tr("Tip: Use an online service to convert your audio file from Mono to Stereo."));
+                msgBox.setStandardButtons(QMessageBox::Ok);
+                msgBox.show();
+
+                msgBox.move(static_cast<int> ((screen->geometry().width() - msgBox.width()) / 2),
+                            static_cast<int> ((screen->geometry().height() - msgBox.height()) / 2));
+
+                msgBox.exec();
+
+                return;
+            }
+
             emit soundFilePicked(path);
             close();
         } else {
@@ -225,6 +261,65 @@ void TupSoundDialog::importSoundAsset()
     } else {
         TOsd::self()->display(TOsd::Error, tr("Please, choose an audio file!"));
     }
+}
+
+bool TupSoundDialog::isAudioInStereo(const QString &soundPath)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupSoundDialog::isAudioInStereo()] - Checking audio file ->" << soundPath;
+    #endif
+
+    QByteArray array = soundPath.toLocal8Bit();
+    char *filename = array.data();
+
+    AVStream *in_stream;
+    AVCodecParameters *in_codecpar;
+    int error;
+
+    // Open the input file to read from it.
+    AVFormatContext *inputFormatContext = avformat_alloc_context();
+    if ((error = avformat_open_input(&inputFormatContext, filename, nullptr, nullptr)) < 0) {
+        #ifdef TUP_DEBUG
+            qCritical() << "[TupSoundDialog::isAudioInStereo()] - Fatal Error: Could not open input file ->" << soundPath;
+            qCritical() << "ERROR CODE ->" << error;
+        #endif
+        avformat_close_input(&inputFormatContext);
+
+        return false;
+    }
+
+    // Get information on the input file (number of streams etc.).
+    if ((error = avformat_find_stream_info(inputFormatContext, nullptr)) < 0) {
+        #ifdef TUP_DEBUG
+            qCritical() << "[TupSoundDialog::isAudioInStereo()] - Fatal Error: Could not open find stream ->" << soundPath;
+            qCritical() << "ERROR CODE ->" << error;
+        #endif
+        avformat_close_input(&inputFormatContext);
+
+        return false;
+    }
+
+    int streamsTotal = inputFormatContext->nb_streams;
+    for(int i=0; i<streamsTotal; i++) {
+        in_stream = inputFormatContext->streams[i];
+        in_codecpar = in_stream->codecpar;
+        if (in_codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+            #ifdef TUP_DEBUG
+                qDebug() << "[TupSoundDialog::isAudioInStereo()] - Found audio stream!";
+                qDebug() << "[TupSoundDialog::isAudioInStereo()] - Audio channels total ->" << in_codecpar->channels;
+            #endif
+
+            if (in_codecpar->channels == 2) {
+                avformat_close_input(&inputFormatContext);
+
+                return true;
+            }
+        }
+    }
+    avformat_close_input(&inputFormatContext);
+
+    return false;
 }
 
 void TupSoundDialog::importRecordingAsset()
