@@ -459,9 +459,21 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
                 file = new QFile(scenePath);
 					 
                 if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-                    xml = QString::fromLocal8Bit(file->readAll());
-                    if (!doc.setContent(xml))
+                    int size =file->size();
+                    if (size == 0) {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupFileManager::load()] - Fatal Error: Scene file has size ZERO! ->" << scenePath;
+                        #endif
                         return false;
+                    }
+
+                    xml = QString::fromLocal8Bit(file->readAll());
+                    if (!doc.setContent(xml)) {
+                        #ifdef TUP_DEBUG
+                            qWarning() << "[TupFileManager::load()] - Fatal Error: Can't open XML file! ->" << scenePath;
+                        #endif
+                        return false;
+                    }
 
                     root = doc.documentElement();
                     QString sceneName = root.attribute("name");
