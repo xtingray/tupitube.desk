@@ -427,7 +427,7 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
         QFile pfile(projectConfigPath);
 
         if (pfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            int size = pfile->size();
+            int size = pfile.size();
             if (size == 0) {
                 #ifdef TUP_DEBUG
                     qWarning() << "[TupFileManager::load()] - Fatal Error: Project file (TPP) has size ZERO! ->" << projectConfigPath;
