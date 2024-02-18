@@ -423,9 +423,20 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
     TupPackageHandler packageHandler;
     if (packageHandler.importPackage(fileName)) {
         QDir projectDir(packageHandler.importedProjectPath());
-        QFile pfile(projectDir.path() + "/project.tpp");
+        QString projectConfigPath = projectDir.path() + "/project.tpp";
+        QFile pfile(projectConfigPath);
 
         if (pfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            int size = pfile->size();
+            if (size == 0) {
+                #ifdef TUP_DEBUG
+                    qWarning() << "[TupFileManager::load()] - Fatal Error: Project file (TPP) has size ZERO! ->" << projectConfigPath;
+                #endif
+                TOsd::self()->display(TOsd::Error, tr("Can't open project config file!"));
+
+                return false;
+            }
+
             project->fromXml(QString::fromLocal8Bit(pfile.readAll()));
             pfile.close();
         } else {
@@ -459,19 +470,23 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
                 file = new QFile(scenePath);
 					 
                 if (file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-                    int size =file->size();
+                    int size = file->size();
                     if (size == 0) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFileManager::load()] - Fatal Error: Scene file has size ZERO! ->" << scenePath;
+                            qWarning() << "[TupFileManager::load()] - Fatal Error: Scene file (TPS) has size ZERO! ->" << scenePath;
                         #endif
+                        TOsd::self()->display(TOsd::Error, tr("Can't open scene config file!"));
+
                         return false;
                     }
 
                     xml = QString::fromLocal8Bit(file->readAll());
                     if (!doc.setContent(xml)) {
                         #ifdef TUP_DEBUG
-                            qWarning() << "[TupFileManager::load()] - Fatal Error: Can't open XML file! ->" << scenePath;
+                            qWarning() << "[TupFileManager::load()] - Fatal Error: Can't open XML scene file! ->" << scenePath;
                         #endif
+                        TOsd::self()->display(TOsd::Error, tr("Can't load scene config file!"));
+
                         return false;
                     }
 
@@ -485,8 +500,9 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
                     delete file;
                 } else {
                     #ifdef TUP_DEBUG
-                        qWarning() << "[TupFileManager::load()] - Error: Can't open file -> " << scenePath;
+                        qWarning() << "[TupFileManager::load()] - Error: Can't open TPS file ->" << scenePath;
                     #endif
+                    TOsd::self()->display(TOsd::Error, tr("Can't read scene config file!"));
 
                     return false;
                 }
@@ -504,7 +520,7 @@ bool TupFileManager::load(const QString &fileName, TupProject *project)
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupFileManager::load()] - Error: Can't import package -> " << fileName;
+        qDebug() << "[TupFileManager::load()] - Error: Can't import package ->" << fileName;
     #endif
 
     return false;
