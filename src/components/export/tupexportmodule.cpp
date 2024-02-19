@@ -170,7 +170,7 @@ void TupExportModule::resetUI()
 
 void TupExportModule::setScenesIndexes(const QList<int> &indexes)
 {
-    m_indexes = indexes;    
+    sceneIndexes = indexes;
     scenes = scenesToExport();
     #ifdef TUP_DEBUG
         qDebug() << "[TupExportModule::setScenesIndexes()] - Scenes total ->" << scenes.count();
@@ -495,7 +495,7 @@ void TupExportModule::exportIt()
 QList<TupScene *> TupExportModule::scenesToExport() const
 {
     QList<TupScene *> scenes;
-    foreach (int index, m_indexes)
+    foreach (int index, sceneIndexes)
         scenes << m_project->sceneAt(index);
 
     return scenes;

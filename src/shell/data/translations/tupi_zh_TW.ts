@@ -131,11 +131,11 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>基本的</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>顏色</translation>
     </message>
 </context>
 <context>
@@ -598,7 +598,7 @@
     </message>
     <message>
         <source>Hide Tips</source>
-        <translation type="unfinished"></translation>
+        <translation>隱藏提示</translation>
     </message>
 </context>
 <context>
@@ -890,10 +890,6 @@
 <context>
     <name>RasterBrushesWidget</name>
     <message>
-        <source>Brush Properties</source>
-        <translation>筆刷屬性</translation>
-    </message>
-    <message>
         <source>Erasers</source>
         <translation>橡皮擦</translation>
     </message>
@@ -917,13 +913,13 @@
         <source>Experimental</source>
         <translation>實驗性</translation>
     </message>
+    <message>
+        <source>Brush Texture</source>
+        <translation>畫筆紋理</translation>
+    </message>
 </context>
 <context>
     <name>RasterColorWidget</name>
-    <message>
-        <source>Color Palette</source>
-        <translation>調色盤</translation>
-    </message>
     <message>
         <source>Contour</source>
         <translation>輪廓</translation>
@@ -943,6 +939,10 @@
     <message>
         <source>Color Mixer</source>
         <translation>色彩混合器</translation>
+    </message>
+    <message>
+        <source>Brush Color</source>
+        <translation>畫筆顏色</translation>
     </message>
 </context>
 <context>
@@ -1030,6 +1030,29 @@
     <message>
         <source>Import Image to Library</source>
         <translation>影像輸入到函式庫</translation>
+    </message>
+    <message>
+        <source>Shift+S</source>
+        <translation>Shift+S</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation>復原</translation>
+    </message>
+    <message>
+        <source>Redo</source>
+        <translation>重做</translation>
+    </message>
+</context>
+<context>
+    <name>RasterSizeWidget</name>
+    <message>
+        <source>Brush Size</source>
+        <translation>刷子大小</translation>
+    </message>
+    <message>
+        <source>Thickness</source>
+        <translation>厚度</translation>
     </message>
 </context>
 <context>
@@ -1148,11 +1171,11 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>基本的</translation>
     </message>
     <message>
         <source>Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation>先進的</translation>
     </message>
 </context>
 <context>
@@ -1402,7 +1425,7 @@
     </message>
     <message>
         <source>Hide Tips</source>
-        <translation type="unfinished"></translation>
+        <translation>隱藏提示</translation>
     </message>
 </context>
 <context>
@@ -1646,6 +1669,17 @@
     <message>
         <source>Align Text To Right</source>
         <translation>文字右對齊</translation>
+    </message>
+</context>
+<context>
+    <name>TItemSelector</name>
+    <message>
+        <source>Duration:</source>
+        <translation>期間：</translation>
+    </message>
+    <message>
+        <source>secs</source>
+        <translation>秒</translation>
     </message>
 </context>
 <context>
@@ -2491,10 +2525,6 @@
 <context>
     <name>TupDocumentView</name>
     <message>
-        <source>@</source>
-        <translation>@</translation>
-    </message>
-    <message>
         <source>%1</source>
         <translation>%1</translation>
     </message>
@@ -2533,10 +2563,6 @@
     <message>
         <source>Shift Length</source>
         <translation>移位長度</translation>
-    </message>
-    <message>
-        <source>Storyboard Settings</source>
-        <translation>分鏡腳本設定</translation>
     </message>
     <message>
         <source>Paint area actions</source>
@@ -2599,20 +2625,12 @@
         <translation>繪製工具</translation>
     </message>
     <message>
-        <source>Export Frame As Image</source>
-        <translation>匯出成幀影像</translation>
-    </message>
-    <message>
         <source>Frames Mode</source>
         <translation>幀模式</translation>
     </message>
     <message>
         <source>Ctrl+Shift+C</source>
         <translation>Ctrl+Shift+C</translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+P</source>
-        <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
         <source>Tweening</source>
@@ -2675,14 +2693,6 @@
         <translation>影像導入成功</translation>
     </message>
     <message>
-        <source>Post Frame On TupiTube</source>
-        <translation>在绘幻想裡發佈幀動畫</translation>
-    </message>
-    <message>
-        <source>Ctrl+@</source>
-        <translation>Ctrl+@</translation>
-    </message>
-    <message>
         <source>Video Formats</source>
         <translation>視訊格式</translation>
     </message>
@@ -2697,6 +2707,14 @@
     <message>
         <source>Shapes</source>
         <translation>形狀</translation>
+    </message>
+    <message>
+        <source>Foreground Properties</source>
+        <translation>前景屬性</translation>
+    </message>
+    <message>
+        <source>Foreground Opacity</source>
+        <translation>前景不透明度</translation>
     </message>
 </context>
 <context>
@@ -2732,10 +2750,6 @@
     <message>
         <source>Images name prefix is unset! Please, type a prefix.</source>
         <translation>尚未設定影像名稱前綴！請輸入前綴。</translation>
-    </message>
-    <message>
-        <source>File exists. Overwrite it?</source>
-        <translation>檔案已存在。取代它嗎?</translation>
     </message>
     <message>
         <source>Image sequence was saved successful</source>
@@ -2809,13 +2823,27 @@
         <source>Sorry, export attempt failed!</source>
         <translation>抱歉，匯出嘗試失敗！</translation>
     </message>
+    <message>
+        <source>Can&apos;t export project</source>
+        <translation>無法匯出項目</translation>
+    </message>
+    <message>
+        <source>The duration of the project is TOO SHORT to generate an accurate MP4 file.
+Please, try to export the scene several times to extend the animation duration
+until reaches at least 3 seconds.</source>
+        <translation>該專案的持續時間太短，無法產生準確的 MP4 檔案。 請嘗試多次匯出場景以延長動畫持續時間，直到至少達到 3 秒。</translation>
+    </message>
+    <message>
+        <source>Video file exists. Overwrite it?</source>
+        <translation>視訊檔案存在。 覆蓋它嗎？</translation>
+    </message>
+    <message>
+        <source>Sorry, animation is too short!</source>
+        <translation>抱歉，動畫太短了！</translation>
+    </message>
 </context>
 <context>
     <name>TupExportWidget</name>
-    <message>
-        <source>Export To Animated Image</source>
-        <translation>匯出動畫影像</translation>
-    </message>
     <message>
         <source>Export To Video</source>
         <translation>匯出視訊</translation>
@@ -2999,6 +3027,22 @@
     <message>
         <source>Can&apos;t save project! (Code %1)</source>
         <translation>無法保存項目！（代碼 %1）</translation>
+    </message>
+    <message>
+        <source>Can&apos;t open project config file!</source>
+        <translation>無法開啟專案設定檔！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t open scene config file!</source>
+        <translation>無法開啟場景設定檔！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t load scene config file!</source>
+        <translation>無法載入場景設定檔！</translation>
+    </message>
+    <message>
+        <source>Can&apos;t read scene config file!</source>
+        <translation>無法讀取場景設定檔！</translation>
     </message>
 </context>
 <context>
@@ -3616,6 +3660,10 @@
         <source>Couldn&apos;t create temporary directory!</source>
         <translation>無法創建臨時目錄！</translation>
     </message>
+    <message>
+        <source>Question</source>
+        <translation>問題</translation>
+    </message>
 </context>
 <context>
     <name>TupLipsyncDoc</name>
@@ -3999,20 +4047,12 @@
         <translation>導出成幀圖像</translation>
     </message>
     <message>
-        <source>@</source>
-        <translation>@</translation>
-    </message>
-    <message>
         <source>&amp;Post Animation</source>
         <translation>發佈動畫</translation>
     </message>
     <message>
         <source>Post Frame</source>
         <translation>發佈幀</translation>
-    </message>
-    <message>
-        <source>Ctrl+@</source>
-        <translation>Ctrl+@</translation>
     </message>
     <message>
         <source>Confirmation Required</source>
@@ -4037,10 +4077,6 @@
     <message>
         <source>Open TupiTube Network</source>
         <translation>打开繪幻想網站</translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+P</source>
-        <translation>Ctrl+Shift+P</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -4089,6 +4125,22 @@
     <message>
         <source>Alt+V</source>
         <translation>Alt+V</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation>X</translation>
+    </message>
+    <message>
+        <source>Export Storyboard</source>
+        <translation>匯出故事板</translation>
+    </message>
+    <message>
+        <source>W</source>
+        <translation>W</translation>
+    </message>
+    <message>
+        <source>Ctrl+F</source>
+        <translation>Ctrl+F</translation>
     </message>
 </context>
 <context>
@@ -5013,6 +5065,10 @@
         <source>Phonetic Breakdown</source>
         <translation>編輯音素</translation>
     </message>
+    <message>
+        <source>Scene:</source>
+        <translation>場景：</translation>
+    </message>
 </context>
 <context>
     <name>TupPenDialog</name>
@@ -5627,36 +5683,40 @@
         <source>Please, choose an audio file!</source>
         <translation>請選擇一個音頻文件！</translation>
     </message>
+    <message>
+        <source>File:</source>
+        <translation>文件：</translation>
+    </message>
+    <message>
+        <source>Audio file only has one channel (Mono). The file must have two channels (Stereo).</source>
+        <translation>音訊檔案只有一個頻道（單聲道）。 該文件必須有兩個通道（立體聲）。</translation>
+    </message>
+    <message>
+        <source>Tip: Use an online service to convert your audio file from Mono to Stereo.</source>
+        <translation>提示：使用線上服務將音訊檔案從單聲道轉換為立體聲。</translation>
+    </message>
 </context>
 <context>
     <name>TupSoundForm</name>
     <message>
         <source>Play audio at:</source>
-        <translation type="unfinished"></translation>
+        <translation>播放音訊：</translation>
     </message>
     <message>
         <source>All Scenes (Background Track)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame 3</source>
-        <translation type="unfinished"></translation>
+        <translation>所有場景（背景軌道）</translation>
     </message>
     <message>
         <source>Add Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>添加框架</translation>
     </message>
     <message>
         <source>Remove Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>移除框架</translation>
+    </message>
+    <message>
+        <source>At Frames:</source>
+        <translation>在幀上：</translation>
     </message>
 </context>
 <context>
@@ -5683,7 +5743,15 @@
     </message>
     <message>
         <source>Audio Properties</source>
-        <translation type="unfinished"></translation>
+        <translation>音訊屬性</translation>
+    </message>
+    <message>
+        <source>Duration:</source>
+        <translation>期間：</translation>
+    </message>
+    <message>
+        <source>Lipsync Audio</source>
+        <translation>口型同步音訊</translation>
     </message>
 </context>
 <context>
@@ -6131,6 +6199,24 @@ Cover</source>
     <message>
         <source>Hashtags</source>
         <translation>標籤</translation>
+    </message>
+    <message>
+        <source>Can&apos;t post project</source>
+        <translation>無法發布項目</translation>
+    </message>
+    <message>
+        <source>The duration of the project is TOO SHORT to generate an accurate MP4 file.
+Please, try to export the scene several times to extend the animation duration
+until reaches at least 3 seconds.</source>
+        <translation>該專案的持續時間太短，無法產生準確的 MP4 檔案。 請嘗試多次匯出場景以延長動畫持續時間，直到至少達到 3 秒。</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation>確定</translation>
+    </message>
+    <message>
+        <source>Sorry, post attempt failed!</source>
+        <translation>抱歉，發文嘗試失敗！</translation>
     </message>
 </context>
 <context>

@@ -436,7 +436,7 @@ void TupDocumentView::setupDrawActions()
     new TAction(QPixmap(ICONS_DIR + "camera.png"), tr("Camera") + QString(" - Ctrl+Shift+C"), QKeySequence(tr("Ctrl+Shift+C")),
                 this, SLOT(cameraInterface()), actionManager, "camera");
 
-    new TAction(QPixmap(ICONS_DIR + "papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(tr("Ctrl+Shift+P")),
+    new TAction(QPixmap(ICONS_DIR + "papagayo.png"), tr("Papagayo Lip-sync Module"), QKeySequence(),
                 this, SLOT(papagayoManager()), actionManager, "papagayo");
 }
 
@@ -1438,7 +1438,7 @@ void TupDocumentView::createToolBar()
     fgEmpty2->setFixedWidth(5);
 
     QLabel *fgOpacityLabel = new QLabel();
-    fgOpacityLabel->setToolTip(tr("Foreground BG Opacity"));
+    fgOpacityLabel->setToolTip(tr("Foreground Opacity"));
     fgOpacityLabel->setPixmap(QPixmap(THEME_DIR + "icons/bg_opacity.png"));
 
     QDoubleSpinBox *fgOpacityBox = new QDoubleSpinBox(this);

@@ -121,7 +121,7 @@ TupExportWidget::TupExportWidget(TupProject *work, QWidget *parent, ExportType t
             connect(this, SIGNAL(scenesUpdated()), scenesPage, SLOT(updateScenesList()));
             addPage(scenesPage);
 
-            videoProperties = new TupVideoProperties(TupVideoProperties::Video);
+            videoProperties = new TupVideoProperties(TupVideoProperties::Animation, project);
             connect(this, SIGNAL(postProcedureCalled()), videoProperties, SLOT(postIt()));
             connect(videoProperties, SIGNAL(postHasStarted()), this, SLOT(updateWindowTitle()));
             addPage(videoProperties);

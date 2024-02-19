@@ -88,7 +88,7 @@ class TUPITUBE_EXPORT TupExportModule : public TupExportWizardPage
     private:
         double calculateProjectDuration(const QList<TupScene *> &scenes, int fps);
 
-        QList<int> m_indexes;
+        QList<int> sceneIndexes;
         QList<TupScene *> scenes;
         int fps;
 

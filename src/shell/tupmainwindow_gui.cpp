@@ -378,7 +378,7 @@ void TupMainWindow::setupFileActions()
     m_actionManager->insert(importPalette, "importGimpPalettes", "file");
 
     TAction *importPapagayo = new TAction(QPixmap(THEME_DIR + "icons/papagayo.png"), tr("&Import Papagayo Lip-sync"),
-                                         QKeySequence(tr("Ctrl+Shift+P")), this, SLOT(importPapagayoLipSync()), m_actionManager);
+                                         QKeySequence(), this, SLOT(importPapagayoLipSync()), m_actionManager);
     importPapagayo->setStatusTip(tr("Import Papagayo lip-sync"));
     m_actionManager->insert(importPapagayo, "importPapagayoLipSync", "file");
 
@@ -406,7 +406,7 @@ void TupMainWindow::setupFileActions()
 
     // Post Frame action
     TAction *postFrame = new TAction(QPixmap(THEME_DIR + "icons/share.png"), tr("Post Frame"),
-                                     QKeySequence(tr("Ctrl+X")), this, SIGNAL(imagePosted()), m_actionManager);
+                                     QKeySequence(tr("Ctrl+F")), this, SIGNAL(imagePosted()), m_actionManager);
     m_actionManager->insert(postFrame, "post_image", "file");
 
     // Visit TupiTube Network action

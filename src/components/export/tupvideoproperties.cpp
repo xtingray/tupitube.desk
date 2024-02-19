@@ -37,16 +37,19 @@
 #include "tconfig.h"
 #include "talgorithm.h"
 #include "tosd.h"
+#include "tapptheme.h"
 
 #include <QNetworkAccessManager>
 #include <QUrlQuery>
 #include <QHttpPart>
 #include <QDomDocument>
+#include <QMessageBox>
 
-TupVideoProperties::TupVideoProperties(Mode m) : TupExportWizardPage(tr("Animation Properties"))
+TupVideoProperties::TupVideoProperties(Mode postMode, const TupProject *work) : TupExportWizardPage(tr("Animation Properties"))
 {
     setTag("PROPERTIES");
-    mode = m;
+    mode = postMode;
+    project = work;
     aborted = false;
     setWindowParams();
     stackedWidget = new QStackedWidget;
@@ -113,6 +116,7 @@ void TupVideoProperties::setProgressBar()
     progressWidget = new QWidget;
     QHBoxLayout *progressLayout = new QHBoxLayout(progressWidget);
 
+    /*
     TCONFIG->beginGroup("Theme");
     int uiTheme = TCONFIG->value("UITheme", DARK_THEME).toInt();
     QString style = "QProgressBar { background-color: #DDDDDD; "
@@ -121,10 +125,11 @@ void TupVideoProperties::setProgressBar()
     if (uiTheme == DARK_THEME)
         color = "#444444";
     style += "QProgressBar::chunk { background-color: " + color + "; border-radius: 2px; }";
+    */
 
     progressBar = new QProgressBar;
     progressBar->setTextVisible(true);
-    progressBar->setStyleSheet(style);
+    progressBar->setStyleSheet(TAppTheme::themeSettings());
     progressBar->setRange(1, 100);
 
     progressLayout->addSpacing(50);
@@ -193,7 +198,7 @@ QString TupVideoProperties::description() const
 
 QList<int> TupVideoProperties::scenesList() const
 {
-     return scenes;
+     return sceneIndexes;
 }
 
 void TupVideoProperties::setProjectParams(const QString &login, const QString &secret, const QString &path)
@@ -249,8 +254,8 @@ void TupVideoProperties::postIt()
     }
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupVideoProperties::postIt()] - Tags -> " << tags;
-        qDebug() << "[TupVideoProperties::postIt()] - Comment -> " << desc;
+        qDebug() << "[TupVideoProperties::postIt()] - Tags ->" << tags;
+        qDebug() << "[TupVideoProperties::postIt()] - Comment ->" << desc;
     #endif
 
     stackedWidget->setCurrentIndex(1);
@@ -270,7 +275,7 @@ void TupVideoProperties::postIt()
         apiEntry = TUPITUBE_POST + QString("/api/desk/add/image/");
 
     #ifdef TUP_DEBUG
-        qDebug() << "[TupVideoProperties::postIt()] - URL -> " << apiEntry;
+        qDebug() << "[TupVideoProperties::postIt()] - URL ->" << apiEntry;
     #endif
 
     QUrl url(apiEntry);
@@ -336,7 +341,7 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
     QString answer(bArray);
     if (answer.length() > 0) {        
         #ifdef TUP_DEBUG
-            qDebug() << "[TupVideoProperties::serverAuthAnswer()] - answer -> " << answer;
+            qDebug() << "[TupVideoProperties::serverAuthAnswer()] - answer ->" << answer;
         #endif
 
         QDomDocument doc;
@@ -412,14 +417,14 @@ void TupVideoProperties::serverAuthAnswer(QNetworkReply *reply)
                 multiPart->append(loginPart);
                 multiPart->append(passwdPart);
                 multiPart->append(codePart);
-                if (mode == Video) {
+                if (mode == Animation) {
                     QString scenesStr = "";
-                    int total = scenes.count();
+                    int total = sceneIndexes.count();
                     if (total == 1) {
-                        scenesStr += QString::number(scenes.at(0));
+                        scenesStr += QString::number(sceneIndexes.at(0));
                     } else {
                         for (int i=0; i < total; i++) {
-                            scenesStr += QString::number(scenes.at(i));
+                            scenesStr += QString::number(sceneIndexes.at(i));
                             scenesStr += ",";
                         }
                         scenesStr.chop(1);
@@ -571,7 +576,7 @@ void TupVideoProperties::tracingPostProgress(qint64 bytesSent, qint64 bytesTotal
     if (bytesTotal > 0) {
         double percent = (bytesSent * 100) / bytesTotal;
         #ifdef TUP_DEBUG
-            qDebug() << "[TupVideoProperties::tracingPostProgress()] - percent -> " << percent;
+            qDebug() << "[TupVideoProperties::tracingPostProgress()] - percent ->" << percent;
         #endif
         progressBar->setValue(percent);
     }
@@ -812,7 +817,60 @@ void TupVideoProperties::resetTagsColor(const QString &)
     tagsEdit->setPalette(palette);
 }
 
+double TupVideoProperties::calculateProjectDuration(const QList<TupScene *> &scenes, int fps)
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoProperties::calculateProjectDuration()] - fps ->" << fps;
+        qDebug() << "[TupVideoProperties::calculateProjectDuration()] - scenes.size() ->" << scenes.size();
+    #endif
+
+    double durationInSeconds = 0;
+    foreach (TupScene *scene, scenes)
+        durationInSeconds += static_cast<double>(scene->framesCount()) / static_cast<double>(fps);
+
+    return durationInSeconds;
+}
+
+QList<TupScene *> TupVideoProperties::scenesToExport() const
+{
+    QList<TupScene *> scenes;
+    foreach (int index, sceneIndexes)
+        scenes << project->sceneAt(index);
+
+    return scenes;
+}
+
 void TupVideoProperties::setScenesIndexes(const QList<int> &indexes)
 {
-    scenes = indexes;
+    sceneIndexes = indexes;
+
+    scenes = scenesToExport();
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupVideoProperties::setScenesIndexes()] - Scenes total ->" << scenes.count();
+    #endif
+    fps = scenes.first()->getFPS();
+
+    double duration = calculateProjectDuration(scenes, fps);
+    if (duration < 3) { // Duration is too short to be played
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupVideoProperties::setScenesIndexes()] - Fatal Error: The project duration is too short. Aborting export action!";
+            qWarning() << "[TupVideoProperties::setScenesIndexes()] - duration ->" << duration;
+        #endif
+
+        QMessageBox msgBox;
+        msgBox.setStyleSheet(TAppTheme::themeSettings());
+        msgBox.setWindowTitle(tr("Can't post project"));
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setTextFormat(Qt::RichText);
+        msgBox.setText(tr("The duration of the project is TOO SHORT to generate an accurate MP4 file.\n"
+                          "Please, try to export the scene several times to extend the animation duration\n"
+                          "until reaches at least 3 seconds."));
+        msgBox.addButton(QString(tr("Ok")), QMessageBox::AcceptRole);
+        msgBox.show();
+
+        if (msgBox.exec() == QMessageBox::AcceptRole) {
+            TOsd::self()->display(TOsd::Error, tr("Sorry, post attempt failed!"));
+            emit isDone();
+        }
+    }
 }

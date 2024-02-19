@@ -51,8 +51,8 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
     Q_OBJECT
 
     public:
-        enum Mode { Video, Image };
-        TupVideoProperties(Mode m);
+        enum Mode { Animation, Image };
+        TupVideoProperties(Mode postMode, const TupProject *project = nullptr);
         ~TupVideoProperties();
 
         bool isComplete() const;
@@ -85,6 +85,8 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         void setProgressBar();
         void setWindowParams();
         QString formatPromoComment() const;
+        double calculateProjectDuration(const QList<TupScene *> &scenes, int fps);
+        QList<TupScene *> scenesToExport() const;
 
         QString flag;
         QVBoxLayout *layout;
@@ -92,9 +94,12 @@ class TUPITUBE_EXPORT TupVideoProperties : public TupExportWizardPage
         QLineEdit *tagsEdit;
         QTextEdit *descText;
         QString defaultDesc;
-        QList<int> scenes;
-        bool aborted;
+        QList<int> sceneIndexes;
+        QList<TupScene *> scenes;
+        int fps;
+        const TupProject *project;
 
+        bool aborted;
         QString username;
         QString password;
         QString filePath;
