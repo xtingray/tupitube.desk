@@ -228,6 +228,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
                              TupLibraryObject::ObjectType type, QByteArray array);
         void libraryAssetDragged();
         void sceneCreated(int index);
+        void eyeDropperLaunched();
 
     private:
         void setupDrawActions();

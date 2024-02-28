@@ -2000,8 +2000,9 @@ void TupDocumentView::exportImage()
         qDebug() << "[TupDocumentView::exportImage()]";
     #endif
 
-    updateToolsMenu(TAction::ExportImage, "export_image");
+    paintArea->viewport()->setCursor(Qt::ArrowCursor);
 
+    updateToolsMenu(TAction::ExportImage, "export_image");
     int sceneIndex = paintArea->currentSceneIndex();
     int frameIndex = paintArea->currentFrameIndex();
 
@@ -2024,6 +2025,7 @@ void TupDocumentView::postImage()
         qDebug() << "[TupDocumentView::postImage()]";
     #endif
 
+    paintArea->viewport()->setCursor(Qt::ArrowCursor);
     updateToolsMenu(TAction::PostImage, "post_image");
 
     int sceneIndex = paintArea->graphicsScene()->currentSceneIndex();
@@ -2660,6 +2662,7 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
     miscMenu->setActiveAction(nullptr);
 
     if (eyedropperAction) {
+        emit eyeDropperLaunched();
         eyedropperAction->trigger();
 
         QString toolName = tr("%1").arg(eyedropperAction->text());
@@ -2694,7 +2697,6 @@ void TupDocumentView::enableEyeDropperTool(TColorCell::FillType fillType)
 
         QWidget *toolConfigurator = tool->configurator();
         if (toolConfigurator) {
-
             int minWidth = 80;
             if (bigScreen)
                 minWidth =(screenWidth*12)/100; // 12% of the screen width

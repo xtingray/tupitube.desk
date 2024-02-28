@@ -57,6 +57,18 @@ TViewButton *ToolView::button() const
     return currentButton;
 }
 
+void ToolView::expandDock()
+{
+    /*
+    #ifdef TUP_DEBUG
+        qDebug() << "[ToolView::expandDock()]";
+    #endif
+    */
+
+    expanded = true;
+    show();
+}
+
 void ToolView::expandDock(bool state)
 {
     /*

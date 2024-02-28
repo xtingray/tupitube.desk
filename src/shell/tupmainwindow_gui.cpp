@@ -390,7 +390,7 @@ void TupMainWindow::setupFileActions()
 
     // Export Frame action
     TAction *exportFrame = new TAction(QPixmap(THEME_DIR + "icons/export_frame.png"), tr("Export Frame As Image"),
-                                       QKeySequence(tr("X")), this, SIGNAL(imageExported()), m_actionManager);
+                                       QKeySequence("Ctrl+M"), this, SIGNAL(imageExported()), m_actionManager);
     m_actionManager->insert(exportFrame, "export_image", "file");
 
     // Export Project as Storyboard

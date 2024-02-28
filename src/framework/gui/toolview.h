@@ -63,6 +63,9 @@ class T_GUI_EXPORT ToolView: public QDockWidget
         void setPerspective(int wsp);
         int perspective() const;
 
+    public slots:
+        void expandDock();
+
     private:
         TViewButton *currentButton;
         int currentPerspective;
