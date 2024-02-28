@@ -115,9 +115,10 @@ void TupSceneSelector::setScenes(const QList<TupScene *> &scenesList, int fps)
 
     #ifdef TUP_DEBUG
         qDebug() << "[TupSceneSelector::setScenes()] - Scene duration ->" << duration;
+        qDebug() << "[TupSceneSelector::setScenes()] - duration ->" << QString::number(duration,'f',2);
     #endif
 
-    m_selector->updateDurationLabel(QString::number(duration));
+    m_selector->updateDurationLabel(QString::number(duration,'f',2));
 }
 
 void TupSceneSelector::aboutToNextPage()
@@ -140,10 +141,10 @@ void TupSceneSelector::updateState()
 
         #ifdef TUP_DEBUG
             qDebug() << "[TupSceneSelector::updateState()] - duration ->" << duration;
-            qDebug() << "[TupSceneSelector::updateState()] - duration ->" << QString::number(duration,'g',2);
+            qDebug() << "[TupSceneSelector::updateState()] - duration ->" << QString::number(duration,'f',2);
         #endif
 
-        m_selector->updateDurationLabel(QString::number(duration,'g',2));
+        m_selector->updateDurationLabel(QString::number(duration,'f',2));
     }
 
     emit completed();
