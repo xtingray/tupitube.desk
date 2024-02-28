@@ -138,7 +138,12 @@ void TupSceneSelector::updateState()
         foreach(int index, indexes)
             duration += sceneDuration.at(index);
 
-        m_selector->updateDurationLabel(QString::number(duration));
+        #ifdef TUP_DEBUG
+            qDebug() << "[TupSceneSelector::updateState()] - duration ->" << duration;
+            qDebug() << "[TupSceneSelector::updateState()] - duration ->" << QString::number(duration,'g',2);
+        #endif
+
+        m_selector->updateDurationLabel(QString::number(duration,'g',2));
     }
 
     emit completed();
