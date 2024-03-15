@@ -4127,10 +4127,6 @@ until reaches at least 3 seconds.</source>
         <translation>Alt+V</translation>
     </message>
     <message>
-        <source>X</source>
-        <translation>X</translation>
-    </message>
-    <message>
         <source>Export Storyboard</source>
         <translation>匯出故事板</translation>
     </message>
