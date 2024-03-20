@@ -197,6 +197,8 @@ void TupSoundForm::setFramesLimit(int sceneIndex, int maxFrame)
     #ifdef TUP_DEBUG
         qDebug() << "[TupSoundForm::setFramesList()] - sceneIndex ->" << sceneIndex;
         qDebug() << "[TupSoundForm::setFramesList()] - maxFrame ->" << maxFrame;
+    #else
+        Q_UNUSED(sceneIndex)
     #endif
 
     framesBox->setRange(1, maxFrame);

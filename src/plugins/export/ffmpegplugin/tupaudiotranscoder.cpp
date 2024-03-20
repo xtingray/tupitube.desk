@@ -361,6 +361,10 @@ void TupAudioTranscoder::logAudioPacket(AVRational time_base, const AVPacket *pk
             QTextStream stream(&file);
             stream << record << Qt::endl;
         }
+    #else
+        Q_UNUSED(time_base)
+        Q_UNUSED(pkt)
+        Q_UNUSED(direction)
     #endif
 }
 

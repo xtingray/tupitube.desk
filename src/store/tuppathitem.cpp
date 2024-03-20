@@ -2140,6 +2140,8 @@ QPainterPath TupPathItem::clearPath(int tolerance)
 {
     #ifdef TUP_DEBUG
         qDebug() << "[TupPathItem::clearPath()] - tolerance ->" << tolerance;
+    #else
+        Q_UNUSED(tolerance)
     #endif
 
     QPainterPath route = path();
