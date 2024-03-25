@@ -121,20 +121,8 @@ int main(int argc, char ** argv)
 #else
     kAppProp->setHomeDir(TCONFIG->value("Home").toString());
     QString binPath = QString::fromLocal8Bit(::getenv("TUPITUBE_BIN"));
-    // if (binPath.isEmpty())
-    //     binPath = "/";
-
-#ifdef Q_OS_WIN
-    QString pluginPath = "plugins";
-#else
     QString pluginPath = QString::fromLocal8Bit(::getenv("TUPITUBE_PLUGIN"));
-#endif
-
-#ifdef Q_OS_WIN
-    QString sharePath = "data";
-#else
     QString sharePath = QString::fromLocal8Bit(::getenv("TUPITUBE_SHARE"));
-#endif
 
     kAppProp->setBinDir(binPath);
     kAppProp->setPluginDir(pluginPath);
@@ -169,11 +157,8 @@ int main(int argc, char ** argv)
     else
         kAppProp->setDataDir(xmlDir + locale + "/");
 
-#ifdef Q_OS_WIN
-    QString themePath = "data/themes/default/";
-#else
     QString themePath = kAppProp->shareDir() + "themes/default/";
-#endif
+
     kAppProp->setThemeDir(themePath);
     QPair<int, int> dimension = TAlgorithm::screenDimension();
     int screenWidth = dimension.first;

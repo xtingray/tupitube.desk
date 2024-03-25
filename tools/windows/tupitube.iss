@@ -12,6 +12,7 @@ ChangesEnvironment=yes
 ChangesAssociations=yes
 ; Uncomment this line for 64bit installer
 ArchitecturesInstallIn64BitMode=x64
+UninstallDisplayIcon={app}\tupitube.desk.exe
 
 [Dirs]
 Name: "{app}"
@@ -99,9 +100,10 @@ Source: "data\xml\pt\*"; DestDir: "{app}\data\xml\pt"
 Source: "plugins\*"; DestDir: "{app}\plugins"
 
 [Registry]
-;Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_HOME"; ValueData: "{app}"; Flags: uninsdeletevalue
-;Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_SHARE"; ValueData: "{app}\data"; Flags: uninsdeletevalue
-;Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_PLUGIN"; ValueData: "{app}\plugins"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_HOME"; ValueData: "{app}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_BIN"; ValueData: "{app}"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_SHARE"; ValueData: "{app}\data"; Flags: uninsdeletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: string; ValueName: "TUPITUBE_PLUGIN"; ValueData: "{app}\plugins"; Flags: uninsdeletevalue
 Root: HKCR; Subkey: ".tup"; ValueType: string; ValueName: ""; ValueData: "TupiTubeDesk"; Flags: uninsdeletevalue 
 Root: HKCR; Subkey: "TupiTubeDesk"; ValueType: string; ValueName: ""; ValueData: "TupiTube Desk"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "TupiTubeDesk\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\tupitube.desk.exe,0"; Flags: uninsdeletekey

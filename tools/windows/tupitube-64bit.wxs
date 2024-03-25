@@ -166,10 +166,15 @@
             <File Id="TUPITIMELINE.DLL" Name="tupitimeline.dll" Source="tupitimeline.dll" />
           </Component>
           <Component Id="TUPITUBE.DESK.EXE" DiskId="1" Guid="999A2156-39B9-47FD-9731-8E4039A420EE" Win64="yes">
-            <File Id="TUPITUBE.DESK.EXE" Name="tupitube.desk.exe" Source="tupitube.desk.exe">
+            <File Id="TUPITUBE.DESK.EXE" Name="tupitube.desk.exe" Source="tupitube.desk.exe" Advertise="yes">
               <Shortcut Id="desktopShortcut" Directory="DesktopFolder" Name="TupiTube Desk" WorkingDirectory="INSTALLDIR" Advertise="yes" Icon="DesktopIcon.exe" IconIndex="0" />
               <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="TupiTube Desk" Advertise="yes" Icon="StartMenuIcon.exe" IconIndex="0" />
-            </File>
+            </File>						
+			<ProgId Id="TupFile" Description="TupiTube Source File" Icon="DesktopIcon.exe" Advertise="yes">
+              <Extension Id="tupExtension" ContentType="application/tup">
+                <Verb Id="open" Command="Open" Argument="&quot;%1&quot;" />
+              </Extension>
+            </ProgId>
           </Component>
           <Component Id="TUPIWORKSPACE.DLL" DiskId="1" Guid="B04F478B-1F01-4D13-AC49-9DB20714BDD6" Win64="yes">
             <File Id="TUPIWORKSPACE.DLL" Name="tupiworkspace.dll" Source="tupiworkspace.dll" />
