@@ -166,15 +166,35 @@
             <File Id="TUPITIMELINE.DLL" Name="tupitimeline.dll" Source="tupitimeline.dll" />
           </Component>
           <Component Id="TUPITUBE.DESK.EXE" DiskId="1" Guid="999A2156-39B9-47FD-9731-8E4039A420EE" Win64="yes">
-            <File Id="TUPITUBE.DESK.EXE" Name="tupitube.desk.exe" Source="tupitube.desk.exe" Advertise="yes">
-              <Shortcut Id="desktopShortcut" Directory="DesktopFolder" Name="TupiTube Desk" WorkingDirectory="INSTALLDIR" Advertise="yes" Icon="DesktopIcon.exe" IconIndex="0" />
+            <File Id="TUPITUBE.DESK.EXE" Name="tupitube.desk.exe" Source="tupitube.desk.exe">
+              <Shortcut Id="desktopShortcut" Directory="DesktopFolder" Name="TupiTube Desk" Advertise="yes" Icon="DesktopIcon.exe" IconIndex="0" />
               <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="TupiTube Desk" Advertise="yes" Icon="StartMenuIcon.exe" IconIndex="0" />
-            </File>						
+            </File>
+
+		    <Environment Id="TUPITUBE_HOME" Name="TUPITUBE_HOME" Action="set" Permanent="yes" System="yes" Part="all" Value="C:\Program Files\TupiTube" />
+			<Environment Id="TUPITUBE_BIN" Name="TUPITUBE_BIN" Action="set" Permanent="yes" System="yes" Part="all" Value="C:\Program Files\TupiTube" />
+            <Environment Id="TUPITUBE_SHARE" Name="TUPITUBE_SHARE" Action="set" Permanent="yes" System="yes" Part="all" Value="C:\Program Files\TupiTube\data" />
+            <Environment Id="TUPITUBE_PLUGIN" Name="TUPITUBE_PLUGIN" Action="set" Permanent="yes" System="yes" Part="all" Value="C:\Program Files\TupiTube\plugins" />
+
+			<!-- Capabilities keys for Vista/7 "Set Program Access and Defaults" -->
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities" Name="ApplicationDescription" Value="2D Animation Tool" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities" Name="ApplicationIcon" Value="[APPLICATIONFOLDER]TUPITUBE.DESK.EXE,0" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities" Name="ApplicationName" Value="TupiTube Desk" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]TUPITUBE.DESK.EXE,1" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities\FileAssociations" Name=".tup" Value="TUPITUBE.DESK.Document" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities\MIMEAssociations" Name="application/tup" Value="TUPITUBE.DESK.Document" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\MyApp\Capabilities\shell\Open\command" Value="&quot;[APPLICATIONFOLDER]TUPITUBE.DESK.EXE&quot; &quot;%1&quot;" Type="string" />
+			<RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="TUPITUBE.DESK" Value="SOFTWARE\TUPITUBE.DESK\Capabilities" Type="string" />
+
 			<ProgId Id="TupFile" Description="TupiTube Source File" Icon="DesktopIcon.exe" Advertise="yes">
-              <Extension Id="tupExtension" ContentType="application/tup">
+              <Extension Id="tup" ContentType="application/tup">
                 <Verb Id="open" Command="Open" Argument="&quot;%1&quot;" />
+                <MIME ContentType="application/tup" Default="yes" Advertise="yes"/>			
               </Extension>
             </ProgId>
+			
+		    <RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tup\shell\edit.TUPITUBE.DESK.EXE" Value="Open with TupiTube Desk" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\Classes\SystemFileAssociations\.tup\shell\edit.TUPITUBE.DESK.EXE\command" Value="&quot;[APPLICATIONFOLDER]TUPITUBE.DESK.EXE&quot; &quot;%1&quot;" Type="string" />			
           </Component>
           <Component Id="TUPIWORKSPACE.DLL" DiskId="1" Guid="B04F478B-1F01-4D13-AC49-9DB20714BDD6" Win64="yes">
             <File Id="TUPIWORKSPACE.DLL" Name="tupiworkspace.dll" Source="tupiworkspace.dll" />

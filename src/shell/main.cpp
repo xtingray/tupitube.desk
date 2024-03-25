@@ -196,12 +196,6 @@ int main(int argc, char ** argv)
         }
     }
 
-    TupMainWindow *mainWindow = new TupMainWindow("ideality");
-    mainWindow->showMaximized();
-    #if defined(Q_OS_MAC)
-        application.setMainWindow(mainWindow);
-    #endif
-
     #ifdef TUP_DEBUG
         qWarning() << "---";
         qWarning() << "  [main.cpp] - CACHE path ->" << cachePath;
@@ -215,6 +209,28 @@ int main(int argc, char ** argv)
         qWarning() << "---";
     #endif
 
+    QString sourceFile = "";
+    if (argc == 2) {
+        sourceFile = QString(argv[1]);
+    } else {
+        if (argc == 1) {
+            bool openLast = TCONFIG->value("OpenLastProject").toBool();
+            if (openLast) {
+                QString files = TCONFIG->value("Recents").toString();
+                if (!files.isEmpty()) {
+                    QStringList recents = files.split(';');
+                    sourceFile = recents.first();
+                }
+            }
+        }
+    }
+
+    TupMainWindow *mainWindow = new TupMainWindow("ideality", sourceFile);
+    mainWindow->showMaximized();
+    #if defined(Q_OS_MAC)
+        application.setMainWindow(mainWindow);
+    #endif
+
     // Looking for plugins for TupiTube Desk
     QApplication::addLibraryPath(kAppProp->pluginDir());
 
@@ -224,6 +240,7 @@ int main(int argc, char ** argv)
         CHANDLER->setImagePath(THEME_DIR + "icons/");
     #endif
 
+    /*
     if (argc == 1) {
         bool openLast = TCONFIG->value("OpenLastProject").toBool();
         if (openLast) {
@@ -244,7 +261,7 @@ int main(int argc, char ** argv)
             if (project.endsWith(".tup") || project.endsWith(".TUP"))
                 mainWindow->openProject(project);
         }
-    }
+    } */
 
     // It's time to play with TupiTube Desk!
     return application.exec();

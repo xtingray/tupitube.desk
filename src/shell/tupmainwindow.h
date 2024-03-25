@@ -99,7 +99,7 @@ class TupMainWindow : public TabbedMainWindow
              ImportProjectToNet
         };
 
-        TupMainWindow(const QString &winKey);
+        TupMainWindow(const QString &winKey, const QString &sourceFile);
         ~TupMainWindow();
 
     signals:
@@ -292,7 +292,7 @@ class TupMainWindow : public TabbedMainWindow
         QSize webMsgSize;
         TAction *updatesAction;
         TupDocumentView::DockType currentDock;
-        QString examplePath;
+        QString examplePath;       
 };
 
 #endif

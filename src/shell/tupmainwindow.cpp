@@ -79,7 +79,7 @@
 #include <QDesktopServices>
 #include <QFileOpenEvent>
 
-TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr),
+TupMainWindow::TupMainWindow(const QString &winKey, const QString &sourceFile) : TabbedMainWindow(winKey), m_projectManager(nullptr), animationTab(nullptr),
                                                       playerTab(nullptr), m_viewChat(nullptr), m_exposureSheet(nullptr),
                                                       isSaveDialogOpen(false) //, internetOn(false) 
                                                       // m_scenes(nullptr), isSaveDialogOpen(false) //, internetOn(false)
@@ -215,6 +215,9 @@ TupMainWindow::TupMainWindow(const QString &winKey) : TabbedMainWindow(winKey), 
     TCONFIG->setValue("AssetsPath", CACHE_DIR + TAlgorithm::randomString(8) + "/");
     TupMainWindow::requestType = None;
     lastSave = false;
+
+    if (!sourceFile.isEmpty())
+        openProject(sourceFile);
 }
 
 TupMainWindow::~TupMainWindow()
@@ -804,8 +807,12 @@ void TupMainWindow::openProject(const QString &path)
         qWarning() << "[TupMainWindow::openProject()] - Opening project -> " << path;
     #endif
 
-    if (path.isEmpty() || !path.endsWith(".tup"))
+    if (path.isEmpty() || !path.endsWith(".tup")) {
+        #ifdef TUP_DEBUG
+            qWarning() << "[TupMainWindow::openProject()] - Fatal Error: Invalid TUP source file path! -> " << path;
+        #endif
         return;
+    }
 
     m_projectManager->setHandler(new TupLocalProjectManagerHandler, false);
     isNetworked = false;
@@ -859,6 +866,9 @@ void TupMainWindow::openProject(const QString &path)
     }
 
     m_actionManager->enable("open_project", true);
+    // exposureView->expandDock(true);
+    // currentDock = TupDocumentView::ExposureSheet;
+
     QApplication::restoreOverrideCursor();
 }
 
