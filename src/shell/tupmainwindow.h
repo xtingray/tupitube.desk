@@ -154,6 +154,7 @@ class TupMainWindow : public TabbedMainWindow
         void postFrame(const QString &imagePath);
         void releaseSoundRecord(ModuleSource source, const QString &soundKey);
         void releaseAudioResources();
+        void enableVisibilityControls();
 
     private slots:
         void enableUpdatesDialog();

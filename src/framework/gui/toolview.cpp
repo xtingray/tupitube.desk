@@ -61,7 +61,7 @@ void ToolView::expandDock()
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "[ToolView::expandDock()]";
+        qDebug() << "[ToolView::expandDock()] - code -> " << objectName();
     #endif
     */
 
@@ -73,7 +73,8 @@ void ToolView::expandDock(bool state)
 {
     /*
     #ifdef TUP_DEBUG
-        qDebug() << "[ToolView::expandDock()] - state -> " << state;
+        qDebug() << "[ToolView::expandDock(bool)] - code -> " << objectName();
+        qDebug() << "[ToolView::expandDock(bool)] - state -> " << state;
     #endif
     */
 
@@ -97,9 +98,11 @@ bool ToolView::isExpanded()
 
 void ToolView::setExpandingFlag() 
 {
+    /*
     #ifdef TUP_DEBUG
         qDebug() << "[ToolView::setExpandingFlag()]";
     #endif
+    */
 
     if (expanded)
         expanded = false;

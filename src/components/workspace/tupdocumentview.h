@@ -191,6 +191,7 @@ class Q_DECL_EXPORT TupDocumentView: public QMainWindow
         void editProjectSize();
 
     signals:
+        void pluginsLoaded();
         void requestTriggered(const TupProjectRequest *event);
         void localRequestTriggered(const TupProjectRequest *event);
         void paintAreaEventTriggered(const TupPaintAreaEvent *event);

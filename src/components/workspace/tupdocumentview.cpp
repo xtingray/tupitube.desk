@@ -743,6 +743,13 @@ void TupDocumentView::loadPlugins()
 
     pencilAction->trigger();
     paintArea->setFocus();
+
+    emit pluginsLoaded();
+
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupDocumentView::loadPlugins()] - All plugins loaded!";
+        qDebug() << "---";
+    #endif
 }
 
 void TupDocumentView::loadPlugin(int menu, int actionID)

@@ -66,7 +66,7 @@ class T_GUI_EXPORT ToolView: public QDockWidget
     public slots:
         void expandDock();
 
-    private:
+    private:        
         TViewButton *currentButton;
         int currentPerspective;
         bool expanded;

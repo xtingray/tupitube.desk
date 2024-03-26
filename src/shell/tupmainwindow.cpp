@@ -429,14 +429,11 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
         connect(animationTab, SIGNAL(fpsUpdated(int)), cameraWidget, SLOT(setFpsStatus(int)));
         connect(animationTab, SIGNAL(fpsUpdated(int)), m_exposureSheet, SLOT(updateFPS(int)));
         connect(animationTab, SIGNAL(fpsUpdated(int)), m_timeLine, SLOT(updateFPS(int)));
-
-        connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
-        connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
+        connect(animationTab, SIGNAL(pluginsLoaded()), this, SLOT(enableVisibilityControls()));
 
         // SQA: Implement the Preferences option to choose between the Exposure view and the Timeline view
         exposureView->expandDock(true);
         // timeView->expandDock(true);
-
         currentDock = TupDocumentView::ExposureSheet;
 
         m_projectManager->setModificationStatus(false);
@@ -456,6 +453,17 @@ void TupMainWindow::setWorkSpace(const QStringList &users)
 
         m_projectManager->clearUndoStack();
     }
+}
+
+void TupMainWindow::enableVisibilityControls()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "---";
+        qDebug() << "[TupMainWindow::enableVisibilityControls()]";
+    #endif
+
+    connect(exposureView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkTimeLineVisibility(bool)));
+    connect(timeView, SIGNAL(visibilityChanged(bool)), this, SLOT(checkExposureVisibility(bool)));
 }
 
 void TupMainWindow::updateSoundItems()
@@ -804,12 +812,12 @@ void TupMainWindow::openProject(const QString &path)
 {
     #ifdef TUP_DEBUG
         qWarning() << "---";
-        qWarning() << "[TupMainWindow::openProject()] - Opening project -> " << path;
+        qWarning() << "[TupMainWindow::openProject()] - Opening project ->" << path;
     #endif
 
     if (path.isEmpty() || !path.endsWith(".tup")) {
         #ifdef TUP_DEBUG
-            qWarning() << "[TupMainWindow::openProject()] - Fatal Error: Invalid TUP source file path! -> " << path;
+            qWarning() << "[TupMainWindow::openProject()] - Fatal Error: Invalid TUP source file path! ->" << path;
         #endif
         return;
     }
@@ -833,9 +841,13 @@ void TupMainWindow::openProject(const QString &path)
 
             TupMainWindow::requestType = OpenLocalProject;
             projectName = m_projectManager->getProject()->getName();
-            // kAppProp->setRasterBgDir(projectName);
             updateRecentProjectList();
             updateOpenRecentMenu(m_recentProjectsMenu, m_recentProjects);
+
+            author = m_projectManager->getProject()->getAuthor();
+            if (author.length() <= 0)
+                author = "Anonymous";
+            setWindowTitle(appTitle + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
 
             enableToolViews(true);
             setMenuItemsContext(true);
@@ -843,13 +855,6 @@ void TupMainWindow::openProject(const QString &path)
 
             m_exposureSheet->updateFramesState();
             m_timeLine->updateFramesState();
-
-            author = m_projectManager->getProject()->getAuthor();
-            if (author.length() <= 0)
-                author = "Anonymous";
-
-            setWindowTitle(appTitle + " - " + projectName + " [ " + tr("by") + " " + author + " ]");
-            setWorkSpace();
 
             m_exposureSheet->updateLayerOpacity(0, 0);
             m_exposureSheet->initLayerVisibility();
@@ -859,6 +864,8 @@ void TupMainWindow::openProject(const QString &path)
             int last = path.lastIndexOf("/");
             QString dir = path.left(last);
             saveDefaultPath(dir);
+
+            setWorkSpace();
         } else {
             setUpdatesEnabled(true);
             TOsd::self()->display(TOsd::Error, tr("Cannot open project!"));
@@ -866,8 +873,6 @@ void TupMainWindow::openProject(const QString &path)
     }
 
     m_actionManager->enable("open_project", true);
-    // exposureView->expandDock(true);
-    // currentDock = TupDocumentView::ExposureSheet;
 
     QApplication::restoreOverrideCursor();
 }
@@ -1774,6 +1779,10 @@ void TupMainWindow::saveDefaultPath(const QString &dir)
 
 void TupMainWindow::showWebMessage()
 {
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::showWebMessage()]";
+    #endif
+
     TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
     msgDialog->show();
 
