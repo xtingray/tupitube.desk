@@ -46,7 +46,7 @@
 #include "tupfilemanager.h"
 
 // TupiTube Framework
-#include "tmsgdialog.h"
+#include "timagedialog.h"
 #include "tosd.h"
 
 #include "tupapplication.h"
@@ -136,8 +136,6 @@ TupMainWindow::TupMainWindow(const QString &winKey, const QString &sourceFile) :
 
     // Processing web msg content
     bool showWebMsg = false;
-    isImageMsg = false;
-    webContent = "";
     if (!fileContent.isEmpty()) {
         QDomDocument doc;
         if (doc.setContent(fileContent)) {
@@ -151,14 +149,10 @@ TupMainWindow::TupMainWindow(const QString &winKey, const QString &sourceFile) :
                         showWebMsg = true;
                     else
                         break;
-                } else if (e.tagName() == "size") {
-                    QStringList numbers = e.text().split(",");
-                    if (numbers.size() == 2)
-                        webMsgSize = QSize(numbers.at(0).toInt(), numbers.at(1).toInt());
-                } else if (e.tagName() == "text") {
-                    webContent = e.text();
+                } else if (e.tagName() == "url") {
+                    msgUrl = e.text();
                 } else if (e.tagName() == "image") {
-                    isImageMsg = true;
+                    msgImageName = e.text();
                 }
 
                 n = n.nextSibling();
@@ -171,7 +165,7 @@ TupMainWindow::TupMainWindow(const QString &winKey, const QString &sourceFile) :
     }
 
     if (showWebMsg)
-        QTimer::singleShot(0, this, SLOT(showWebMessage()));
+        QTimer::singleShot(0, this, SLOT(showNewsMessage()));
 
     /* SQA: Check this code for the future
     TCONFIG->beginGroup("General");
@@ -218,6 +212,19 @@ TupMainWindow::TupMainWindow(const QString &winKey, const QString &sourceFile) :
 
     if (!sourceFile.isEmpty())
         openProject(sourceFile);
+}
+
+void TupMainWindow::showNewsMessage()
+{
+    #ifdef TUP_DEBUG
+        qDebug() << "[TupMainWindow::showNewsMessage()]";
+    #endif
+
+    TImageDialog *msgDialog = new TImageDialog(msgUrl, msgImageName, this);
+    msgDialog->show();
+
+    msgDialog->move(static_cast<int> ((screenWidth - msgDialog->width()) / 2),
+                    static_cast<int> ((screenHeight - msgDialog->height()) / 2));
 }
 
 TupMainWindow::~TupMainWindow()
@@ -1775,19 +1782,6 @@ void TupMainWindow::saveDefaultPath(const QString &dir)
     TCONFIG->beginGroup("General");
     TCONFIG->setValue("DefaultPath", dir);
     TCONFIG->sync();
-}
-
-void TupMainWindow::showWebMessage()
-{
-    #ifdef TUP_DEBUG
-        qDebug() << "[TupMainWindow::showWebMessage()]";
-    #endif
-
-    TMsgDialog *msgDialog = new TMsgDialog(webContent, webMsgSize, isImageMsg, this);
-    msgDialog->show();
-
-    msgDialog->move(static_cast<int> ((screenWidth - msgDialog->width()) / 2),
-                    static_cast<int> ((screenHeight - msgDialog->height()) / 2));
 }
 
 void TupMainWindow::setUpdateFlag(bool update)

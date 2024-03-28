@@ -208,7 +208,7 @@ class TupMainWindow : public TabbedMainWindow
         void updateUsersOnLine(const QString &login, int state);
         void importPapagayoLipSync();
         void hideTopPanels();
-        void showWebMessage();
+        void showNewsMessage();
         void setUpdateFlag(bool flag);
         void checkTimeLineVisibility(bool visible);
         void checkExposureVisibility(bool visible);
@@ -288,9 +288,8 @@ class TupMainWindow : public TabbedMainWindow
         QString projectName;
         QString author;
         QString netUser;
-        QString webContent;
-        bool isImageMsg;
-        QSize webMsgSize;
+        QString msgImageName;
+        QString msgUrl;
         TAction *updatesAction;
         TupDocumentView::DockType currentDock;
         QString examplePath;       

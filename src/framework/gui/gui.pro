@@ -99,7 +99,8 @@ HEADERS += taction.h \
            tsizebox.h \
            tcolorarrow.xpm \
            tcolorreset.xpm \
-           tmsgdialog.h
+           tmsgdialog.h \
+           timagedialog.h
 
 SOURCES += taction.cpp \
            tactionmanager.cpp \
@@ -168,7 +169,8 @@ SOURCES += taction.cpp \
            tsizebox.cpp \
            tcolorcell.cpp \
            tslider.cpp \
-           tmsgdialog.cpp
+           tmsgdialog.cpp \
+           timagedialog.cpp
 
 INCLUDEPATH += ../core ../ ../../libbase
 
